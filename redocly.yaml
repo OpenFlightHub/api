@@ -12,9 +12,9 @@ theme:
   openapi:
     theme:
       sidebar:
-        backgroundColor: "#272a45"
-        textColor: "#F5F7FF"
+        backgroundColor: "#07112D"
+        textColor: "#F5F6FF"
       rightPanel:
-        backgroundColor: '#1D1F35'
-        textColor: "#F5F7FF"
+        backgroundColor: '#040A1B'
+        textColor: "#F5F6FF"
 

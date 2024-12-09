@@ -112,11 +112,11 @@ if(!IS_TEST_ENVIRONMENT){
 
 import path = require('path');
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname , '../public/index.html'))
+    res.sendFile(path.join(__dirname , './public/index.html'))
 })
 
 app.get('/docs', (req, res) => {
-    res.sendFile(path.join(__dirname , '../public/docs.html'))
+    res.sendFile(path.join(__dirname , './public/docs.html'))
 })
 
 import { getLoginToken } from './util/user'

@@ -1,6 +1,6 @@
 import app from './app'
 
-const PORT = 81;
+const PORT = 9001;
 const HOST = '0.0.0.0';
 
 export const server = app.listen(PORT, HOST, () => {

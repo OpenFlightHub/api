@@ -2,10 +2,6 @@ rmdir /q/s dist
 mkdir dist
 robocopy "public" "dist/public" /E /NP /NFL /NJH /NJS /NS /NC /NDL
 
-::call npx.cmd @redocly/cli bundle internal@latest -o bundled.yaml
-::call npx.cmd @redocly/cli build-docs bundled.yaml
-::move "redoc-static.html" "api-docs-internal.html"
-
 ::call npx.cmd @redocly/cli bundle public@latest -o bundled.yaml
 ::call npx.cmd @redocly/cli build-docs bundled.yaml
 ::move "redoc-static.html" "dist/public/docs.html"

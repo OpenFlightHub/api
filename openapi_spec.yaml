@@ -486,7 +486,6 @@ components:
         - email
         - created_at
         - locale
-        - is_recruiter
         - registration_incomplete
       properties:
         id:
@@ -501,8 +500,6 @@ components:
         locale:
           type: string
           example: en-US
-        is_recruiter:
-          type: boolean
         registration_incomplete:
           type: boolean
 
