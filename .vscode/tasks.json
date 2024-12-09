@@ -39,9 +39,9 @@
 		},{
 			"label": "Generate Types and Schemas",
 			"type": "shell",
-			"command": "./generate_types_and_schemas.sh",
+			"command": "./dev/generate_types_and_schemas.sh",
 			"windows": {
-				"command": "./generate_types_and_schemas.cmd"
+				"command": "./dev/generate_types_and_schemas.cmd"
 			},
 			"group": {"kind": "build"},
 			"presentation": {

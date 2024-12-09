@@ -4,7 +4,7 @@ const path = require('path')
 
 const deasync = require('deasync')
 
-const srcPath = path.resolve('src')
+const srcPath = path.resolve('./src')
 
 function recursivelyFindFiles(folder, files){
     if(!files){
