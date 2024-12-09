@@ -1,0 +1,11 @@
+
+###TEXT_HEADER###
+###TEXT_MAIN###
+
+###BUTTON_TEXT###
+###BUTTON_URL###
+
+###NOTE###
+
+###FOOTER###
+###FOOTER_URL###

@@ -1,0 +1,77 @@
+
+import * as request from "supertest"
+import app from './../../app'
+import makeJestOpenAPI from './_makeJestOpenAPI'
+
+makeJestOpenAPI()
+
+
+import type * as OpenAPI from 'openapi-types'
+
+import * as fs from 'fs'
+import { generateIdempotencyToken } from "../../__test_helpers__/idempotency"
+const api : OpenAPI.OpenAPI.Document = JSON.parse(fs.readFileSync('./openapi_spec.json', {
+    encoding: 'utf-8'
+}))
+
+
+describe('general status codes', ()=>{
+
+    if(!api.paths){
+        return
+    }
+
+    for(const path of Object.keys(api.paths)){
+
+        const pathObject = api.paths[path]
+
+        for(const method of Object.keys(pathObject as object)){
+
+            const methodObject = (pathObject as object)[method]
+
+            if(methodObject.deprecated){
+                continue
+            }
+
+            it(`${method.toUpperCase()} ${path} should not return 404`, async()=>{
+
+                const req = request(app)
+
+                let func : (url: string) => request.Test = req[method]
+
+                const res = await func(path)
+                    .send()
+
+                expect(res.statusCode).not.toEqual(404)
+                expect(res).toSatisfyApiSpec()
+            })
+
+            if(methodObject.security){
+
+                it(`${method.toUpperCase()} ${path} should return 401 when no auth cookie is provided`, async()=>{
+
+                    const req = request(app)
+
+                    let func : (url: string) => request.Test = req[method]
+
+                    let prep = func(path)
+
+                    if(methodObject.parameters && methodObject.parameters.find(el => el.name === 'idempotency')){
+                        prep = prep.query({
+                            idempotency: await generateIdempotencyToken(app)
+                        })
+                    }
+
+                    const res = await prep
+                        .send()
+
+                    expect(res.statusCode).toEqual(401)
+                    expect(res).toSatisfyApiSpec()
+                })
+
+            }
+
+        }
+    }
+})
+//TODO generate generic test built from api schemas

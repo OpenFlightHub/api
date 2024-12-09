@@ -1,0 +1,293 @@
+import * as express from 'express';
+import * as asyncHandler from 'express-async-handler'
+import * as pgp from 'pg-promise'
+const db : pgp.IDatabase<any> = global.db
+
+
+import * as crypto from './../util/crypto'
+import { DBType_User, DBType_User_STATES } from '../db/DBTypes'
+import { ApiType_Id, ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost } from './../definitions/ApiTypes'
+import { ApiSchema_AuthLoginPost, ApiSchema_AuthLoginWithTokenPost, ApiSchema_AuthPasswordChangePost, ApiSchema_AuthPasswordResetPost, ApiSchema_AuthPasswordSetInitialPost, ApiSchema_AuthPasswordSetNewPost, ApiSchema_Reference } from '../definitions/ApiSchemas';
+import { GuardError } from '../ManInTheMiddleware';
+import liveUpdate from './live-update'
+import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
+import { selectUser, updateUser } from '../db/DBHelpers';
+import { resetPasswordForEmail } from '../util/user';
+
+const SESSION_TOKEN_BYTE_LENGTH = 42
+
+const router = express.Router()
+
+function delay(callback: ()=>void){
+    //TODO make delay match password hashing and user searching
+
+    setTimeout(callback, 1000 * 0.5)
+}
+
+router.post('/login', asyncHandler(async (req, res) => {
+
+    const requestBody = req.GM.guardBodySchema<ApiType_AuthLoginPost>(ApiSchema_AuthLoginPost)
+
+    let user : DBType_User
+
+    try {
+        user = await db.one('SELECT * FROM users WHERE email = ${email};', {
+            email: requestBody.username,
+        })
+    } catch {
+        delay(()=>{//delay request so people can't correlate that with email existance
+            res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
+        })
+
+        return
+    }
+
+    if(!user.password){// prevent login for users without password (e.g. invitation not yet complete)
+        delay(()=>{
+            res.status(418).send()
+        })
+
+        return
+    }
+
+    if(!isSafePassword(requestBody.password)){
+        throw GuardError._400_invalidBody('password')
+    }
+
+    const passwordMatches = await crypto.stringMatchesHash(requestBody.password, user.password)
+
+    if(!passwordMatches){
+        res.status(418).send()
+    } else {
+
+        confirmUser(user.id)
+
+        await generateSessionCookieAndSet(user.id, res)
+
+        try {
+            liveUpdate.forceLogoutUser(user.id)
+        } catch (err){
+            //ignore
+            console.log('failed to logout live-update sessions for user', user.id, err)
+        }
+
+        res.GM.guardSend(user, ApiSchema_Reference)
+    }
+
+}))
+
+
+router.post('/login-with-token', asyncHandler(async (req, res) => {
+
+    const requestBody = req.GM.guardBodySchema<ApiType_AuthLoginWithTokenPost>(ApiSchema_AuthLoginWithTokenPost)
+
+    try {
+        const user = await db.one('SELECT * FROM users WHERE login_token = ${token};', {
+            token: requestBody.token
+        }) as DBType_User
+
+        try {
+
+            confirmUser(user.id)
+
+            await generateSessionCookieAndSet(user.id, res)
+
+            try {
+                liveUpdate.forceLogoutUser(user.id)
+            } catch (err){
+                //ignore
+                console.log('failed to logout live-update sessions for user', user.id, err)
+            }
+
+
+            res.GM.guardSend(user, ApiSchema_Reference)
+        } catch (err){
+            console.error(err)
+            throw err
+        }
+
+    } catch {
+        res.status(418).send()
+    }
+}))
+
+//TODO: renew cookie maxAge?
+router.get('/check', asyncHandler(async (req, res) => {
+
+    const sessionToken = req.cookies['user-auth']
+
+    const validSessionToken = typeof sessionToken === 'string'
+    if(!validSessionToken){
+        throw GuardError._400_BadRequest('invalid session token')
+    }
+
+    try {
+        const user = await db.one('SELECT * FROM users WHERE session_token = ${sessionToken};', {
+            sessionToken
+        }) as DBType_User
+
+        res.GM.guardSend(user, ApiSchema_Reference)
+
+    } catch {
+        res.status(401).send()
+    }
+
+}))
+
+
+router.post('/password-change', asyncHandler(async (req, res) => {
+
+    const user = await req.GM.guardUserIsAuthenticated()
+
+    const body = req.GM.guardBodySchema<ApiType_AuthPasswordChangePost>(ApiSchema_AuthPasswordChangePost)
+
+    if(!isSafePassword(body.current_password)){
+        throw GuardError._400_invalidBody('current_password')
+    }
+
+
+    if(!(await stringMatchesHash(body.current_password, user.password))){
+        throw GuardError._403_Forbidden('wrong current password')
+    }
+
+    if(!isSafePassword(body.new_password)){
+        throw GuardError._400_invalidBody('new_password')
+    }
+
+    await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+
+    res.status(200)
+    res.send()
+}))
+
+router.post('/password-reset', asyncHandler(async (req, res) => {
+
+    const body = req.GM.guardBodySchema<ApiType_AuthPasswordResetPost>(ApiSchema_AuthPasswordResetPost)
+
+    await resetPasswordForEmail(body.username)
+
+    res.status(200)
+    res.send()
+}))
+
+router.post('/password-set-initial', asyncHandler(async (req, res) => {
+
+    const user = await req.GM.guardUserIsAuthenticated()
+
+    const body = req.GM.guardBodySchema<ApiType_AuthPasswordSetInitialPost>(ApiSchema_AuthPasswordSetInitialPost)
+
+    if(typeof user.password === 'string'){
+        throw GuardError._403_Forbidden('initial password already set')
+    }
+
+    await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+
+    res.status(200)
+    res.send()
+
+}))
+
+router.post('/password-set-new', asyncHandler(async (req, res) => {
+
+    const body = req.GM.guardBodySchema<ApiType_AuthPasswordSetNewPost>(ApiSchema_AuthPasswordSetNewPost)
+
+    try {
+        const user = await db.one('SELECT * FROM users WHERE reset_code = ${resetCode};', {
+            resetCode: body.code
+        }) as DBType_User
+
+        if(!isSafePassword(body.new_password)){
+            throw GuardError._400_invalidBody('new_password')
+        }
+
+        await updateUser({password: await hashString(body.new_password), reset_code: null}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+
+        res.status(200)
+        res.send()
+
+    } catch {
+        res.status(418).send()
+    }
+
+}))
+
+
+router.post('/logout', asyncHandler(async (req, res) => {
+
+    const sessionToken = req.cookies['user-auth']
+
+    try {
+        const user = await db.one('SELECT * FROM users WHERE session_token = ${sessionToken};', {
+            sessionToken
+        }) as DBType_User
+
+        try {
+            liveUpdate.forceLogoutUser(user.id)
+        } catch (err){
+            //ignore
+            console.log('failed to logout live-update sessions for user', user.id, err)
+        }
+
+        try {
+            await db.none('UPDATE users SET session_token = null WHERE id = ${id};', {
+                id: user.id
+            })
+
+            //set cookie
+            res.cookie('user-auth', 'invalid', {
+                //secure: true, TODO enable for production (but does this not kill api client sdk?)
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 42
+            })
+
+            res.status(200).send()
+
+        } catch (err){
+            console.error('failed to invalidate session cookie', err)
+            res.status(500).send()
+        }
+
+    } catch {
+        res.status(401).send()
+    }
+
+}))
+
+
+export default router
+
+
+async function generateSessionCookieAndSet(userId: ApiType_Id, res: express.Response){
+
+    const sessionToken = crypto.generateUniqueToken(SESSION_TOKEN_BYTE_LENGTH)
+
+    await db.none('UPDATE users SET session_token = ${sessionToken} WHERE id = ${id};', {
+        id: userId,
+        sessionToken
+    })
+
+    //set cookie
+    res.cookie('user-auth', sessionToken, {
+        //secure: true, TODO enable for production (but does this not kill api client sdk?)
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60 * 24
+    })
+}
+
+async function confirmUser(userId: number){
+    try {
+        const user = await selectUser(userId)
+
+        if(user.state === DBType_User_STATES.invited){
+            await updateUser({state: DBType_User_STATES.live}, pgp.as.format('WHERE id = ${id} AND (state = ${stateInvited} OR state = ${stateLive})', {
+                id: userId,
+                stateInvited: DBType_User_STATES.invited,
+                stateLive: DBType_User_STATES.live
+            }))
+        }
+    } catch (err){
+        console.error('error while confirming user', err)
+    }
+}

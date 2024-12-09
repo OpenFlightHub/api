@@ -1,0 +1,567 @@
+openapi: 3.0.3
+info:
+  x-logo:
+    url: /api/logo.png
+
+  title: OpenFlightHub - API
+  description: |-
+    # Welcome to the API!
+
+    Check out our typescript client sdk [on github](https://github.com/)
+
+    # Some important notes:
+    - HTTP Response Code 410 (Gone) is used to indicate that you reached a valid API endpoint, but the item you where looking for does not exist in the database. 404 (Not found) indicates that the API endpoint does not exist, so probably your code is wrong!
+
+    ## Path logic:
+
+    For example a `tree` has a property `apples` which is an array of `apple`.
+
+    These paths reflect some actions:
+    | Path | Method | Description |
+    | --- | --- | --- |
+    | `/tree/{id}` | GET | returns the tree data and and array of apples, but only the id of each apple, not the apple data`{apples: [{ id: "1" }, { id: "2" }]}` |
+    | `/apple/{id}` | GET | returns the apple data `{id: "1", weight: 0.2 }`|
+    | `/apple/{id}` | PATCH | modify an apple. Each property is optional, only present properties will be updated in the database. Maybe some properties cannot be changed! |
+    | `/apple/{id}` | DELETE | delete an apple |
+    | `/apple` | POST | create a new apple |
+
+    ## Request Bodies
+
+    | Method | Request body |
+    | --- | --- |
+    | GET | No |
+    | POST | No |
+    | PATCH | No |
+    | DELETE | No |
+
+    ## Ordering of data
+    Data is not guaruanteed to be ordered by id or creation date (unless endpoint specifically tells it does).
+
+    ## General Status Codes
+
+    These status codes can be returned by almost any path and are not specifically declared for each path!
+
+    ### Methods: All
+
+    * 400: you (the client) sent invalid data to the server
+    * 401: you are not authorized (but this endpoint requires you to be)
+    * 403: you do not have permission to do this
+    * 410: we understood your request but whatever you where looking for does not exist
+
+  version: 0.1.0
+externalDocs:
+  description: Learn more about Swagger Editor and OpenApi
+  url: http://swagger.io
+servers:
+  - url: https://dev.openflighthub.org/api/
+  - url: http://localhost/
+tags:
+  - name: authentication
+    description: Everything about authentication
+
+paths:
+
+  # auth
+
+  /auth/login:
+    post:
+      tags:
+        - authentication
+      summary: login as a user (with credentials)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_login_post'
+        required: true
+      responses:
+          '200':
+            description: Logged in as user
+            headers:
+              Set-Cookie:
+                $ref: '#/components/headers/user_auth'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/reference'
+          '418':
+            description: Invalid credentials
+
+          '400':
+              $ref: '#/components/responses/400'
+
+  /auth/login-with-token:
+    post:
+      tags:
+        - authentication
+      summary: login as a user (with a token)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_login_with_token_post'
+        required: true
+      responses:
+        '200':
+          description: Logged in as user
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/user_auth'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+        '418':
+          description: Invalid credentials
+
+        '400':
+            $ref: '#/components/responses/400'
+
+  /auth/check:
+    get:
+      tags:
+        - authentication
+      summary: Check if i am still authenticated (via the cookie)
+      responses:
+        '200':
+          description: You are authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '401':
+          description: You are not authenticated
+
+
+  /auth/password-change:
+    post:
+      tags:
+        - authentication
+      summary: change your password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_password_change_post'
+        required: true
+      responses:
+        '200':
+          description: password changed
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+      security:
+        - user_auth: []
+
+
+  /auth/password-reset:
+    post:
+      tags:
+        - authentication
+      summary: request a password reset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_password_reset_post'
+        required: true
+      responses:
+        '200':
+          description: password reset process started
+
+        '400':
+          $ref: '#/components/responses/400'
+
+
+  /auth/password-set-initial:
+    post:
+      tags:
+        - authentication
+      summary: set your password the first time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_password_set_initial_post'
+        required: true
+      responses:
+        '200':
+          description: new password set
+        '418':
+          description: Invalid code
+
+        '400':
+          $ref: '#/components/responses/400'
+      security:
+        - user_auth: []
+
+  /auth/password-set-new:
+    post:
+      tags:
+        - authentication
+      summary: set your new password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_password_set_new_post'
+        required: true
+      responses:
+        '200':
+          description: new password set
+        '418':
+          description: Invalid code
+
+        '400':
+          $ref: '#/components/responses/400'
+
+  /auth/register:
+    post:
+      deprecated: true
+      tags:
+        - authentication
+      summary: Register as new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_register_post'
+        required: true
+      responses:
+        '200':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+  /auth/logout:
+    post:
+      tags:
+        - authentication
+      summary: logout (delete auth cookie)
+      responses:
+          '200':
+            description: Logged out
+            headers:
+              Set-Cookie:
+                $ref: '#/components/headers/user_auth'
+      security:
+        - user_auth: []
+
+  # user
+
+  /user/{user_id}:
+    get:
+      tags:
+        - user
+      summary: Get a user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns a user definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - user
+      summary: Modify an existing user. Each property is optional, only present properties will be updated in the database. Some properties cannot be changed!
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_patch'
+        required: true
+      responses:
+        '200':
+          description: User modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_self'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /user/self:
+    get:
+      tags:
+        - user
+      summary: Get your user information
+      responses:
+        '200':
+          description: Returns your user definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_self'
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - user_auth: []
+
+components:
+
+
+  schemas:
+
+    # data type
+
+    id:
+      type: number
+      example: 42
+    time:
+      type: string
+      format: time
+      description: hh:mm:ss
+      example: "01:00:00"
+    timestamptz:
+      type: string
+      format: timestamptz
+      description: ISO 8601 format
+      example: "2023-12-11 23:06:52.7879+00"
+
+    email:
+      type: string
+      example: "john.doe@example.com"
+
+    password:
+      type: string
+      description: Maximum length is 72 Bytes (utf-8).
+      example: "j9876sa1kjhqsa6dtasd12="
+
+    # general
+
+    reference:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+
+    references:
+      type: array
+      items:
+        $ref: '#/components/schemas/reference'
+
+    #routes
+
+    # auth
+
+    auth_login_post:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          $ref: '#/components/schemas/email'
+        password:
+          type: string
+
+    auth_login_with_token_post:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+
+    auth_register_post:
+      deprecated: true
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
+
+    auth_password_change_post:
+      type: object
+      required:
+        - current_password
+        - new_password
+      properties:
+        current_password:
+          $ref: '#/components/schemas/password'
+        new_password:
+          $ref: '#/components/schemas/password'
+
+
+    auth_password_reset_post:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          $ref: '#/components/schemas/email'
+
+    auth_password_set_initial_post:
+      type: object
+      required:
+        - new_password
+      properties:
+        new_password:
+          $ref: '#/components/schemas/password'
+
+    auth_password_set_new_post:
+      type: object
+      required:
+        - new_password
+        - code
+      properties:
+        new_password:
+          $ref: '#/components/schemas/password'
+        code:
+          type: string
+
+
+
+    # user
+
+    user:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+          example: Harry Potter
+
+
+    user_self:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - created_at
+        - locale
+        - is_recruiter
+        - registration_incomplete
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+          example: Harry Potter
+        email:
+          $ref: '#/components/schemas/email'
+        created_at:
+          $ref: '#/components/schemas/timestamptz'
+        locale:
+          type: string
+          example: en-US
+        is_recruiter:
+          type: boolean
+        registration_incomplete:
+          type: boolean
+
+
+    user_patch:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        email:
+          $ref: '#/components/schemas/email'
+        locale:
+          type: string
+          example: en-US
+
+
+
+  responses:
+    '400':
+      description: Bad Request (Invalid input)
+      content:
+        text:
+          schema:
+            type: string
+            example: '.x'
+            description: the property `x` is invalid
+
+    '401':
+      description: Unauthorized (this endpoint requires authorization)
+      content:
+        text:
+          schema:
+            type: string
+
+    '403':
+      description: Forbidden (you do not have permission to do this)
+      content:
+        text:
+          schema:
+            type: string
+
+
+    '410':
+      description: Gone (we understood your request but whatever you where looking for does not exist)
+      content:
+        text:
+          schema:
+            type: string
+
+  headers:
+    user_auth:
+      description: used for authentication of a user
+      schema:
+        type: string
+        example: user-auth=abcde12345; Path=/; HttpOnly
+
+  securitySchemes:
+    user_auth:
+      type: apiKey
+      in: cookie
+      name: user-auth

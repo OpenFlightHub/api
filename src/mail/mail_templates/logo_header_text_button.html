@@ -1,0 +1,175 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Mail Template</title>
+    <link href='https://openflighthub.org/Blinker/blinker.css' rel='stylesheet' type='text/css'/>
+    <style type="text/css">
+
+        @media screen { /* hides this rule from unsupported clients */
+           @import url('https://openflighthub.org/Blinker/blinker.css');
+       }
+
+       @media only screen and (max-width: 660px){
+        /* CLIENT-SPECIFIC MOBILE STYLES */
+        [summary="mail_table"], [summary="mail_main"], [summary="mail_footer"]{
+            -webkit-text-size-adjust:none;
+        } /* Webkit platforms */
+
+        [summary="mail_main"]{
+            width: 90%  !important;
+        }
+        [summary="mail_mainText"]{
+            padding-left: 5% !important;
+        }
+        [summary="mail_logo"]{
+            max-width: 90% !important;
+        }
+        [summary="mail_footer"]{
+            width: 90% !important;
+        }
+    }
+
+    @media only screen and (min-width: 660px){
+        [summary="mail_button_thisComment"] table {
+            width: 250px!important;
+            margin: auto;
+        }
+        [summary="no_display_above_660px"] {
+            overflow: hidden;
+            display: none;
+            width: 0px;
+        }
+    }
+    </style>
+    <style type="text/css">
+    #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+    .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+    body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+    table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+    img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+    </style>
+    </head>
+    <body id="evMode" summary="body" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="width: 100%; min-width: 100%; -webkit-text-size-adjust:none; font-family: 'Blinker', Arial; background-color: ###BACKGROUND###; margin: 0; padding: 0;">
+        <center>
+            <table style="border-collapse: collapse;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                    <tr style="width: 100%;">
+                        <td style="height: 30px; background-color: ###BACKGROUND###;"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="border-collapse: collapse;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tbody>
+                                     <tr>
+                                        <td style="width: 30px; background-color: ###BACKGROUND###;"></td>
+                                        <td style="background-color: ###BACKGROUND###;">
+                                            <div>
+                                                <table summary="mail_main" valign="top" style="margin: auto; padding: 0; max-width: 600px; width: 600px; border-left: ###SHADOW###; border-top: ###SHADOW###; border-right: ###SHADOW###; border-bottom: ###SHADOW###;" height="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                    <tbody>
+                                                        <tr style="height: 80px;">
+                                                            <td>
+                                                                <table class="mail_table_image" style="border-collapse: collapse; background-color: ###LOGO_BACKGROUND_COLOR###; margin-top: 0px; padding: 0px; width: 100%; height: 80px;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td style="padding-top: 20px; padding-bottom: 20px; text-align: center; vertical-align: middle;" align="center">
+                                                                                <div summary="mail_logo" style="max-width: 213px !important; margin: auto !important; height: 30px !important; background-repeat: no-repeat !important; background-position: 50% center  !important; background-origin: content-box;">
+                                                                                    <img src="###LOGO_SRC###" style="z-index: 2; position: relative; top: 0px; left: 0px; height: auto; max-width: ###LOGO_MAX_WIDTH###; max-height: ###LOGO_MAX_HEIGHT###; border: 0; line-height: 100%; outline: none; text-decoration: none; background-color: transparent; color: ###LOGO_ALT_COLOR###" alt="###LOGO_ALT###" />
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="height: 100px;">
+                                                            <td>
+                                                                <table class="mail_table_content" style="border-collapse: collapse; border-top: 1px solid ###LOGO_BORDER_BOTTOM_COLOR###; line-height: 24px; width: 100%; padding: 0; margin: 0;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table class="mail_table_content_text" style="border-collapse: collapse; background-color: ###BOTTOM_BACKGROUND###; width: 100%;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td summary="mail_mainText" style="text-align: left; vertical-align: middle; padding: 30px 5% 30px 5%;" align="center"><span style="color: ###TEXT_HEADER_COLOR###; font-family: 'Blinker', Arial; font-size: ###TEXT_HEADER_SIZE###;">###TEXT_HEADER###</span> <br /> <br /> <span style="color: ###TEXT_MAIN_COLOR###; font-family: 'Blinker', Arial; font-size: ###TEXT_MAIN_SIZE###;">###TEXT_MAIN###</span></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table style="border-collapse: collapse; margin: 0px; padding: 0px; padding-bottom: 30px; width: 100%; background-color: ###BOTTOM_BACKGROUND###;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td style="width: 5%;"></td>
+                                                                                            <td>
+                                                                                                <table class="mail_table_content_buttons" style="border-collapse: collapse; margin: 0px; padding: 0px; width: 100%;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                                                    <tbody>
+                                                                                                        <tr summary="mail_button_thisComment" style="font-size: 16px; text-align: center; vertical-align: middle; width: 100%; min-width: 100%;">
+                                                                                                            <td>
+                                                                                                                <table style="text-align: center; border: ###BUTTON_BORDER###; border-radius: ###BUTTON_RADIUS###; padding: ###BUTTON_PADDING###; width: 100%; background-color: ###BUTTON_BACKGROUND###;" width="100%">
+                                                                                                                    <tbody>
+                                                                                                                        <tr>
+                                                                                                                            <td><a href="###BUTTON_URL###" style="font-size: ###BUTTON_SIZE###; display: block; line-height: ###BUTTON_SIZE###; text-decoration: none; color: ###BUTTON_COLOR###; word-break: break-all; word-wrap: break-word; width: 100%;"> <strong style="text-decoration: none; color: ###BUTTON_COLOR###; font-family: 'Blinker', Arial; font-size: ###BUTTON_SIZE###;">###BUTTON_TEXT###</strong></a></td>
+                                                                                                                        </tr>
+                                                                                                                    </tbody>
+                                                                                                                </table>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                            <td style="width: 5%;"></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table class="mail_table_content_space" style="height: 25px; width: 100%; background-color: ###BOTTOM_BACKGROUND###;">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div>
+                                                <table summary="mail_footer" class="mail_table_footer_text" valign="top" style="margin: auto; padding: 0; max-width: 600px; width: 600px;" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td valign="top"><br /> <span style="font-size: ###NOTE_SIZE###; color: ###NOTE_COLOR###; font-family: 'Blinker', Arial; line-height: 15px;">###NOTE###</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top"><br /> <br /> <a href="###FOOTER_URL###" style="font-size: ###FOOTER_SIZE###; color: ###FOOTER_COLOR###; font-family: 'Blinker', Arial; text-decoration: underline; line-height: ###FOOTER_SIZE###;">###FOOTER###</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td style="width: 30px; background-color: ###BACKGROUND###;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 30px; background-color: ###BACKGROUND###;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+    </body>
+</html>
