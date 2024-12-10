@@ -47,7 +47,7 @@ router.patch('/:user_id', asyncHandler(async (req, res) => {
 
     //TODO add additional check for when user wants to change his email (and let them confirm it)
 
-    const updatedUser = await updateUser(newUser, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+    const updatedUser = await updateUser(newUser, user.id)
 
     Object.assign(updatedUser, {registration_incomplete: typeof updatedUser.password !== 'string'})
 

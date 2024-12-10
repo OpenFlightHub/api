@@ -151,6 +151,14 @@ app.use('/auth', authRoute)
 import userRoute from './routes/user'
 app.use('/user', userRoute)
 
+
+import workspaceRoute from './routes/workspace'
+app.use('/workspace', workspaceRoute)
+
+import connectRoute from './routes/connect'
+app.use('/connect', connectRoute)
+
+
 //websockets
 
 import liveUpdateRoute from './routes/live-update'

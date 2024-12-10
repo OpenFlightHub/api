@@ -1,6 +1,6 @@
 import { NextFunction, RequestHandler, Request, Response, Express } from 'express'
 import { validate, filterObject, FilterError } from './util/schema'
-import { DBType_User } from './db/DBTypes'
+import { DBType_User, DBType_Connection, DBType_WorkspacePermission } from './db/DBTypes'
 import * as pgp from 'pg-promise'
 import { ApiType_Id } from './definitions/ApiTypes'
 import { JSONSchema } from 'json-schema-to-typescript'
@@ -83,6 +83,18 @@ export function getUserForSessionToken(token: string) : Promise<false | DBType_U
     })
 }
 
+export function getConnectionForAccessKey(accessKey: string) : Promise<false | DBType_Connection> {
+    return new Promise(resolve=>{
+        db.one('SELECT * FROM connections WHERE access_key = ${accessKey};', {
+            accessKey
+        }).then(result => {
+            resolve(result)
+        }).catch(()=>{
+            resolve(false)
+        })
+    })
+}
+
 
 export class GuardedMiddleware {
 
@@ -91,6 +103,9 @@ export class GuardedMiddleware {
 
     private readonly requestBody: any
     private readonly requestParams: any
+
+    currentUser: DBType_User | undefined
+    currentConnection: DBType_Connection | undefined
 
     constructor(req: Request, res: Response){
         this.req = req
@@ -116,7 +131,54 @@ export class GuardedMiddleware {
             throw GuardError._401_Unauthorized()
         }
 
+        this.currentUser = user
+
         return user
+    }
+
+    async guardUserHasPermissionForWorkspace(workspaceId: number){
+        const user = await this.getCurrentUser()
+
+        const permission = await db.oneOrNone<DBType_WorkspacePermission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
+            userId: user.id,
+            workspaceId
+        })
+
+        return !!permission
+    }
+
+    async getCurrentUser(){
+        if(this.currentUser){
+            return this.currentUser
+        } else {
+            return await this.guardUserIsAuthenticated()
+        }
+    }
+
+    async guardConnectIsAuthenticated() : Promise<DBType_Connection> {
+        const cookie = this.req.cookies['connect-auth']
+
+        if(!cookie){
+            throw GuardError._401_Unauthorized()
+        }
+
+        const connection = await getConnectionForAccessKey(cookie)
+
+        if(connection === false){ //invalid token
+            throw GuardError._401_Unauthorized()
+        }
+
+        this.currentConnection = connection
+
+        return connection
+    }
+
+    async getCurrentConnection(){
+        if(this.currentConnection){
+            return this.currentConnection
+        } else {
+            return await this.guardConnectIsAuthenticated()
+        }
     }
 
 

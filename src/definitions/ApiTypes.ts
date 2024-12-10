@@ -112,3 +112,56 @@ export type ApiType_UserPatch = {
 }
 
 
+export type ApiType_Workspace = {
+    id: number;
+    name: string;
+}
+
+
+export type ApiType_WorkspacePatch = {
+    name?: string;
+}
+
+
+export type ApiType_WorkspacesPost = {
+    name: string;
+}
+
+
+export type ApiType_WorkspaceConnection = {
+    id: string;
+    remote_controller_id?: number;
+    drone_id?: number;
+}
+
+
+export type ApiType_WorkspaceConnectionsPost = {
+    name: string;
+}
+
+
+export type ApiType_WorkspaceConnectionsPostResponse = {
+    id: string;
+    secret: string;
+}
+
+
+export type ApiType_ConnectAuthLoginPost = {
+    id: string;
+    secret: string;
+}
+
+
+export type ApiType_ConnectWorkspace = {
+    id: string;
+    name: string;
+}
+
+
+export type ApiType_ConnectDjiPilot2SdkConfig = {
+    app_id: string;
+    app_key: string;
+    app_license: string;
+}
+
+

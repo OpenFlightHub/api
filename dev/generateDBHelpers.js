@@ -147,15 +147,23 @@ export function insert${normalizeTableName(tableName)}(values: DBInsert_${dbType
 }`
 
     exportString += `\n\n/**
- @param whereCondition shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = \${id}', {id: 42})
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = \${id}', {id: 42})
 */
-export function update${normalizeTableName(tableName)}(values: DBUpdate_${dbTypeName}, whereCondition: string){
-    whereCondition = whereCondition.trim()
-    if(whereCondition.endsWith(';')){
-        whereCondition = whereCondition.substring(0, whereCondition.length - 1)
-    }
+export function update${normalizeTableName(tableName)}<T extends number | string>(values: DBUpdate_${dbTypeName}, idOrWhereCondition: T): T extends number ? Promise<DBType_${dbTypeName}> : Promise<DBType_${dbTypeName}[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBType${dbTypeName}>(db.$config.pgp.helpers.update(values,  ${columSetNameUpdate}) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
 
-    return db.one<DBType_${dbTypeName}>(db.$config.pgp.helpers.update(values, ${columSetNameUpdate}) + ' ' + whereCondition + ' RETURNING *')
+        //@ts-ignore
+        return db.manyOrNone<DBType_${dbTypeName}>(db.$config.pgp.helpers.update(values,  ${columSetNameUpdate}) + ' ' + whereCondition + ' RETURNING *')
+    }
 }
 
 export function delete${normalizeTableName(tableName)}(id: number){

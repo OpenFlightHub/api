@@ -41,3 +41,48 @@ export type DBType_User = {
 }
 
 
+export type DBType_Workspace = {
+  id: number;
+  name: string;
+}
+
+
+export type DBType_WorkspacePermission = {
+  user_id: number;
+  workspace_id: number;
+}
+
+
+export type DBType_Connection = {
+  id: number;
+  /**
+   * used as credential together with id
+   */
+  access_key: string;
+  workspace_id: number;
+  remote_controller_id?: number;
+  drone_id?: number;
+}
+
+
+export type DBType_RemoteController = {
+  id: number;
+  serial_number: string;
+}
+
+
+export type DBType_Drone_TypeType = 0
+export const DBType_Drone_TYPES = {
+  dji_mavic_3: 0 as DBType_Drone_TypeType
+}
+export type DBType_Drone = {
+  id: number;
+  serial_number: string;
+  name: string;
+  /**
+   * 0 = dji mavic 3
+   */
+  type: DBType_Drone_TypeType;
+}
+
+

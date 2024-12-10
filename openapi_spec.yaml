@@ -342,6 +342,360 @@ paths:
       security:
         - user_auth: []
 
+
+
+  # workspace
+
+  /workspace/my-workspaces:
+    get:
+      tags:
+        - workspace
+      summary: Get all your workspaces
+      responses:
+        '200':
+          description: Returns your workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/workspace'
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - user_auth: []
+
+  /workspace:
+    post:
+      tags:
+        - workspace
+      summary: Create a workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspaces_post'
+        required: true
+      responses:
+        '200':
+          description: Created workspace successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+      security:
+        - connect_auth: []
+
+  /workspace/{workspace_id}:
+    get:
+      tags:
+        - workspace
+      summary: Get a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspace'
+
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - workspace
+      summary: Modify a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_patch'
+        required: true
+      responses:
+        '200':
+          description: Modified workspace successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspace'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    delete:
+      tags:
+        - workspace
+      summary: Delete a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Deleted workspace successfully
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/connections/list:
+    get:
+      tags:
+        - workspace
+      summary: Get all connections for this workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the connections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/workspace_connection'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    post:
+      tags:
+        - workspace
+      summary: Create a new connection for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_connections_post'
+      responses:
+        '200':
+          description: Returns the connection credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/connections/{connection_id}:
+    get:
+      tags:
+        - workspace
+      summary: Get a connection
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the connection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspace_connection'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    delete:
+      tags:
+        - workspace
+      summary: Delete a connection
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Deleted the connection successfully
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  # connect
+
+
+  /connect/auth/check:
+    get:
+      tags:
+        - connect
+      summary: Check if the credentials are valid
+      responses:
+        '200':
+          description: are valid
+
+        '401':
+          $ref: '#/components/responses/401'
+
+  /connect/auth/login:
+    post:
+      tags:
+        - connect
+      summary: Login with credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connect_auth_login_post'
+        required: true
+      responses:
+        '200':
+          description: Logged in successfully
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/connect_auth'
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - connect_auth: []
+
+
+  /connect/my-workspace:
+    get:
+      tags:
+        - connect
+      summary: Get information about the workspace i am connected to
+      responses:
+        '200':
+          description: either `false` (no workspace connected) or the workspace
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/connect_workspace'
+                  - type: boolean
+                    example: false
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - connect_auth: []
+
+
+  # dji pilot 2
+
+  /connect/dji-pilot-2/sdk-config:
+    get:
+      tags:
+        - connect-dji-pilot-2
+      summary: Get config required for the dji bridge sdk
+      responses:
+        '200':
+          description: Returns the config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect_dji_pilot_2_sdk_config'
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - connect_auth: []
+
+
 components:
 
 
@@ -517,6 +871,110 @@ components:
           example: en-US
 
 
+    # workspace
+
+
+    workspace:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+
+
+    workspace_patch:
+      type: object
+      properties:
+        name:
+          type: string
+
+
+    workspaces_post:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    workspace_connection:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        remote_controller_id:
+          $ref: '#/components/schemas/id'
+        drone_id:
+          $ref: '#/components/schemas/id'
+
+
+
+    workspace_connections_post:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    workspace_connections_post_response:
+      type: object
+      required:
+        - id
+        - secret
+      properties:
+        id:
+          type: string
+        secret:
+          type: string
+
+    # connect
+
+    connect_auth_login_post:
+      type: object
+      required:
+        - id
+        - secret
+      properties:
+        id:
+          type: string
+        secret:
+          type: string
+
+
+    connect_workspace:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    connect_dji_pilot_2_sdk_config:
+      type: object
+      required:
+        - app_id
+        - app_key
+        - app_license
+      properties:
+        app_id:
+          type: string
+        app_key:
+          type: string
+        app_license:
+          type: string
+
+
+
 
   responses:
     '400':
@@ -556,9 +1014,18 @@ components:
       schema:
         type: string
         example: user-auth=abcde12345; Path=/; HttpOnly
+    connect_auth:
+      description: used for authentication of a connection
+      schema:
+        type: string
+        example: connect-auth=abcde12345; Path=/; HttpOnly
 
   securitySchemes:
     user_auth:
       type: apiKey
       in: cookie
       name: user-auth
+    connect_auth:
+      type: apiKey
+      in: cookie
+      name: connect-auth

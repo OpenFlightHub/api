@@ -163,7 +163,7 @@ export async function getLoginToken(userId: ApiType_Id){
     } else {
         const updatedUser = await updateUser({
             login_token: generateUrlSafeToken()
-        }, pgp.as.format('WHERE id = ${userId}', {userId}))
+        }, userId)
 
         return updatedUser.login_token
     }
@@ -178,7 +178,7 @@ export async function makePasswordResetCode(userId: ApiType_Id){
 
     const updatedUser = await updateUser({
         reset_code: generateUrlSafeToken()
-    }, pgp.as.format('WHERE id = ${userId}', {userId}))
+    }, userId)
 
     return updatedUser.reset_code
 }

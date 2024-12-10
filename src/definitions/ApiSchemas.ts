@@ -248,3 +248,141 @@ export const ApiSchema_UserPatch : JSONSchema  = {
     }
 }
 
+export const ApiSchema_Workspace : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspacePatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspacesPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name"
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceConnection : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id"
+    ],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "remote_controller_id": {
+            "type": "number",
+            "example": 42
+        },
+        "drone_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceConnectionsPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name"
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "secret"
+    ],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "secret": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_ConnectAuthLoginPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "secret"
+    ],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "secret": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_ConnectWorkspace : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name"
+    ],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_ConnectDjiPilot2SdkConfig : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "app_id",
+        "app_key",
+        "app_license"
+    ],
+    "properties": {
+        "app_id": {
+            "type": "string"
+        },
+        "app_key": {
+            "type": "string"
+        },
+        "app_license": {
+            "type": "string"
+        }
+    }
+}
+
