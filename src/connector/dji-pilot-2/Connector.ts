@@ -7,7 +7,6 @@ export default class Connector  {
     private eventManager = new PublicEventManager<{[key: string]: {
         connectionId: number
         message: Message_Base
-        callback?: ResponseCallback
     }}>()
 
     private handleMqttPacket(connectionId: number, packet: PublishPacket){
@@ -59,7 +58,45 @@ export default class Connector  {
         })
     }
 
-    onMessage_Status(callback: EventCallbackWithResponse<Message_DeviceToCloud_Status, ResponseCallback_DeviceToCloud_Status>){
+    onMessage_Test = this.makeEventFunction<Message_DeviceToCloud_Test>('test')
+
+    private makeEventFunction<M extends Message_Base>(eventName: string){
+        return (callback: EventCallback<M>)=>{
+            this.eventManager.addListener(eventName, (c)=>{
+                callback(c.connectionId, c.message as M)
+            })
+        }
+    }
+
+    onMessage_TestWithCallback = this.makeEventFunctionWithCallback<Message_DeviceToCloud_TestWithCallback, Response_DeviceToCloud_TestWithCallback>('test-with-callback')
+
+    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string){
+        return (callback: EventCallbackWithResponse<M, R>)=>{
+            this.eventManager.addListener(eventName, (c)=>{
+                callback(c.connectionId, c.message as M, (response: R)=>{
+                    this.respondToMessage(c.connectionId, c.message, response)
+                })
+            })
+        }
+    }
+
+
+    trigger_testWithCallback(){
+        this.eventManager.dispatch('test-with-callback', {
+            connectionId: 42,
+            message: {
+                tid: 'tid',
+                bid: 'bid',
+                timestamp: Date.now(),
+                gateway: 'gateway',
+                data: {
+                    test_with_callback: true
+                }
+            }
+        })
+    }
+
+    onMessage_Status(callback: EventCallbackWithResponse<Message_DeviceToCloud_Status, Response_DeviceToCloud_TestWithCallback>){
         this.eventManager.addListener('status', (c) => {
             callback(c.connectionId, c.message as Message_DeviceToCloud_Status, (response)=>{
                 this.respondToMessage(c.connectionId, c.message, response)
@@ -67,8 +104,8 @@ export default class Connector  {
         })
     }
 
-    private respondToMessage<OM extends Message_Base, R extends Object>(connectionId: number, originalMessage: OM, response: R){
-        const responseMessage: ResponseMessage_Base = {
+    private respondToMessage<OM extends Message_Base, R extends Response>(connectionId: number, originalMessage: OM, response: R){
+        const responseMessage: Response_Base = {
             tid: originalMessage.tid,
             bid: originalMessage.bid,
             timestamp: Date.now(),
@@ -84,25 +121,20 @@ export default class Connector  {
         }
 
         //TODO send message
+        console.log('TODO', 'respondToMessage', connectionId, responseMessage)
     }
 
-    private makeResponseCallback<M extends Message_Base, C extends ResponseCallback, ECWR extends EventCallbackWithResponse<M, C>>(eventCallback: ECWR){
-        return function(){
+    // private makeResponseCallback<M extends Message_Base, C extends ResponseCallback, ECWR extends EventCallbackWithResponse<M, C>>(eventCallback: ECWR){
+    //     return function(){
 
-        }
-    }
+    //     }
+    // }
 }
 
 
 
 type EventCallback<M extends Message_Base> = (connectionId: number, message: M) => void
-type EventCallbackWithResponse<M extends Message_Base, C extends ResponseCallback> = (connectionId: number, message: M, callback: C) => void
-
-type ResponseCallback = Function
-
-type ResponseCallback_DeviceToCloud_Status = (data: {result: number}) => void
-
-
+type EventCallbackWithResponse<M extends Message_Base, C extends Object> = (connectionId: number, message: M, callback: (data: C) => void) => void
 
 
 interface Message_Base {// coming from device to cloud
@@ -113,8 +145,9 @@ interface Message_Base {// coming from device to cloud
     data: {}
 }
 
+type Response = Object
 
-interface ResponseMessage_Base {// respons from cloud back to device
+interface Response_Base {// respons from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
     timestamp: number // the time the message was sent (unix milliseconds)
@@ -146,4 +179,22 @@ type Message_DeviceToCloud_Status_SubDevice = {
     device_secret: string,
     nonce: string,
     version: number
+}
+
+type Response_DeviceToCloud_Status = (data: {result: number}) => void
+
+
+
+
+//TODO remove
+
+interface Message_DeviceToCloud_Test extends Message_Base {
+    test: true
+}
+
+interface Message_DeviceToCloud_TestWithCallback extends Message_Base {
+    test_with_callback: true
+}
+type Response_DeviceToCloud_TestWithCallback = {
+    test_with_callback_response: boolean
 }
