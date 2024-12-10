@@ -11,6 +11,11 @@ connector.onMessage_Status((connectionId, message, respond)=>{
     console.log('onMessage_Status', connectionId, message)
 
     respond({
-        result: 0
+        method: 'update_topo',
+        data: {
+            result: 0
+        }
     })
 })
+
+export const handleMqttPacket = connector.handleMqttPacket.bind(connector)

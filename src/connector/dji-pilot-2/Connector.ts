@@ -1,44 +1,34 @@
-import { PublishPacket } from "aedes";
+import { Client, PublishPacket } from "aedes";
 import { PublicEventManager } from "../../util/event_manager";
+import { randomUUID } from "crypto";
 
 
 export default class Connector  {
 
     private eventManager = new PublicEventManager<{[key: string]: {
+        client: Client
         connectionId: number
         message: Message_Base
     }}>()
 
     private validEvents = new Array<string>()
 
-    handleMqttPacket(connectionId: number, packet: PublishPacket){
+    handleMqttPacket(client: Client, connectionId: number, packet: PublishPacket){
 
         const message = JSON.parse(packet.payload.toString())
 
         const topic = packet.topic
+        const topicMatch = topic.match(/^([^\/]+\/product\/)[^/]+\/(.*)$/)
 
-        const topicParts = topic.split('/')
-        if(topicParts.length < 4){
-            throw new Error('unsupported topic: ' + topic)
+        if(!topicMatch){
+            throw new Error('unsupported topic ' + topic)
         }
 
-        const topLevel = topicParts[0]
-        if(topLevel !== 'thing' && topLevel !== 'sys'){
-            throw new Error('unsupported topic: topLevel ' + topLevel)
-        }
+        const eventName = topicMatch[1] + topicMatch[2]
 
-        const secondLevel = topicParts[1]
-        if(secondLevel !== 'product'){
-            throw new Error('unsupported topic: secondLevel ' + secondLevel)
-        }
-
-        const clientId = topicParts[2]
-
-        const remaining = topicParts.slice(3).join('/')
-
-
-        if(this.validEvents.includes(remaining)){
-            this.eventManager.dispatch(remaining, {
+        if(this.validEvents.includes(eventName)){
+            this.eventManager.dispatch(eventName, {
+                client,
                 connectionId,
                 message
             })
@@ -65,21 +55,26 @@ export default class Connector  {
         }
     }
 
-    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string){
+    /**
+     *
+     * @param responseEventName special string of the format "thing/product/$/property" where $ will be replaced with the client id automatically
+     * @returns
+     */
+    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string, responseEventName: string, responseBaseData?: Record<string, any>){
         this.registerEvent(eventName)
 
         return (callback: EventCallbackWithResponse<M, R>)=>{
             this.eventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M, (response: R)=>{
-                    this.respondToMessage(c.connectionId, c.message, response)
+                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, Object.assign(response, responseBaseData))
                 })
             })
         }
     }
 
-    private respondToMessage<OM extends Message_Base, R extends Response>(connectionId: number, originalMessage: OM, response: R){
+    private respondToMessage<OM extends Message_Base, R extends Response>(client: Client, connectionId: number, originalMessage: OM, responseEventName: string, response: R){
         const responseMessage: Response_Base = {
-            tid: originalMessage.tid,
+            tid: originalMessage.tid,//randomUUID(),
             bid: originalMessage.bid,
             timestamp: Date.now(),
             data: {}
@@ -93,15 +88,31 @@ export default class Connector  {
             }
         }
 
-        //TODO send message
-        console.log('TODO', 'respondToMessage', connectionId, responseMessage)
+        const topic = responseEventName.replace('$', client.id)
+
+        client.publish({
+            cmd: 'publish',
+            dup: false,
+            qos: 1,
+            retain: false,
+            topic,
+            payload: JSON.stringify(responseMessage)
+        }, (err)=>{
+            if(err){
+                console.warn('failed to send response to', connectionId, err)
+            } else {
+                console.log('responded to #' + topic, connectionId, responseMessage)
+            }
+        })
     }
 
     // definitions
 
-    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('state')
+    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('status')
+    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('sys/product/status', 'sys/product/$/status_reply', {
+        method: 'update_topo'
+    })
 
 }
 
@@ -156,5 +167,7 @@ type Message_DeviceToCloud_Status_SubDevice = {
 }
 
 interface Response_DeviceToCloud_Status extends Response {
-    result: number
+    data: {
+        result: number
+    }
 }
