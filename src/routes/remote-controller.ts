@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone } from '../db/DBHelpers';
+import { selectDrone, selectRemoteController } from '../db/DBHelpers';
 import { ApiSchema_RemoteController } from '../definitions/ApiSchemas';
 import { DBType_Connection } from '../db/DBTypes';
 const db : pgp.IDatabase<any> = global.db
@@ -34,7 +34,7 @@ router.get('/:remote_controller_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
     const drone = await req.GM.guardDBGone(()=>{
-        return selectDrone(remoteControllerId)
+        return selectRemoteController(remoteControllerId)
     })
 
     res.GM.guardSend(drone, ApiSchema_RemoteController)
