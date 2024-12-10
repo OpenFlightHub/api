@@ -40,7 +40,7 @@ db.connect({
         process.exit(1)
     }
 }).then(sco => {
-    return liveUpdateRoute.setupNotifications(sco)
+    return liveRoute.setupNotifications(sco)
 }).catch(error => {
     console.error(error)
     process.exit(1)
@@ -170,8 +170,8 @@ app.use('/link', linkRoute)
 
 //websockets
 
-import liveUpdateRoute from './routes/live-update'
-app.use('/live-update', liveUpdateRoute.router)
+import liveRoute from './routes/live'
+app.use('/live', liveRoute.router)
 
 
 // 404 handler at almost the end of the use() chain

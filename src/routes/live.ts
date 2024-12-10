@@ -14,7 +14,7 @@ const listeners = new Map<String, Map<String, Number[]>>()
 let clientIdCounter = 1
 const clients: {id: number, userId: number, ws: ws.WebSocket, listeners: Map<String, String[]>}[] = []
 
-//TODO hidden fiels like session.result_attachment_set_id will also trigger a change event, but the api data will still be the same (because that field is hidden)
+//TODO hidden fields like session.result_attachment_set_id will also trigger a change event, but the api data will still be the same (because that field is hidden)
 //TODO on the other side, adding a result attachment will not trigger a change but it should ...
 
 const router = express.Router()
