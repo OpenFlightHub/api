@@ -10,15 +10,15 @@ const IS_TEST_ENVIRONMENT = process.env.JEST_WORKER_ID !== undefined
 // Documentation:
 // https://kazupon.github.io/vue-i18n/guide/formatting.html
 
-import * as deasync from 'deasync'
-import * as i18next from 'i18next'
-import * as Backend from 'i18next-fs-backend'
+import deasync from 'deasync'
+import i18next, { TFunction, TOptions } from 'i18next'
+import Backend from 'i18next-fs-backend'
 import {lstatSync, readdirSync} from 'fs'
 import {join, resolve} from 'path'
 
 const FALLBACK_LANG = 'en'
 
-let i18n : i18next.TFunction
+let i18n : TFunction
 
 if(!IS_TEST_ENVIRONMENT){
     const languages = readdirSync(resolve('i18n')).filter((fileName) => {
@@ -56,8 +56,8 @@ if(!IS_TEST_ENVIRONMENT){
 
 function $t(key: string | string[]) : string
 function $t(key: string | string[], lang: string) : string
-function $t(key: string | string[], lang: string, options: i18next.TOptions): string
-function $t(key: string | string[], lang: string, defaultValue: string, options: i18next.TOptions): string
+function $t(key: string | string[], lang: string, options: TOptions): string
+function $t(key: string | string[], lang: string, defaultValue: string, options: TOptions): string
 function $t(...args: any[]) : string {
 
     if(IS_TEST_ENVIRONMENT){

@@ -1,6 +1,5 @@
 
-
-import * as express from 'express'
+import express from 'express'
 
 import SecretsLoader from './util/SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
@@ -16,7 +15,7 @@ setupMail(secrets.mail_hostname, secrets.mail_port, secrets.mail_secure, secrets
     console.log('mail is setup')
 })
 
-import * as pgp from 'pg-promise'
+import pgp from 'pg-promise'
 const db = pgp({
     error: (error)=>{
         if(error.code === 'ECONNREFUSED' || error.routine === 'auth_failed'){
@@ -58,7 +57,7 @@ import { GuardError } from './ManInTheMiddleware'
 const app = express();
 export default app //for testing
 
-import * as expressWs from 'express-ws'
+import expressWs from 'express-ws'
 const ws = expressWs(app)
 
 //req.body will be an object if content-type header is set to application/json
@@ -70,7 +69,7 @@ app.disable('x-powered-by')
 
 
 // prevent query parameter pollution
-import * as hpp from 'hpp'
+import hpp from 'hpp'
 app.use(hpp())
 
 const ALLOWED_ORIGIN_HOSTNAMES = ['http://localhost', 'http://localhost:5173', 'https://openflighthub.org', 'https://editor.swagger.io']
@@ -94,7 +93,7 @@ app.use(function(req, res, next){
     }
 })
 
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 app.use(cookieParser())
 
 
@@ -103,7 +102,7 @@ import { guardedMiddleware, GuardedMiddleware } from './ManInTheMiddleware'
 app.use(guardedMiddleware(app))
 
 
-import * as morgan from 'morgan'
+import morgan from 'morgan'
 const IS_TEST_ENVIRONMENT = process.env.JEST_WORKER_ID !== undefined
 if(!IS_TEST_ENVIRONMENT){
     app.use(morgan('combined'))
@@ -120,7 +119,7 @@ app.get('/docs', (req, res) => {
 })
 
 import { getLoginToken } from './util/user'
-import * as asyncHandler from 'express-async-handler'
+import asyncHandler from 'express-async-handler'
 app.post('/make-login-token', asyncHandler(async(req, res) => {
     //TODO remove this unsafe endpoint which is only needed as dirty fix for worker-scheduler!!!
 
@@ -175,6 +174,10 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
     }
 })
 
+
+
+import './mqtt/mqtt_server'
+import './mqtt/mqtt_client'
 
 
 declare global {

@@ -1,10 +1,10 @@
-import * as express from 'express';
+import express from 'express';
 import { DBType_User } from '../db/DBTypes';
 import { ApiSchema_User, ApiSchema_UserPatch, ApiSchema_UserSelf } from '../definitions/ApiSchemas';
-import * as asyncHandler from 'express-async-handler'
+import asyncHandler from 'express-async-handler'
 import { selectUser, updateUser } from '../db/DBHelpers';
 import { ApiType_UserPatch } from '../definitions/ApiTypes';
-import * as pgp from 'pg-promise'
+import pgp from 'pg-promise'
 import { GuardError } from '../ManInTheMiddleware';
 
 

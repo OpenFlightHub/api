@@ -1,6 +1,6 @@
-import * as express from 'express';
-import * as asyncHandler from 'express-async-handler'
-import * as pgp from 'pg-promise'
+import express from 'express';
+import asyncHandler from 'express-async-handler'
+import pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -48,10 +48,6 @@ router.post('/login', asyncHandler(async (req, res) => {
         })
 
         return
-    }
-
-    if(!isSafePassword(requestBody.password)){
-        throw GuardError._400_invalidBody('password')
     }
 
     const passwordMatches = await crypto.stringMatchesHash(requestBody.password, user.password)
