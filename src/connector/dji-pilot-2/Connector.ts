@@ -11,7 +11,7 @@ export default class Connector  {
 
     private validEvents = new Array<string>()
 
-    private handleMqttPacket(connectionId: number, packet: PublishPacket){
+    handleMqttPacket(connectionId: number, packet: PublishPacket){
 
         const message = JSON.parse(packet.payload.toString())
 
@@ -145,7 +145,7 @@ export default class Connector  {
 
 
 type EventCallback<M extends Message_Base> = (connectionId: number, message: M) => void
-type EventCallbackWithResponse<M extends Message_Base, C extends Object> = (connectionId: number, message: M, callback: (data: C) => void) => void
+type EventCallbackWithResponse<M extends Message_Base, C extends Object> = (connectionId: number, message: M, respond: (data: C) => void) => void
 
 
 interface Message_Base {// coming from device to cloud
