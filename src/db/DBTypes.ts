@@ -65,9 +65,18 @@ export type DBType_Connection = {
 }
 
 
+export type DBType_RemoteController_TypeType = 0|1
+export const DBType_RemoteController_TYPES = {
+  dji_rc_pro_enterprise: 0 as DBType_RemoteController_TypeType,
+  dji_rc_plus: 1 as DBType_RemoteController_TypeType
+}
 export type DBType_RemoteController = {
   id: number;
   serial_number: string;
+  /**
+   * 0 = dji rc pro enterprise, 1 = dji rc plus
+   */
+  type: DBType_RemoteController_TypeType;
 }
 
 

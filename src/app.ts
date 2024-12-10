@@ -155,8 +155,17 @@ app.use('/user', userRoute)
 import workspaceRoute from './routes/workspace'
 app.use('/workspace', workspaceRoute)
 
-import connectRoute from './routes/connect'
-app.use('/connect', connectRoute)
+import connectionRoute from './routes/connection'
+app.use('/connection', connectionRoute)
+
+import droneRoute from './routes/drone'
+app.use('/drone', droneRoute)
+
+import remoteControllerRoute from './routes/remote-controller'
+app.use('/remote-controller', remoteControllerRoute)
+
+import linkRoute from './routes/link'
+app.use('/link', linkRoute)
 
 
 //websockets

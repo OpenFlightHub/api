@@ -2,12 +2,6 @@ export type ApiType_Id = number;
 
 
 /**
- * hh:mm:ss
- */
-export type ApiType_Time = string;
-
-
-/**
  * ISO 8601 format
  */
 export type ApiType_Timestamptz = string;
@@ -25,11 +19,6 @@ export type ApiType_Password = string;
 export type ApiType_Reference = {
     id: number;
 }
-
-
-export type ApiType_References = {
-    id: number;
-}[];
 
 
 export type ApiType_AuthLoginPost = {
@@ -128,11 +117,11 @@ export type ApiType_WorkspacesPost = {
 }
 
 
-export type ApiType_WorkspaceConnection = {
-    id: string;
+export type ApiType_WorkspaceConnections = {
+    id: number;
     remote_controller_id?: number;
     drone_id?: number;
-}
+}[];
 
 
 export type ApiType_WorkspaceConnectionsPost = {
@@ -141,24 +130,64 @@ export type ApiType_WorkspaceConnectionsPost = {
 
 
 export type ApiType_WorkspaceConnectionsPostResponse = {
+    id: number;
+    secret: string;
+}
+
+
+export type ApiType_Connection = {
+    id: number;
+    remote_controller_id?: number;
+    drone_id?: number;
+}
+
+
+export type ApiType_RemoteController = {
+    id: number;
+    serial_number: string;
+    /**
+     * 0 = dji rc pro enterprise, 1 = dji rc plus
+     */
+    type: number;
+}
+
+
+export type ApiType_Drone = {
+    id: number;
+    serial_number: string;
+    /**
+     * 0 = dji mavic 3
+     */
+    type: number;
+    name: string;
+}
+
+
+/**
+ * 0 = dji rc pro enterprise, 1 = dji rc plus
+ */
+export type ApiType_RemoteControllerType = number;
+
+
+/**
+ * 0 = dji mavic 3
+ */
+export type ApiType_DroneType = number;
+
+
+export type ApiType_LinkAuthLoginPost = {
     id: string;
     secret: string;
 }
 
 
-export type ApiType_ConnectAuthLoginPost = {
-    id: string;
-    secret: string;
-}
-
-
-export type ApiType_ConnectWorkspace = {
+export type ApiType_LinkWorkspace = {
     id: string;
     name: string;
 }
 
 
-export type ApiType_ConnectDjiPilot2SdkConfig = {
+export type ApiType_LinkDjiPilot2SdkConfig = {
     app_id: string;
     app_key: string;
     app_license: string;

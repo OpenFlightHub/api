@@ -5,13 +5,6 @@ export const ApiSchema_Id : JSONSchema  = {
     "example": 42
 }
 
-export const ApiSchema_Time : JSONSchema  = {
-    "type": "string",
-    "format": "time",
-    "description": "hh:mm:ss",
-    "example": "01:00:00"
-}
-
 export const ApiSchema_Timestamptz : JSONSchema  = {
     "type": "string",
     "format": "timestamptz",
@@ -39,22 +32,6 @@ export const ApiSchema_Reference : JSONSchema  = {
         "id": {
             "type": "number",
             "example": 42
-        }
-    }
-}
-
-export const ApiSchema_References : JSONSchema  = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "required": [
-            "id"
-        ],
-        "properties": {
-            "id": {
-                "type": "number",
-                "example": 42
-            }
         }
     }
 }
@@ -286,22 +263,26 @@ export const ApiSchema_WorkspacesPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceConnection : JSONSchema  = {
-    "type": "object",
-    "required": [
-        "id"
-    ],
-    "properties": {
-        "id": {
-            "type": "string"
-        },
-        "remote_controller_id": {
-            "type": "number",
-            "example": 42
-        },
-        "drone_id": {
-            "type": "number",
-            "example": 42
+export const ApiSchema_WorkspaceConnections : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "remote_controller_id": {
+                "type": "number",
+                "example": 42
+            },
+            "drone_id": {
+                "type": "number",
+                "example": 42
+            }
         }
     }
 }
@@ -326,7 +307,8 @@ export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
     ],
     "properties": {
         "id": {
-            "type": "string"
+            "type": "number",
+            "example": 42
         },
         "secret": {
             "type": "string"
@@ -334,7 +316,86 @@ export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectAuthLoginPost : JSONSchema  = {
+export const ApiSchema_Connection : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "remote_controller_id": {
+            "type": "number",
+            "example": 42
+        },
+        "drone_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_RemoteController : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "serial_number",
+        "type"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "serial_number": {
+            "type": "string"
+        },
+        "type": {
+            "type": "integer",
+            "description": "0 = dji rc pro enterprise, 1 = dji rc plus"
+        }
+    }
+}
+
+export const ApiSchema_Drone : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "serial_number",
+        "type",
+        "name"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "serial_number": {
+            "type": "string"
+        },
+        "type": {
+            "type": "integer",
+            "description": "0 = dji mavic 3"
+        },
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_RemoteControllerType : JSONSchema  = {
+    "type": "integer",
+    "description": "0 = dji rc pro enterprise, 1 = dji rc plus"
+}
+
+export const ApiSchema_DroneType : JSONSchema  = {
+    "type": "integer",
+    "description": "0 = dji mavic 3"
+}
+
+export const ApiSchema_LinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [
         "id",
@@ -350,7 +411,7 @@ export const ApiSchema_ConnectAuthLoginPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectWorkspace : JSONSchema  = {
+export const ApiSchema_LinkWorkspace : JSONSchema  = {
     "type": "object",
     "required": [
         "id",
@@ -366,7 +427,7 @@ export const ApiSchema_ConnectWorkspace : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectDjiPilot2SdkConfig : JSONSchema  = {
+export const ApiSchema_LinkDjiPilot2SdkConfig : JSONSchema  = {
     "type": "object",
     "required": [
         "app_id",

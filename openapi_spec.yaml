@@ -392,7 +392,7 @@ paths:
         '403':
           $ref: '#/components/responses/403'
       security:
-        - connect_auth: []
+        - link_auth: []
 
   /workspace/{workspace_id}:
     get:
@@ -482,7 +482,7 @@ paths:
       security:
         - user_auth: []
 
-  /workspace/{workspace_id}/connections/list:
+  /workspace/{workspace_id}/connections:
     get:
       tags:
         - workspace
@@ -499,9 +499,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/workspace_connection'
+                $ref: '#/components/schemas/workspace_connections'
 
         '400':
           $ref: '#/components/responses/400'
@@ -535,7 +533,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/reference'
+                $ref: '#/components/schemas/workspace_connections_post_response'
 
         '400':
           $ref: '#/components/responses/400'
@@ -548,17 +546,12 @@ paths:
       security:
         - user_auth: []
 
-  /workspace/{workspace_id}/connections/{connection_id}:
+  /connection/{connection_id}:
     get:
       tags:
-        - workspace
+        - connection
       summary: Get a connection
       parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/id'
         - name: connection_id
           in: path
           required: true
@@ -570,7 +563,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/workspace_connection'
+                $ref: '#/components/schemas/connection'
 
         '400':
           $ref: '#/components/responses/400'
@@ -585,14 +578,9 @@ paths:
 
     delete:
       tags:
-        - workspace
+        - connection
       summary: Delete a connection
       parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/id'
         - name: connection_id
           in: path
           required: true
@@ -614,10 +602,72 @@ paths:
         - user_auth: []
 
 
-  # connect
+  /remote-controller/{remote_controller_id}:
+    get:
+      tags:
+        - remote-controller
+      summary: Get a remote controller
+      parameters:
+        - name: remote_controller_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the remote controller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/remote_controller'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
 
 
-  /connect/auth/check:
+  /drone/{drone_id}:
+    get:
+      tags:
+        - drone
+      summary: Get a drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  # link
+
+
+  /link/auth/check:
     get:
       tags:
         - connect
@@ -629,58 +679,58 @@ paths:
         '401':
           $ref: '#/components/responses/401'
 
-  /connect/auth/login:
+  /link/auth/login:
     post:
       tags:
-        - connect
+        - link
       summary: Login with credentials
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/connect_auth_login_post'
+              $ref: '#/components/schemas/link_auth_login_post'
         required: true
       responses:
         '200':
           description: Logged in successfully
           headers:
             Set-Cookie:
-              $ref: '#/components/headers/connect_auth'
+              $ref: '#/components/headers/link_auth'
 
         '401':
           $ref: '#/components/responses/401'
       security:
-        - connect_auth: []
+        - link_auth: []
 
 
-  /connect/my-workspace:
+  /link/my-workspace:
     get:
       tags:
-        - connect
-      summary: Get information about the workspace i am connected to
+        - link
+      summary: Get information about the workspace i am linked to
       responses:
         '200':
-          description: either `false` (no workspace connected) or the workspace
+          description: either `false` (no workspace linked) or the workspace
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/connect_workspace'
+                  - $ref: '#/components/schemas/link_workspace'
                   - type: boolean
                     example: false
 
         '401':
           $ref: '#/components/responses/401'
       security:
-        - connect_auth: []
+        - link_auth: []
 
 
   # dji pilot 2
 
-  /connect/dji-pilot-2/sdk-config:
+  /link/dji-pilot-2/sdk-config:
     get:
       tags:
-        - connect-dji-pilot-2
+        - link-dji-pilot-2
       summary: Get config required for the dji bridge sdk
       responses:
         '200':
@@ -688,12 +738,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/connect_dji_pilot_2_sdk_config'
+                $ref: '#/components/schemas/link_dji_pilot_2_sdk_config'
 
         '401':
           $ref: '#/components/responses/401'
       security:
-        - connect_auth: []
+        - link_auth: []
 
 
 components:
@@ -706,11 +756,6 @@ components:
     id:
       type: number
       example: 42
-    time:
-      type: string
-      format: time
-      description: hh:mm:ss
-      example: "01:00:00"
     timestamptz:
       type: string
       format: timestamptz
@@ -735,11 +780,6 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/id'
-
-    references:
-      type: array
-      items:
-        $ref: '#/components/schemas/reference'
 
     #routes
 
@@ -901,19 +941,11 @@ components:
         name:
           type: string
 
-    workspace_connection:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-        remote_controller_id:
-          $ref: '#/components/schemas/id'
-        drone_id:
-          $ref: '#/components/schemas/id'
 
-
+    workspace_connections:
+      type: array
+      items:
+          $ref: '#/components/schemas/connection'
 
     workspace_connections_post:
       type: object
@@ -930,13 +962,65 @@ components:
         - secret
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/id'
         secret:
           type: string
 
-    # connect
+    connection:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        remote_controller_id:
+          $ref: '#/components/schemas/id'
+        drone_id:
+          $ref: '#/components/schemas/id'
 
-    connect_auth_login_post:
+    remote_controller:
+      type: object
+      required:
+        - id
+        - serial_number
+        - type
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        serial_number:
+          type: string
+        type:
+          $ref: '#/components/schemas/remote_controller_type'
+
+
+    drone:
+      type: object
+      required:
+        - id
+        - serial_number
+        - type
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        serial_number:
+          type: string
+        type:
+          $ref: '#/components/schemas/drone_type'
+        name:
+          type: string
+
+    remote_controller_type:
+      type: integer
+      description: 0 = dji rc pro enterprise, 1 = dji rc plus
+
+    drone_type:
+      type: integer
+      description: 0 = dji mavic 3
+
+    # link
+
+    link_auth_login_post:
       type: object
       required:
         - id
@@ -948,7 +1032,7 @@ components:
           type: string
 
 
-    connect_workspace:
+    link_workspace:
       type: object
       required:
         - id
@@ -959,7 +1043,7 @@ components:
         name:
           type: string
 
-    connect_dji_pilot_2_sdk_config:
+    link_dji_pilot_2_sdk_config:
       type: object
       required:
         - app_id
@@ -1014,7 +1098,7 @@ components:
       schema:
         type: string
         example: user-auth=abcde12345; Path=/; HttpOnly
-    connect_auth:
+    link_auth:
       description: used for authentication of a connection
       schema:
         type: string
@@ -1025,7 +1109,7 @@ components:
       type: apiKey
       in: cookie
       name: user-auth
-    connect_auth:
+    link_auth:
       type: apiKey
       in: cookie
-      name: connect-auth
+      name: link-auth

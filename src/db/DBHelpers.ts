@@ -399,14 +399,16 @@ export function selectConnection(id: number){
 
 //remote_controllers
 
-import {} from "./DBTypes";
+import {DBType_RemoteController_TypeType} from "./DBTypes";
 
 export type DBInsert_RemoteController = {
     serial_number: string
+    type?: DBType_RemoteController_TypeType
 }
 
 export type DBUpdate_RemoteController = {
     serial_number?: string
+    type?: DBType_RemoteController_TypeType
 }
 const COLUMN_SET_REMOTE_CONTROLLERS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -415,6 +417,10 @@ const COLUMN_SET_REMOTE_CONTROLLERS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "serial_number"
+    },
+    {
+        "name": "type",
+        "skip": col => !col.exists
     }
 ], {table: "remote_controllers"})
 
@@ -425,6 +431,10 @@ const COLUMN_SET_REMOTE_CONTROLLERS_UPDATE = new db.$config.pgp.helpers.ColumnSe
     },
     {
         "name": "serial_number",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "type",
         "skip": col => !col.exists
     }
 ], {table: "remote_controllers"})

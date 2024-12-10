@@ -155,7 +155,7 @@ export class GuardedMiddleware {
         }
     }
 
-    async guardConnectIsAuthenticated() : Promise<DBType_Connection> {
+    async guardLinkIsAuthenticatedAsConnection() : Promise<DBType_Connection> {
         const cookie = this.req.cookies['connect-auth']
 
         if(!cookie){
@@ -177,7 +177,7 @@ export class GuardedMiddleware {
         if(this.currentConnection){
             return this.currentConnection
         } else {
-            return await this.guardConnectIsAuthenticated()
+            return await this.guardLinkIsAuthenticatedAsConnection()
         }
     }
 
@@ -328,7 +328,12 @@ export class GuardedMiddleware {
     }
 
     guardSend(responseBody: object, schema: JSONSchema){
-       try {
+
+        if(responseBody instanceof Promise){
+            throw new Error('responseBody is a Promise, did you forget await?')
+        }
+
+        try {
             const filtered = filterObject(responseBody, schema)
             this.res.isGuarded = true
             this.res.send(filtered)

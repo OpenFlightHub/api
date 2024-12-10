@@ -1,12 +1,12 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteConnection, deleteWorkspace, insertWorkspace, selectConnection, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnection, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
+import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
 import { ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
 import { DBType_Connection, DBType_Workspace } from '../db/DBTypes';
+import { createConnection } from '../util/connection';
 const db : pgp.IDatabase<any> = global.db
-import { createConnection } from '../util/connection'
 
 
 const router = express.Router()
@@ -85,13 +85,10 @@ router.delete('/:workspace_id', asyncHandler(async (req, res) => {
     res.status(200).send()
 }))
 
+// connection
 
 
-
-// connections
-
-
-router.get('/:workspace_id/connections/lest', asyncHandler(async (req, res) => {
+router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
 
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
@@ -105,12 +102,11 @@ router.get('/:workspace_id/connections/lest', asyncHandler(async (req, res) => {
         workspaceId
     })
 
-    req.GM.guardSend(connections, {type: 'array', items: ApiSchema_WorkspaceConnection})
+    req.GM.guardSend(connections, ApiSchema_WorkspaceConnections)
 
 }))
 
-
-router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
+router.post('/:workspace_id/connection', asyncHandler(async (req, res) => {
 
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
@@ -125,57 +121,10 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const connection = await createConnection(workspaceId, requestBody.name)
 
     res.GM.guardSend({
-        id: '' + connection.id,
+        id: connection.id,
         secret: connection.access_key
     } as ApiType_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceConnectionsPostResponse)
 
 }))
-
-
-router.get('/:workspace_id/connections/:connection_id', asyncHandler(async (req, res) => {
-
-
-    const workspaceId = req.GM.guardParam('workspace_id', 'id')
-    const connectionId = req.GM.guardParam('connection_id', 'id')
-
-    const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
-    })
-
-    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
-
-    const connection = req.GM.guardDBGone(()=>{
-        return db.one<DBType_Connection>('SELECT * FROM connections WHERE workspace_id = ${workspaceId} AND id = ${connectionId}', {
-            workspaceId,
-            connectionId
-        })
-    })
-
-    res.GM.guardSend(connection, ApiSchema_WorkspaceConnection)
-}))
-
-router.delete('/:workspace_id/connections/:connection_id', asyncHandler(async (req, res) => {
-
-    const workspaceId = req.GM.guardParam('workspace_id', 'id')
-    const connectionId = req.GM.guardParam('connection_id', 'id')
-
-    const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
-    })
-
-    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
-
-    const connection = req.GM.guardDBGone(()=>{
-        return db.one<DBType_Connection>('SELECT * FROM connections WHERE workspace_id = ${workspaceId} AND id = ${connectionId}', {
-            workspaceId,
-            connectionId
-        })
-    })
-
-    await deleteConnection(connectionId)
-
-    res.status(200).send()
-}))
-
 
 export default router

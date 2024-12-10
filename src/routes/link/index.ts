@@ -10,7 +10,7 @@ import djiPilot2Route from './dji-pilot-2'
 
 router.use((req, res, next) => {
 
-    req.GM.guardConnectIsAuthenticated().then(()=>{
+    req.GM.guardLinkIsAuthenticatedAsConnection().then(()=>{
         next()
     }).catch(err => {
         next(err)
