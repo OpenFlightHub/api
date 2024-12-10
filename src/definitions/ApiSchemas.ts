@@ -199,7 +199,6 @@ export const ApiSchema_UserSelf : JSONSchema  = {
         "email",
         "created_at",
         "locale",
-        "is_recruiter",
         "registration_incomplete"
     ],
     "properties": {
@@ -224,9 +223,6 @@ export const ApiSchema_UserSelf : JSONSchema  = {
         "locale": {
             "type": "string",
             "example": "en-US"
-        },
-        "is_recruiter": {
-            "type": "boolean"
         },
         "registration_incomplete": {
             "type": "boolean"

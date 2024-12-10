@@ -101,7 +101,6 @@ export type ApiType_UserSelf = {
      */
     created_at: string;
     locale: string;
-    is_recruiter: boolean;
     registration_incomplete: boolean;
 }
 
