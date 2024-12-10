@@ -7,15 +7,18 @@ connector.onMessage_State((connectionId, message)=>{
 })
 
 
-// connector.onMessage_Status((connectionId, message, callback)=>{
-//     callback({
-//         result: 0
-//     })
-// })
+connector.onMessage_Status((connectionId, message, callback)=>{
+    callback({
+        result: 0
+    })
+})
 
 connector.onMessage_Test((connectionId, message)=>{
     console.log('onMessage_Test', connectionId, message)
 })
+
+
+connector.trigger_test()
 
 connector.onMessage_TestWithCallback((connectionId, message, callback)=>{
     console.log('onMessage_TestWithCallback', connectionId, message)

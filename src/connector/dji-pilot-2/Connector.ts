@@ -52,11 +52,7 @@ export default class Connector  {
 
     }
 
-    onMessage_State(callback: EventCallback<Message_DeviceToCloud_State>){
-        this.eventManager.addListener('state', (c)=>{
-            callback(c.connectionId, c.message)
-        })
-    }
+    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('state')
 
     onMessage_Test = this.makeEventFunction<Message_DeviceToCloud_Test>('test')
 
@@ -66,6 +62,23 @@ export default class Connector  {
                 callback(c.connectionId, c.message as M)
             })
         }
+    }
+
+
+
+    trigger_test(){
+        this.eventManager.dispatch('test', {
+            connectionId: 41,
+            message: {
+                tid: 'tid_1',
+                bid: 'bid_1',
+                timestamp: Date.now(),
+                gateway: 'gateway_1',
+                data: {
+                    test: true
+                }
+            }
+        })
     }
 
     onMessage_TestWithCallback = this.makeEventFunctionWithCallback<Message_DeviceToCloud_TestWithCallback, Response_DeviceToCloud_TestWithCallback>('test-with-callback')
@@ -85,10 +98,10 @@ export default class Connector  {
         this.eventManager.dispatch('test-with-callback', {
             connectionId: 42,
             message: {
-                tid: 'tid',
-                bid: 'bid',
+                tid: 'tid_2',
+                bid: 'bid_2',
                 timestamp: Date.now(),
-                gateway: 'gateway',
+                gateway: 'gateway_2',
                 data: {
                     test_with_callback: true
                 }
@@ -96,13 +109,7 @@ export default class Connector  {
         })
     }
 
-    onMessage_Status(callback: EventCallbackWithResponse<Message_DeviceToCloud_Status, Response_DeviceToCloud_TestWithCallback>){
-        this.eventManager.addListener('status', (c) => {
-            callback(c.connectionId, c.message as Message_DeviceToCloud_Status, (response)=>{
-                this.respondToMessage(c.connectionId, c.message, response)
-            })
-        })
-    }
+    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('status')
 
     private respondToMessage<OM extends Message_Base, R extends Response>(connectionId: number, originalMessage: OM, response: R){
         const responseMessage: Response_Base = {
@@ -124,11 +131,6 @@ export default class Connector  {
         console.log('TODO', 'respondToMessage', connectionId, responseMessage)
     }
 
-    // private makeResponseCallback<M extends Message_Base, C extends ResponseCallback, ECWR extends EventCallbackWithResponse<M, C>>(eventCallback: ECWR){
-    //     return function(){
-
-    //     }
-    // }
 }
 
 
@@ -145,7 +147,7 @@ interface Message_Base {// coming from device to cloud
     data: {}
 }
 
-type Response = Object
+type Response = Record<string, any>
 
 interface Response_Base {// respons from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
@@ -181,7 +183,9 @@ type Message_DeviceToCloud_Status_SubDevice = {
     version: number
 }
 
-type Response_DeviceToCloud_Status = (data: {result: number}) => void
+interface Response_DeviceToCloud_Status extends Response {
+    result: number
+}
 
 
 
@@ -195,6 +199,6 @@ interface Message_DeviceToCloud_Test extends Message_Base {
 interface Message_DeviceToCloud_TestWithCallback extends Message_Base {
     test_with_callback: true
 }
-type Response_DeviceToCloud_TestWithCallback = {
+interface Response_DeviceToCloud_TestWithCallback extends Response {
     test_with_callback_response: boolean
 }
