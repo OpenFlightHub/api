@@ -9,6 +9,8 @@ export default class Connector  {
         message: Message_Base
     }}>()
 
+    private validEvents = new Array<string>()
+
     private handleMqttPacket(connectionId: number, packet: PublishPacket){
 
         const message = JSON.parse(packet.payload.toString())
@@ -32,31 +34,30 @@ export default class Connector  {
 
         const clientId = topicParts[2]
 
-        const remainingParts = topicParts.slice(3)
-
-        switch(remainingParts[0]){
-            case 'state': {
-                this.eventManager.dispatch('state', {
-                    connectionId,
-                    message
-                })
-            }; break;
+        const remaining = topicParts.slice(3).join('/')
 
 
-
-
-            default: {
-                throw new Error('unsupported topic: ' + topic)
-            }
+        if(this.validEvents.includes(remaining)){
+            this.eventManager.dispatch(remaining, {
+                connectionId,
+                message
+            })
+        } else {
+            throw new Error('unsupported topic: ' + topic)
         }
-
     }
 
-    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('state')
+    private registerEvent(eventName: string){
+        if(this.validEvents.includes(eventName)){
+            throw new Error('duplicate eventName ' + eventName)
+        }
 
-    onMessage_Test = this.makeEventFunction<Message_DeviceToCloud_Test>('test')
+        this.validEvents.push(eventName)
+    }
 
     private makeEventFunction<M extends Message_Base>(eventName: string){
+        this.registerEvent(eventName)
+
         return (callback: EventCallback<M>)=>{
             this.eventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M)
@@ -64,26 +65,9 @@ export default class Connector  {
         }
     }
 
-
-
-    trigger_test(){
-        this.eventManager.dispatch('test', {
-            connectionId: 41,
-            message: {
-                tid: 'tid_1',
-                bid: 'bid_1',
-                timestamp: Date.now(),
-                gateway: 'gateway_1',
-                data: {
-                    test: true
-                }
-            }
-        })
-    }
-
-    onMessage_TestWithCallback = this.makeEventFunctionWithCallback<Message_DeviceToCloud_TestWithCallback, Response_DeviceToCloud_TestWithCallback>('test-with-callback')
-
     private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string){
+        this.registerEvent(eventName)
+
         return (callback: EventCallbackWithResponse<M, R>)=>{
             this.eventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M, (response: R)=>{
@@ -92,24 +76,6 @@ export default class Connector  {
             })
         }
     }
-
-
-    trigger_testWithCallback(){
-        this.eventManager.dispatch('test-with-callback', {
-            connectionId: 42,
-            message: {
-                tid: 'tid_2',
-                bid: 'bid_2',
-                timestamp: Date.now(),
-                gateway: 'gateway_2',
-                data: {
-                    test_with_callback: true
-                }
-            }
-        })
-    }
-
-    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('status')
 
     private respondToMessage<OM extends Message_Base, R extends Response>(connectionId: number, originalMessage: OM, response: R){
         const responseMessage: Response_Base = {
@@ -129,6 +95,49 @@ export default class Connector  {
 
         //TODO send message
         console.log('TODO', 'respondToMessage', connectionId, responseMessage)
+    }
+
+    // definitions
+
+    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('state')
+
+    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('status')
+
+
+    // for testing
+
+    onMessage_Test = this.makeEventFunction<Message_DeviceToCloud_Test>('test')
+
+    trigger_test(){
+        this.eventManager.dispatch('test', {
+            connectionId: 41,
+            message: {
+                tid: 'tid_1',
+                bid: 'bid_1',
+                timestamp: Date.now(),
+                gateway: 'gateway_1',
+                data: {
+                    test: true
+                }
+            }
+        })
+    }
+
+    onMessage_TestWithCallback = this.makeEventFunctionWithCallback<Message_DeviceToCloud_TestWithCallback, Response_DeviceToCloud_TestWithCallback>('test-with-callback')
+
+    trigger_testWithCallback(){
+        this.eventManager.dispatch('test-with-callback', {
+            connectionId: 42,
+            message: {
+                tid: 'tid_2',
+                bid: 'bid_2',
+                timestamp: Date.now(),
+                gateway: 'gateway_2',
+                data: {
+                    test_with_callback: true
+                }
+            }
+        })
     }
 
 }
@@ -190,7 +199,7 @@ interface Response_DeviceToCloud_Status extends Response {
 
 
 
-//TODO remove
+// testing
 
 interface Message_DeviceToCloud_Test extends Message_Base {
     test: true
