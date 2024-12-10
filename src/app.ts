@@ -175,9 +175,7 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 })
 
 
-
-import './mqtt/mqtt_server'
-import './mqtt/mqtt_client'
+import './mqtt'
 
 
 declare global {
