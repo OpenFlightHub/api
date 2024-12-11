@@ -114,6 +114,8 @@ export default class Connector  {
         method: 'update_topo'
     })
 
+    onMessage_Osd = this.makeEventFunction<Message_DeviceToCloud_Osd>('thing/product/osd')
+
 }
 
 
@@ -126,7 +128,7 @@ interface Message_Base {// coming from device to cloud
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
     timestamp: number // the time the message was sent (unix milliseconds)
-    gateway: string // serial number of the gateway device (usually the remote controller) that send the message
+    gateway?: string // serial number of the gateway device (usually the remote controller) that send the message
     data: {}
 }
 
@@ -169,5 +171,107 @@ type Message_DeviceToCloud_Status_SubDevice = {
 interface Response_DeviceToCloud_Status extends Response {
     data: {
         result: number
+    }
+}
+
+interface Message_DeviceToCloud_Osd extends Message_Base {
+    data: Message_DeviceToCloud_Osd_Data_A | Message_DeviceToCloud_Osd_Data_B | Message_DeviceToCloud_Osd_Data_C
+}
+
+type Message_DeviceToCloud_Osd_Data_A = {
+    job_number: number,
+    acc_time: number,
+    activation_time: number,
+    maintain_status: {
+        maintain_status_array: {
+            state: number,
+            last_maintain_type: number,
+            last_maintain_time: number,
+            last_maintain_work_sorties: number
+        }[]
+    },
+    electric_supply_voltage: number,
+    working_voltage: number,
+    working_current: number,
+    backup_battery: {
+        voltage: number,
+        temperature: number,
+        switch: number
+    },
+    drone_battery_maintenance_info: {
+        maintenance_state: number,
+        maintenance_time_left: number
+    }
+}
+
+type Message_DeviceToCloud_Osd_Data_B = {
+    flighttask_step_code: number
+    media_file_detail: {
+        remain_upload: number
+    }
+    wireless_link: {
+        "4g_freq_band": number
+        "4g_gnd_quality": number
+        "4g_link_state": number
+        "4g_quality": number
+        "4g_uav_quality": number
+        dongle_number: number
+        link_workmode: number
+        sdr_freq_band: number
+        sdr_link_state: number
+        sdr_quality: number
+    }
+}
+
+type Message_DeviceToCloud_Osd_Data_C = {
+    network_state: {
+        type: number
+        quality: number
+        rate: number
+    }
+    drone_charge_state: {
+        state: number
+        capacity_percent: number
+    }
+    drone_in_dock: number
+    rainfall: number
+    wind_speed: number
+    environment_temperature: number
+    temperature: number
+    humidity: number
+    latitude: number
+    longitude: number
+    height: number
+    alternate_land_point: {
+        latitude: number
+        longitude: number
+        safe_land_height: number
+        is_configured: number
+    }
+    first_power_on: number
+    position_state: {
+        is_calibration: number
+        is_fixed: number
+        quality: number
+        gps_number: number
+        rtk_number: number
+    }
+    storage: {
+        total: number
+        used: number
+    }
+    mode_code: number
+    cover_state: number
+    supplement_light_state: number
+    emergency_stop_state: number
+    air_conditioner_mode: number
+    battery_store_mode: number
+    alarm_state: number
+    putter_state: number
+    sub_device: {
+        device_sn: number
+        device_model_key: number
+        device_online_status: number
+        device_paired: number
     }
 }

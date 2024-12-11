@@ -18,4 +18,9 @@ connector.onMessage_Status((connectionId, message, respond)=>{
     })
 })
 
+
+connector.onMessage_Osd((connectionId, message)=>{
+    console.log('onMessage_Osd', connectionId, message)
+})
+
 export const handleMqttPacket = connector.handleMqttPacket.bind(connector)
