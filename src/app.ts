@@ -194,7 +194,6 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 
 import './mqtt'
 
-import './connector/dji-pilot-2'
 
 declare global {
 
