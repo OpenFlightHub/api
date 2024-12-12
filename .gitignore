@@ -2,7 +2,5 @@
 /dist
 /secrets.json
 /openapi_spec.json
-/tmp_file_handler_session
-/tmp_image_finder
-/api-docs-internal.html
 /bundled.yaml
+/connector_logs

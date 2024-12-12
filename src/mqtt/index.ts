@@ -11,7 +11,7 @@ const mqttServer = new MqttServer(9002, async (client, username, password) => {
         return false
     }
 }, (client, packet)=>{
-    console.log('MQTT message from', client.id, '#' + packet.topic, packet.payload.toString())
+    //console.log('MQTT message from', client.id, '#' + packet.topic, packet.payload.toString())
 
     //TODO implement connectionId
     handleMqttPacket(client, 1, packet)

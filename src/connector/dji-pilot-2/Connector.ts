@@ -1,11 +1,19 @@
 import { Client, PublishPacket } from "aedes";
-import { PublicEventManager } from "../../util/event_manager";
-import { randomUUID } from "crypto";
+import { EventManager, PublicEventManager } from "../../util/event_manager";
 
 
-export default class Connector  {
+type ConnectorEvents = {
+    packet: {
+        client: Client
+        connectionId: number
+        packet: PublishPacket
+    }
+    unsupported_topic: string
+}
 
-    private eventManager = new PublicEventManager<{[key: string]: {
+export default class Connector extends EventManager<ConnectorEvents>  {
+
+    private internalEventManager = new PublicEventManager<{[key: string]: {
         client: Client
         connectionId: number
         message: Message_Base
@@ -15,25 +23,28 @@ export default class Connector  {
 
     handleMqttPacket(client: Client, connectionId: number, packet: PublishPacket){
 
+        this.dispatch('packet', {client, connectionId, packet})
+
         const message = JSON.parse(packet.payload.toString())
 
         const topic = packet.topic
         const topicMatch = topic.match(/^([^\/]+\/product\/)[^/]+\/(.*)$/)
 
         if(!topicMatch){
-            throw new Error('unsupported topic ' + topic)
+            this.dispatch('unsupported_topic', topic)
+            return
         }
 
         const eventName = topicMatch[1] + topicMatch[2]
 
         if(this.validEvents.includes(eventName)){
-            this.eventManager.dispatch(eventName, {
+            this.internalEventManager.dispatch(eventName, {
                 client,
                 connectionId,
                 message
             })
         } else {
-            throw new Error('unsupported topic: ' + topic)
+            this.dispatch('unsupported_topic', topic)
         }
     }
 
@@ -49,7 +60,7 @@ export default class Connector  {
         this.registerEvent(eventName)
 
         return (callback: EventCallback<M>)=>{
-            this.eventManager.addListener(eventName, (c)=>{
+            this.internalEventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M)
             })
         }
@@ -64,7 +75,7 @@ export default class Connector  {
         this.registerEvent(eventName)
 
         return (callback: EventCallbackWithResponse<M, R>)=>{
-            this.eventManager.addListener(eventName, (c)=>{
+            this.internalEventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M, (response: R)=>{
                     this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, Object.assign(response, responseBaseData))
                 })

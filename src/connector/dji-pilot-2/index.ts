@@ -1,4 +1,7 @@
+import { Client, PublishPacket } from "aedes";
 import Connector from "./Connector";
+import Logger from "./ConnectorLogger";
+import path from "path";
 
 const connector = new Connector()
 
@@ -20,7 +23,16 @@ connector.onMessage_Status((connectionId, message, respond)=>{
 
 
 connector.onMessage_Osd((connectionId, message)=>{
-    console.log('onMessage_Osd', connectionId, message)
+    //console.log('onMessage_Osd', connectionId, message)
 })
 
-export const handleMqttPacket = connector.handleMqttPacket.bind(connector)
+
+new Logger(connector, path.resolve('connector_logs'))
+
+export function handleMqttPacket(client: Client, connectionId: number, packet: PublishPacket){
+    try {
+        connector.handleMqttPacket(client, connectionId, packet)
+    } catch (err){
+        console.error('Failed to handleMqttPacket', err)
+    }
+}
