@@ -14,7 +14,7 @@ export default class Logger {
         }
 
         const now = new Date()
-        const logFilesDirectory = path.join(p, now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + '_' + now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds())
+        const logFilesDirectory = path.join(p, now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + '_' + now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds())
 
         if(!fs.existsSync(logFilesDirectory)){
             fs.mkdirSync(logFilesDirectory)
