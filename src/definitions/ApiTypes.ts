@@ -152,6 +152,23 @@ export type ApiType_RemoteController = {
 }
 
 
+/**
+ * 0 = dji rc pro enterprise, 1 = dji rc plus
+ */
+export type ApiType_RemoteControllerType = number;
+
+
+export type ApiType_RemoteControllerPosition = {
+    longitude: number;
+    latitude: number;
+    height: number;
+    /**
+     * ISO 8601 format
+     */
+    reported_at: string;
+}
+
+
 export type ApiType_Drone = {
     id: number;
     serial_number: string;
@@ -164,15 +181,20 @@ export type ApiType_Drone = {
 
 
 /**
- * 0 = dji rc pro enterprise, 1 = dji rc plus
- */
-export type ApiType_RemoteControllerType = number;
-
-
-/**
  * 0 = dji mavic 3
  */
 export type ApiType_DroneType = number;
+
+
+export type ApiType_DronePosition = {
+    longitude: number;
+    latitude: number;
+    height: number;
+    /**
+     * ISO 8601 format
+     */
+    reported_at: string;
+}
 
 
 export type ApiType_LinkAuthLoginPost = {

@@ -261,6 +261,8 @@ function convertDBMLTypeToTypescriptType(type){
 
         case 'uuid': return 'string'
 
+        case 'jsonb': return 'string'
+
         default: throw new Error('unsupported DBML type: ' + type)
 
     }

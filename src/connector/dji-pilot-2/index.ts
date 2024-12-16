@@ -14,7 +14,6 @@ connector.onMessage_Status((connectionId, message, respond)=>{
     console.log('onMessage_Status', connectionId, message)
 
     respond({
-        method: 'update_topo',
         data: {
             result: 0
         }
@@ -23,7 +22,24 @@ connector.onMessage_Status((connectionId, message, respond)=>{
 
 
 connector.onMessage_Osd((connectionId, message)=>{
+
+    const m = message as {data: {longitude?: number, latitude?: number, height?: number}}
+
     //console.log('onMessage_Osd', connectionId, message)
+    if(typeof m.data.longitude === 'number' && typeof m.data.latitude === 'number'){
+
+    }
+    message.data
+})
+
+connector.onMessage_Event((connectionId, message, respond)=>{
+    console.log('onMessage_Event', connectionId, message)
+
+    respond({
+        data: {
+            result: 0
+        }
+    })
 })
 
 

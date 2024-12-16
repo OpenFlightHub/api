@@ -359,6 +359,38 @@ export const ApiSchema_RemoteController : JSONSchema  = {
     }
 }
 
+export const ApiSchema_RemoteControllerType : JSONSchema  = {
+    "type": "integer",
+    "description": "0 = dji rc pro enterprise, 1 = dji rc plus"
+}
+
+export const ApiSchema_RemoteControllerPosition : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "longitude",
+        "latitude",
+        "height",
+        "reported_at"
+    ],
+    "properties": {
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "height": {
+            "type": "number"
+        },
+        "reported_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
 export const ApiSchema_Drone : JSONSchema  = {
     "type": "object",
     "required": [
@@ -385,14 +417,36 @@ export const ApiSchema_Drone : JSONSchema  = {
     }
 }
 
-export const ApiSchema_RemoteControllerType : JSONSchema  = {
-    "type": "integer",
-    "description": "0 = dji rc pro enterprise, 1 = dji rc plus"
-}
-
 export const ApiSchema_DroneType : JSONSchema  = {
     "type": "integer",
     "description": "0 = dji mavic 3"
+}
+
+export const ApiSchema_DronePosition : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "longitude",
+        "latitude",
+        "height",
+        "reported_at"
+    ],
+    "properties": {
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "height": {
+            "type": "number"
+        },
+        "reported_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
 }
 
 export const ApiSchema_LinkAuthLoginPost : JSONSchema  = {

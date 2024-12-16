@@ -2,8 +2,9 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { selectDrone } from '../db/DBHelpers';
-import { ApiSchema_Drone } from '../definitions/ApiSchemas';
-import { DBType_Connection } from '../db/DBTypes';
+import { ApiSchema_Drone, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
+import { DBType_Connection, DBType_DroneData } from '../db/DBTypes';
+import { ApiType_DronePosition } from '../definitions/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -38,6 +39,35 @@ router.get('/:drone_id', asyncHandler(async (req, res) => {
     })
 
     res.GM.guardSend(drone, ApiSchema_Drone)
+}))
+
+
+
+
+router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
+
+    const droneId = req.GM.guardParam('drone_id', 'id')
+
+    const connection = await db.one<DBType_Connection>('SELECT * FROM connections WHERE drone_id = ${droneId}', {
+        droneId
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
+
+    const droneLastPosition = await req.GM.guardDBGone(()=>{
+        return db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = 0 ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains longitude and latitude
+            droneId
+        })
+    })
+
+    const ret: ApiType_DronePosition = {
+        reported_at: droneLastPosition.created_at,
+        latitude: droneLastPosition.data.latitude as number,
+        longitude: droneLastPosition.data.longitude as number,
+        height: droneLastPosition.data.height as number
+    }
+
+    res.GM.guardSend(ret, ApiSchema_DronePosition)
 }))
 
 

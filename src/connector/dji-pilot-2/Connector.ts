@@ -71,13 +71,16 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      * @param responseEventName special string of the format "thing/product/$/property" where $ will be replaced with the client id automatically
      * @returns
      */
-    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string, responseEventName: string, responseBaseData?: Record<string, any>){
+    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string, responseEventName: string, makeResponseBaseData?: (message: M)=>Record<string, any>){
         this.registerEvent(eventName)
 
         return (callback: EventCallbackWithResponse<M, R>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M, (response: R)=>{
-                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, Object.assign(response, responseBaseData))
+                    if(typeof makeResponseBaseData === 'function'){
+                        Object.assign(response, makeResponseBaseData(c.message as M))
+                    }
+                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, response)
                 })
             })
         }
@@ -121,12 +124,20 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('sys/product/status', 'sys/product/$/status_reply', {
-        method: 'update_topo'
+    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('sys/product/status', 'sys/product/$/status_reply', (message)=>{
+        return {
+            method: message.method
+        }
     })
 
     onMessage_Osd = this.makeEventFunction<Message_DeviceToCloud_Osd>('thing/product/osd')
 
+
+    onMessage_Event = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Events, Response_DeviceToCloud_Events>('thing/product/events', 'thing/product/$/events_reply', (message)=>{
+        return {
+            method: message.method
+        }
+    })
 }
 
 
@@ -284,5 +295,17 @@ type Message_DeviceToCloud_Osd_Data_C = {
         device_model_key: number
         device_online_status: number
         device_paired: number
+    }
+}
+
+
+interface Message_DeviceToCloud_Events extends Message_Base {
+    need_reply: 0 | 1
+    method: string
+}
+
+interface Response_DeviceToCloud_Events extends Response {
+    data: {
+        result: number
     }
 }

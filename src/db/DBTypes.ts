@@ -95,3 +95,39 @@ export type DBType_Drone = {
 }
 
 
+export type DBType_RemoteControllerData_TypeType = 0
+export const DBType_RemoteControllerData_TYPES = {
+  todo: 0 as DBType_RemoteControllerData_TypeType
+}
+export type DBType_RemoteControllerData = {
+  id: number;
+  remote_controller_id: number;
+  /**
+   * 0 = todo
+   */
+  type: DBType_RemoteControllerData_TypeType;
+  data: {
+    [k: string]: unknown;
+  };
+  created_at: string;
+}
+
+
+export type DBType_DroneData_TypeType = 0
+export const DBType_DroneData_TYPES = {
+  todo: 0 as DBType_DroneData_TypeType
+}
+export type DBType_DroneData = {
+  id: number;
+  drone_id: number;
+  /**
+   * 0 = todo
+   */
+  type: DBType_DroneData_TypeType;
+  data: {
+    [k: string]: unknown;
+  };
+  created_at: string;
+}
+
+

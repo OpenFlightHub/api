@@ -258,6 +258,8 @@ function convertDBMLTypeToJSONSchemaType(type){
 
         case 'uuid': return 'string'
 
+        case 'jsonb': return 'Record<string,any>'
+
         default: throw new Error('unsupported DBML type: ' + type)
 
     }

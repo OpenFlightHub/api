@@ -633,6 +633,37 @@ paths:
         - user_auth: []
 
 
+  /remote-controller/{remote_controller_id}/last-position:
+    get:
+      tags:
+        - remote-controller
+      summary: Get the last remote controller position
+      parameters:
+        - name: remote_controller_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the remote controllers position
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/remote_controller_position'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
   /drone/{drone_id}:
     get:
       tags:
@@ -651,6 +682,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/drone'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /drone/{drone_id}/last-position:
+    get:
+      tags:
+        - drone
+      summary: Get the last positon of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drone last position
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone_position'
 
         '400':
           $ref: '#/components/responses/400'
@@ -992,6 +1054,26 @@ components:
         type:
           $ref: '#/components/schemas/remote_controller_type'
 
+    remote_controller_type:
+      type: integer
+      description: 0 = dji rc pro enterprise, 1 = dji rc plus
+
+    remote_controller_position:
+      type: object
+      required:
+        - longitude
+        - latitude
+        - height
+        - reported_at
+      properties:
+        longitude:
+          type: number
+        latitude:
+          type: number
+        height:
+          type: number
+        reported_at:
+          $ref: '#/components/schemas/timestamptz'
 
     drone:
       type: object
@@ -1010,13 +1092,27 @@ components:
         name:
           type: string
 
-    remote_controller_type:
-      type: integer
-      description: 0 = dji rc pro enterprise, 1 = dji rc plus
-
     drone_type:
       type: integer
       description: 0 = dji mavic 3
+
+    drone_position:
+      type: object
+      required:
+        - longitude
+        - latitude
+        - height
+        - reported_at
+      properties:
+        longitude:
+          type: number
+        latitude:
+          type: number
+        height:
+          type: number
+        reported_at:
+          $ref: '#/components/schemas/timestamptz'
+
 
     # link
 
