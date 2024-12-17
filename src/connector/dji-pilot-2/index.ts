@@ -13,6 +13,9 @@ const connector = new Connector()
 
 connector.onMessage_State((connectionId, message)=>{
     console.log('onMessage_State', connectionId, message)
+
+    //TODO save live_capacity information of rc (and use that to determine if rc can do livestreaming)
+    //TODO website on rc needs to reqest aircraft and rc serial number, send to server so it can identify rc and drone by serial number
 })
 
 
