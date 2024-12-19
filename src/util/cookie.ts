@@ -42,5 +42,5 @@ export async function generateConnectionSessionCookieAndSet(connectionId: number
         sessionToken
     })
 
-    setSessionCookie('link-auth', sessionToken, res)
+    setSessionCookie('connection-link-auth', sessionToken, res)
 }

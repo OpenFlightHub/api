@@ -36,6 +36,8 @@ router.post('/login', asyncHandler(async(req, res)=>{
 
         await generateConnectionSessionCookieAndSet(connection.id, res)
 
+        res.status(200).send()
+
     } catch {
 
         delay(()=>{//delay request so people can't correlate that with email existance
