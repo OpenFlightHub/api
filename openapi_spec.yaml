@@ -494,7 +494,6 @@ paths:
   /workspace/{workspace_id}/connections:
     get:
       tags:
-        - workspace
         - connection
       summary: Get all connections for this workspace
       parameters:
@@ -524,7 +523,6 @@ paths:
 
     post:
       tags:
-        - workspace
         - connection
       summary: Create a new connection for a workspace
       parameters:
@@ -803,7 +801,6 @@ paths:
   /connection-link/dji-pilot-2/sdk-config:
     get:
       tags:
-        - connection-link
         - dji-pilot-2
       summary: Get config required for the dji bridge sdk
       responses:
