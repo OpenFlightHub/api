@@ -5,16 +5,8 @@ import $t from './i18n'
 import * as pgp from 'pg-promise'
 import { DBType_User, DBType_User_STATES, DBType_User_StateType } from '../db/DBTypes'
 import { ApiType_Id } from '../definitions/ApiTypes'
+import { assignObject } from './typescript'
 const db : pgp.IDatabase<any> = global.db
-
-
-
-// typescript compatible version of Object.keys()
-const objectKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>
-
-// typescript compatible version of Object.assign()
-const assignObject = Object.assign as <T extends object, U extends object>(obj: T, other: U) => T & U
-
 
 
 export async function createUser(values: {
