@@ -114,7 +114,7 @@ router.get('/check', asyncHandler(async (req, res) => {
 
     const validSessionToken = typeof sessionToken === 'string'
     if(!validSessionToken){
-        throw GuardError._401_Unauthorized()
+        throw GuardError._401_Unauthorized('invalid session token')
     }
 
     try {
@@ -125,7 +125,7 @@ router.get('/check', asyncHandler(async (req, res) => {
         res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
 
     } catch {
-        res.status(401).send()
+        throw GuardError._401_Unauthorized('invalid session token')
     }
 
 }))

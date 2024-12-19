@@ -32,11 +32,11 @@ describe('GET /auth/check', ()=>{
 
         const res = await request(app)
             .get('/auth/check')
-            .set('Cookie', ['user-auth=session_1'])
+            .set('Cookie', ['user-auth=session_2'])
             .send()
 
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toEqual({id: 1})
+        expect(res.body).toEqual({id: 2})
         expect(res).toSatisfyApiSpec()
     })
 
@@ -85,13 +85,13 @@ describe('POST /auth/login', ()=>{
         const res = await request(app)
             .post('/auth/login')
             .send({
-                username: 'mail@openflighthub.org',
-                password: 'ofh'
+                username: 'test_api_2@openflighthub.org',
+                password: 'CorrectBatteryHorseStaple'
             })
 
         expect(res.statusCode).toEqual(200)
         expect(res.get('Set-Cookie')![0]).toMatch(/.*user-auth=.*/)
-        expect(res.body).toEqual({id: 1})
+        expect(res.body).toEqual({id: 3})
         expect(res).toSatisfyApiSpec()
     })
 
@@ -127,12 +127,12 @@ describe('POST /auth/login-with-token', ()=>{
         const res = await request(app)
             .post('/auth/login-with-token')
             .send({
-                token: '19s7h17sd76g1sd'
+                token: '39s7h17sd76g1sd'
             })
 
         expect(res.statusCode).toEqual(200)
         expect(res.get('Set-Cookie')![0]).toMatch(/.*user-auth=.*/)
-        expect(res.body).toEqual({id: 2})
+        expect(res.body).toEqual({id: 3})
         expect(res).toSatisfyApiSpec()
     })
 

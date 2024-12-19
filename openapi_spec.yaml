@@ -138,9 +138,9 @@ paths:
                 $ref: '#/components/schemas/reference'
 
         '400':
-              $ref: '#/components/responses/400'
+            $ref: '#/components/responses/400'
         '401':
-          description: You are not authenticated
+            $ref: '#/components/responses/401'
 
 
   /auth/password-change:
