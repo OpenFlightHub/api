@@ -118,33 +118,6 @@ app.get('/docs', (req, res) => {
     res.sendFile(path.join(__dirname , './public/docs.html'))
 })
 
-import { getLoginToken } from './util/user'
-import asyncHandler from 'express-async-handler'
-app.post('/make-login-token', asyncHandler(async(req, res) => {
-    //TODO remove this unsafe endpoint which is only needed as dirty fix for worker-scheduler!!!
-
-    if(req.body.secret !== 'a987ds766kjhkads6'){
-        res.status(404).send()
-        return
-    }
-
-    const body = req.GM.guardBodySchema<{
-        user_id: number
-    }>({
-        type: 'object',
-        required: ['user_id'],
-        properties: {
-            user_id: {
-                type: 'number'
-            }
-        }
-    })
-
-    const token = await getLoginToken(body.user_id)
-
-    res.GM.guardSend({token}, {type: 'object', required: ['token'], properties: {token: {type: 'string'}}})
-}))
-
 import authRoute from './routes/auth'
 app.use('/auth', authRoute)
 
@@ -164,8 +137,8 @@ app.use('/drone', droneRoute)
 import remoteControllerRoute from './routes/remote-controller'
 app.use('/remote-controller', remoteControllerRoute)
 
-import linkRoute from './routes/link'
-app.use('/link', linkRoute)
+import connectionLinkRoute from './routes/connection-link'
+app.use('/connection-link', connectionLinkRoute)
 
 
 //websockets
@@ -191,8 +164,6 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
     }
 })
 
-
-import './mqtt'
 
 import FakeDrone from './connector/dji-pilot-2/FakeDrone'
 

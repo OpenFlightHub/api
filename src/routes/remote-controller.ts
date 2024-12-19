@@ -4,7 +4,7 @@ import pgp from 'pg-promise'
 import { selectDrone, selectRemoteController, selectRemoteControllerData } from '../db/DBHelpers';
 import { ApiSchema_RemoteController, ApiSchema_RemoteControllerPosition } from '../definitions/ApiSchemas';
 import { DBType_Connection, DBType_RemoteControllerData } from '../db/DBTypes';
-import { ApiType_RemoteControllerPosition } from '../definitions/ApiTypes';
+import { ApiType_RemoteController, ApiType_RemoteControllerPosition } from '../definitions/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -38,7 +38,7 @@ router.get('/:remote_controller_id', asyncHandler(async (req, res) => {
         return selectRemoteController(remoteControllerId)
     })
 
-    res.GM.guardSend(remoteController, ApiSchema_RemoteController)
+    res.GM.guardSend<ApiType_RemoteController>(remoteController, ApiSchema_RemoteController)
 }))
 
 router.get('/:remote_controller_id/last-position', asyncHandler(async (req, res) => {
@@ -64,7 +64,7 @@ router.get('/:remote_controller_id/last-position', asyncHandler(async (req, res)
         height: remoteControllerLastPosition.data.height as number
     }
 
-    res.GM.guardSend(ret, ApiSchema_RemoteControllerPosition)
+    res.GM.guardSend<ApiType_RemoteControllerPosition>(ret, ApiSchema_RemoteControllerPosition)
 }))
 
 

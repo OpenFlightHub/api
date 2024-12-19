@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
 import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
-import { ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
+import { ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
 import { DBType_Connection, DBType_Workspace } from '../db/DBTypes';
 import { createConnection } from '../util/connection';
 const db : pgp.IDatabase<any> = global.db
@@ -30,7 +30,7 @@ router.get('/my-workspaces', asyncHandler(async (req, res) => {
         user_id: user.id
     })
 
-    req.GM.guardSend(workspaces, {type: 'array', items: ApiSchema_Workspace})
+    req.GM.guardSend<ApiType_Workspace[]>(workspaces, {type: 'array', items: ApiSchema_Workspace})
 
 }))
 
@@ -41,7 +41,7 @@ router.post('/', asyncHandler(async (req, res) => {
 
     const workspace = await insertWorkspace(requestBody)
 
-    res.GM.guardSend(workspace, ApiSchema_Reference)
+    res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
 
 
@@ -55,7 +55,7 @@ router.get('/:workspace_id', asyncHandler(async (req, res) => {
         return selectWorkspace(workspaceId)
     })
 
-    res.GM.guardSend(workspace, ApiSchema_Workspace)
+    res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Workspace)
 }))
 
 
@@ -71,7 +71,7 @@ router.patch('/:workspace_id', asyncHandler(async (req, res) => {
         return updateWorkspace(requestBody, workspaceId)
     })
 
-    res.GM.guardSend(updatedWorkspace, ApiSchema_Workspace)
+    res.GM.guardSend<ApiType_Workspace>(updatedWorkspace, ApiSchema_Workspace)
 }))
 
 router.delete('/:workspace_id', asyncHandler(async (req, res) => {
@@ -102,7 +102,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
         workspaceId
     })
 
-    req.GM.guardSend(connections, ApiSchema_WorkspaceConnections)
+    req.GM.guardSend<ApiType_WorkspaceConnections>(connections, ApiSchema_WorkspaceConnections)
 
 }))
 
@@ -120,10 +120,10 @@ router.post('/:workspace_id/connection', asyncHandler(async (req, res) => {
 
     const connection = await createConnection(workspaceId, requestBody.name)
 
-    res.GM.guardSend({
-        id: connection.id,
-        secret: connection.access_key
-    } as ApiType_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceConnectionsPostResponse)
+    res.GM.guardSend<ApiType_WorkspaceConnectionsPostResponse>({
+        connection_id: connection.id,
+        secret: connection.secret
+    }, ApiSchema_WorkspaceConnectionsPostResponse)
 
 }))
 

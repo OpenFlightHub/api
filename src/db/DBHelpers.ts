@@ -303,14 +303,16 @@ export function deleteWorkspacePermission(id: number){
 import {} from "./DBTypes";
 
 export type DBInsert_Connection = {
-    access_key: string
+    secret: string
+    session_token?: string
     workspace_id: number
     remote_controller_id?: number
     drone_id?: number
 }
 
 export type DBUpdate_Connection = {
-    access_key?: string
+    secret?: string
+    session_token?: string
     workspace_id?: number
     remote_controller_id?: number
     drone_id?: number
@@ -321,7 +323,11 @@ const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
         "cnd": true
     },
     {
-        "name": "access_key"
+        "name": "secret"
+    },
+    {
+        "name": "session_token",
+        "skip": col => !col.exists
     },
     {
         "name": "workspace_id"
@@ -342,7 +348,11 @@ const COLUMN_SET_CONNECTIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "access_key",
+        "name": "secret",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "session_token",
         "skip": col => !col.exists
     },
     {

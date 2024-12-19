@@ -1,5 +1,5 @@
 
-import * as request from "supertest"
+import request from "supertest"
 import app from './../../app'
 import makeJestOpenAPI from './_makeJestOpenAPI'
 
@@ -9,7 +9,6 @@ makeJestOpenAPI()
 import type * as OpenAPI from 'openapi-types'
 
 import * as fs from 'fs'
-import { generateIdempotencyToken } from "../../__test_helpers__/idempotency"
 const api : OpenAPI.OpenAPI.Document = JSON.parse(fs.readFileSync('./openapi_spec.json', {
     encoding: 'utf-8'
 }))
@@ -55,12 +54,6 @@ describe('general status codes', ()=>{
                     let func : (url: string) => request.Test = req[method]
 
                     let prep = func(path)
-
-                    if(methodObject.parameters && methodObject.parameters.find(el => el.name === 'idempotency')){
-                        prep = prep.query({
-                            idempotency: await generateIdempotencyToken(app)
-                        })
-                    }
 
                     const res = await prep
                         .send()

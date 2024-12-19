@@ -6,15 +6,15 @@ const db : pgp.IDatabase<any> = global.db
 
 import * as crypto from './../util/crypto'
 import { DBType_User, DBType_User_STATES } from '../db/DBTypes'
-import { ApiType_Id, ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost } from './../definitions/ApiTypes'
+import { ApiType_Id, ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost, ApiType_User, ApiType_Reference } from './../definitions/ApiTypes'
 import { ApiSchema_AuthLoginPost, ApiSchema_AuthLoginWithTokenPost, ApiSchema_AuthPasswordChangePost, ApiSchema_AuthPasswordResetPost, ApiSchema_AuthPasswordSetInitialPost, ApiSchema_AuthPasswordSetNewPost, ApiSchema_Reference } from '../definitions/ApiSchemas';
 import { GuardError } from '../ManInTheMiddleware';
 import liveUpdate from './live'
 import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
 import { selectUser, updateUser } from '../db/DBHelpers';
 import { resetPasswordForEmail } from '../util/user';
+import { generateUserSessionCookieAndSet } from '../util/cookie'
 
-const SESSION_TOKEN_BYTE_LENGTH = 42
 
 const router = express.Router()
 
@@ -58,7 +58,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
         confirmUser(user.id)
 
-        await generateSessionCookieAndSet(user.id, res)
+        await generateUserSessionCookieAndSet(user.id, res)
 
         try {
             liveUpdate.forceLogoutUser(user.id)
@@ -67,7 +67,7 @@ router.post('/login', asyncHandler(async (req, res) => {
             console.log('failed to logout live-update sessions for user', user.id, err)
         }
 
-        res.GM.guardSend(user, ApiSchema_Reference)
+        res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
     }
 
 }))
@@ -86,7 +86,7 @@ router.post('/login-with-token', asyncHandler(async (req, res) => {
 
             confirmUser(user.id)
 
-            await generateSessionCookieAndSet(user.id, res)
+            await generateUserSessionCookieAndSet(user.id, res)
 
             try {
                 liveUpdate.forceLogoutUser(user.id)
@@ -96,7 +96,7 @@ router.post('/login-with-token', asyncHandler(async (req, res) => {
             }
 
 
-            res.GM.guardSend(user, ApiSchema_Reference)
+            res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
         } catch (err){
             console.error(err)
             throw err
@@ -114,7 +114,7 @@ router.get('/check', asyncHandler(async (req, res) => {
 
     const validSessionToken = typeof sessionToken === 'string'
     if(!validSessionToken){
-        throw GuardError._400_BadRequest('invalid session token')
+        throw GuardError._401_Unauthorized()
     }
 
     try {
@@ -122,7 +122,7 @@ router.get('/check', asyncHandler(async (req, res) => {
             sessionToken
         }) as DBType_User
 
-        res.GM.guardSend(user, ApiSchema_Reference)
+        res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
 
     } catch {
         res.status(401).send()
@@ -245,32 +245,20 @@ router.post('/logout', asyncHandler(async (req, res) => {
         }
 
     } catch {
-        res.status(401).send()
+        res.cookie('user-auth', 'invalid', {
+            //secure: true, TODO enable for production (but does this not kill api client sdk?)
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 42
+        })
+
+        res.status(200).send()
     }
 
 }))
 
 
 export default router
-
-
-async function generateSessionCookieAndSet(userId: ApiType_Id, res: express.Response){
-
-    const sessionToken = crypto.generateUniqueToken(SESSION_TOKEN_BYTE_LENGTH)
-
-    await db.none('UPDATE users SET session_token = ${sessionToken} WHERE id = ${id};', {
-        id: userId,
-        sessionToken
-    })
-
-    //set cookie
-    res.cookie('user-auth', sessionToken, {
-        //secure: true, TODO enable for production (but does this not kill api client sdk?)
-        httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24
-    })
-}
 
 async function confirmUser(userId: number){
     try {

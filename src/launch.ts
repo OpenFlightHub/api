@@ -6,3 +6,7 @@ const HOST = '0.0.0.0';
 export const server = app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
 })
+
+
+import {setup} from './mqtt'
+setup(9002)

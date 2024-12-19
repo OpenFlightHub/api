@@ -7,7 +7,7 @@ import { generateUniqueToken } from '../util/crypto'
 export async function createConnection(workspaceId: number, connectionName: string){
 
     const connection = await insertConnection({
-        access_key: generateUniqueToken(25),
+        secret: generateUniqueToken(25),
         workspace_id: workspaceId
     })
 

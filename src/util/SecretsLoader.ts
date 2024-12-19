@@ -1,4 +1,4 @@
-import JsonLoader from './JsonLoader.js'
+import JsonLoader from './JsonLoader'
 
 export default class SecretsLoader {
 

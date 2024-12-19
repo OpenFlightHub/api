@@ -58,7 +58,8 @@ export type DBType_Connection = {
   /**
    * used as credential together with id
    */
-  access_key: string;
+  secret: string;
+  session_token?: string;
   workspace_id: number;
   remote_controller_id?: number;
   drone_id?: number;

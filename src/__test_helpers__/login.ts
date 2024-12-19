@@ -6,7 +6,7 @@ export async function getAuthCookieValue(app: App, loginToken: string){
         token: loginToken
     })
 
-    const cookie = login.get('Set-Cookie')[0]
+    const cookie = login.get('Set-Cookie')![0]
     if(!cookie){
         throw new Error('Set-Cookie header missing')
     }

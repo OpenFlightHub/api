@@ -3,9 +3,10 @@ import { DBType_User } from '../db/DBTypes';
 import { ApiSchema_User, ApiSchema_UserPatch, ApiSchema_UserSelf } from '../definitions/ApiSchemas';
 import asyncHandler from 'express-async-handler'
 import { selectUser, updateUser } from '../db/DBHelpers';
-import { ApiType_UserPatch } from '../definitions/ApiTypes';
+import { ApiType_User, ApiType_UserPatch, ApiType_UserSelf } from '../definitions/ApiTypes';
 import pgp from 'pg-promise'
 import { GuardError } from '../ManInTheMiddleware';
+import { assignObject } from '../util/typescript'
 
 
 const router = express.Router()
@@ -15,9 +16,11 @@ router.get('/self', asyncHandler(async (req, res) => {
 
     const user = await req.GM.guardUserIsAuthenticated()
 
-    Object.assign(user, {registration_incomplete: typeof user.password !== 'string'})
+    res.GM.guardSend<ApiType_UserSelf>(
+        assignObject(user, {registration_incomplete: typeof user.password !== 'string'}),
+        ApiSchema_UserSelf
+    )
 
-    res.GM.guardSend(user, ApiSchema_UserSelf)
 }))
 
 router.get('/:user_id', asyncHandler(async (req, res) => {
@@ -30,7 +33,7 @@ router.get('/:user_id', asyncHandler(async (req, res) => {
         return selectUser(user_id)
     })
 
-    res.GM.guardSend(user, ApiSchema_User)
+    res.GM.guardSend<ApiType_User>(user, ApiSchema_User)
 }))
 
 router.patch('/:user_id', asyncHandler(async (req, res) => {
@@ -49,10 +52,10 @@ router.patch('/:user_id', asyncHandler(async (req, res) => {
 
     const updatedUser = await updateUser(newUser, user.id)
 
-    Object.assign(updatedUser, {registration_incomplete: typeof updatedUser.password !== 'string'})
-
-
-    res.GM.guardSend(updatedUser, ApiSchema_UserSelf)
+    res.GM.guardSend<ApiType_UserSelf>(
+        assignObject(updatedUser, {registration_incomplete: typeof updatedUser.password !== 'string'}),
+        ApiSchema_UserSelf
+    )
 }))
 
 export default router

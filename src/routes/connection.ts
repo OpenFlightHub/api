@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { deleteConnection, selectConnection } from '../db/DBHelpers';
 import { ApiSchema_Connection } from '../definitions/ApiSchemas';
+import { ApiType_Connection } from '../definitions/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -32,7 +33,7 @@ router.get('/:connection_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    res.GM.guardSend(connection, ApiSchema_Connection)
+    res.GM.guardSend<ApiType_Connection>(connection, ApiSchema_Connection)
 }))
 
 router.delete('/:connection_id', asyncHandler(async (req, res) => {

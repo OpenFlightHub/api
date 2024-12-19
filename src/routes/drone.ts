@@ -4,7 +4,7 @@ import pgp from 'pg-promise'
 import { selectDrone } from '../db/DBHelpers';
 import { ApiSchema_Drone, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
 import { DBType_Connection, DBType_DroneData } from '../db/DBTypes';
-import { ApiType_DronePosition } from '../definitions/ApiTypes';
+import { ApiType_Drone, ApiType_DronePosition } from '../definitions/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -38,7 +38,7 @@ router.get('/:drone_id', asyncHandler(async (req, res) => {
         return selectDrone(droneId)
     })
 
-    res.GM.guardSend(drone, ApiSchema_Drone)
+    res.GM.guardSend<ApiType_Drone>(drone, ApiSchema_Drone)
 }))
 
 
@@ -67,7 +67,7 @@ router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
         height: droneLastPosition.data.height as number
     }
 
-    res.GM.guardSend(ret, ApiSchema_DronePosition)
+    res.GM.guardSend<ApiType_DronePosition>(ret, ApiSchema_DronePosition)
 }))
 
 

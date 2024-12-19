@@ -302,11 +302,11 @@ export const ApiSchema_WorkspaceConnectionsPost : JSONSchema  = {
 export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
     "type": "object",
     "required": [
-        "id",
+        "connection_id",
         "secret"
     ],
     "properties": {
-        "id": {
+        "connection_id": {
             "type": "number",
             "example": 42
         },
@@ -449,14 +449,14 @@ export const ApiSchema_DronePosition : JSONSchema  = {
     }
 }
 
-export const ApiSchema_LinkAuthLoginPost : JSONSchema  = {
+export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [
-        "id",
+        "connection_id",
         "secret"
     ],
     "properties": {
-        "id": {
+        "connection_id": {
             "type": "string"
         },
         "secret": {
@@ -465,7 +465,7 @@ export const ApiSchema_LinkAuthLoginPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_LinkWorkspace : JSONSchema  = {
+export const ApiSchema_ConnectionLinkMyWorkspace : JSONSchema  = {
     "type": "object",
     "required": [
         "id",
@@ -481,7 +481,7 @@ export const ApiSchema_LinkWorkspace : JSONSchema  = {
     }
 }
 
-export const ApiSchema_LinkDjiPilot2SdkConfig : JSONSchema  = {
+export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
     "type": "object",
     "required": [
         "app_id",

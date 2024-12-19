@@ -130,7 +130,7 @@ export type ApiType_WorkspaceConnectionsPost = {
 
 
 export type ApiType_WorkspaceConnectionsPostResponse = {
-    id: number;
+    connection_id: number;
     secret: string;
 }
 
@@ -197,19 +197,19 @@ export type ApiType_DronePosition = {
 }
 
 
-export type ApiType_LinkAuthLoginPost = {
-    id: string;
+export type ApiType_ConnectionLinkAuthLoginPost = {
+    connection_id: string;
     secret: string;
 }
 
 
-export type ApiType_LinkWorkspace = {
+export type ApiType_ConnectionLinkMyWorkspace = {
     id: string;
     name: string;
 }
 
 
-export type ApiType_LinkDjiPilot2SdkConfig = {
+export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
     app_id: string;
     app_key: string;
     app_license: string;

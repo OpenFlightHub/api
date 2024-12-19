@@ -57,8 +57,15 @@ servers:
   - url: http://localhost/
 tags:
   - name: authentication
-    description: Everything about authentication
-
+    description: Everything about authentication (for link authentication see `/link` endpoints)
+  - name: user
+  - name: workspace
+  - name: connection
+  - name: remote-controller
+  - name: drone
+  - name: dji-pilot-2
+  - name: connection-link
+    description: All the endpoints for linked devices (e.g. a drone or a remote controller)
 paths:
 
   # auth
@@ -130,6 +137,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/reference'
 
+        '400':
+              $ref: '#/components/responses/400'
         '401':
           description: You are not authenticated
 
@@ -195,6 +204,8 @@ paths:
         '418':
           description: Invalid code
 
+        '401':
+              $ref: '#/components/responses/401'
         '400':
           $ref: '#/components/responses/400'
       security:
@@ -254,8 +265,6 @@ paths:
             headers:
               Set-Cookie:
                 $ref: '#/components/headers/user_auth'
-      security:
-        - user_auth: []
 
   # user
 
@@ -392,7 +401,7 @@ paths:
         '403':
           $ref: '#/components/responses/403'
       security:
-        - link_auth: []
+        - connection_link_auth: []
 
   /workspace/{workspace_id}:
     get:
@@ -486,6 +495,7 @@ paths:
     get:
       tags:
         - workspace
+        - connection
       summary: Get all connections for this workspace
       parameters:
         - name: workspace_id
@@ -515,6 +525,7 @@ paths:
     post:
       tags:
         - workspace
+        - connection
       summary: Create a new connection for a workspace
       parameters:
         - name: workspace_id
@@ -529,7 +540,7 @@ paths:
               $ref: '#/components/schemas/workspace_connections_post'
       responses:
         '200':
-          description: Returns the connection credentials
+          description: Returns the connection credentials (used at the "/link" endpoints)
           content:
             application/json:
               schema:
@@ -726,13 +737,12 @@ paths:
         - user_auth: []
 
 
-  # link
+  # connection-link
 
-
-  /link/auth/check:
+  /connection-link/auth/check:
     get:
       tags:
-        - connect
+        - connection-link
       summary: Check if the credentials are valid
       responses:
         '200':
@@ -741,34 +751,33 @@ paths:
         '401':
           $ref: '#/components/responses/401'
 
-  /link/auth/login:
+  /connection-link/auth/login:
     post:
       tags:
-        - link
+        - connection-link
       summary: Login with credentials
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/link_auth_login_post'
+              $ref: '#/components/schemas/connection_link_auth_login_post'
         required: true
       responses:
         '200':
           description: Logged in successfully
           headers:
             Set-Cookie:
-              $ref: '#/components/headers/link_auth'
-
+              $ref: '#/components/headers/connection_link_auth'
+        '400':
+          $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
-      security:
-        - link_auth: []
 
 
-  /link/my-workspace:
+  /connection-link/my-workspace:
     get:
       tags:
-        - link
+        - connection-link
       summary: Get information about the workspace i am linked to
       responses:
         '200':
@@ -777,22 +786,23 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/link_workspace'
+                  - $ref: '#/components/schemas/connection_link_my_workspace'
                   - type: boolean
                     example: false
 
         '401':
           $ref: '#/components/responses/401'
       security:
-        - link_auth: []
+        - connection_link_auth: []
 
 
   # dji pilot 2
 
-  /link/dji-pilot-2/sdk-config:
+  /connection-link/dji-pilot-2/sdk-config:
     get:
       tags:
-        - link-dji-pilot-2
+        - connection-link
+        - dji-pilot-2
       summary: Get config required for the dji bridge sdk
       responses:
         '200':
@@ -800,12 +810,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/link_dji_pilot_2_sdk_config'
+                $ref: '#/components/schemas/connection_link_dji_pilot_2_sdk_config'
 
         '401':
           $ref: '#/components/responses/401'
       security:
-        - link_auth: []
+        - connection_link_auth: []
 
 
 components:
@@ -1020,10 +1030,10 @@ components:
     workspace_connections_post_response:
       type: object
       required:
-        - id
+        - connection_id
         - secret
       properties:
-        id:
+        connection_id:
           $ref: '#/components/schemas/id'
         secret:
           type: string
@@ -1114,21 +1124,21 @@ components:
           $ref: '#/components/schemas/timestamptz'
 
 
-    # link
+    # connection-link
 
-    link_auth_login_post:
+    connection_link_auth_login_post:
       type: object
       required:
-        - id
+        - connection_id
         - secret
       properties:
-        id:
+        connection_id:
           type: string
         secret:
           type: string
 
 
-    link_workspace:
+    connection_link_my_workspace:
       type: object
       required:
         - id
@@ -1139,7 +1149,7 @@ components:
         name:
           type: string
 
-    link_dji_pilot_2_sdk_config:
+    connection_link_dji_pilot_2_sdk_config:
       type: object
       required:
         - app_id
@@ -1194,8 +1204,8 @@ components:
       schema:
         type: string
         example: user-auth=abcde12345; Path=/; HttpOnly
-    link_auth:
-      description: used for authentication of a connection
+    connection_link_auth:
+      description: used for authentication of a connection link
       schema:
         type: string
         example: connect-auth=abcde12345; Path=/; HttpOnly
@@ -1205,7 +1215,7 @@ components:
       type: apiKey
       in: cookie
       name: user-auth
-    link_auth:
+    connection_link_auth:
       type: apiKey
       in: cookie
-      name: link-auth
+      name: connection-link-auth

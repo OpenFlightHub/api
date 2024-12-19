@@ -2,9 +2,7 @@ import { NextFunction, RequestHandler, Request, Response, Express } from 'expres
 import { validate, filterObject, FilterError } from './util/schema'
 import { DBType_User, DBType_Connection, DBType_WorkspacePermission } from './db/DBTypes'
 import * as pgp from 'pg-promise'
-import { ApiType_Id } from './definitions/ApiTypes'
 import { JSONSchema } from 'json-schema-to-typescript'
-import { selectUser } from './db/DBHelpers'
 import { DBType_User_STATES } from './db/DBTypes'
 
 const db : pgp.IDatabase<any> = global.db
@@ -83,10 +81,10 @@ export function getUserForSessionToken(token: string) : Promise<false | DBType_U
     })
 }
 
-export function getConnectionForAccessKey(accessKey: string) : Promise<false | DBType_Connection> {
+export function getConnectionForSessionToken(sessionToken: string) : Promise<false | DBType_Connection> {
     return new Promise(resolve=>{
-        db.one('SELECT * FROM connections WHERE access_key = ${accessKey};', {
-            accessKey
+        db.one('SELECT * FROM connections WHERE session_token = ${sessionToken};', {
+            sessionToken
         }).then(result => {
             resolve(result)
         }).catch(()=>{
@@ -155,14 +153,14 @@ export class GuardedMiddleware {
         }
     }
 
-    async guardLinkIsAuthenticatedAsConnection() : Promise<DBType_Connection> {
-        const cookie = this.req.cookies['connect-auth']
+    async guardConnectionLinkIsAuthenticated() : Promise<DBType_Connection> {
+        const cookie = this.req.cookies['connection-link-auth']
 
         if(!cookie){
             throw GuardError._401_Unauthorized()
         }
 
-        const connection = await getConnectionForAccessKey(cookie)
+        const connection = await getConnectionForSessionToken(cookie)
 
         if(connection === false){ //invalid token
             throw GuardError._401_Unauthorized()
@@ -177,7 +175,7 @@ export class GuardedMiddleware {
         if(this.currentConnection){
             return this.currentConnection
         } else {
-            return await this.guardLinkIsAuthenticatedAsConnection()
+            return await this.guardConnectionLinkIsAuthenticated()
         }
     }
 
@@ -327,7 +325,7 @@ export class GuardedMiddleware {
         }
     }
 
-    guardSend(responseBody: object, schema: JSONSchema){
+    guardSend<T extends Record<string, any>>(responseBody: T, schema: JSONSchema){
 
         if(responseBody instanceof Promise){
             throw new Error('responseBody is a Promise, did you forget await?')
