@@ -33,13 +33,18 @@ describe('general status codes', ()=>{
             }
 
             it(`${method.toUpperCase()} ${path} should not return 404`, async()=>{
-
                 const req = request(app)
 
                 let func : (url: string) => request.Test = req[method]
 
-                const res = await func(path)
-                    .send()
+
+                const f = func(path)
+
+                if(methodObject.security){
+                    f.set('Cookie', ['user-auth=session_2'])
+                }
+
+                const res = await f.send()
 
                 expect(res.statusCode).not.toEqual(404)
                 expect(res).toSatisfyApiSpec()
