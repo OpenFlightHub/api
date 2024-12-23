@@ -8,7 +8,7 @@ const db : pgp.IDatabase<any> = global.db
 import SecretsLoader from '../../util/SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets([
-    'dji_cloud_app_id', 'dji_cloud_app_key', 'dji_cloud_app_license', 'platform_url', 'mqtt_port'])
+    'dji_cloud_app_id', 'dji_cloud_app_key', 'dji_cloud_app_license', 'platform_url', 'mqtt_port', 'rtmp_url'])
 
 const router = express.Router()
 
@@ -22,7 +22,8 @@ router.get('/sdk-config', asyncHandler(async (req, res) => {
         app_id: secrets.dji_cloud_app_id,
         app_key: secrets.dji_cloud_app_key,
         app_license: secrets.dji_cloud_app_license,
-        mqtt_url: secrets.platform_url + ':' + secrets.mqtt_port
+        mqtt_url: secrets.platform_url + ':' + secrets.mqtt_port,
+        rtmp_url:secrets.rtmp_url
     }, ApiSchema_ConnectionLinkDjiPilot2SdkConfig)
 
 }))

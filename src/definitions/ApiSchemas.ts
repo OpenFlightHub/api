@@ -498,7 +498,8 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
         "app_id",
         "app_key",
         "app_license",
-        "mqtt_url"
+        "mqtt_url",
+        "rtmp_url"
     ],
     "properties": {
         "app_id": {
@@ -511,6 +512,9 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
             "type": "string"
         },
         "mqtt_url": {
+            "type": "string"
+        },
+        "rtmp_url": {
             "type": "string"
         }
     }

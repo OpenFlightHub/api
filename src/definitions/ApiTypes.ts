@@ -217,6 +217,7 @@ export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
     app_key: string;
     app_license: string;
     mqtt_url: string;
+    rtmp_url: string;
 }
 
 

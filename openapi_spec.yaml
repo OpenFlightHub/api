@@ -1159,6 +1159,7 @@ components:
         - app_key
         - app_license
         - mqtt_url
+        - rtmp_url
       properties:
         app_id:
           type: string
@@ -1167,6 +1168,8 @@ components:
         app_license:
           type: string
         mqtt_url:
+          type: string
+        rtmp_url:
           type: string
 
 

@@ -28,7 +28,8 @@ example contents:
     "dji_cloud_app_key": "cabba",
     "dji_cloud_app_license": "loicense=",
 
-    "mqtt_port": 9002
+    "mqtt_port": 9002,
+    "rtmp_url": "stream.rocks/ome"
 }
 ```
 
@@ -62,7 +63,8 @@ make sure that you created an action secret called `SECRETS` here https://github
     "dji_cloud_app_key": "cabba",
     "dji_cloud_app_license": "loicense=",
 
-    "mqtt_port": 9002
+    "mqtt_port": 9002,
+    "rtmp_url": "stream.rocks/ome"
 }
 ```
 
