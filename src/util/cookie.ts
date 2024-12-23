@@ -2,6 +2,7 @@ import * as express from 'express'
 import {generateUniqueToken} from './crypto'
 import {ApiType_Id} from '../definitions/ApiTypes'
 import pgp from 'pg-promise'
+import { selectUser } from '../db/DBHelpers'
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -21,9 +22,20 @@ function setSessionCookie(cookieName: string, cookieValue: string, res: express.
     })
 }
 
-export async function generateUserSessionCookieAndSet(userId: number, res: express.Response){
+export async function generateUserSessionCookieAndSet(userId: number, res: express.Response, allowReuseExistingSessionToken?: boolean){
 
-    const sessionToken = generateSessionCookie()
+    let sessionToken: string
+    if(allowReuseExistingSessionToken){
+        const currentToken = (await selectUser(userId)).session_token
+
+        if(currentToken){
+            sessionToken = currentToken
+        } else {
+            sessionToken = generateSessionCookie()
+        }
+    } else {
+        sessionToken = generateSessionCookie()
+    }
 
     await db.none('UPDATE users SET session_token = ${sessionToken} WHERE id = ${id};', {
         id: userId,

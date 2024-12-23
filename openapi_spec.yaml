@@ -63,7 +63,6 @@ tags:
   - name: connection
   - name: remote-controller
   - name: drone
-  - name: dji-pilot-2
   - name: connection-link
     description: All the endpoints for linked devices (e.g. a drone or a remote controller)
 paths:
@@ -773,22 +772,18 @@ paths:
         '418':
           description: Invalid credentials
 
-
-  /connection-link/my-workspace:
+  /connection-link/config:
     get:
       tags:
         - connection-link
-      summary: Get information about the workspace i am linked to
+      summary: Get config required for the OpenFlightHub ConnectLink SDK
       responses:
         '200':
-          description: either `false` (no workspace linked) or the workspace
+          description: Returns the config
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/connection_link_my_workspace'
-                  - type: boolean
-                    example: false
+                $ref: '#/components/schemas/connection_link_config'
 
         '401':
           $ref: '#/components/responses/401'
@@ -796,13 +791,11 @@ paths:
         - connection_link_auth: []
 
 
-  # dji pilot 2
-
   /connection-link/dji-pilot-2/sdk-config:
     get:
       tags:
-        - dji-pilot-2
-      summary: Get config required for the dji bridge sdk
+        - connection-link
+      summary: Get config required for the OpenFlightHub ConnectLink SDK (when using dji pilot 2)
       responses:
         '200':
           description: Returns the config
@@ -1033,7 +1026,7 @@ components:
         - secret
       properties:
         connection_id:
-          $ref: '#/components/schemas/id'
+          type: string
         secret:
           type: string
 
@@ -1137,15 +1130,24 @@ components:
           type: string
 
 
-    connection_link_my_workspace:
+    connection_link_config:
       type: object
       required:
-        - id
-        - name
+        - workspace_id
+        - workspace_name
+        - platform_name
+        - platform_url
+        - secret
       properties:
-        id:
+        platform_name:
           type: string
-        name:
+        platform_url:
+          type: string
+        workspace_id:
+          type: string
+        workspace_name:
+          type: string
+        secret:
           type: string
 
     connection_link_dji_pilot_2_sdk_config:
@@ -1154,12 +1156,15 @@ components:
         - app_id
         - app_key
         - app_license
+        - mqtt_url
       properties:
         app_id:
           type: string
         app_key:
           type: string
         app_license:
+          type: string
+        mqtt_url:
           type: string
 
 

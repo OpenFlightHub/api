@@ -130,7 +130,7 @@ export type ApiType_WorkspaceConnectionsPost = {
 
 
 export type ApiType_WorkspaceConnectionsPostResponse = {
-    connection_id: number;
+    connection_id: string;
     secret: string;
 }
 
@@ -203,9 +203,12 @@ export type ApiType_ConnectionLinkAuthLoginPost = {
 }
 
 
-export type ApiType_ConnectionLinkMyWorkspace = {
-    id: string;
-    name: string;
+export type ApiType_ConnectionLinkConfig = {
+    platform_name: string;
+    platform_url: string;
+    workspace_id: string;
+    workspace_name: string;
+    secret: string;
 }
 
 
@@ -213,6 +216,7 @@ export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
     app_id: string;
     app_key: string;
     app_license: string;
+    mqtt_url: string;
 }
 
 

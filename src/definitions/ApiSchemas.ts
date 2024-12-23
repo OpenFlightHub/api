@@ -307,8 +307,7 @@ export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
     ],
     "properties": {
         "connection_id": {
-            "type": "number",
-            "example": 42
+            "type": "string"
         },
         "secret": {
             "type": "string"
@@ -465,17 +464,29 @@ export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectionLinkMyWorkspace : JSONSchema  = {
+export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
     "type": "object",
     "required": [
-        "id",
-        "name"
+        "workspace_id",
+        "workspace_name",
+        "platform_name",
+        "platform_url",
+        "secret"
     ],
     "properties": {
-        "id": {
+        "platform_name": {
             "type": "string"
         },
-        "name": {
+        "platform_url": {
+            "type": "string"
+        },
+        "workspace_id": {
+            "type": "string"
+        },
+        "workspace_name": {
+            "type": "string"
+        },
+        "secret": {
             "type": "string"
         }
     }
@@ -486,7 +497,8 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
     "required": [
         "app_id",
         "app_key",
-        "app_license"
+        "app_license",
+        "mqtt_url"
     ],
     "properties": {
         "app_id": {
@@ -496,6 +508,9 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
             "type": "string"
         },
         "app_license": {
+            "type": "string"
+        },
+        "mqtt_url": {
             "type": "string"
         }
     }

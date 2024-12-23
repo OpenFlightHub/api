@@ -106,7 +106,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
 
 }))
 
-router.post('/:workspace_id/connection', asyncHandler(async (req, res) => {
+router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
 
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
@@ -121,7 +121,7 @@ router.post('/:workspace_id/connection', asyncHandler(async (req, res) => {
     const connection = await createConnection(workspaceId, requestBody.name)
 
     res.GM.guardSend<ApiType_WorkspaceConnectionsPostResponse>({
-        connection_id: connection.id,
+        connection_id: '' + connection.id,
         secret: connection.secret
     }, ApiSchema_WorkspaceConnectionsPostResponse)
 

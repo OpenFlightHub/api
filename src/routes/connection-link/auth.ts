@@ -7,7 +7,7 @@ const router = express.Router()
 
 import { ApiSchema_ConnectionLinkAuthLoginPost } from '../../definitions/ApiSchemas';
 import { ApiType_ConnectionLinkAuthLoginPost } from '../../definitions/ApiTypes';
-import { generateConnectionSessionCookieAndSet } from '../../util/cookie'
+import { generateConnectionSessionCookieAndSet as generateConnectionSessionCookieAndSet } from '../../util/cookie'
 import { DBType_Connection } from '../../db/DBTypes';
 
 

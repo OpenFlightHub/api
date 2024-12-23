@@ -58,7 +58,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
         confirmUser(user.id)
 
-        await generateUserSessionCookieAndSet(user.id, res)
+        await generateUserSessionCookieAndSet(user.id, res, true)
 
         try {
             liveUpdate.forceLogoutUser(user.id)
@@ -86,7 +86,7 @@ router.post('/login-with-token', asyncHandler(async (req, res) => {
 
             confirmUser(user.id)
 
-            await generateUserSessionCookieAndSet(user.id, res)
+            await generateUserSessionCookieAndSet(user.id, res, true)
 
             try {
                 liveUpdate.forceLogoutUser(user.id)

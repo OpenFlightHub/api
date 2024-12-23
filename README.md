@@ -18,7 +18,17 @@ example contents:
     "mail_password": "abcde",
     "mail_from": "\"OpenFlightHub\" mail@openflighthub.org",
 
-    "emailHashPepper": "abcde="
+    "emailHashPepper": "abcde=",
+
+    "platform_name": "OpenFlightHub",
+    "platform_url": "dev.openflighthub.org",
+    "platform_uuid": "e97dd32f-5977-44f9-ab4d-e34205012dce",
+
+    "dji_cloud_app_id": "12345",
+    "dji_cloud_app_key": "cabba",
+    "dji_cloud_app_license": "loicense=",
+
+    "mqtt_port": 9002
 }
 ```
 
@@ -42,7 +52,17 @@ make sure that you created an action secret called `SECRETS` here https://github
     "mail_password": "abcde",
     "mail_from": "\"OpenFlightHub\" mail@openflighthub.org",
 
-    "emailHashPepper": "abcde="
+    "emailHashPepper": "abcde=",
+
+    "platform_name": "OpenFlightHub",
+    "platform_url": "dev.openflighthub.org",
+    "platform_uuid": "e97dd32f-5977-44f9-ab4d-e34205012dce",
+
+    "dji_cloud_app_id": "12345",
+    "dji_cloud_app_key": "cabba",
+    "dji_cloud_app_license": "loicense=",
+
+    "mqtt_port": 9002
 }
 ```
 
