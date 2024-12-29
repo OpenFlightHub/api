@@ -22,8 +22,8 @@ router.get('/sdk-config', asyncHandler(async (req, res) => {
         app_id: secrets.dji_cloud_app_id,
         app_key: secrets.dji_cloud_app_key,
         app_license: secrets.dji_cloud_app_license,
-        mqtt_url: secrets.platform_url + ':' + secrets.mqtt_port,
-        rtmp_url:secrets.rtmp_url
+        mqtt_url: 'tcp://' + secrets.platform_url + ':' + secrets.mqtt_port,
+        rtmp_url: 'rtmp://' + secrets.rtmp_url + '/' + (await  req.GM.getCurrentConnection()).id
     }, ApiSchema_ConnectionLinkDjiPilot2SdkConfig)
 
 }))

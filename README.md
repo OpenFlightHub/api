@@ -2,6 +2,9 @@
 
 create the file `secrets.json`
 
+platform_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
+rtmp_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
+
 example contents:
 ```json
 {
