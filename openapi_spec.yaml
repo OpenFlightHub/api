@@ -265,6 +265,23 @@ paths:
               Set-Cookie:
                 $ref: '#/components/headers/user_auth'
 
+
+  /auth/stream-token:
+    get:
+      tags:
+        - authentication
+      summary: get token for viewing streams
+      responses:
+          '200':
+            description: the token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/auth_stream_token'
+            headers:
+              Set-Cookie:
+                $ref: '#/components/headers/user_auth'
+
   # user
 
   /user/{user_id}:
@@ -921,7 +938,13 @@ components:
         code:
           type: string
 
-
+    auth_stream_token:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
 
     # user
 

@@ -75,6 +75,11 @@ export type ApiType_AuthPasswordSetNewPost = {
 }
 
 
+export type ApiType_AuthStreamToken = {
+    token: string;
+}
+
+
 export type ApiType_User = {
     id: number;
     name: string;

@@ -140,6 +140,8 @@ app.use('/remote-controller', remoteControllerRoute)
 import connectionLinkRoute from './routes/connection-link'
 app.use('/connection-link', connectionLinkRoute)
 
+import omeAdmissionRoute from './routes/ome-admission'
+app.use('/ome-admission', omeAdmissionRoute)
 
 //websockets
 

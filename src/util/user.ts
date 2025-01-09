@@ -3,7 +3,7 @@ import {insertUser, selectUser, updateUser} from '../db/DBHelpers'
 import { sendMail, sendMailFromTemplate } from '../mail'
 import $t from './i18n'
 import * as pgp from 'pg-promise'
-import { DBType_User, DBType_User_STATES, DBType_User_StateType } from '../db/DBTypes'
+import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_WorkspacePermission } from '../db/DBTypes'
 import { ApiType_Id } from '../definitions/ApiTypes'
 import { assignObject } from './typescript'
 const db : pgp.IDatabase<any> = global.db
@@ -177,4 +177,13 @@ export async function makePasswordResetCode(userId: ApiType_Id){
 
 function generateUrlSafeToken(){
     return generateUniqueToken(42).replaceAll('+', '-').replaceAll('/', '_')
+}
+
+export async function userHasPermissionForWorkspace(userId: number, workspaceId: number){
+    const res = await db.oneOrNone<DBType_WorkspacePermission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
+        userId,
+        workspaceId
+    })
+
+    return !!res
 }

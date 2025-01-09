@@ -150,6 +150,18 @@ export const ApiSchema_AuthPasswordSetNewPost : JSONSchema  = {
     }
 }
 
+export const ApiSchema_AuthStreamToken : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "token"
+    ],
+    "properties": {
+        "token": {
+            "type": "string"
+        }
+    }
+}
+
 export const ApiSchema_User : JSONSchema  = {
     "type": "object",
     "required": [

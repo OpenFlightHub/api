@@ -4,6 +4,7 @@ import { DBType_User, DBType_Connection, DBType_WorkspacePermission } from './db
 import * as pgp from 'pg-promise'
 import { JSONSchema } from 'json-schema-to-typescript'
 import { DBType_User_STATES } from './db/DBTypes'
+import { userHasPermissionForWorkspace } from './util/user'
 
 const db : pgp.IDatabase<any> = global.db
 
@@ -81,6 +82,18 @@ export function getUserForSessionToken(token: string) : Promise<false | DBType_U
     })
 }
 
+export function getUserForStreamToken(token: string) : Promise<false | DBType_User> {
+    return new Promise(resolve=>{
+        db.one('SELECT * FROM users WHERE stream_token = ${stream_token};', {
+            stream_token: token
+        }).then(result => {
+            resolve(result)
+        }).catch(()=>{
+            resolve(false)
+        })
+    })
+}
+
 export function getConnectionForSessionToken(sessionToken: string) : Promise<false | DBType_Connection> {
     return new Promise(resolve=>{
         db.one('SELECT * FROM connections WHERE session_token = ${sessionToken};', {
@@ -137,12 +150,7 @@ export class GuardedMiddleware {
     async guardUserHasPermissionForWorkspace(workspaceId: number){
         const user = await this.getCurrentUser()
 
-        const permission = await db.oneOrNone<DBType_WorkspacePermission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
-            userId: user.id,
-            workspaceId
-        })
-
-        return !!permission
+        return userHasPermissionForWorkspace(user.id, workspaceId)
     }
 
     async getCurrentUser(){

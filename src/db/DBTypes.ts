@@ -31,6 +31,10 @@ export type DBType_User = {
   /**
    * some unique token
    */
+  stream_token?: string;
+  /**
+   * some unique token
+   */
   reset_code?: string;
   created_at: string;
   /**

@@ -15,6 +15,7 @@ export type DBInsert_User = {
     password?: string
     login_token?: string
     session_token?: string
+    stream_token?: string
     reset_code?: string
     created_at?: string
     state?: DBType_User_StateType
@@ -28,6 +29,7 @@ export type DBUpdate_User = {
     password?: string
     login_token?: string
     session_token?: string
+    stream_token?: string
     reset_code?: string
     created_at?: string
     state?: DBType_User_StateType
@@ -57,6 +59,10 @@ const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "session_token",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "stream_token",
         "skip": col => !col.exists
     },
     {
@@ -107,6 +113,10 @@ const COLUMN_SET_USERS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
+        "name": "stream_token",
+        "skip": col => !col.exists
+    },
+    {
         "name": "reset_code",
         "skip": col => !col.exists
     },
@@ -145,8 +155,7 @@ export function updateUser<T extends number | string>(values: DBUpdate_User, idO
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -215,8 +224,7 @@ export function updateWorkspace<T extends number | string>(values: DBUpdate_Work
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_Workspace>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -286,8 +294,7 @@ export function updateWorkspacePermission<T extends number | string>(values: DBU
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_WorkspacePermission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -390,8 +397,7 @@ export function updateConnection<T extends number | string>(values: DBUpdate_Con
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_Connection>(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -470,8 +476,7 @@ export function updateRemoteController<T extends number | string>(values: DBUpda
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_RemoteController>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -559,8 +564,7 @@ export function updateDrone<T extends number | string>(values: DBUpdate_Drone, i
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_Drone>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -658,8 +662,7 @@ export function updateRemoteControllerData<T extends number | string>(values: DB
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_RemoteControllerData>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' ' + whereCondition)
     }
 }
 
@@ -757,8 +760,7 @@ export function updateDroneData<T extends number | string>(values: DBUpdate_Dron
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_DroneData>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' ' + whereCondition)
     }
 }
 
