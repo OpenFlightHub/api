@@ -161,8 +161,7 @@ export function update${normalizeTableName(tableName)}<T extends number | string
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        //@ts-ignore
-        return db.manyOrNone<DBType_${dbTypeName}>(db.$config.pgp.helpers.update(values,  ${columSetNameUpdate}) + ' ' + whereCondition + ' RETURNING *')
+        return db.none(db.$config.pgp.helpers.update(values,  ${columSetNameUpdate}) + ' ' + whereCondition)
     }
 }
 
