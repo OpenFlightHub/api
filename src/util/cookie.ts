@@ -12,13 +12,13 @@ function generateSessionCookie(){
     return generateUniqueToken(SESSION_TOKEN_BYTE_LENGTH)
 }
 
-function setSessionCookie(cookieName: string, cookieValue: string, res: express.Response){
+function setSessionCookie(cookieName: string, cookieValue: string, res: express.Response, customMaxAge?: number){
 
     res.cookie(cookieName, cookieValue, {
         //secure: true, TODO enable for production (but does this not kill api client sdk?)
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: typeof customMaxAge === 'number' ? customMaxAge : (1000 * 60 * 60 * 24)
     })
 }
 
@@ -54,5 +54,7 @@ export async function generateConnectionSessionCookieAndSet(connectionId: number
         sessionToken
     })
 
-    setSessionCookie('connection-link-auth', sessionToken, res)
+    const longTime = 1000 * 60 * 60 * 24 * 365 * 10 // 10 years
+
+    setSessionCookie('connection-link-auth', sessionToken, res, longTime)
 }
