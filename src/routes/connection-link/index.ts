@@ -32,6 +32,7 @@ router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)
     const workspace = await selectWorkspace(req.GM.currentConnection.workspace_id)
 
     res.GM.guardSend<ApiType_ConnectionLinkConfig>({
+        connection_id: '' + req.GM.currentConnection.id,
         platform_name: secrets.platform_name,
         platform_url: secrets.platform_url,
         workspace_id: '' + workspace.id,

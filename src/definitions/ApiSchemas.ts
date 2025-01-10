@@ -479,6 +479,7 @@ export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
 export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
     "type": "object",
     "required": [
+        "connection_id",
         "workspace_id",
         "workspace_name",
         "platform_name",
@@ -486,6 +487,9 @@ export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
         "secret"
     ],
     "properties": {
+        "connection_id": {
+            "type": "string"
+        },
         "platform_name": {
             "type": "string"
         },

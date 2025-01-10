@@ -1158,12 +1158,15 @@ components:
     connection_link_config:
       type: object
       required:
+        - connection_id
         - workspace_id
         - workspace_name
         - platform_name
         - platform_url
         - secret
       properties:
+        connection_id:
+          type: string
         platform_name:
           type: string
         platform_url:

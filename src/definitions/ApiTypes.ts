@@ -209,6 +209,7 @@ export type ApiType_ConnectionLinkAuthLoginPost = {
 
 
 export type ApiType_ConnectionLinkConfig = {
+    connection_id: string;
     platform_name: string;
     platform_url: string;
     workspace_id: string;
