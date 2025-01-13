@@ -460,6 +460,25 @@ export const ApiSchema_DronePosition : JSONSchema  = {
     }
 }
 
+export const ApiSchema_DroneBattery : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "capacity_percent_left",
+        "reported_at"
+    ],
+    "properties": {
+        "capacity_percent_left": {
+            "type": "number"
+        },
+        "reported_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
 export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [

@@ -4,7 +4,7 @@ import Logger from "./ConnectorLogger";
 import path from "path";
 import {addDroneData, DRONE_DATA_TYPES} from '../../util/drone'
 import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
-import {thing_product_osd_Mavic_3_T} from './mqtt-types/auto_detected'
+import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
 import { DBType_Connection, DBType_RemoteController_TYPES } from "../../db/DBTypes";
 import { insertDrone, insertRemoteController, selectConnection, updateConnection } from "../../db/DBHelpers";
@@ -23,6 +23,7 @@ connector.onMessage_State((connectionId, message)=>{
 connector.onMessage_Status((connectionId, message, respond)=>{
     console.log('onMessage_Status', connectionId, message)
 
+    //@ts-ignore
     respond({
         data: {
             result: 0
@@ -32,17 +33,18 @@ connector.onMessage_Status((connectionId, message, respond)=>{
 
 
 
+
 connector.onMessage_Osd(async (connectionId, message)=>{
 
-    const m = message as {data: {longitude?: number, latitude?: number, height?: number}}
+    const _m = message as {data: {longitude?: number, latitude?: number, height?: number}}
 
     const connection = await selectConnection(connectionId)
 
-    if(typeof m.data.longitude === 'number' && typeof m.data.latitude === 'number' && typeof m.data.height === 'number'){
+    if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number'){
 
         //@ts-ignore
-        if(typeof m.data.elevation === 'number'){// DRONE
-            const message = m as thing_product_osd_Mavic_3_T
+        if(typeof _m.data.elevation === 'number'){// DRONE //TODO better detection of what type it is
+            const messageData = _m.data as MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE
 
             if(typeof connection.drone_id !== 'number'){
 
@@ -64,8 +66,15 @@ connector.onMessage_Osd(async (connectionId, message)=>{
                 }
             }
 
-            addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: m.data.longitude, latitude: m.data.latitude, height: m.data.height})
+            addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+
+            if(typeof messageData.battery?.capacity_percent === 'number'){
+                addDroneData(connection.drone_id, DRONE_DATA_TYPES.BATTERY, {capacity_percent_left: messageData.battery.capacity_percent})
+            }
+
         } else {// RC
+
+            const messageData = _m.data as MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE
 
             if(typeof connection.remote_controller_id !== 'number'){
 
@@ -86,7 +95,7 @@ connector.onMessage_Osd(async (connectionId, message)=>{
                 }
             }
 
-            addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: m.data.longitude, latitude: m.data.latitude, height: m.data.height})
+            addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
         }
     }
 })
@@ -95,11 +104,11 @@ connector.onMessage_Event((connectionId, message, respond)=>{
     console.log('onMessage_Event', connectionId, message)
 
     return
-    respond({
-        data: {
-            result: 0
-        }
-    })
+    // respond({
+    //     data: {
+    //         result: 0
+    //     }
+    // })
 })
 
 

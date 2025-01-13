@@ -118,15 +118,16 @@ export type DBType_RemoteControllerData = {
 }
 
 
-export type DBType_DroneData_TypeType = 0
+export type DBType_DroneData_TypeType = 0|1
 export const DBType_DroneData_TYPES = {
-  todo: 0 as DBType_DroneData_TypeType
+  position: 0 as DBType_DroneData_TypeType,
+  battery: 1 as DBType_DroneData_TypeType
 }
 export type DBType_DroneData = {
   id: number;
   drone_id: number;
   /**
-   * 0 = todo
+   * 0 = position, 1 = battery
    */
   type: DBType_DroneData_TypeType;
   data: {

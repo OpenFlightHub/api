@@ -4,7 +4,8 @@ import { insertDroneData } from '../db/DBHelpers'
 import { DBType_DroneData_TypeType } from '../db/DBTypes'
 
 export const DRONE_DATA_TYPES: Record<string,DBType_DroneData_TypeType> = {
-    POSITION: 0
+    POSITION: 0,
+    BATTERY: 1
 }
 
 

@@ -202,6 +202,15 @@ export type ApiType_DronePosition = {
 }
 
 
+export type ApiType_DroneBattery = {
+    capacity_percent_left: number;
+    /**
+     * ISO 8601 format
+     */
+    reported_at: string;
+}
+
+
 export type ApiType_ConnectionLinkAuthLoginPost = {
     connection_id: string;
     secret: string;

@@ -752,6 +752,36 @@ paths:
       security:
         - user_auth: []
 
+  /drone/{drone_id}/last-battery:
+    get:
+      tags:
+        - drone
+      summary: Get the last battery information of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drone last battery information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone_battery'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
 
   # connection-link
 
@@ -1136,6 +1166,18 @@ components:
         latitude:
           type: number
         height:
+          type: number
+        reported_at:
+          $ref: '#/components/schemas/timestamptz'
+
+
+    drone_battery:
+      type: object
+      required:
+        - capacity_percent_left
+        - reported_at
+      properties:
+        capacity_percent_left:
           type: number
         reported_at:
           $ref: '#/components/schemas/timestamptz'

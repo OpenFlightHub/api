@@ -56,12 +56,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         this.validEvents.push(eventName)
     }
 
-    private makeEventFunction<M extends Message_Base>(eventName: string){
+    private makeEventFunction(eventName: string){
         this.registerEvent(eventName)
 
-        return (callback: EventCallback<M>)=>{
+        return (callback: EventCallback<Message_Base>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M)
+                callback(c.connectionId, c.message as Message_Base)
             })
         }
     }
@@ -71,14 +71,14 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      * @param responseEventName special string of the format "thing/product/$/property" where $ will be replaced with the client id automatically
      * @returns
      */
-    private makeEventFunctionWithCallback<M extends Message_Base, R extends Response>(eventName: string, responseEventName: string, makeResponseBaseData?: (message: M)=>Record<string, any>){
+    private makeEventFunctionWithCallback(eventName: string, responseEventName: string, makeResponseBaseData?: (message: Message_Base)=>Record<string, any>){
         this.registerEvent(eventName)
 
-        return (callback: EventCallbackWithResponse<M, R>)=>{
+        return (callback: EventCallbackWithResponse<Message_Base, Response_Base>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, (response: R)=>{
+                callback(c.connectionId, c.message as Message_Base, (response: Response_Base)=>{
                     if(typeof makeResponseBaseData === 'function'){
-                        Object.assign(response, makeResponseBaseData(c.message as M))
+                        Object.assign(response, makeResponseBaseData(c.message as Message_Base))
                     }
                     this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, response)
                 })
@@ -86,7 +86,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
     }
 
-    private respondToMessage<OM extends Message_Base, R extends Response>(client: Client, connectionId: number, originalMessage: OM, responseEventName: string, response: R){
+    private respondToMessage(client: Client, connectionId: number, originalMessage: Message_Base, responseEventName: string, response: Response_Base){
         const responseMessage: Response_Base = {
             tid: originalMessage.tid,//randomUUID(),
             bid: originalMessage.bid,
@@ -122,19 +122,21 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     // definitions
 
-    onMessage_State = this.makeEventFunction<Message_DeviceToCloud_State>('thing/product/state')
+    onMessage_State = this.makeEventFunction('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Status, Response_DeviceToCloud_Status>('sys/product/status', 'sys/product/$/status_reply', (message)=>{
+    onMessage_Status = this.makeEventFunctionWithCallback('sys/product/status', 'sys/product/$/status_reply', (message)=>{
         return {
+            //@ts-ignore
             method: message.method
         }
     })
 
-    onMessage_Osd = this.makeEventFunction<Message_DeviceToCloud_Osd>('thing/product/osd')
+    onMessage_Osd = this.makeEventFunction('thing/product/osd')
 
 
-    onMessage_Event = this.makeEventFunctionWithCallback<Message_DeviceToCloud_Events, Response_DeviceToCloud_Events>('thing/product/events', 'thing/product/$/events_reply', (message)=>{
+    onMessage_Event = this.makeEventFunctionWithCallback('thing/product/events', 'thing/product/$/events_reply', (message)=>{
         return {
+            //@ts-ignore
             method: message.method
         }
     })
@@ -154,157 +156,15 @@ interface Message_Base {// coming from device to cloud
     data: {}
 }
 
-type Response = Record<string, any>
-
-interface Response_Base {// respons from cloud back to device
+interface Response_Base {// response from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
     timestamp: number // the time the message was sent (unix milliseconds)
     data: {}
 }
 
-interface Message_DeviceToCloud_State extends Message_Base {
 
-}
-
-
-interface Message_DeviceToCloud_Status extends Message_Base {
-    method: 'update_topo'
-    data: {
-        type: number,
-        sub_type: number,
-        device_secret: string,
-        nonce: string,
-        version: number,
-        sub_devices: Message_DeviceToCloud_Status_SubDevice[]
-    }
-}
-
-type Message_DeviceToCloud_Status_SubDevice = {
-    sn: string,
-    type: number,
-    sub_type: 0,
-    index: string,
-    device_secret: string,
-    nonce: string,
-    version: number
-}
-
-interface Response_DeviceToCloud_Status extends Response {
-    data: {
-        result: number
-    }
-}
-
-interface Message_DeviceToCloud_Osd extends Message_Base {
-    data: Message_DeviceToCloud_Osd_Data_A | Message_DeviceToCloud_Osd_Data_B | Message_DeviceToCloud_Osd_Data_C
-}
-
-type Message_DeviceToCloud_Osd_Data_A = {
-    job_number: number,
-    acc_time: number,
-    activation_time: number,
-    maintain_status: {
-        maintain_status_array: {
-            state: number,
-            last_maintain_type: number,
-            last_maintain_time: number,
-            last_maintain_work_sorties: number
-        }[]
-    },
-    electric_supply_voltage: number,
-    working_voltage: number,
-    working_current: number,
-    backup_battery: {
-        voltage: number,
-        temperature: number,
-        switch: number
-    },
-    drone_battery_maintenance_info: {
-        maintenance_state: number,
-        maintenance_time_left: number
-    }
-}
-
-type Message_DeviceToCloud_Osd_Data_B = {
-    flighttask_step_code: number
-    media_file_detail: {
-        remain_upload: number
-    }
-    wireless_link: {
-        "4g_freq_band": number
-        "4g_gnd_quality": number
-        "4g_link_state": number
-        "4g_quality": number
-        "4g_uav_quality": number
-        dongle_number: number
-        link_workmode: number
-        sdr_freq_band: number
-        sdr_link_state: number
-        sdr_quality: number
-    }
-}
-
-type Message_DeviceToCloud_Osd_Data_C = {
-    network_state: {
-        type: number
-        quality: number
-        rate: number
-    }
-    drone_charge_state: {
-        state: number
-        capacity_percent: number
-    }
-    drone_in_dock: number
-    rainfall: number
-    wind_speed: number
-    environment_temperature: number
-    temperature: number
-    humidity: number
-    latitude: number
-    longitude: number
-    height: number
-    alternate_land_point: {
-        latitude: number
-        longitude: number
-        safe_land_height: number
-        is_configured: number
-    }
-    first_power_on: number
-    position_state: {
-        is_calibration: number
-        is_fixed: number
-        quality: number
-        gps_number: number
-        rtk_number: number
-    }
-    storage: {
-        total: number
-        used: number
-    }
-    mode_code: number
-    cover_state: number
-    supplement_light_state: number
-    emergency_stop_state: number
-    air_conditioner_mode: number
-    battery_store_mode: number
-    alarm_state: number
-    putter_state: number
-    sub_device: {
-        device_sn: number
-        device_model_key: number
-        device_online_status: number
-        device_paired: number
-    }
-}
-
-
-interface Message_DeviceToCloud_Events extends Message_Base {
-    need_reply: 0 | 1
-    method: string
-}
-
-interface Response_DeviceToCloud_Events extends Response {
+interface Response_With_Result extends Response_Base {
     data: {
         result: number
     }
