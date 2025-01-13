@@ -4,10 +4,10 @@ import Logger from "./ConnectorLogger";
 import path from "path";
 import {addDroneData, DRONE_DATA_TYPES} from '../../util/drone'
 import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
-import {thing_product_osd_Mavic_3_T} from './mqtt_types'
+import {thing_product_osd_Mavic_3_T} from './mqtt-types/auto_detected'
 import * as pgp from 'pg-promise'
 import { DBType_Connection, DBType_RemoteController_TYPES } from "../../db/DBTypes";
-import { insertRemoteController, selectConnection, updateConnection } from "../../db/DBHelpers";
+import { insertDrone, insertRemoteController, selectConnection, updateConnection } from "../../db/DBHelpers";
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
@@ -43,6 +43,26 @@ connector.onMessage_Osd(async (connectionId, message)=>{
         //@ts-ignore
         if(typeof m.data.elevation === 'number'){// DRONE
             const message = m as thing_product_osd_Mavic_3_T
+
+            if(typeof connection.drone_id !== 'number'){
+
+                if(typeof message.gateway !== 'string'){
+                    console.error('expected osd message to have the property "gateway"', message)
+                    return
+                } else {
+                    const newDrone = await insertDrone({
+                        //TODO: detect type type: DBType_RemoteController_TYPES.dji_rc_plus
+                        serial_number: message.gateway, //TODO detect correct serial number
+                        name: 'unknown'
+                    })
+
+                    await updateConnection({
+                        drone_id: newDrone.id
+                    }, connection.id)
+
+                    connection.drone_id = newDrone.id
+                }
+            }
 
             addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: m.data.longitude, latitude: m.data.latitude, height: m.data.height})
         } else {// RC
