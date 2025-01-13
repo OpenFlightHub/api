@@ -74,6 +74,16 @@ export function generateUniqueToken(sizeInBytes: integer){
     return getBase64(generateSalt(sizeInBytes))
 }
 
+/**
+ * a urlsafe version of generateUniqueToken(). Attention: This will reduce the entropy a bit!
+ * @see generateUniqueToken
+ */
+export function generateUniqueTokenUrlSafe(sizeInBytes: integer){
+    const token = getBase64(generateSalt(sizeInBytes))
+
+    return token.replace(/[^a-zA-Z0-9_]/g, '_')
+}
+
 const CRYPTO_HASH_PART_DEFINITIONS : {name: string, type: 'integer' | 'powerOf2' | 'base64' }[] = [{
     name: 'keyLength',
     type: 'integer'

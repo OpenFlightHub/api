@@ -1,4 +1,4 @@
-import { generateUniqueToken, hashString } from './crypto'
+import { generateUniqueToken, generateUniqueTokenUrlSafe, hashString } from './crypto'
 import {insertUser, selectUser, updateUser} from '../db/DBHelpers'
 import { sendMail, sendMailFromTemplate } from '../mail'
 import $t from './i18n'
@@ -176,7 +176,7 @@ export async function makePasswordResetCode(userId: ApiType_Id){
 }
 
 function generateUrlSafeToken(){
-    return generateUniqueToken(42).replaceAll('+', '-').replaceAll('/', '_')
+    return generateUniqueTokenUrlSafe(42)
 }
 
 export async function userHasPermissionForWorkspace(userId: number, workspaceId: number){

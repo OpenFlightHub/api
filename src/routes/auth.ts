@@ -6,11 +6,11 @@ const db : pgp.IDatabase<any> = global.db
 
 import * as crypto from './../util/crypto'
 import { DBType_User, DBType_User_STATES } from '../db/DBTypes'
-import { ApiType_Id, ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost, ApiType_User, ApiType_Reference } from './../definitions/ApiTypes'
+import { ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost, ApiType_Reference } from './../definitions/ApiTypes'
 import { ApiSchema_AuthLoginPost, ApiSchema_AuthLoginWithTokenPost, ApiSchema_AuthPasswordChangePost, ApiSchema_AuthPasswordResetPost, ApiSchema_AuthPasswordSetInitialPost, ApiSchema_AuthPasswordSetNewPost, ApiSchema_AuthStreamToken, ApiSchema_Reference } from '../definitions/ApiSchemas';
 import { GuardError } from '../ManInTheMiddleware';
 import liveUpdate from './live'
-import { generateUniqueToken, hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
+import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
 import { selectUser, updateUser } from '../db/DBHelpers';
 import { resetPasswordForEmail } from '../util/user';
 import { generateUserSessionCookieAndSet } from '../util/cookie'
@@ -266,7 +266,7 @@ router.get('/stream-token', asyncHandler(async (req, res) => {
 
     if(!user.stream_token){
 
-        const urlSafeToken = generateUniqueToken(STREAM_TOKEN_BYTE_LENGTH).replace(/[^a-zA-Z0-9_]/g, '_')
+        const urlSafeToken = crypto.generateUniqueTokenUrlSafe(STREAM_TOKEN_BYTE_LENGTH)
 
         user = await updateUser({
             stream_token: urlSafeToken

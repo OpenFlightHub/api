@@ -1,6 +1,5 @@
 import * as express from 'express'
 import {generateUniqueToken} from './crypto'
-import {ApiType_Id} from '../definitions/ApiTypes'
 import pgp from 'pg-promise'
 import { selectUser } from '../db/DBHelpers'
 const db : pgp.IDatabase<any> = global.db
