@@ -1,5 +1,5 @@
 env:
-  PROJECT_NAME: api-service
+  PROJECT_NAME: ofh-api
 
 name: deploy-api-service
 on:

@@ -10,4 +10,4 @@ docker stop ofh-api || true
 
 docker rm ofh-api || true
 
-docker run --restart unless-stopped --add-host host.docker.internal:host-gateway --add-host internal-ofh-api:host-gateway -p 81:81 --name ofh-api -d ofh-api
+docker run --restart unless-stopped --add-host host.docker.internal:host-gateway --add-host internal-ofh-api:host-gateway -p 6001:6001 --name ofh-api -d ofh-api
