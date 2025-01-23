@@ -13,7 +13,6 @@ COPY . .
 
 RUN rm -rf dist
 RUN mkdir -p dist
-RUN cp -R lib dist/lib
 RUN cp -R public dist/public
 
 RUN npx @redocly/cli bundle public@latest -o bundled.yaml
