@@ -5,7 +5,7 @@ const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets([
     'mqtt_port'])
 
-const PORT = 9001;
+const PORT = 6001;
 const HOST = '0.0.0.0';
 
 export const server = app.listen(PORT, HOST, () => {
