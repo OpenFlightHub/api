@@ -22,6 +22,7 @@
     "deasync": "^0.1.30",
     "express": "^4.21.2",
     "express-async-handler": "^1.2.0",
+    "express-serve-static-core": "^0.1.1",
     "express-ws": "^5.0.2",
     "hpp": "^0.2.3",
     "i18next": "^24.0.5",
