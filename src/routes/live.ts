@@ -1,18 +1,33 @@
 import * as express from 'express';
 import * as ws from "ws";
+import { userHasPermissionForWorkspace } from '../util/user';
+import { selectConnection, selectDrone, selectDroneData } from '../db/DBHelpers';
+import { getConnectionForDrone } from '../util/connection';
+import { DBType_DroneData } from '../db/DBTypes';
 import * as pgp from 'pg-promise'
+const db : pgp.IDatabase<any> = global.db
 import pg = require('pg-promise/typescript/pg-subset');
+import { DRONE_DATA_TYPES, getLastPositionOfDrone } from '../util/drone';
 
 let messageIdCounter = 1
 
 
 type ListenerTableName = string
 type ListenerIdAsString = string
-type ListenerClientId = number
-const listeners = new Map<String, Map<String, Number[]>>()
+const listeners = new Map<ListenerTableName, Map<ListenerIdAsString, ClientId[]>>()
 
-let clientIdCounter = 1
-const clients: {id: number, userId: number, ws: ws.WebSocket, listeners: Map<String, String[]>}[] = []
+type SubscriptionDroneId = number
+const subscribersLiveDrone = new Map<SubscriptionDroneId, ClientId[]>()
+
+type ClientId = number
+let clientIdCounter: ClientId = 1
+const clients: {
+    id: ClientId
+    userId: number
+    ws: ws.WebSocket
+    listeners: Map<ListenerTableName, ListenerIdAsString[]>
+    subscribers: SubscriptionDroneId[]
+}[] = []
 
 //TODO hidden fields like session.result_attachment_set_id will also trigger a change event, but the api data will still be the same (because that field is hidden)
 //TODO on the other side, adding a result attachment will not trigger a change but it should ...
@@ -30,10 +45,11 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
             id: clientId,
             userId: user.id,
             ws,
-            listeners: new Map<String, String[]>()
+            listeners: new Map<ListenerTableName, ListenerIdAsString[]>(),
+            subscribers: []
         })
 
-        ws.on('message', (msg, isBinary) => {
+        ws.on('message', async (msg, isBinary) => {
 
             if(isBinary){
                 sendErrorToWebSocket(ws, 'can not handle binary message')
@@ -73,7 +89,7 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                     //TODO check if table is supported
                     //TODO permission check
 
-                    // add to clients
+                    // add to client
                     for(const client of clients){
                         if(client.id === clientId){
                             if(!client.listeners.has(tableName)){
@@ -88,7 +104,7 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
 
                     //add to listeners
                     if(!listeners.has(tableName)){
-                        listeners.set(tableName, new Map<String, Number[]>())
+                        listeners.set(tableName, new Map<ListenerIdAsString, ClientId[]>())
                     }
 
                     if(!listeners.get(tableName).has(id)){
@@ -104,6 +120,49 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                     resolveWebSocketMessage(ws, parsed)
 
                 } break
+
+
+                case 'subscribe-live-drone': {
+
+                    const droneId = parsed.data.drone_id
+
+                    try {
+
+                        const drone = await selectDrone(droneId)
+
+                        const connection = await getConnectionForDrone(drone.id)
+
+                        const hasPermission = await userHasPermissionForWorkspace((await req.GM.getCurrentUser()).id, connection.workspace_id)
+
+                        if(!hasPermission){
+                            rejectWebSocketMessage(ws, parsed, '403: Permission denied')
+                            return
+                        }
+
+                        // add to client
+                        for(const client of clients){
+                            if(client.id === clientId){
+
+                                if(client.subscribers.indexOf(droneId) === -1){
+                                    client.subscribers.push(droneId)
+                                }
+                            }
+                        }
+
+                        // add to subscribers
+
+                        if(!subscribersLiveDrone.has(droneId)){
+                            subscribersLiveDrone.set(droneId, [])
+                        }
+
+                        subscribersLiveDrone.get(droneId).push(clientId)
+
+                        resolveWebSocketMessage(ws, parsed)
+                    } catch(err) {
+                        console.error(err)
+                        rejectWebSocketMessage(ws, parsed, 'unexpected error')
+                    }
+                }
 
                 default: {
                     rejectWebSocketMessage(ws, parsed, 'invalid message type: ' + parsed.type)
@@ -127,7 +186,7 @@ type WebSocketMessageClient = {
     messageId: number
 }
 
-type WebSocketMessageTypeClient = 'listen'
+type WebSocketMessageTypeClient = 'listen' | 'subscribe-live-drone'
 
 type WebSocketMessageServer = {
     type: WebSocketMessageTypeServer
@@ -135,7 +194,7 @@ type WebSocketMessageServer = {
     messageId: number
 }
 
-type WebSocketMessageTypeServer = 'error' | 'answer' | 'notify_change' | 'info'
+type WebSocketMessageTypeServer = 'error' | 'answer' | 'notify_change' | 'info' | 'live_drone'
 
 function sendToWebSocket(ws: ws.WebSocket, type: WebSocketMessageTypeServer, data: any, overwriteMessageId?: number){
     ws.send(JSON.stringify({
@@ -183,6 +242,12 @@ function removeClient(clientId: number){
         }
     }
 
+    for(const droneId of clients[indexClient].subscribers){
+        const idMap = subscribersLiveDrone.get(droneId)
+        const indexListener = idMap.indexOf(clientId)
+        idMap.splice(indexListener, 1)
+    }
+
     clients.splice(indexClient, 1)
 }
 
@@ -199,43 +264,76 @@ function kickClient(clientId: number, reason?: string){
 
 async function setupNotifications(sco: pgp.IConnected<{}, pg.IClient>){
 
-    sco.client.on('notification', data => {
+    sco.client.on('notification', async (data) => {
 
-        console.log('notification', data)
-        console.log('listeners', JSON.stringify(listeners))
+        //console.log('notification', data)
+        //console.log('listeners', JSON.stringify(listeners))
 
         const channel = data.channel
 
-        if(channel !== 'notify_change'){
-            return
-        }
+        switch(channel){
+            case 'notify_change': {
 
-        const parsed = JSON.parse(data.payload)
+                const parsed = JSON.parse(data.payload)
 
-        const changedTable : string = parsed.table
-        const changedId : string = '' + parsed.id
+                const changedTable : string = parsed.table
+                const changedId : string = '' + parsed.id
 
-        for(const entry of listeners.entries()){
-            const tableName = entry[0]
+                for(const entry of listeners.entries()){
+                    const tableName = entry[0]
 
 
-            if(tableName !== changedTable){
-                continue
-            }
+                    if(tableName !== changedTable){
+                        continue
+                    }
 
-            const ids = entry[1]
+                    const ids = entry[1]
 
-            for(const idEntry of ids.entries()){
-                if(idEntry[0] !== changedId){
-                    continue
+                    for(const idEntry of ids.entries()){
+                        if(idEntry[0] !== changedId){
+                            continue
+                        }
+
+                        for(const clientId of idEntry[1]){
+                            console.log('notifying client', clientId, changedTable, changedId)
+                            sendToWebSocket(clients.find(c => c.id === clientId).ws, 'notify_change', {
+                                table: changedTable,
+                                id: changedId
+                            })
+                        }
+                    }
                 }
 
-                for(const clientId of idEntry[1]){
-                    console.log('notifying client', clientId, changedTable, changedId)
-                    sendToWebSocket(clients.find(c => c.id === clientId).ws, 'notify_change', {
-                        table: changedTable,
-                        id: changedId
-                    })
+                break;
+            }
+
+            case 'notify_insert': {
+
+                const parsed = JSON.parse(data.payload)
+
+                const changedTable : string = parsed.table
+                const newId : string = '' + parsed.id
+
+                if(changedTable === 'drone_data'){
+                    const changedDroneId = parseInt(parsed.data.drone_id)
+
+                    if(subscribersLiveDrone.has(changedDroneId)){
+
+                        const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
+
+                        for(const clientId of subscribersLiveDrone.get(changedDroneId)){
+                            console.log('live drone to client', clientId, changedTable, newId)
+
+                            const client = clients.find(c => c.id === clientId)
+
+                            if(client){
+                                sendToWebSocket(client.ws, 'live_drone', {
+                                    id: changedDroneId,
+                                    position: droneLastPosition
+                                })
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -243,6 +341,7 @@ async function setupNotifications(sco: pgp.IConnected<{}, pg.IClient>){
     })
 
     await sco.none('LISTEN $1:name', 'notify_change')
+    await sco.none('LISTEN $1:name', 'notify_insert')
 }
 
 function forceLogoutUser(userId: number){

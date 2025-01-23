@@ -5,7 +5,7 @@ import { selectDrone } from '../db/DBHelpers';
 import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
 import { DBType_Connection, DBType_DroneData } from '../db/DBTypes';
 import { ApiType_Drone, ApiType_DroneBattery, ApiType_DronePosition } from '../definitions/ApiTypes';
-import { DRONE_DATA_TYPES } from '../util/drone';
+import { DRONE_DATA_TYPES, getLastPositionOfDrone as getLastPositionOfDrone } from '../util/drone';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -56,20 +56,10 @@ router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
     const droneLastPosition = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains longitude and latitude
-            type: DRONE_DATA_TYPES.POSITION,
-            droneId
-        })
+        return getLastPositionOfDrone(droneId)
     })
 
-    const ret: ApiType_DronePosition = {
-        reported_at: droneLastPosition.created_at,
-        latitude: droneLastPosition.data.latitude as number,
-        longitude: droneLastPosition.data.longitude as number,
-        height: droneLastPosition.data.height as number
-    }
-
-    res.GM.guardSend<ApiType_DronePosition>(ret, ApiSchema_DronePosition)
+    res.GM.guardSend<ApiType_DronePosition>(droneLastPosition, ApiSchema_DronePosition)
 }))
 
 
