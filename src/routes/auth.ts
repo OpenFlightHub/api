@@ -14,6 +14,7 @@ import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto'
 import { selectUser, updateUser } from '../db/DBHelpers';
 import { resetPasswordForEmail } from '../util/user';
 import { generateUserSessionCookieAndSet } from '../util/cookie'
+import { forceLogoutUser } from '../live-websocket/websocket';
 
 
 const STREAM_TOKEN_BYTE_LENGTH = 21
@@ -63,7 +64,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         await generateUserSessionCookieAndSet(user.id, res, true)
 
         try {
-            liveUpdate.forceLogoutUser(user.id)
+            forceLogoutUser(user.id)
         } catch (err){
             //ignore
             console.log('failed to logout live-update sessions for user', user.id, err)
@@ -91,7 +92,7 @@ router.post('/login-with-token', asyncHandler(async (req, res) => {
             await generateUserSessionCookieAndSet(user.id, res, true)
 
             try {
-                liveUpdate.forceLogoutUser(user.id)
+                forceLogoutUser(user.id)
             } catch (err){
                 //ignore
                 console.log('failed to logout live-update sessions for user', user.id, err)
@@ -220,7 +221,7 @@ router.post('/logout', asyncHandler(async (req, res) => {
         }) as DBType_User
 
         try {
-            liveUpdate.forceLogoutUser(user.id)
+            forceLogoutUser(user.id)
         } catch (err){
             //ignore
             console.log('failed to logout live-update sessions for user', user.id, err)

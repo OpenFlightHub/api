@@ -40,7 +40,7 @@ db.connect({
         process.exit(1)
     }
 }).then(sco => {
-    return liveRoute.setupNotifications(sco)
+    return setupDatabaseNotifications(sco)
 }).catch(error => {
     console.error(error)
     process.exit(1)
@@ -146,7 +146,7 @@ app.use('/ome-admission', omeAdmissionRoute)
 //websockets
 
 import liveRoute from './routes/live'
-app.use('/live', liveRoute.router)
+app.use('/live', liveRoute)
 
 
 // 404 handler at almost the end of the use() chain
@@ -168,6 +168,7 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 
 
 import FakeDrone from './connector/dji-pilot-2/FakeDrone'
+import { setupDatabaseNotifications } from './live-websocket/websocket'
 
 const fakeDrone = new FakeDrone(2, [
     [10.31123970862481,47.54303902438443,1470],
