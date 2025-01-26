@@ -170,7 +170,7 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 import FakeDrone from './connector/dji-pilot-2/FakeDrone'
 import { setupDatabaseNotifications } from './live-websocket/websocket'
 
-const fakeDrone = new FakeDrone(2, [
+const fakeDrone = new FakeDrone(1, [
     [10.31123970862481,47.54303902438443,1470],
     [10.31111796634494,47.54531198554595,1610],
     [10.31363253702402,47.5465021623194,1580],
