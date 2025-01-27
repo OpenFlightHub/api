@@ -11,7 +11,7 @@ const secrets = secretsLoader.getSecrets([
 
 //TODO when publishing we must inform adsb exchange that we us the lite API and we must show a information note in the website somewhere
 
-const TIMEOUT_BETWEEN_API_FETCH = 1000 * 30 // 30 secs
+const TIMEOUT_BETWEEN_API_FETCH = 1000 * 10 // 10 secs
 
 
 type ApiResult = {
@@ -44,14 +44,16 @@ type Aircraft = {
 }
 
 
-export default class AdsbExchangeSensinArea extends SensingSourceArea {
+export default class AdsbExchangeSensingArea extends SensingSourceArea {
 
     private intervalHandle: any
 
     protected onSetup(): void {
         this.intervalHandle = setInterval(()=>{
-            this.fetchAircrafts()
+            this.fetchAircrafts().catch(this.reportApiError.bind(this))
         }, TIMEOUT_BETWEEN_API_FETCH)
+
+        this.fetchAircrafts().catch(this.reportApiError.bind(this))
     }
 
     protected onShutdown(): void {
@@ -64,8 +66,10 @@ export default class AdsbExchangeSensinArea extends SensingSourceArea {
      */
     private async fetchAircrafts(){
 
+        const radiusInNauticalMiles = this.radius / 1852
+
         const result = await fetchUrl({
-            url: `https://adsbexchange-com1.p.rapidapi.com/v2/lat/${this.latitude}/lon/${this.longitude}/dist/${this.radius}/`,
+            url: `https://adsbexchange-com1.p.rapidapi.com/v2/lat/${this.latitude}/lon/${this.longitude}/dist/${radiusInNauticalMiles}/`,
             method: 'get',
             headers: {
                 'x-rapidapi-host': 'adsbexchange-com1.p.rapidapi.com',
@@ -103,4 +107,7 @@ export default class AdsbExchangeSensinArea extends SensingSourceArea {
         }
     }
 
+    private reportApiError(err: any){
+        console.error('error while fetching aircrafts from adsb exchange', err)
+    }
 }

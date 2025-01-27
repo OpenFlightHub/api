@@ -252,6 +252,18 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
         if(!clients.includes(client)){
             clients.push(client)
         }
+
+        // add to client
+        let clientFilters = client.subscribedEvents.get(this.event)
+        if(!clientFilters){
+            const n = []
+            clientFilters = n
+            client.subscribedEvents.set(this.event, n)
+        }
+
+        if(!clientFilters.includes(filter)){
+            clientFilters.push(filter)
+        }
     }
 
     _removeFilterListener(filter: EventFilter, client: ClientData){

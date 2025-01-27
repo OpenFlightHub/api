@@ -1,6 +1,7 @@
 import { EventManager } from '../util/event_manager'
 import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './Source'
 import FakeArea from './sources/Fake'
+import AdsbExchangeSensingArea from './sources/AsdbExchange'
 
 export type TrafficData = {
     id: string
@@ -19,7 +20,7 @@ export default class TrafficSensing {
 
     constructor(){
         this.addSource(FakeArea.getFactory())
-        //this.addSource(AdsbExchangeSensingArea.getFactory()) TODO: enable this line
+        this.addSource(AdsbExchangeSensingArea.getFactory())
     }
 
     private addSource(factory: SensingSourceAreaFactory){
