@@ -19,20 +19,24 @@ example contents:
     "mail_secure": false,
     "mail_username": "mail@openflighthub.org",
     "mail_password": "abcde",
-    "mail_from": "\"OpenFlightHub\" mail@openflighthub.org",
+    "mail_from": "\"OpenFlightHub DEV\" mail@openflighthub.org",
 
     "emailHashPepper": "abcde=",
 
-    "platform_name": "OpenFlightHub",
+    "platform_name": "OpenFlightHub DEV",
     "platform_url": "dev.openflighthub.org",
-    "platform_uuid": "e97dd32f-5977-44f9-ab4d-e34205012dce",
+    "platform_uuid": "d97dd32f-5977-44f9-ab4d-e34205012dce",
 
     "dji_cloud_app_id": "12345",
     "dji_cloud_app_key": "cabba",
     "dji_cloud_app_license": "loicense=",
 
     "mqtt_port": 9002,
-    "rtmp_url": "stream.rocks/ome"
+    "rtmp_url": "stream.rocks/ome",
+    "ome_admission_secret": "1234",
+
+
+    "rapidapi_adsb_exchange_key": "1234"
 }
 ```
 
@@ -43,7 +47,7 @@ make sure that you created an action secret called `SECRETS` here https://github
 
 ```json
 {
-    "db_host": "database",
+    "db_host": "ofh-database",
     "db_port": 5432,
     "db_database": "ofh",
     "db_user": "api",
@@ -59,7 +63,7 @@ make sure that you created an action secret called `SECRETS` here https://github
     "emailHashPepper": "abcde=",
 
     "platform_name": "OpenFlightHub",
-    "platform_url": "dev.openflighthub.org",
+    "platform_url": "hub.openflighthub.org",
     "platform_uuid": "e97dd32f-5977-44f9-ab4d-e34205012dce",
 
     "dji_cloud_app_id": "12345",
@@ -67,7 +71,11 @@ make sure that you created an action secret called `SECRETS` here https://github
     "dji_cloud_app_license": "loicense=",
 
     "mqtt_port": 9002,
-    "rtmp_url": "stream.rocks/ome"
+    "rtmp_url": "stream.rocks/ome",
+    "ome_admission_secret": "1234",
+
+
+    "rapidapi_adsb_exchange_key": "1234"
 }
 ```
 
