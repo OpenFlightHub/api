@@ -1,7 +1,7 @@
 import { EventManager } from '../util/event_manager'
 import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './Source'
 import FakeArea from './sources/Fake'
-import AdsbExchangeSensingArea from './sources/AsdbExchange'
+import AdsbExchangeSensingArea from './sources/AdsbExchange'
 
 export type TrafficData = {
     id: string
