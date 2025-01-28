@@ -1,7 +1,9 @@
 import { EventManager } from '../util/event_manager'
 import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './Source'
-import FakeArea from './sources/Fake'
+import FakeSensingArea from './sources/Fake'
 import AdsbExchangeSensingArea from './sources/AdsbExchange'
+import AdsbLolSensingArea from './sources/AdsbLol'
+import GliderNetSensingArea from './sources/GliderNet'
 
 export type TrafficData = {
     id: string
@@ -19,12 +21,14 @@ export default class TrafficSensing {
     private readonly sources: SensingSource[] = []
 
     constructor(){
-        this.addSource(FakeArea.getFactory())
-        this.addSource(AdsbExchangeSensingArea.getFactory())
+        this.addSource(FakeSensingArea.getFactory())
+        //this.addSource(AdsbExchangeSensingArea.getFactory())
+        //this.addSource(AdsbLolSensingArea.getFactory())
+        this.addSource(GliderNetSensingArea.getFactory())
     }
 
     private addSource(factory: SensingSourceAreaFactory){
-        this.sources.push(new SensingSource(factory))
+        this.sources.push(new SensingSource(factory))//TODO each source should have its own id prefix, also we should try to aggregate all sources and remove duplicates
     }
 
 
