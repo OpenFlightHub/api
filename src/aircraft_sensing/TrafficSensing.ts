@@ -23,7 +23,7 @@ export default class TrafficSensing {
     constructor(){
         this.addSource(FakeSensingArea.getFactory())
         //this.addSource(AdsbExchangeSensingArea.getFactory())
-        //this.addSource(AdsbLolSensingArea.getFactory())
+        this.addSource(AdsbLolSensingArea.getFactory())
         this.addSource(GliderNetSensingArea.getFactory())
     }
 
