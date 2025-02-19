@@ -15,7 +15,10 @@ export default class GliderNetSensingArea extends SensingSourceArea {
         this.receiver = new GliderNetReceiver(this.latitude, this.longitude, this.radius)
 
         this.receiver.addListener('aircraft', data=>{
-            this.dispatch('traffic', data)
+            this.dispatch('traffic', {
+                id: '[Glidernet] ' + data.id,
+                position: data.position
+            })
         })
 
         this.receiver.start()
