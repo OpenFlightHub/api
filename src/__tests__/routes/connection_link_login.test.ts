@@ -60,7 +60,7 @@ describe('POST /connection-link/auth/login', ()=>{
         const res = await request(app)
             .post('/connection-link/auth/login')
             .send({
-                connection_id: '1',
+                connection_id: '2',
                 secret: 'access'
             })
 
@@ -76,7 +76,7 @@ describe('POST /connection-link/auth/login', ()=>{
         const res = await request(app)
             .post('/connection-link/auth/login')
             .send({
-                connection_id: '1',
+                connection_id: '2',
                 secret: 'access'
             })
 
