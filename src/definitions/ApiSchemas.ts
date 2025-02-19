@@ -795,9 +795,7 @@ export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema  = {
                     "type": "object",
                     "required": [
                         "access_key_id",
-                        "access_key_secret",
-                        "expire",
-                        "security_token"
+                        "access_key_secret"
                     ],
                     "properties": {
                         "access_key_id": {

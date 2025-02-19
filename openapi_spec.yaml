@@ -1814,8 +1814,6 @@ components:
               required:
                 - access_key_id
                 - access_key_secret
-                - expire
-                - security_token
               properties:
                 access_key_id:
                   type: string

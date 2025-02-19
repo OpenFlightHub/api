@@ -11,84 +11,218 @@ import SecretsLoader from '../util/SecretsLoader'
 import { validate } from '../util/schema';
 import Credentials from 'minio/dist/main/Credentials';
 const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_api_access_key_readwrite', 'minio_api_secret_key_readwrite', 'minio_api_access_key_writeonly', 'minio_api_secret_key_writeonly', 'minio_region'])
+const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_web_url', 'minio_web_access_key_root', 'minio_web_secret_key_root','minio_api_access_key_root', 'minio_api_secret_key_root', 'minio_region'])
 
 const API_BASE_URL = secrets.minio_api_url + (('' + secrets.minio_api_url).endsWith('/') ? '' : '/' )
 const MY_ARN_ID = 'ofh'
 
 
-const minioClientReadWrite = new minio.Client({
+const minioClientRoot = new minio.Client({
     endPoint: API_BASE_URL.split(':')[0],
     useSSL: false,
     port: parseInt(API_BASE_URL.split(':')[1]),
-    accessKey: secrets.minio_api_access_key_readwrite,
-    secretKey: secrets.minio_api_secret_key_readwrite,
+    accessKey: secrets.minio_web_access_key_root,
+    secretKey: secrets.minio_web_secret_key_root,
     region: secrets.minio_region
 })
 
-const minioClientWriteOnly = new minio.Client({
-    endPoint: API_BASE_URL.split(':')[0],
-    useSSL: false,
-    port: parseInt(API_BASE_URL.split(':')[1]),
-    accessKey: secrets.minio_api_access_key_writeonly,
-    secretKey: secrets.minio_api_secret_key_writeonly,
-    region: secrets.minio_region
-})
+const WEB_API_BASE_URL = 'http://' + secrets.minio_web_url + (('' + secrets.minio_web_url).endsWith('/') ? '' : '/') + 'api/v1'
 
-//TODO make bucket for each connection (with minio client)
 
-export type TemporaryCredentials = {
-    access_key_id: string
-    access_key_secret: string
-    expire: number
-    security_token: string
+export function getBucketNameForConnectionId(connectionId: number){
+    return 'connection-' + connectionId
 }
 
-export async function createTemporaryCredentialsForFileUpload(){
+/**
+ * creates new bucket and a user that only has access to exactly this bucket. You can call this multiple times, and it will skip the steps that are already complete (So if this function fails, you can simple execute it again later and try again).
+ *
+ * @param connectionId
+ * @returns bucket name form getBucketNameForConnectionId()
+ */
+export async function createBucketForConnection(connectionId: number){
 
-    const token = generateUniqueTokenUrlSafe(42)
+    const authenticatedHeaders = await loginAsRoot()
 
-    //TODO login first
-    const res = await fetchUrl({
-        url: API_BASE_URL
-        + '?Action=AssumeRoleWithCustomToken&Token=' + token
-        + '&Version=2011-06-15'
-        + '&RoleArn=' + MY_ARN_ID //TODO what does this do?
-        + '&DurationSeconds=3600',
-        method: 'post'
-    })
 
-    const validationResult = validate(res, {
-        type: 'object',
-        required: ['access_key_id', 'access_key_secret', 'expire', 'security_token'],
-        properties: {
-            access_key_id: {
-                type: 'string'
-            },
-            access_key_secret: {
-                type: 'string'
-            },
-            expire: {
-                type: 'number'
-            },
-            security_token: {
-                type: 'string'
+    const newBucketName = getBucketNameForConnectionId(connectionId)
+
+
+    const bucketExistsAlready = await minioClientRoot.bucketExists(newBucketName)
+
+    if(!bucketExistsAlready){
+        // create new bucket
+
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/buckets',
+            method: 'post',
+            headers: authenticatedHeaders,
+            data: {
+                name: newBucketName,
+                versioning: {
+                    enabled: false,
+                    excludePrefixes: [],
+                    excludeFolders: false
+                },
+                locking: false
             }
+        })
+    }
+
+
+
+    const policyExistsAlready = await policyExists(newBucketName, authenticatedHeaders)
+
+    if(!policyExistsAlready){
+        // create new policy
+
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/policies',
+            method: 'post',
+            headers: authenticatedHeaders,
+            data: {
+                name: newBucketName,
+                policy: JSON.stringify({
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": "s3:*",
+                            "Resource": [
+                                "arn:aws:s3:::" + newBucketName + "/*",
+                                "arn:aws:s3:::" + newBucketName
+                            ]
+                        }
+                    ]
+                })
+            }
+        })
+    }
+
+
+    const userExistsAlready = await userExists(newBucketName, authenticatedHeaders)
+
+    if(!userExistsAlready){
+
+        // create new user
+
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/users',
+            method: 'post',
+            headers: authenticatedHeaders,
+            data: {
+                accessKey: newBucketName,
+                secretKey: generateUniqueTokenUrlSafe(42),
+                groups: [],
+                policies: [newBucketName]
+            }
+        })
+    }
+
+
+    return newBucketName
+}
+
+export async function createTemporaryCredentialsForFileUpload(connectionId: number){
+
+    const bucketExists = await minioClientRoot.bucketExists(getBucketNameForConnectionId(connectionId))
+
+    if(!bucketExists){
+        throw new Error('bucket does not exist for connectionId: ' + connectionId)
+    }
+
+    const authenticatedHeaders = await loginAsRoot()
+
+    const accessKey = generateUniqueTokenUrlSafe(42).substring(0, 20) //minio max is 20 chars
+    const secretKey = generateUniqueTokenUrlSafe(42).substring(0, 40) //minio max is 40 chars
+
+
+    // create service account
+    const createServiceAccountResult = await fetchUrl({
+        url: WEB_API_BASE_URL + '/user/' + getBucketNameForConnectionId(connectionId) + '/service-account-credentials',
+        method: 'post',
+        headers: authenticatedHeaders,
+        data: {
+            policy: "",
+            accessKey,
+            secretKey,
+            description: "",
+            comment: "automatically generated by ofh",
+            name: "",
+            expiry: new Date(Date.now() + 1000 * 60 * 60 /* 1 hour */).toISOString()
         }
     })
 
-    console.log(res)
-
-    if(validationResult !== true){
-        throw new Error('could not create temporary credentials, minio response did not satisfy schema: ' + validationResult)
+    return {
+        accessKey,
+        secretKey
     }
+}
 
-    return res as TemporaryCredentials
+
+async function loginAsRoot(){
+
+    const loginResult = await fetchUrl({
+        url: WEB_API_BASE_URL + '/login',
+        method: 'post',
+        data: {
+            accessKey: secrets.minio_web_access_key_root,
+            secretKey: secrets.minio_web_secret_key_root,
+        }
+    })
+
+    return {
+        'Cookie': loginResult.responseHeaders.get('Set-Cookie').split(';')[0]
+    }
+}
+
+
+async function policyExists(policyName: string, authenticatedHeaders: Record<string, string>){
+
+    try {
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/policy/' + policyName,
+            method: 'get',
+            headers: authenticatedHeaders
+        })
+
+        return true
+
+    } catch (err) {
+        if(err instanceof Object && typeof err.code === 'number'){
+            // minio returns a 500 if it does not find the policy LOL, so we can not differentiate between real server errors and policy not found
+            return false
+        }
+
+        throw err
+    }
+}
+
+
+async function userExists(userName: string, authenticatedHeaders: Record<string, string>){
+
+    try {
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/user/' + userName,
+            method: 'get',
+            headers: authenticatedHeaders
+        })
+
+        return true
+
+    } catch (err) {
+        if(err instanceof Object && typeof err.code === 'number'){
+            if(err.code === 404){
+                return false
+            }
+        }
+
+        throw err
+    }
 }
 
 export async function uploadObject(bucketName: string, objectKey: string, sourceFilePath: string){
     const readBuffer = await fs.promises.readFile(sourceFilePath)
-    await minioClientWriteOnly.putObject(bucketName, objectKey, readBuffer)
+    await minioClientRoot.putObject(bucketName, objectKey, readBuffer)
 }
 
 export function downloadObject(bucketName: string, objectKey: string, targetFilePath: string){
@@ -110,7 +244,7 @@ export function downloadObject(bucketName: string, objectKey: string, targetFile
             resolve()
         })
 
-        minioClientReadWrite.getObject(bucketName, objectKey).then(readStream => {
+        minioClientRoot.getObject(bucketName, objectKey).then(readStream => {
 
             readStream.pipe(writeStream)
 
@@ -127,5 +261,5 @@ export function downloadObject(bucketName: string, objectKey: string, targetFile
 
 export async function deleteObject(bucketName: string, objectKey: string){
 
-    await minioClientReadWrite.removeObject(bucketName, objectKey)
+    await minioClientRoot.removeObject(bucketName, objectKey)
 }

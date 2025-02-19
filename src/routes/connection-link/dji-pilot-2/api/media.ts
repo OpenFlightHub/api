@@ -78,7 +78,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
 
     // see https://min.io/docs/minio/linux/developers/security-token-service.html
 
-    const credentials = await createTemporaryCredentialsForFileUpload()
+    const credentials = await createTemporaryCredentialsForFileUpload(connection.id)
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaStsPostResponse>({
         code: 0,
@@ -88,7 +88,10 @@ router.post('/sts', asyncHandler(async (req, res) => {
             object_key_prefix: 'from_drone_',
             provider: 'minio',
             region: secrets.minio_region,
-            credentials
+            credentials: {
+                access_key_id: credentials.accessKey,
+                access_key_secret: credentials.secretKey
+            }
         },
         message: 'success'
     }, ApiSchema_DjiPilot2ApiMediaStsPostResponse)

@@ -1,66 +1,84 @@
 import fs from 'fs'
 import path from 'path'
-import { deleteObject, uploadObject, downloadObject } from '../../s3-store'
+import { deleteObject, uploadObject, downloadObject, createTemporaryCredentialsForFileUpload, createBucketForConnection } from '../../s3-store'
 import { randomUUID } from 'crypto'
 
 const TEST_BUCKET_NAME = 'test'
 
+test('createBucketForConnection()', async ()=>{
 
-test('upload and overwrite object', async()=>{
-
-    const inputFile = path.resolve('./public/logo.png')
-
-    const fileName = 'test_upload.png'
-
-    await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
-    await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
+    await createBucketForConnection(2)
 
 })
 
-test('upload and delete object', async()=>{
+describe('sts', ()=>{
 
-    const inputFile = path.resolve('./public/logo.png')
+    test('createTemporaryCredentialsForFileUpload', async()=>{
+        const credentials = await createTemporaryCredentialsForFileUpload(2)
 
-    const fileName = 'test_upload.png'
-
-    await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
-    await deleteObject(TEST_BUCKET_NAME, fileName)
-
+        expect(typeof credentials.accessKey).toStrictEqual('string')
+        expect(typeof credentials.accessKey).toStrictEqual('string')
+    })
 })
 
-test('upload and delete object', async()=>{
+describe('object manipulation', ()=>{
 
-    const inputFile = path.resolve('./public/logo.png')
+    test('upload and overwrite object', async()=>{
 
-    const TEST_OBJECT_KEY = 'test-object.png'
+        const inputFile = path.resolve('./public/logo.png')
 
-    await uploadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, inputFile)
+        const fileName = 'test_upload.png'
 
-    await deleteObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY)
+        await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
+        await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
 
-})
+    })
 
-test('upload, download and delete object', async()=>{
+    test('upload and delete object', async()=>{
 
-    const inputFile = path.resolve('./public/logo.png')
+        const inputFile = path.resolve('./public/logo.png')
 
-    const TEST_OBJECT_KEY = 'test-object.png'
+        const fileName = 'test_upload.png'
 
-    await uploadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, inputFile)
+        await uploadObject(TEST_BUCKET_NAME, fileName, inputFile)
+        await deleteObject(TEST_BUCKET_NAME, fileName)
 
-    const outputFile = path.resolve('./dist', randomUUID() + '.png')
+    })
 
-    await downloadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, outputFile)
+    test('upload and delete object', async()=>{
 
-    await deleteObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY)
+        const inputFile = path.resolve('./public/logo.png')
+
+        const TEST_OBJECT_KEY = 'test-object.png'
+
+        await uploadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, inputFile)
+
+        await deleteObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY)
+
+    })
+
+    test('upload, download and delete object', async()=>{
+
+        const inputFile = path.resolve('./public/logo.png')
+
+        const TEST_OBJECT_KEY = 'test-object.png'
+
+        await uploadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, inputFile)
+
+        const outputFile = path.resolve('./dist', randomUUID() + '.png')
+
+        await downloadObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY, outputFile)
+
+        await deleteObject(TEST_BUCKET_NAME, TEST_OBJECT_KEY)
 
 
-    const fdInput = fs.openSync(inputFile, 'r')
-    const statsInput =  fs.fstatSync(fdInput)
+        const fdInput = fs.openSync(inputFile, 'r')
+        const statsInput =  fs.fstatSync(fdInput)
 
-    const fdOutput = fs.openSync(outputFile, 'r')
-    const statsOutput =  fs.fstatSync(fdOutput)
+        const fdOutput = fs.openSync(outputFile, 'r')
+        const statsOutput =  fs.fstatSync(fdOutput)
 
-    expect(statsInput.size).toStrictEqual(statsOutput.size)
+        expect(statsInput.size).toStrictEqual(statsOutput.size)
 
+    })
 })

@@ -330,8 +330,8 @@ export type ApiType_DjiPilot2ApiMediaStsPostResponse = {
         credentials: {
             access_key_id: string;
             access_key_secret: string;
-            expire: number;
-            security_token: string;
+            expire?: number;
+            security_token?: string;
         };
         endpoint: string;
         object_key_prefix: string;
