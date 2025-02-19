@@ -35,8 +35,13 @@ example contents:
     "rtmp_url": "stream.rocks/ome",
     "ome_admission_secret": "1234",
 
-
-    "rapidapi_adsb_exchange_key": "1234"
+    "minio_api_url": "127.0.0.1:6003",
+    "minio_region": "eu-1",
+    "minio_api_access_key_readwrite": "1234",
+    "minio_api_secret_key_readwrite": "1234",
+    "minio_api_access_key_writeonly": "1234",
+    "minio_api_secret_key_writeonly": "1234",
+    "minio_bucket_dji_pilot_2_media": "dji-pilot-2-media"
 }
 ```
 
@@ -74,8 +79,13 @@ make sure that you created an action secret called `SECRETS` here https://github
     "rtmp_url": "stream.rocks/ome",
     "ome_admission_secret": "1234",
 
-
-    "rapidapi_adsb_exchange_key": "1234"
+    "minio_api_url": "127.0.0.1:6003",
+    "minio_region": "eu-1",
+    "minio_api_access_key_readwrite": "1234",
+    "minio_api_secret_key_readwrite": "1234",
+    "minio_api_access_key_writeonly": "1234",
+    "minio_api_secret_key_writeonly": "1234",
+    "minio_bucket_dji_pilot_2_media": "dji-pilot-2-media"
 }
 ```
 

@@ -45,6 +45,15 @@ export type DBType_User = {
 }
 
 
+export type DBType_File = {
+  id: number;
+  workspace_id: number;
+  name: string;
+  created_at: string;
+  created_by: number;
+}
+
+
 export type DBType_Workspace = {
   id: number;
   name: string;
@@ -134,6 +143,24 @@ export type DBType_DroneData = {
     [k: string]: unknown;
   };
   created_at: string;
+}
+
+
+export type DBType_DroneMedia_TypeType = 0|1
+export const DBType_DroneMedia_TYPES = {
+  image: 0 as DBType_DroneMedia_TypeType,
+  video: 1 as DBType_DroneMedia_TypeType
+}
+export type DBType_DroneMedia = {
+  id: number;
+  drone_id: number;
+  /**
+   * 0 = image, 1 = video
+   */
+  type: DBType_DroneMedia_TypeType;
+  file_id: number;
+  fingerprint: string;
+  tiny_fingerprint: string;
 }
 
 

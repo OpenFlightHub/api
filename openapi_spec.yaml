@@ -282,6 +282,9 @@ paths:
               Set-Cookie:
                 $ref: '#/components/headers/user_auth'
 
+          '401':
+            $ref: '#/components/responses/401'
+
   # user
 
   /user/{user_id}:
@@ -364,6 +367,67 @@ paths:
 
         '401':
           $ref: '#/components/responses/401'
+      security:
+        - user_auth: []
+
+
+  # file
+
+  /file/{file_id}:
+    get:
+      tags:
+        - file
+      summary: Get a file
+      description: Only returns file meta data, For the actual file see /file/data
+      parameters:
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns a file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file'
+
+        '400':
+            $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /file/data/{file_id}:
+    get:
+      x-no-sdk: true
+      tags:
+        - file
+      summary: Get a files data (to download or show as <img>)
+      parameters:
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns a file
+
+        '400':
+            $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
       security:
         - user_auth: []
 
@@ -497,6 +561,141 @@ paths:
       responses:
         '200':
           description: Deleted workspace successfully
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/file:
+    post:
+      tags:
+        - workspace
+      summary: Upload a file to a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/workspace_file_post'
+        required: true
+      responses:
+        '200':
+          description: Result (returns file id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /workspace/{workspace_id}/file/{file_id}:
+    patch:
+      tags:
+        - workspace
+      summary: Upload a file to a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+         application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_file_patch'
+        required: true
+      responses:
+        '200':
+          description: Result
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    delete:
+      tags:
+        - workspace
+      summary: delete a file from a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Result
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /workspace/{workspace_id}/files:
+    get:
+      tags:
+        - connection
+      summary: Get all files for this workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the files
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspace_files'
 
         '400':
           $ref: '#/components/responses/400'
@@ -782,6 +981,36 @@ paths:
       security:
         - user_auth: []
 
+  /drone/{drone_id}/media:
+    get:
+      tags:
+        - drone
+      summary: Get all the uploaded media of this drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drones media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone_media'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
 
   # connection-link
 
@@ -857,6 +1086,180 @@ paths:
           $ref: '#/components/responses/401'
       security:
         - connection_link_auth: []
+
+
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/fast-upload:
+    post:
+      tags:
+        - dji-pilot-2-api
+      summary: Upload media from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_media_fast_upload_post'
+      responses:
+        '200':
+          description: Returns upload status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_media_fast_upload_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/files/tiny-fingerprints:
+    post:
+      tags:
+        - dji-pilot-2-api
+      summary: Get all existing tiny fingerprints of files from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_media_files_tiny_fingerprints_post'
+      responses:
+        '200':
+          description: Returns existing fingerprints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_media_files_tiny_fingerprints_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/sts:
+    post:
+      tags:
+        - dji-pilot-2-api
+      summary: Get a temporary access token to upload a media from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns existing fingerprints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_media_sts_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/upload-callback:
+    post:
+      tags:
+        - dji-pilot-2-api
+      summary: Get upload feedback from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_media_upload_callback_post'
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_media_upload_callback_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/group-upload-callback:
+    post:
+      tags:
+        - dji-pilot-2-api
+      summary: Get upload feedback from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_media_group_upload_callback_post'
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_media_group_upload_callback_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+
+
 
 
 components:
@@ -1029,6 +1432,22 @@ components:
           type: string
           example: en-US
 
+    # file
+
+    file:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/timestamptz'
+
 
     # workspace
 
@@ -1060,6 +1479,29 @@ components:
         name:
           type: string
 
+
+    workspace_files:
+      type: array
+      items:
+          $ref: '#/components/schemas/reference'
+
+    workspace_file_post:
+      type: object
+      required:
+        - file
+        - filename
+      properties:
+        file:
+          type: string
+          format: binary
+        filename:
+          type: string
+
+    workspace_file_patch:
+      type: object
+      properties:
+        filename:
+          type: string
 
     workspace_connections:
       type: array
@@ -1183,6 +1625,26 @@ components:
           $ref: '#/components/schemas/timestamptz'
 
 
+    drone_media:
+      type: object
+      required:
+        - id
+        - type
+        - reported_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        type:
+          type: number
+          description: 0 = image, 1 = video
+        file_id:
+          type: number
+          example: 42
+          description: see `/file` endpoint
+        created_at:
+          $ref: '#/components/schemas/timestamptz'
+
+
     # connection-link
 
     connection_link_auth_login_post:
@@ -1228,6 +1690,7 @@ components:
         - app_license
         - mqtt_url
         - rtmp_url
+        - api_url
       properties:
         app_id:
           type: string
@@ -1239,8 +1702,252 @@ components:
           type: string
         rtmp_url:
           type: string
+        api_url:
+          type: string
+
+    # dji pilot 2 api
+
+    dji_pilot_2_api_media_fast_upload_post:
+      type: object
+      required:
+        - fingerprint
+      properties:
+        ext:
+          type: object
+          required:
+            - drone_model_key
+            - is_original
+            - payload_model_key
+            - tinny_fingerprint
+            - sn
+          properties:
+            drone_model_key:
+              type: string
+            is_original:
+              type: boolean
+            payload_model_key:
+              type: string
+            tinny_fingerprint:
+              type: string
+            sn:
+              type: string
+        fingerprint:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+
+    dji_pilot_2_api_media_fast_upload_post_response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: number
+          description: 0 = success
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+
+    dji_pilot_2_api_media_files_tiny_fingerprints_post:
+      type: object
+      description: TODO what is the format? documentation does not say
+
+    dji_pilot_2_api_media_files_tiny_fingerprints_post_response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: number
+          description: 0 = success
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          required:
+            - tiny_fingerprints
+          properties:
+            tiny_fingerprints:
+              type: array
+              items:
+                type: string
+                example: 5aec4c6e78052bf38fab901bcd1a2319_2021_12_8_22_13_10
 
 
+
+    dji_pilot_2_api_media_sts_post_response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: number
+          description: 0 = success
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          required:
+            - bucket
+            - credentials
+            - endpoint
+            - object_key_prefix
+            - provider
+            - region
+          properties:
+            bucket:
+              type: string
+            credentials:
+              type: object
+              required:
+                - access_key_id
+                - access_key_secret
+                - expire
+                - security_token
+              properties:
+                access_key_id:
+                  type: string
+                access_key_secret:
+                  type: string
+                expire:
+                  type: number
+                security_token:
+                  type: string
+            endpoint:
+              type: string
+            object_key_prefix:
+              type: string
+            provider:
+              type: string
+              description: can be `ali`, `aws` or `minio`
+            region:
+              type: string
+
+
+    dji_pilot_2_api_media_upload_callback_post:
+      type: object
+      required:
+        - result
+        - name
+        - object_key
+      properties:
+        result:
+          type: integer
+          description: non-zero means failure
+        name:
+          type: string
+        object_key:
+          type: string
+        path:
+          type: string
+        sub_file_type:
+          type: string
+        ext:
+          type: object
+          properties:
+            file_group_id:
+              type: string
+            drone_model_key:
+              type: string
+              description: device product enum
+            is_original:
+              type: boolean
+            payload_model_key:
+              type: string
+              description: payload product enum
+            tinny_fingerprint:
+              type: string
+              description: TODO check if tinny is spelled correctly
+            sn:
+              type: string
+        fingerprint:
+          type: string
+        metadata:
+          type: object
+          properties:
+            absolute_altitude:
+              type: number
+            created_time:
+              type: string
+            gimbal_yaw_degree:
+              type: number
+            relative_altitude:
+              type: number
+            shoot_position:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+
+
+
+    dji_pilot_2_api_media_upload_callback_post_response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: number
+          description: 0 = success
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          required:
+            - object_key
+          properties:
+            object_key:
+              type: string
+
+
+    dji_pilot_2_api_media_group_upload_callback_post:
+      type: object
+      required:
+        - file_count
+        - file_uploaded_count
+      properties:
+        file_group_id:
+          type: string
+        file_count:
+          type: integer
+        file_uploaded_count:
+          type: integer
+
+
+
+    dji_pilot_2_api_media_group_upload_callback_post_response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: number
+          description: 0 = success
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          description: TODO missing documentation
 
 
   responses:
@@ -1296,3 +2003,7 @@ components:
       type: apiKey
       in: cookie
       name: connection-link-auth
+    dji_pilot_2_api:
+      type: apiKey
+      in: header
+      name: x-auth-token

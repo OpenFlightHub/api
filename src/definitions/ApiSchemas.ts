@@ -237,6 +237,30 @@ export const ApiSchema_UserPatch : JSONSchema  = {
     }
 }
 
+export const ApiSchema_File : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "created_at"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
 export const ApiSchema_Workspace : JSONSchema  = {
     "type": "object",
     "required": [
@@ -270,6 +294,48 @@ export const ApiSchema_WorkspacesPost : JSONSchema  = {
     ],
     "properties": {
         "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceFiles : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            }
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceFilePost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "file",
+        "filename"
+    ],
+    "properties": {
+        "file": {
+            "type": "string",
+            "format": "binary"
+        },
+        "filename": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceFilePatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "filename": {
             "type": "string"
         }
     }
@@ -479,6 +545,36 @@ export const ApiSchema_DroneBattery : JSONSchema  = {
     }
 }
 
+export const ApiSchema_DroneMedia : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "type",
+        "reported_at"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "type": {
+            "type": "number",
+            "description": "0 = image, 1 = video"
+        },
+        "file_id": {
+            "type": "number",
+            "example": 42,
+            "description": "see `/file` endpoint"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
 export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [
@@ -534,7 +630,8 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
         "app_key",
         "app_license",
         "mqtt_url",
-        "rtmp_url"
+        "rtmp_url",
+        "api_url"
     ],
     "properties": {
         "app_id": {
@@ -551,6 +648,342 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
         },
         "rtmp_url": {
             "type": "string"
+        },
+        "api_url": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaFastUploadPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "fingerprint"
+    ],
+    "properties": {
+        "ext": {
+            "type": "object",
+            "required": [
+                "drone_model_key",
+                "is_original",
+                "payload_model_key",
+                "tinny_fingerprint",
+                "sn"
+            ],
+            "properties": {
+                "drone_model_key": {
+                    "type": "string"
+                },
+                "is_original": {
+                    "type": "boolean"
+                },
+                "payload_model_key": {
+                    "type": "string"
+                },
+                "tinny_fingerprint": {
+                    "type": "string"
+                },
+                "sn": {
+                    "type": "string"
+                }
+            }
+        },
+        "fingerprint": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "path": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "message",
+        "data"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "description": "0 = success"
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object"
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost : JSONSchema  = {
+    "type": "object",
+    "description": "TODO what is the format? documentation does not say"
+}
+
+export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "message",
+        "data"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "description": "0 = success"
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "tiny_fingerprints"
+            ],
+            "properties": {
+                "tiny_fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "example": "5aec4c6e78052bf38fab901bcd1a2319_2021_12_8_22_13_10"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "message",
+        "data"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "description": "0 = success"
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "bucket",
+                "credentials",
+                "endpoint",
+                "object_key_prefix",
+                "provider",
+                "region"
+            ],
+            "properties": {
+                "bucket": {
+                    "type": "string"
+                },
+                "credentials": {
+                    "type": "object",
+                    "required": [
+                        "access_key_id",
+                        "access_key_secret",
+                        "expire",
+                        "security_token"
+                    ],
+                    "properties": {
+                        "access_key_id": {
+                            "type": "string"
+                        },
+                        "access_key_secret": {
+                            "type": "string"
+                        },
+                        "expire": {
+                            "type": "number"
+                        },
+                        "security_token": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "endpoint": {
+                    "type": "string"
+                },
+                "object_key_prefix": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "description": "can be `ali`, `aws` or `minio`"
+                },
+                "region": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "result",
+        "name",
+        "object_key"
+    ],
+    "properties": {
+        "result": {
+            "type": "integer",
+            "description": "non-zero means failure"
+        },
+        "name": {
+            "type": "string"
+        },
+        "object_key": {
+            "type": "string"
+        },
+        "path": {
+            "type": "string"
+        },
+        "sub_file_type": {
+            "type": "string"
+        },
+        "ext": {
+            "type": "object",
+            "properties": {
+                "file_group_id": {
+                    "type": "string"
+                },
+                "drone_model_key": {
+                    "type": "string",
+                    "description": "device product enum"
+                },
+                "is_original": {
+                    "type": "boolean"
+                },
+                "payload_model_key": {
+                    "type": "string",
+                    "description": "payload product enum"
+                },
+                "tinny_fingerprint": {
+                    "type": "string",
+                    "description": "TODO check if tinny is spelled correctly"
+                },
+                "sn": {
+                    "type": "string"
+                }
+            }
+        },
+        "fingerprint": {
+            "type": "string"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "absolute_altitude": {
+                    "type": "number"
+                },
+                "created_time": {
+                    "type": "string"
+                },
+                "gimbal_yaw_degree": {
+                    "type": "number"
+                },
+                "relative_altitude": {
+                    "type": "number"
+                },
+                "shoot_position": {
+                    "type": "object",
+                    "properties": {
+                        "lat": {
+                            "type": "number"
+                        },
+                        "lng": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "message",
+        "data"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "description": "0 = success"
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "object_key"
+            ],
+            "properties": {
+                "object_key": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "file_count",
+        "file_uploaded_count"
+    ],
+    "properties": {
+        "file_group_id": {
+            "type": "string"
+        },
+        "file_count": {
+            "type": "integer"
+        },
+        "file_uploaded_count": {
+            "type": "integer"
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "message",
+        "data"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "description": "0 = success"
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "description": "TODO missing documentation"
         }
     }
 }

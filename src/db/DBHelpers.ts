@@ -171,6 +171,103 @@ export function selectUser(id: number){
 }
 
 
+//files
+
+import {} from "./DBTypes";
+
+export type DBInsert_File = {
+    workspace_id: number
+    name: string
+    created_at?: string
+    created_by: number
+}
+
+export type DBUpdate_File = {
+    workspace_id?: number
+    name?: string
+    created_at?: string
+    created_by?: number
+}
+const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "workspace_id"
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by"
+    }
+], {table: "files"})
+
+const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "workspace_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by",
+        "skip": col => !col.exists
+    }
+], {table: "files"})
+import {DBType_File} from './DBTypes'
+
+
+export function insertFile(values: DBInsert_File){
+    return db.one<DBType_File>(db.$config.pgp.helpers.insert(values, undefined, 'files') + ' RETURNING *')
+}
+
+/**
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+*/
+export function updateFile<T extends number | string>(values: DBUpdate_File, idOrWhereCondition: T): T extends number ? Promise<DBType_File> : Promise<DBType_File[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBTypeFile>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
+
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' ' + whereCondition)
+    }
+}
+
+export function deleteFile(id: number){
+    return db.none('DELETE FROM files WHERE id = ${id}', {id})
+}
+
+
+
+
+export function selectFile(id: number){
+    return db.one<DBType_File>('SELECT * FROM files ' + pgp.as.format('WHERE id = ${id}', {id}))
+}
+
+
 //workspaces
 
 import {} from "./DBTypes";
@@ -773,4 +870,109 @@ export function deleteDroneData(id: number){
 
 export function selectDroneData(id: number){
     return db.one<DBType_DroneData>('SELECT * FROM drone_data ' + pgp.as.format('WHERE id = ${id}', {id}))
+}
+
+
+//drone_media
+
+import {DBType_DroneMedia_TypeType} from "./DBTypes";
+
+export type DBInsert_DroneMedia = {
+    drone_id: number
+    type: DBType_DroneMedia_TypeType
+    file_id: number
+    fingerprint: string
+    tiny_fingerprint: string
+}
+
+export type DBUpdate_DroneMedia = {
+    drone_id?: number
+    type?: DBType_DroneMedia_TypeType
+    file_id?: number
+    fingerprint?: string
+    tiny_fingerprint?: string
+}
+const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "drone_id"
+    },
+    {
+        "name": "type"
+    },
+    {
+        "name": "file_id"
+    },
+    {
+        "name": "fingerprint"
+    },
+    {
+        "name": "tiny_fingerprint"
+    }
+], {table: "drone_media"})
+
+const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "drone_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "file_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "fingerprint",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "tiny_fingerprint",
+        "skip": col => !col.exists
+    }
+], {table: "drone_media"})
+import {DBType_DroneMedia} from './DBTypes'
+
+
+export function insertDroneMedia(values: DBInsert_DroneMedia){
+    return db.one<DBType_DroneMedia>(db.$config.pgp.helpers.insert(values, undefined, 'drone_media') + ' RETURNING *')
+}
+
+/**
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+*/
+export function updateDroneMedia<T extends number | string>(values: DBUpdate_DroneMedia, idOrWhereCondition: T): T extends number ? Promise<DBType_DroneMedia> : Promise<DBType_DroneMedia[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBTypeDroneMedia>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
+
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' ' + whereCondition)
+    }
+}
+
+export function deleteDroneMedia(id: number){
+    return db.none('DELETE FROM drone_media WHERE id = ${id}', {id})
+}
+
+
+
+
+export function selectDroneMedia(id: number){
+    return db.one<DBType_DroneMedia>('SELECT * FROM drone_media ' + pgp.as.format('WHERE id = ${id}', {id}))
 }

@@ -107,6 +107,19 @@ export function getConnectionForSessionToken(sessionToken: string) : Promise<fal
 }
 
 
+export function getConnectionForSecret(secret: string) : Promise<false | DBType_Connection> {
+    return new Promise(resolve=>{
+        db.one('SELECT * FROM connections WHERE secret = ${secret};', {
+            secret
+        }).then(result => {
+            resolve(result)
+        }).catch(()=>{
+            resolve(false)
+        })
+    })
+}
+
+
 export class GuardedMiddleware {
 
     private readonly req: Request
@@ -183,8 +196,31 @@ export class GuardedMiddleware {
         if(this.currentConnection){
             return this.currentConnection
         } else {
-            return await this.guardConnectionLinkIsAuthenticated()
+            try {
+                return await this.guardConnectionLinkIsAuthenticated()
+            } catch (err){
+                return await this.guardDjiPilot2ApiIsAuthenticated()
+            }
         }
+    }
+
+
+    async guardDjiPilot2ApiIsAuthenticated() : Promise<DBType_Connection> {
+        const cookie = this.req.cookies['x-auth-token']
+
+        if(!cookie){
+            throw GuardError._401_Unauthorized()
+        }
+
+        const connection = await getConnectionForSecret(cookie)
+
+        if(connection === false){ //invalid token
+            throw GuardError._401_Unauthorized()
+        }
+
+        this.currentConnection = connection
+
+        return connection
     }
 
 

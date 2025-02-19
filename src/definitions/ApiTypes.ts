@@ -106,6 +106,16 @@ export type ApiType_UserPatch = {
 }
 
 
+export type ApiType_File = {
+    id: number;
+    name: string;
+    /**
+     * ISO 8601 format
+     */
+    created_at: string;
+}
+
+
 export type ApiType_Workspace = {
     id: number;
     name: string;
@@ -119,6 +129,22 @@ export type ApiType_WorkspacePatch = {
 
 export type ApiType_WorkspacesPost = {
     name: string;
+}
+
+
+export type ApiType_WorkspaceFiles = {
+    id: number;
+}[];
+
+
+export type ApiType_WorkspaceFilePost = {
+    file: string;
+    filename: string;
+}
+
+
+export type ApiType_WorkspaceFilePatch = {
+    filename?: string;
 }
 
 
@@ -211,6 +237,23 @@ export type ApiType_DroneBattery = {
 }
 
 
+export type ApiType_DroneMedia = {
+    id: number;
+    /**
+     * 0 = image, 1 = video
+     */
+    type: number;
+    /**
+     * see `/file` endpoint
+     */
+    file_id?: number;
+    /**
+     * ISO 8601 format
+     */
+    created_at?: string;
+}
+
+
 export type ApiType_ConnectionLinkAuthLoginPost = {
     connection_id: string;
     secret: string;
@@ -233,6 +276,143 @@ export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
     app_license: string;
     mqtt_url: string;
     rtmp_url: string;
+    api_url: string;
+}
+
+
+export type ApiType_DjiPilot2ApiMediaFastUploadPost = {
+    ext?: {
+        drone_model_key: string;
+        is_original: boolean;
+        payload_model_key: string;
+        tinny_fingerprint: string;
+        sn: string;
+    };
+    fingerprint: string;
+    name?: string;
+    path?: string;
+}
+
+
+export type ApiType_DjiPilot2ApiMediaFastUploadPostResponse = {
+    /**
+     * 0 = success
+     */
+    code: number;
+    message: string;
+    data: {};
+}
+
+
+export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost = {}
+
+
+export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse = {
+    /**
+     * 0 = success
+     */
+    code: number;
+    message: string;
+    data: {
+        tiny_fingerprints: string[];
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMediaStsPostResponse = {
+    /**
+     * 0 = success
+     */
+    code: number;
+    message: string;
+    data: {
+        bucket: string;
+        credentials: {
+            access_key_id: string;
+            access_key_secret: string;
+            expire: number;
+            security_token: string;
+        };
+        endpoint: string;
+        object_key_prefix: string;
+        /**
+         * can be `ali`, `aws` or `minio`
+         */
+        provider: string;
+        region: string;
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMediaUploadCallbackPost = {
+    /**
+     * non-zero means failure
+     */
+    result: number;
+    name: string;
+    object_key: string;
+    path?: string;
+    sub_file_type?: string;
+    ext?: {
+        file_group_id?: string;
+        /**
+         * device product enum
+         */
+        drone_model_key?: string;
+        is_original?: boolean;
+        /**
+         * payload product enum
+         */
+        payload_model_key?: string;
+        /**
+         * TODO check if tinny is spelled correctly
+         */
+        tinny_fingerprint?: string;
+        sn?: string;
+    };
+    fingerprint?: string;
+    metadata?: {
+        absolute_altitude?: number;
+        created_time?: string;
+        gimbal_yaw_degree?: number;
+        relative_altitude?: number;
+        shoot_position?: {
+            lat?: number;
+            lng?: number;
+        };
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse = {
+    /**
+     * 0 = success
+     */
+    code: number;
+    message: string;
+    data: {
+        object_key: string;
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPost = {
+    file_group_id?: string;
+    file_count: number;
+    file_uploaded_count: number;
+}
+
+
+export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse = {
+    /**
+     * 0 = success
+     */
+    code: number;
+    message: string;
+    /**
+     * TODO missing documentation
+     */
+    data: {};
 }
 
 
