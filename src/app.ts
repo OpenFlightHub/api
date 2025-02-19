@@ -11,9 +11,7 @@ const secrets = secretsLoader.getSecrets([
 global.emailHashPepper = secrets.emailHashPepper
 
 import {setupMail} from './mail'
-setupMail(secrets.mail_hostname, secrets.mail_port, secrets.mail_secure, secrets.mail_username, secrets.mail_password, secrets.mail_from).then(()=>{
-    console.log('mail is setup')
-})
+setupMail(secrets.mail_hostname, secrets.mail_port, secrets.mail_secure, secrets.mail_username, secrets.mail_password, secrets.mail_from)
 
 import pgp from 'pg-promise'
 const db = pgp({
