@@ -1,3 +1,4 @@
+import {Headers}from 'undici-types'
 
 export function fetchUrl(options: {
     url: string
@@ -6,7 +7,7 @@ export function fetchUrl(options: {
     headers?: Record<string, string>
     timeout?: number
 }){
-    return new Promise<undefined | object>((resolve, reject)=>{
+    return new Promise<{responseHeaders: Headers, data: undefined | object}>((resolve, reject)=>{
 
         const baseHeaders: {[key: string]: string} = {
             'Accept': 'application/json',
@@ -50,11 +51,17 @@ export function fetchUrl(options: {
                 if (response.body) {
                     response.text().then(text => {
                         if(text.length === 0){
-                            resolve(undefined)
+                            resolve({
+                                responseHeaders: response.headers,
+                                data: undefined
+                            })
                         } else {
                             try {
                                 const parsed = JSON.parse(text)
-                                resolve(parsed)
+                                resolve({
+                                    responseHeaders: response.headers,
+                                    data: parsed
+                                })
                             } catch(err){
                                 reject(err)
                             }
@@ -65,7 +72,10 @@ export function fetchUrl(options: {
                         reject(err)
                     })
                 } else {
-                    resolve(undefined)
+                    resolve({
+                        responseHeaders: response.headers,
+                        data: undefined
+                    })
                     return
                 }
             } else {
@@ -73,15 +83,29 @@ export function fetchUrl(options: {
 
                     if (response.body) {
                         response.text().then(body => {
-                            reject(`Fatal fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.statusText} ${body}`)
-                        }).catch(reject)
+                            reject({
+                                code: response.status,
+                                error: `Fatal fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.statusText} ${body}`
+                            })
+                        }).catch(err => {
+                            reject({
+                                code: response.status,
+                                error: err
+                            })
+                        })
                     } else {
-                        reject(`Fatal fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.statusText}`)
+                        reject({
+                            code: response.status,
+                            error: `Fatal fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.statusText}`
+                        })
                     }
 
 
                 } else {
-                    reject(`fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.status} ${response.statusText}`)
+                    reject({
+                        code: response.status,
+                        error: `fetch Error @ ${options.method.toUpperCase()} ${options.url} : ${response.status} ${response.statusText}`
+                    })
                 }
             }
         }).catch(reason => {
