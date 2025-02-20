@@ -52,13 +52,28 @@ describe('general status codes', ()=>{
 
             if(methodObject.security){
 
-                it(`${method.toUpperCase()} ${path} should return 401 when no auth cookie is provided`, async()=>{
+                let fullPath = path
+
+                if(methodObject.parameters){
+                    fullPath = fullPath.replace(/\{([^\}]*)\}/, (match, parameterName) => {
+
+                        const parameterSchema = methodObject.parameters.find(p => p.name === parameterName).schema
+                        if(typeof parameterSchema.example !== 'undefined'){
+                            return '' + parameterSchema.example
+                        } else {
+                            throw new Error('unable to replace parameter with example: ' + parameterName)
+                        }
+                    })
+                }
+
+                it(`${method.toUpperCase()} ${fullPath} should return 401 when no auth cookie is provided`, async()=>{
 
                     const req = request(app)
 
+
                     let func : (url: string) => request.Test = req[method]
 
-                    let prep = func(path)
+                    let prep = func(fullPath)
 
                     const res = await prep
                         .send()

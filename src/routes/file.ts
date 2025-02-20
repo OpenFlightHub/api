@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as pgp from 'pg-promise'
-import * as asyncHandler from 'express-async-handler'
+import asyncHandler from 'express-async-handler'
 const db : pgp.IDatabase<any> = global.db
 
 import { selectFile } from '../db/DBHelpers';
@@ -11,6 +11,7 @@ import { getAbsoluteFilePathForFile } from '../util/file';
 const router = express.Router()
 
 router.get('/:file_id', asyncHandler(async (req, res) => {
+
     await req.GM.guardUserIsAuthenticated()
 
     const fileId = req.GM.guardParam('file_id', 'id')
@@ -25,6 +26,7 @@ router.get('/:file_id', asyncHandler(async (req, res) => {
 }))
 
 router.get('/data/:file_id', asyncHandler(async (req, res) => {
+
     await req.GM.guardUserIsAuthenticated()
 
     const fileId = req.GM.guardParam('file_id', 'id')

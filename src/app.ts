@@ -120,9 +120,12 @@ app.get('/docs', (req, res) => {
 import authRoute from './routes/auth'
 app.use('/auth', authRoute)
 
+
+import fileRoute from './routes/file'
+app.use('/file', fileRoute)
+
 import userRoute from './routes/user'
 app.use('/user', userRoute)
-
 
 import workspaceRoute from './routes/workspace'
 app.use('/workspace', workspaceRoute)
