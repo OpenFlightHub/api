@@ -24,3 +24,9 @@ export async function getConnectionForDrone(droneId: number){
         droneId
     })
 }
+
+export async function getConnectionForRemoteController(remoteControllerId: number){
+    return await db.one<DBType_Connection>('SELECT * FROM connections WHERE remote_controller_id = ${remoteControllerId}', {
+        remoteControllerId
+    })
+}

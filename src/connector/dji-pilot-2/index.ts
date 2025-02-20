@@ -69,7 +69,7 @@ connector.onMessage_Osd(async (connectionId, message)=>{
             addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
 
             if(typeof messageData.battery?.capacity_percent === 'number'){
-                addDroneData(connection.drone_id, DRONE_DATA_TYPES.BATTERY, {capacity_percent_left: messageData.battery.capacity_percent})
+                addDroneData(connection.drone_id, DRONE_DATA_TYPES.TELEMETRY, {capacity_percent_left: messageData.battery.capacity_percent})
             }
 
         } else {// RC

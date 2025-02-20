@@ -75,7 +75,7 @@ router.get('/:drone_id/last-battery', asyncHandler(async (req, res) => {
 
     const droneLastBattery = await req.GM.guardDBGone(()=>{
         return db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains longitude and latitude
-            type: DRONE_DATA_TYPES.BATTERY,
+            type: DRONE_DATA_TYPES.TELEMETRY,
             droneId
         })
     })
