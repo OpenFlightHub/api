@@ -614,7 +614,7 @@ paths:
     patch:
       tags:
         - workspace
-      summary: Upload a file to a workspace
+      summary: Overwrite an existing file of a workspace
       parameters:
         - name: workspace_id
           in: path
@@ -1626,23 +1626,28 @@ components:
 
 
     drone_media:
-      type: object
-      required:
-        - id
-        - type
-        - reported_at
-      properties:
-        id:
-          $ref: '#/components/schemas/id'
-        type:
-          type: number
-          description: 0 = image, 1 = video
-        file_id:
-          type: number
-          example: 42
-          description: see `/file` endpoint
-        created_at:
-          $ref: '#/components/schemas/timestamptz'
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - type
+          - file_id
+          - created_at
+        properties:
+          id:
+            $ref: '#/components/schemas/id'
+          type:
+            type: number
+            description: 0 = image, 1 = video
+          file_id:
+            type: number
+            example: 42
+            description: see `/file` endpoint
+          created_at:
+            $ref: '#/components/schemas/timestamptz'
+          meta:
+            type: string
 
 
     # connection-link

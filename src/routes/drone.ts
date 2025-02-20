@@ -2,9 +2,9 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { selectDrone } from '../db/DBHelpers';
-import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
-import { DBType_Connection, DBType_DroneData } from '../db/DBTypes';
-import { ApiType_Drone, ApiType_DroneBattery, ApiType_DronePosition } from '../definitions/ApiTypes';
+import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneMedia, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
+import { DBType_Connection, DBType_DroneData, DBType_DroneMedia } from '../db/DBTypes';
+import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneMedia, ApiType_DronePosition } from '../definitions/ApiTypes';
 import { DRONE_DATA_TYPES, getLastPositionOfDrone as getLastPositionOfDrone } from '../util/drone';
 const db : pgp.IDatabase<any> = global.db
 
@@ -86,6 +86,24 @@ router.get('/:drone_id/last-battery', asyncHandler(async (req, res) => {
     }
 
     res.GM.guardSend<ApiType_DroneBattery>(ret, ApiSchema_DroneBattery)
+}))
+
+
+router.get('/:drone_id/media', asyncHandler(async (req, res) => {
+
+    const droneId = req.GM.guardParam('drone_id', 'id')
+
+    const connection = await db.one<DBType_Connection>('SELECT * FROM connections WHERE drone_id = ${droneId}', {
+        droneId
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
+
+    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {created_at: string}>('SELECT drone_media.*, files.created_at FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId} ORDER BY drone_media.id DESC', {
+        droneId
+    })
+
+    res.GM.guardSend<ApiType_DroneMedia>(droneMedia, ApiSchema_DroneMedia)
 }))
 
 

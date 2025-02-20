@@ -546,31 +546,38 @@ export const ApiSchema_DroneBattery : JSONSchema  = {
 }
 
 export const ApiSchema_DroneMedia : JSONSchema  = {
-    "type": "object",
-    "required": [
-        "id",
-        "type",
-        "reported_at"
-    ],
-    "properties": {
-        "id": {
-            "type": "number",
-            "example": 42
-        },
-        "type": {
-            "type": "number",
-            "description": "0 = image, 1 = video"
-        },
-        "file_id": {
-            "type": "number",
-            "example": 42,
-            "description": "see `/file` endpoint"
-        },
-        "created_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format",
-            "example": "2023-12-11 23:06:52.7879+00"
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "type",
+            "file_id",
+            "created_at"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "type": {
+                "type": "number",
+                "description": "0 = image, 1 = video"
+            },
+            "file_id": {
+                "type": "number",
+                "example": 42,
+                "description": "see `/file` endpoint"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "meta": {
+                "type": "string"
+            }
         }
     }
 }

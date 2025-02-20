@@ -246,12 +246,13 @@ export type ApiType_DroneMedia = {
     /**
      * see `/file` endpoint
      */
-    file_id?: number;
+    file_id: number;
     /**
      * ISO 8601 format
      */
-    created_at?: string;
-}
+    created_at: string;
+    meta?: string;
+}[];
 
 
 export type ApiType_ConnectionLinkAuthLoginPost = {
