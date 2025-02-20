@@ -2,10 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import {deleteFile, insertFile, selectFile} from '../db/DBHelpers'
 
-export async function getAbsoluteFilePathForFile(fileId: number){
+export async function getAbsoluteFilePathForFileId(fileId: number){
     const file = await selectFile(fileId)
 
-    return getAbsoluteFilePathForFileIdAnName(file.id, file.name)
+    return getAbsoluteFilePathForFile(file)
 }
 
 export function getAbsoluteFilePathForFileIdAnName(fileId: number, fileName: string){
@@ -14,8 +14,13 @@ export function getAbsoluteFilePathForFileIdAnName(fileId: number, fileName: str
     return '' + fileId + '.' + ext
 }
 
+export function getAbsoluteFilePathForFile(file: DBType_File){
+    return getAbsoluteFilePathForFileIdAnName(file.id, file.name)
+}
+
 import multer from 'multer'
 import { MulterFile } from '../app'
+import { DBType_File } from '../db/DBTypes'
 const multerMiddleware = multer({
     dest: path.resolve('tmp_files_multer')
 })
@@ -39,8 +44,13 @@ export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, works
     return file
 }
 
-export async function deleteFileFromDatabaseAndFilesystem(fileId: number){
-    await fs.promises.rm(await getAbsoluteFilePathForFile(fileId))
+export async function deleteFileFromDatabaseAndFilesystem(file: DBType_File){
+    await fs.promises.rm(getAbsoluteFilePathForFile(file))
+    await deleteFile(file.id)
+}
+
+export async function deleteFileIdFromDatabaseAndFilesystem(fileId: number){
+    await fs.promises.rm(await getAbsoluteFilePathForFileId(fileId))
     await deleteFile(fileId)
 }
 

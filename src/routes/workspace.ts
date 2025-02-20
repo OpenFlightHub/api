@@ -189,14 +189,14 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
 
     const fileId = req.GM.guardParam('file_id', 'id')
 
-    await req.GM.guardDBGone(()=>{
+    const file = await req.GM.guardDBGone(()=>{
         return db.one<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId} AND id = ${id};', {
             id: fileId,
             workspaceId
         })
     })
 
-    await deleteFileFromDatabaseAndFilesystem(fileId)
+    await deleteFileFromDatabaseAndFilesystem(file)
 
     res.status(200).send()
 }))
