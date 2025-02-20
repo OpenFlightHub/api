@@ -2,8 +2,8 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { deleteFile, deleteWorkspace, insertWorkspace, selectFile, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFilePost, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFilePost, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFilePost, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFilePost, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace } from '../db/DBTypes';
 import { createConnection } from '../util/connection';
 import { deleteFileFromDatabaseAndFilesystem, multerMiddleware, storeTmpMulterFileInDatabase } from '../util/file';
@@ -127,6 +127,24 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
         connection_id: '' + connection.id,
         secret: connection.secret
     }, ApiSchema_WorkspaceConnectionsPostResponse)
+
+}))
+
+
+
+router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = req.GM.guardDBGone(()=>{
+        return selectWorkspace(workspaceId)
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    const files = await db.manyOrNone<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId}')
+
+    res.GM.guardSend<ApiType_WorkspaceFiles>(files, ApiSchema_WorkspaceFiles)
 
 }))
 
