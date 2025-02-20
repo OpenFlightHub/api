@@ -1,11 +1,14 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
-import { ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
-import { DBType_Connection, DBType_Workspace } from '../db/DBTypes';
+import { deleteFile, deleteWorkspace, insertWorkspace, selectFile, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFilePost, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFilePost, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
+import { DBType_Connection, DBType_File, DBType_Workspace } from '../db/DBTypes';
 import { createConnection } from '../util/connection';
+import { deleteFileFromDatabaseAndFilesystem, multerMiddleware, storeTmpMulterFileInDatabase } from '../util/file';
+import { MulterFile } from '../app';
+import { GuardError } from '../ManInTheMiddleware';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -125,6 +128,77 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
         secret: connection.secret
     }, ApiSchema_WorkspaceConnectionsPostResponse)
 
+}))
+
+router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = req.GM.guardDBGone(()=>{
+        return selectWorkspace(workspaceId)
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    if(!req.file){
+        throw GuardError._400_invalidBody('file')
+    }
+
+    const file = await storeTmpMulterFileInDatabase(req.file, workspaceId, (await req.GM.getCurrentUser()).id)
+
+    res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
+}))
+
+router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = req.GM.guardDBGone(()=>{
+        return selectWorkspace(workspaceId)
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    const fileId = req.GM.guardParam('file_id', 'id')
+
+    await req.GM.guardDBGone(()=>{
+        return db.one<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId} AND id = ${id};', {
+            id: fileId,
+            workspaceId
+        })
+    })
+
+    if(!req.file){
+        throw GuardError._400_invalidBody('file')
+    }
+
+    const file = await storeTmpMulterFileInDatabase(req.file, workspaceId, (await req.GM.getCurrentUser()).id)
+
+    res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
+}))
+
+router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = req.GM.guardDBGone(()=>{
+        return selectWorkspace(workspaceId)
+    })
+
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    const fileId = req.GM.guardParam('file_id', 'id')
+
+    await req.GM.guardDBGone(()=>{
+        return db.one<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId} AND id = ${id};', {
+            id: fileId,
+            workspaceId
+        })
+    })
+
+    await deleteFileFromDatabaseAndFilesystem(fileId)
+
+    res.status(200).send()
 }))
 
 export default router

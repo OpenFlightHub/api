@@ -191,9 +191,6 @@ declare global {
 
         export interface Request {
             GM: GuardedMiddleware
-            file?: MulterFile // for multer: uplad.single('file')
-            files?: MulterFile[] // for multer: uplad.array('files')
-
             //query: {[key: string] : string} // hpp middleware TODO uncomment this line again and fix the ts error in express
         }
 

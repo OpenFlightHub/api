@@ -14,6 +14,8 @@ example contents:
     "db_user": "api",
     "db_password": "123456",
 
+    "files_path": "/ofh_files",
+
     "mail_hostname": "smtp.gmail.com",
     "mail_port": 587,
     "mail_secure": false,
@@ -58,6 +60,8 @@ make sure that you created an action secret called `SECRETS` here https://github
     "db_database": "ofh",
     "db_user": "api",
     "db_password": "123456",
+
+    "files_path": "/ofh_files",
 
     "mail_hostname": "smtp.gmail.com",
     "mail_port": 587,

@@ -107,11 +107,11 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
     if(body.result === 0){
         // upload successfull
 
-        const mediaType = typeof body.sub_file_type === 'number' ? (body.sub_file_type === 1 ? 'panorama' : 'picture') : 'video'
+        const mediaType: DBType_DroneMedia_TypeType = typeof body.sub_file_type === 'number' ? (body.sub_file_type === 1 ? DBType_DroneMedia_TYPES.panorama : DBType_DroneMedia_TYPES.picture) : DBType_DroneMedia_TYPES.video
 
         //TODO support differentiation between picture and panorama
 
-        await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType === 'video' ? DBType_DroneMedia_TYPES.video : DBType_DroneMedia_TYPES.image, body.fingerprint, body.ext.tinny_fingerprint)
+        await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint)
 
         res.GM.guardSend<ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse>({
             code: 0,

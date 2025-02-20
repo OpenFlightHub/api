@@ -146,21 +146,26 @@ export type DBType_DroneData = {
 }
 
 
-export type DBType_DroneMedia_TypeType = 0|1
+export type DBType_DroneMedia_TypeType = 0|1|2
 export const DBType_DroneMedia_TYPES = {
-  image: 0 as DBType_DroneMedia_TypeType,
-  video: 1 as DBType_DroneMedia_TypeType
+  video: 0 as DBType_DroneMedia_TypeType,
+  picture: 1 as DBType_DroneMedia_TypeType,
+  panorama: 2 as DBType_DroneMedia_TypeType
 }
 export type DBType_DroneMedia = {
   id: number;
   drone_id: number;
   /**
-   * 0 = image, 1 = video
+   * 0 = video, 1 = picture, 2 = panorama
    */
   type: DBType_DroneMedia_TypeType;
   file_id: number;
   fingerprint: string;
   tiny_fingerprint: string;
+  /**
+   * json encoded meta data
+   */
+  meta?: string;
 }
 
 
