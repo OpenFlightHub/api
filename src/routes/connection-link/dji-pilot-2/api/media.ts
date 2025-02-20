@@ -10,7 +10,7 @@ import SecretsLoader from '../../../../util/SecretsLoader'
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import { deleteFile, insertDroneMedia, insertFile, updateFile } from '../../../../db/DBHelpers';
-import {getAbsoluteFilePathForFileIdAnName} from '../../../../util/file'
+import {getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_region', 'minio_bucket_dji_pilot_2_media'])
 
@@ -159,12 +159,12 @@ export default router
 
 
 async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName: string, objectKey: string, type: DBType_DroneMedia_TypeType, fingerprint: string, tinyFingerprint: string){
-    //TODO
 
     const file = await insertFile({
-        created_by: 0, // TODO change this
+        created_by: 0,
         workspace_id: connection.workspace_id,
-        name: objectKey
+        name: objectKey,
+        ext: getFileExtension(objectKey)
     })
 
     let droneMedia: DBType_DroneMedia
@@ -184,7 +184,7 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
     }
 
     try {
-        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFileIdAnName(file.id, file.name))
+        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
     } catch (err){
         //TODO delete file and delete dronemedia
         throw err

@@ -177,6 +177,7 @@ import {} from "./DBTypes";
 
 export type DBInsert_File = {
     workspace_id: number
+    ext: string
     name: string
     created_at?: string
     created_by: number
@@ -184,6 +185,7 @@ export type DBInsert_File = {
 
 export type DBUpdate_File = {
     workspace_id?: number
+    ext?: string
     name?: string
     created_at?: string
     created_by?: number
@@ -195,6 +197,9 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "workspace_id"
+    },
+    {
+        "name": "ext"
     },
     {
         "name": "name"
@@ -215,6 +220,10 @@ const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "workspace_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "ext",
         "skip": col => !col.exists
     },
     {

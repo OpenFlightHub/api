@@ -48,6 +48,10 @@ export type DBType_User = {
 export type DBType_File = {
   id: number;
   workspace_id: number;
+  ext: string;
+  /**
+   * full original name including extension
+   */
   name: string;
   created_at: string;
   created_by: number;

@@ -142,7 +142,9 @@ router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    const files = await db.manyOrNone<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId}')
+    const files = await db.manyOrNone<DBType_File>('SELECT * FROM files WHERE workspace_id = ${workspaceId}', {
+        workspaceId
+    })
 
     res.GM.guardSend<ApiType_WorkspaceFiles>(files, ApiSchema_WorkspaceFiles)
 

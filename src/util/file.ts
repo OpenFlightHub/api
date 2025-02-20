@@ -2,20 +2,18 @@ import fs from 'fs'
 import path from 'path'
 import {deleteFile, insertFile, selectFile} from '../db/DBHelpers'
 
+import SecretsLoader from './SecretsLoader'
+const secretsLoader = new SecretsLoader('secrets.json')
+const secrets = secretsLoader.getSecrets(['files_path'])
+
 export async function getAbsoluteFilePathForFileId(fileId: number){
     const file = await selectFile(fileId)
 
     return getAbsoluteFilePathForFile(file)
 }
 
-export function getAbsoluteFilePathForFileIdAnName(fileId: number, fileName: string){
-    const ext = path.extname(fileName)
-
-    return '' + fileId + '.' + ext
-}
-
 export function getAbsoluteFilePathForFile(file: DBType_File){
-    return getAbsoluteFilePathForFileIdAnName(file.id, file.name)
+    return path.join(path.resolve(secrets.files_path), '' + file.id + '.' + file.ext)
 }
 
 import multer from 'multer'
@@ -29,10 +27,18 @@ export async function deleteTmpMulterFile(multerFile: MulterFile){
     await fs.promises.rm(multerFile.path)
 }
 
+export function getFileExtension(fileName: string){
+    const lastDotIndex = fileName.lastIndexOf('.')
+    const ext = lastDotIndex < 0 ? '' : fileName.substring(lastDotIndex + 1)
+
+    return ext
+}
+
 export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, workspaceId: number, createdBy: number){
 
     const file = await insertFile({
         name: multerFile.originalname,
+        ext: getFileExtension(multerFile.originalname),
         created_by: createdBy,
         workspace_id: workspaceId
     })
