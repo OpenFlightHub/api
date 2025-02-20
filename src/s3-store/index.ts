@@ -11,7 +11,7 @@ import SecretsLoader from '../util/SecretsLoader'
 import { validate } from '../util/schema';
 import Credentials from 'minio/dist/main/Credentials';
 const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_web_url', 'minio_web_access_key_root', 'minio_web_secret_key_root','minio_api_access_key_root', 'minio_api_secret_key_root', 'minio_region'])
+const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_web_url', 'minio_web_access_key_root', 'minio_web_secret_key_root', 'minio_region'])
 
 const API_BASE_URL = secrets.minio_api_url + (('' + secrets.minio_api_url).endsWith('/') ? '' : '/' )
 const MY_ARN_ID = 'ofh'

@@ -42,8 +42,6 @@ example contents:
     "minio_region": "eu-1",
     "minio_web_access_key_root": "ofh",
     "minio_web_secret_key_root": "ofh-bucket",
-    "minio_api_access_key_root": "1234",
-    "minio_api_secret_key_root": "1234",
     "minio_bucket_dji_pilot_2_media": "dji-pilot-2-media"
 }
 ```
@@ -74,7 +72,7 @@ make sure that you created an action secret called `SECRETS` here https://github
 
     "platform_name": "OpenFlightHub",
     "platform_url": "hub.openflighthub.org",
-    "platform_uuid": "e97dd32f-5977-44f9-ab4d-e34205012dce",
+    "platform_uuid": "f97dd32f-5977-44f9-ab4d-e34205012dce",
 
     "dji_cloud_app_id": "12345",
     "dji_cloud_app_key": "cabba",
@@ -89,8 +87,6 @@ make sure that you created an action secret called `SECRETS` here https://github
     "minio_region": "eu-1",
     "minio_web_access_key_root": "ofh",
     "minio_web_secret_key_root": "ofh-bucket",
-    "minio_api_access_key_root": "1234",
-    "minio_api_secret_key_root": "1234",
     "minio_bucket_dji_pilot_2_media": "dji-pilot-2-media"
 }
 ```
