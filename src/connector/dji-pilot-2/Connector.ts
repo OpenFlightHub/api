@@ -179,7 +179,10 @@ type Message_Type_Status = Message<{todo: true}>
 type Message_Type_Osd = Message<{todo: true}>
 
 //TODO
-type Message_Type_Event = Message<{todo: true}>
+type Message_Type_Event = Message<{
+    method: string,
+    need_reply: 0 | 1 // 0 = false, 1 = true
+}>
 
 
 interface Response_Base {// response from cloud back to device
@@ -195,20 +198,22 @@ interface Response<RD extends ResponseData> extends Response_Base {
 }
 
 //TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
-type Response_Type_Status = Response<{
-    todo: true
+type Response_Type_Status = Response_With_Result<{
+    method: string
 }>
 
 //TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
-type Response_Type_Event = Response<{
-    todo: true
+type Response_Type_Event = Response_With_Result<{
+    method: string
+    need_reply: 0 | 1 // 0 = false, 1 = true
 }>
 
-interface Response_With_Result extends Response_Base {
+type Response_With_Result<R extends Record<string, any>> = Response<R> & {
     data: {
         result: number
     }
 }
+
 
 // DRONE CONNECTION CONNECTOR
 
