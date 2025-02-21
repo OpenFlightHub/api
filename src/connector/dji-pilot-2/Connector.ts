@@ -12,16 +12,16 @@ type ConnectorEvents = {
     unsupported_topic: string
 }
 
-type EventFunction<M extends Message_Base> = (callback: EventCallback<M>) => void
+type EventFunction<M extends Message<MD>, MD = ExtractGenericMessageDataArgument<M>> = (callback: EventCallback<M, MD>) => void
 
-type EventFunctionWithRespond<M extends Message_Base, R extends Response_Base> = (callback: EventCallbackWithResponse<M, R>) => void
+type EventFunctionWithRespond<M extends Message<MD>, R extends Response<RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>> = (callback: EventCallbackWithResponse<M, R, MD, RD>) => void
 
 export default class Connector extends EventManager<ConnectorEvents>  {
 
     private internalEventManager = new PublicEventManager<{[key: string]: {
         client: Client
         connectionId: number
-        message: Message_Base
+        message: Message<any>
     }}>()
 
     private validEvents = new Array<string>()
@@ -61,10 +61,10 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         this.validEvents.push(eventName)
     }
 
-    private makeEventFunction<M extends Message_Base>(eventName: string): EventFunction<M> {
+    private makeEventFunction<M extends Message<MD>, MD = ExtractGenericMessageDataArgument<M>>(eventName: string): EventFunction<M, MD> {
         this.registerEvent(eventName)
 
-        return (callback: EventCallback<M>)=>{
+        return (callback: EventCallback<M, MD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
                 callback(c.connectionId, c.message as M)
             })
@@ -76,12 +76,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      * @param responseEventName special string of the format "thing/product/$/property" where $ will be replaced with the client id automatically
      * @returns
      */
-    private makeEventFunctionWithRespond<M extends Message_Base, R extends Response_Base>(eventName: string, responseEventName: string, makeResponseBaseData?: (message: M)=>Record<string, any>): EventFunctionWithRespond<M, R> {
+    private makeEventFunctionWithRespond<M extends Message<MD>, R extends Response<RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>>(eventName: string, responseEventName: string, makeResponseBaseData?: (message: M)=>Record<string, any>): EventFunctionWithRespond<M, R, MD, RD> {
         this.registerEvent(eventName)
 
-        return (callback: EventCallbackWithResponse<M, R>)=>{
+        return (callback: EventCallbackWithResponse<M, R, MD, RD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, (response: R)=>{
+                callback(c.connectionId, c.message as M, (response: RD)=>{
                     if(typeof makeResponseBaseData === 'function'){
                         Object.assign(response, makeResponseBaseData(c.message as M))
                     }
@@ -91,7 +91,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
     }
 
-    private respondToMessage(client: Client, connectionId: number, originalMessage: Message_Base, responseEventName: string, response: Response_Base){
+    private respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, response: ResponseData){
         const responseMessage: Response_Base = {
             tid: originalMessage.tid,//randomUUID(),
             bid: originalMessage.bid,
@@ -127,7 +127,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     // definitions
 
-    onMessage_State = this.makeEventFunction<Message_State>('thing/product/state')
+    onMessage_State = this.makeEventFunction<Message_Type_State>('thing/product/state')
 
     onMessage_Status = this.makeEventFunctionWithRespond('sys/product/status', 'sys/product/$/status_reply', (message)=>{
         return {
@@ -149,9 +149,8 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
 
 
-type EventCallback<M extends Message_Base> = (connectionId: number, message: M) => void
-type EventCallbackWithResponse<M extends Message_Base, C extends Object> = (connectionId: number, message: M, respond: (data: C) => void) => void
-
+type EventCallback<M extends Message<MD>, MD = ExtractGenericMessageDataArgument<M>> = (connectionId: number, message: M) => void
+type EventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>> = (connectionId: number, message: M, respond: (data: RD) => void) => void
 
 interface Message_Base {// coming from device to cloud
     tid: string //transaction UUID used when a response is required for this message
@@ -161,16 +160,28 @@ interface Message_Base {// coming from device to cloud
     data: {}
 }
 
-interface Message_State extends Message_Base {//TODO make this generic for many drones
-    //TODO is gateway property and bid mandatory?
-    data: MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE
+
+type ExtractGenericMessageDataArgument<T> = T extends Message<infer Generic> ? Generic : unknown
+interface Message<MD extends Record<string, any>> extends Message_Base {
+    data: MD
 }
+
+
+//TODO make this generic for many drones
+//TODO is gateway property and bid mandatory?
+type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE>
 
 interface Response_Base {// response from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
     timestamp: number // the time the message was sent (unix milliseconds)
     data: {}
+}
+
+type ExtractGenericResponseDataArgument<T> = T extends Response<infer Generic> ? Generic : unknown
+type ResponseData = Record<string, any>
+interface Response<RD extends ResponseData> extends Response_Base {
+    data: RD
 }
 
 
@@ -182,13 +193,14 @@ interface Response_With_Result extends Response_Base {
 
 // DRONE CONNECTION CONNECTOR
 
-type DroneConnectionEventCallback<M extends Message_Base> = (message: M) => void
+type DroneConnectionEventCallback<M extends Message<MD>, MD = ExtractGenericMessageDataArgument<M>> = (message: M) => void
 
-type DroneConnectionEventCallbackWithResponse<M extends Message_Base, C extends Object> = (message: M, respond: (data: C) => void) => void
+type DroneConnectionEventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>> = (message: M, respond: (data: RD) => void) => void
 
+type ExtractGenericMessageArgument<T> = T extends Message<infer Generic> ? Generic : unknown
 
-type DroneConnection_EventFunction<E extends EventFunction<M>, M extends Message_Base> = (callback: DroneConnectionEventCallback<M>) => void
-type DroneConnection_EventFunctionWithRespond<E extends EventFunctionWithRespond<M, R>, M extends Message_Base, R extends Response_Base> = (callback: DroneConnectionEventCallbackWithResponse<M, R>) => void
+type DroneConnection_EventFunction<E extends EventFunction<M>, M extends Message<MD>, MD = ExtractGenericMessageDataArgument<M>> = (callback: DroneConnectionEventCallback<M, MD>) => void
+type DroneConnection_EventFunctionWithRespond<E extends EventFunctionWithRespond<M, R, MD, RD>, M extends Message<MD>, R extends Response<RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>> = (callback: DroneConnectionEventCallbackWithResponse<M, R, MD, RD>) => void
 
 export class DroneConnectionConnector {
 
@@ -197,7 +209,7 @@ export class DroneConnectionConnector {
 
 
 
-    onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State'], Connector['onMessage_State']>
+    onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State']>
 
     // this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
 
@@ -226,13 +238,13 @@ export class DroneConnectionConnector {
 
     // definitions
 
-    private makeEventFunction<M extends Message_Base, EF extends EventFunction<M>>(connectorEventFunction: EF): DroneConnection_EventFunction<EF>{
+    private makeEventFunction<M extends Message<MD>, EF extends EventFunction<M, MD>, MD = ExtractGenericMessageDataArgument<M>>(connectorEventFunction: EF): DroneConnection_EventFunction<EF, M, MD>{
         return (callback)=>{
             //TODO
         }
     }
 
-    private makeEventFunctionWithRespond<M extends Message_Base, R extends Response_Base, EF extends EventFunctionWithRespond<M, R>>(connectorEventFunctionWithRespond: EF): DroneConnection_EventFunctionWithRespond<EF>{
+    private makeEventFunctionWithRespond<M extends Message<MD>, R extends Response<RD>, EF extends EventFunctionWithRespond<M, R, MD, RD>, MD = ExtractGenericMessageDataArgument<M>, RD = ExtractGenericResponseDataArgument<R>>(connectorEventFunctionWithRespond: EF): DroneConnection_EventFunctionWithRespond<EF, M, R, MD, RD>{
         return (callback)=>{
             //TODO
         }
