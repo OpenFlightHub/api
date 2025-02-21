@@ -1,5 +1,6 @@
 import { Client, PublishPacket } from "aedes";
 import { EventManager, PublicEventManager } from "../../util/event_manager";
+import { MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE } from "./mqtt-types/documented";
 
 
 type ConnectorEvents = {
@@ -10,6 +11,10 @@ type ConnectorEvents = {
     }
     unsupported_topic: string
 }
+
+type EventFunction<M extends Message_Base> = (callback: EventCallback<M>) => void
+
+type EventFunctionWithRespond<M extends Message_Base, R extends Response_Base> = (callback: EventCallbackWithResponse<M, R>) => void
 
 export default class Connector extends EventManager<ConnectorEvents>  {
 
@@ -56,12 +61,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         this.validEvents.push(eventName)
     }
 
-    private makeEventFunction(eventName: string){
+    private makeEventFunction<M extends Message_Base>(eventName: string): EventFunction<M> {
         this.registerEvent(eventName)
 
-        return (callback: EventCallback<Message_Base>)=>{
+        return (callback: EventCallback<M>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as Message_Base)
+                callback(c.connectionId, c.message as M)
             })
         }
     }
@@ -71,14 +76,14 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      * @param responseEventName special string of the format "thing/product/$/property" where $ will be replaced with the client id automatically
      * @returns
      */
-    private makeEventFunctionWithCallback(eventName: string, responseEventName: string, makeResponseBaseData?: (message: Message_Base)=>Record<string, any>){
+    private makeEventFunctionWithRespond<M extends Message_Base, R extends Response_Base>(eventName: string, responseEventName: string, makeResponseBaseData?: (message: M)=>Record<string, any>): EventFunctionWithRespond<M, R> {
         this.registerEvent(eventName)
 
-        return (callback: EventCallbackWithResponse<Message_Base, Response_Base>)=>{
+        return (callback: EventCallbackWithResponse<M, R>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as Message_Base, (response: Response_Base)=>{
+                callback(c.connectionId, c.message as M, (response: R)=>{
                     if(typeof makeResponseBaseData === 'function'){
-                        Object.assign(response, makeResponseBaseData(c.message as Message_Base))
+                        Object.assign(response, makeResponseBaseData(c.message as M))
                     }
                     this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, response)
                 })
@@ -122,9 +127,9 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     // definitions
 
-    onMessage_State = this.makeEventFunction('thing/product/state')
+    onMessage_State = this.makeEventFunction<Message_State>('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithCallback('sys/product/status', 'sys/product/$/status_reply', (message)=>{
+    onMessage_Status = this.makeEventFunctionWithRespond('sys/product/status', 'sys/product/$/status_reply', (message)=>{
         return {
             //@ts-ignore
             method: message.method
@@ -134,7 +139,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
     onMessage_Osd = this.makeEventFunction('thing/product/osd')
 
 
-    onMessage_Event = this.makeEventFunctionWithCallback('thing/product/events', 'thing/product/$/events_reply', (message)=>{
+    onMessage_Event = this.makeEventFunctionWithRespond('thing/product/events', 'thing/product/$/events_reply', (message)=>{
         return {
             //@ts-ignore
             method: message.method
@@ -156,6 +161,11 @@ interface Message_Base {// coming from device to cloud
     data: {}
 }
 
+interface Message_State extends Message_Base {//TODO make this generic for many drones
+    //TODO is gateway property and bid mandatory?
+    data: MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE
+}
+
 interface Response_Base {// response from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
@@ -167,5 +177,64 @@ interface Response_Base {// response from cloud back to device
 interface Response_With_Result extends Response_Base {
     data: {
         result: number
+    }
+}
+
+// DRONE CONNECTION CONNECTOR
+
+type DroneConnectionEventCallback<M extends Message_Base> = (message: M) => void
+
+type DroneConnectionEventCallbackWithResponse<M extends Message_Base, C extends Object> = (message: M, respond: (data: C) => void) => void
+
+
+type DroneConnection_EventFunction<E extends EventFunction<M>, M extends Message_Base> = (callback: DroneConnectionEventCallback<M>) => void
+type DroneConnection_EventFunctionWithRespond<E extends EventFunctionWithRespond<M, R>, M extends Message_Base, R extends Response_Base> = (callback: DroneConnectionEventCallbackWithResponse<M, R>) => void
+
+export class DroneConnectionConnector {
+
+    private readonly connector: Connector
+    private readonly myDroneId: number
+
+
+
+    onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State'], Connector['onMessage_State']>
+
+    // this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
+
+    // this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
+
+    // this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
+
+    constructor(connector: Connector, droneId: number){
+        this.connector = connector
+        this.myDroneId = droneId
+
+        connector.onMessage_Event((connectionId, message, respond)=>{
+            if(connectionId !== this.myDroneId){
+                return
+            }
+        })
+
+        this.onMessage_State = this.makeEventFunction(this.connector.onMessage_State)
+
+        // this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
+
+        // this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
+
+        // this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
+    }
+
+    // definitions
+
+    private makeEventFunction<M extends Message_Base, EF extends EventFunction<M>>(connectorEventFunction: EF): DroneConnection_EventFunction<EF>{
+        return (callback)=>{
+            //TODO
+        }
+    }
+
+    private makeEventFunctionWithRespond<M extends Message_Base, R extends Response_Base, EF extends EventFunctionWithRespond<M, R>>(connectorEventFunctionWithRespond: EF): DroneConnection_EventFunctionWithRespond<EF>{
+        return (callback)=>{
+            //TODO
+        }
     }
 }

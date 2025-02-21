@@ -2345,7 +2345,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
     properties: {
         country: {
             type: "string",
-            description: "Country area code\n\n READONLY"
+            description: "Country area code\n\n READONLY",
+            required: false
         },
         mode_code: {
             type: "integer",
@@ -2370,7 +2371,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                 16,
                 17,
                 18
-            ]
+            ],
+            required: false
         },
         mode_code_reason: {
             type: "integer",
@@ -2399,7 +2401,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                 20,
                 21,
                 22
-            ]
+            ],
+            required: false
         },
         cameras: {
             type: "array",
@@ -2888,7 +2891,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         dongle_infos: {
             type: "array",
@@ -2994,7 +2998,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         obstacle_avoidance: {
             type: "object",
@@ -3024,7 +3029,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         1
                     ]
                 }
-            }
+            },
+            required: false
         },
         is_near_area_limit: {
             type: "integer",
@@ -3032,7 +3038,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
             enum: [
                 0,
                 1
-            ]
+            ],
+            required: false
         },
         is_near_height_limit: {
             type: "integer",
@@ -3040,11 +3047,13 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
             enum: [
                 0,
                 1
-            ]
+            ],
+            required: false
         },
         height_limit: {
             type: "integer",
-            description: "Aircraft height limit\n\n READ AND WRITEABLE\n\nMeters / m"
+            description: "Aircraft height limit\n\n READ AND WRITEABLE\n\nMeters / m",
+            required: false
         },
         night_lights_state: {
             type: "integer",
@@ -3052,11 +3061,13 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
             enum: [
                 0,
                 1
-            ]
+            ],
+            required: false
         },
         activation_time: {
             type: "integer",
-            description: "Aircraft activation time (Unix timestamp)\n\n READONLY\n\nSeconds / s"
+            description: "Aircraft activation time (Unix timestamp)\n\n READONLY\n\nSeconds / s",
+            required: false
         },
         maintain_status: {
             type: "object",
@@ -3096,15 +3107,18 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         total_flight_sorties: {
             type: "integer",
-            description: "Accumulated total sorties of the aircraft\n\n READONLY"
+            description: "Accumulated total sorties of the aircraft\n\n READONLY",
+            required: false
         },
         track_id: {
             type: "string",
-            description: "Track ID\n\n READONLY"
+            description: "Track ID\n\n READONLY",
+            required: false
         },
         position_state: {
             type: "object",
@@ -3139,7 +3153,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                     type: "integer",
                     description: "Number of RTK satellite acquisitions\n\n"
                 }
-            }
+            },
+            required: false
         },
         storage: {
             type: "object",
@@ -3153,7 +3168,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                     type: "integer",
                     description: "Used capacity\n\n\n\nKilobytes / KB"
                 }
-            }
+            },
+            required: false
         },
         battery: {
             type: "object",
@@ -3230,27 +3246,33 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         total_flight_distance: {
             type: "number",
-            description: "Accumulated total mileage of the aircraft\n\n READONLY\n\nMeters / m"
+            description: "Accumulated total mileage of the aircraft\n\n READONLY\n\nMeters / m",
+            required: false
         },
         total_flight_time: {
             type: "integer",
-            description: "Accumulated total flight time of the aircraft\n\n READONLY\n\nSeconds / s"
+            description: "Accumulated total flight time of the aircraft\n\n READONLY\n\nSeconds / s",
+            required: false
         },
         serious_low_battery_warning_threshold: {
             type: "integer",
-            description: "Critical low battery warning\n\nUser-set battery critically low warning percentage READONLY"
+            description: "Critical low battery warning\n\nUser-set battery critically low warning percentage READONLY",
+            required: false
         },
         low_battery_warning_threshold: {
             type: "integer",
-            description: "Low battery warning\n\nUser-set battery low battery warning percentage READONLY"
+            description: "Low battery warning\n\nUser-set battery low battery warning percentage READONLY",
+            required: false
         },
         control_source: {
             type: "string",
-            description: "Current control source\n\nCan be a device or a browser. Devices use A/B to represent A control and B control, while browsers use a self-generated UUID as an identifier. READONLY"
+            description: "Current control source\n\nCan be a device or a browser. Devices use A/B to represent A control and B control, while browsers use a self-generated UUID as an identifier. READONLY",
+            required: false
         },
         wind_direction: {
             type: "integer",
@@ -3264,59 +3286,73 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                 6,
                 7,
                 8
-            ]
+            ],
+            required: false
         },
         wind_speed: {
             type: "number",
-            description: "Wind speed\n\nEstimated wind speed, calculated based on the aircraft's attitude with some margin of error. It is for reference only and should not be used as meteorological data. READONLY"
+            description: "Wind speed\n\nEstimated wind speed, calculated based on the aircraft's attitude with some margin of error. It is for reference only and should not be used as meteorological data. READONLY",
+            required: false
         },
         home_distance: {
             type: "number",
-            description: "Distance from the Home point\n\n READONLY"
+            description: "Distance from the Home point\n\n READONLY",
+            required: false
         },
         home_latitude: {
             type: "number",
-            description: "Home point latitude\n\n READONLY"
+            description: "Home point latitude\n\n READONLY",
+            required: false
         },
         home_longitude: {
             type: "number",
-            description: "Home point longitude\n\n READONLY"
+            description: "Home point longitude\n\n READONLY",
+            required: false
         },
         attitude_head: {
             type: "integer",
-            description: "Yaw axis angle\n\nYaw axis angle with true north angle (longitude). Positive values from 0 to 6 o'clock direction, negative values from 6 to 12 o'clock direction. READONLY"
+            description: "Yaw axis angle\n\nYaw axis angle with true north angle (longitude). Positive values from 0 to 6 o'clock direction, negative values from 6 to 12 o'clock direction. READONLY",
+            required: false
         },
         attitude_roll: {
             type: "number",
-            description: "Roll axis angle\n\n READONLY"
+            description: "Roll axis angle\n\n READONLY",
+            required: false
         },
         attitude_pitch: {
             type: "number",
-            description: "Pitch axis angle\n\n READONLY"
+            description: "Pitch axis angle\n\n READONLY",
+            required: false
         },
         elevation: {
             type: "number",
-            description: "Relative takeoff point altitude\n\n READONLY"
+            description: "Relative takeoff point altitude\n\n READONLY",
+            required: false
         },
         height: {
             type: "number",
-            description: "Absolute height\n\nRelative to the Earth ellipsoid height. Calculation is height relative to takeoff point + ellipsoid height of takeoff point READONLY"
+            description: "Absolute height\n\nRelative to the Earth ellipsoid height. Calculation is height relative to takeoff point + ellipsoid height of takeoff point READONLY",
+            required: false
         },
         latitude: {
             type: "number",
-            description: "Current latitude\n\n READONLY"
+            description: "Current latitude\n\n READONLY",
+            required: false
         },
         longitude: {
             type: "number",
-            description: "Longitude of the current position\n\n READONLY"
+            description: "Longitude of the current position\n\n READONLY",
+            required: false
         },
         vertical_speed: {
             type: "number",
-            description: "Vertical speed\n\n READONLY\n\nMeters per second / m/s"
+            description: "Vertical speed\n\n READONLY\n\nMeters per second / m/s",
+            required: false
         },
         horizontal_speed: {
             type: "number",
-            description: "Horizontal speed\n\n READONLY"
+            description: "Horizontal speed\n\n READONLY",
+            required: false
         },
         firmware_upgrade_status: {
             type: "integer",
@@ -3324,7 +3360,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
             enum: [
                 0,
                 1
-            ]
+            ],
+            required: false
         },
         compatible_status: {
             type: "integer",
@@ -3332,11 +3369,13 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
             enum: [
                 0,
                 1
-            ]
+            ],
+            required: false
         },
         firmware_version: {
             type: "string",
-            description: "Firmware version\n\n READONLY"
+            description: "Firmware version\n\n READONLY",
+            required: false
         },
         gear: {
             type: "integer",
@@ -3352,7 +3391,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                 7,
                 8,
                 9
-            ]
+            ],
+            required: false
         },
         camera_watermark_settings: {
             type: "object",
@@ -3420,7 +3460,8 @@ export const MqttMavic3EnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         3
                     ]
                 }
-            }
+            },
+            required: false
         }
     }
 }
@@ -7991,19 +8032,23 @@ export const MqttRcProEnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         country: {
             type: "string",
-            description: "Country area code\n\n READONLY"
+            description: "Country area code\n\n READONLY",
+            required: false
         },
         capacity_percent: {
             type: "integer",
-            description: "Remaining capacity\n\nRemaining battery level of the remote control READONLY\n\nPercentage / %"
+            description: "Remaining capacity\n\nRemaining battery level of the remote control READONLY\n\nPercentage / %",
+            required: false
         },
         height: {
             type: "number",
-            description: "Ellipsoid height\n\n READONLY\n\nMeters / m"
+            description: "Ellipsoid height\n\n READONLY\n\nMeters / m",
+            required: false
         },
         dongle_infos: {
             type: "array",
@@ -8109,7 +8154,8 @@ export const MqttRcProEnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         }
                     }
                 }
-            }
+            },
+            required: false
         },
         live_status: {
             type: "array",
@@ -8149,7 +8195,8 @@ export const MqttRcProEnterpriseProperties_STATE_CHANGE_SCHEMA = {
                         description: "Error code\n\n"
                     }
                 }
-            }
+            },
+            required: false
         },
         wireless_link: {
             type: "object",
@@ -8207,19 +8254,23 @@ export const MqttRcProEnterpriseProperties_STATE_CHANGE_SCHEMA = {
                     type: "number",
                     description: "4G frequency band\n\n"
                 }
-            }
+            },
+            required: false
         },
         firmware_version: {
             type: "string",
-            description: "Firmware version\n\n READONLY"
+            description: "Firmware version\n\n READONLY",
+            required: false
         },
         latitude: {
             type: "number",
-            description: "Latitude\n\n READONLY"
+            description: "Latitude\n\n READONLY",
+            required: false
         },
         longitude: {
             type: "number",
-            description: "Longitude\n\nLongitude of the gateway device READONLY"
+            description: "Longitude\n\nLongitude of the gateway device READONLY",
+            required: false
         }
     }
 }
