@@ -23,11 +23,8 @@ connector.onMessage_State((connectionId, message)=>{
 connector.onMessage_Status((connectionId, message, respond)=>{
     console.log('onMessage_Status', connectionId, message)
 
-    //@ts-ignore
     respond({
-        data: {
-            result: 0
-        }
+        result: 0
     })
 })
 

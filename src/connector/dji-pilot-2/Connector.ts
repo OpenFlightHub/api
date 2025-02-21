@@ -1,6 +1,8 @@
 import { Client, PublishPacket } from "aedes";
-import { EventManager, PublicEventManager } from "../../util/event_manager";
+import { EventManager, EventManagerWithPublicDispatch } from "../../util/event_manager";
 import { MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE } from "./mqtt-types/documented";
+import { randomUUID } from "crypto";
+import { assignObject } from "../../util/typescript";
 
 
 type ConnectorEvents = {
@@ -16,9 +18,12 @@ type EventFunction<M extends Message<MD>, MD = M extends Message<infer G> ? G : 
 
 type EventFunctionWithRespond<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (callback: EventCallbackWithResponse<M, R, MD, RD>) => void
 
+
+type ConnectionId = number
+
 export default class Connector extends EventManager<ConnectorEvents>  {
 
-    private internalEventManager = new PublicEventManager<{[key: string]: {
+    private internalEventManager = new EventManagerWithPublicDispatch<{[key: string]: {
         client: Client
         connectionId: number
         message: Message<any>
@@ -26,7 +31,11 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     private validEvents = new Array<string>()
 
+    private clients = new Map<ConnectionId, Client>()
+
     handleMqttPacket(client: Client, connectionId: number, packet: PublishPacket){
+
+        this.clients.set(connectionId, client)//TODO this is really not great. we should move all the management (including auth) code from ./index.ts into this class
 
         this.dispatch('packet', {client, connectionId, packet})
 
@@ -91,7 +100,11 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
     }
 
-    private respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, response: ResponseData){
+    /**
+     * @param responseEventName the $ char will be replaced with the client id
+     * @param response
+     */
+    private async respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, response: ResponseData){
         const responseMessage: Response_Base = {
             tid: originalMessage.tid,//randomUUID(),
             bid: originalMessage.bid,
@@ -107,22 +120,58 @@ export default class Connector extends EventManager<ConnectorEvents>  {
             }
         }
 
-        const topic = responseEventName.replace('$', client.id)
+        const topic = responseEventName
 
-        client.publish({
-            cmd: 'publish',
-            dup: false,
-            qos: 1,
-            retain: false,
-            topic,
-            payload: JSON.stringify(responseMessage)
-        }, (err)=>{
-            if(err){
-                console.warn('failed to send response to', connectionId, err)
-            } else {
-                console.log('responded to #' + topic, connectionId, responseMessage)
-            }
+        try {
+            await this.sendMessage(connectionId, topic, responseMessage)
+        } catch (err){
+            console.warn('failed to send response to', connectionId, err)
+        }
+
+        console.log('responded to #' + topic, connectionId, responseMessage)
+    }
+
+    /**
+     * @param topic the $ char will be replaced with the client id
+     *
+     * you should use makeMessage() to create a message
+     */
+    sendMessage(connectionId: number, topic: string, message: Message<MessageData>){
+
+        // TODO implement tid and bid belonging to this message (for simple tids, we can use promises, for bids we need something special)
+
+        return new Promise<void>((resolve, reject)=>{
+            const client = this.clients.get(connectionId)
+
+            client.publish({
+                cmd: 'publish',
+                dup: false,
+                qos: 1,
+                retain: false,
+                topic: topic.replace('$', client.id),
+                payload: JSON.stringify(message)
+            }, (err)=>{
+                if(err){
+                    reject(err)
+                } else {
+                    resolve()
+                }
+            })
         })
+    }
+
+    static makeMessage<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown, >(base: Omit<M, keyof Message_Base>, data: MD) {
+
+        const initial: Message_Base = {
+            tid: randomUUID(),
+            bid: randomUUID(),
+            timestamp: Date.now(),
+            data
+        }
+
+        const ret = assignObject(initial, base)
+
+        return ret as M
     }
 
     // definitions
@@ -131,7 +180,6 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     onMessage_Status = this.makeEventFunctionWithRespond<Message_Type_Status, Response_Type_Status>('sys/product/status', 'sys/product/$/status_reply', (message)=>{
         return {
-            //@ts-ignore
             method: message.method
         }
     })
@@ -141,10 +189,10 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     onMessage_Event = this.makeEventFunctionWithRespond<Message_Type_Event, Response_Type_Event>('thing/product/events', 'thing/product/$/events_reply', (message)=>{
         return {
-            //@ts-ignore
             method: message.method
         }
     })
+
 }
 
 
@@ -169,20 +217,31 @@ interface Message<MD extends MessageData> extends Message_Base {
 
 //TODO make this generic for many drones
 //TODO is gateway property and bid mandatory?
-type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE>
+export type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE>
 
 //TODO
-type Message_Type_Status = Message<{todo: true}>
+export interface Message_Type_Status extends Message<{
+    todo: string
+}> {
+    method: string
+}
 
 
 //TODO
-type Message_Type_Osd = Message<{todo: true}>
+export type Message_Type_Osd = Message<{todo: true}>
 
 //TODO
-type Message_Type_Event = Message<{
-    method: string,
+export interface Message_Type_Event extends Message<{
+    todo22: string
+}> {
+    method: string
     need_reply: 0 | 1 // 0 = false, 1 = true
-}>
+}
+
+//TODO
+export interface Message_Type_Services extends Message<{}> {// sent down to client
+    method: string
+}
 
 
 interface Response_Base {// response from cloud back to device
@@ -198,21 +257,19 @@ interface Response<RD extends ResponseData> extends Response_Base {
 }
 
 //TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
-type Response_Type_Status = Response_With_Result<{
+export interface Response_Type_Status extends Response_With_Result<{}> {
     method: string
-}>
+}
 
 //TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
-type Response_Type_Event = Response_With_Result<{
+export interface Response_Type_Event extends Response_With_Result<{}> {
     method: string
     need_reply: 0 | 1 // 0 = false, 1 = true
-}>
-
-type Response_With_Result<R extends Record<string, any>> = Response<R> & {
-    data: {
-        result: number
-    }
 }
+
+type Response_With_Result<R extends Record<string, any>> = Response<R & {
+    result: number
+}>
 
 
 // DRONE CONNECTION CONNECTOR
@@ -235,8 +292,7 @@ export class DroneConnectionConnector {
 
     private readonly connector: Connector
     private readonly myDroneId: number
-
-
+    private readonly myConnectionId: number
 
     onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State']>
 
@@ -246,9 +302,10 @@ export class DroneConnectionConnector {
 
     onMessage_Event: DroneConnection_EventFunctionWithRespond<Connector['onMessage_Event']>
 
-    constructor(connector: Connector, droneId: number){
+    constructor(connector: Connector, droneId: number, connectionId: number){
         this.connector = connector
         this.myDroneId = droneId
+        this.myConnectionId = connectionId
 
         this.onMessage_State = this.makeEventFunction(this.connector.onMessage_State)
 
@@ -258,6 +315,17 @@ export class DroneConnectionConnector {
 
         this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
     }
+
+
+    /**
+     * @param topic the $ char will be replaced with the client id
+     *
+     * you should use makeMessage() to create a message
+     */
+    sendMessage(topic: string, message: Message<MessageData>){
+        return this.connector.sendMessage(this.myConnectionId, topic, message)
+    }
+
 
     // definitions
 
