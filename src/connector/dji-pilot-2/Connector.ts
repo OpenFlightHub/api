@@ -129,17 +129,17 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     onMessage_State = this.makeEventFunction<Message_Type_State>('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithRespond('sys/product/status', 'sys/product/$/status_reply', (message)=>{
+    onMessage_Status = this.makeEventFunctionWithRespond<Message_Type_Status, Response_Type_Status>('sys/product/status', 'sys/product/$/status_reply', (message)=>{
         return {
             //@ts-ignore
             method: message.method
         }
     })
 
-    onMessage_Osd = this.makeEventFunction('thing/product/osd')
+    onMessage_Osd = this.makeEventFunction<Message_Type_Osd>('thing/product/osd')
 
 
-    onMessage_Event = this.makeEventFunctionWithRespond('thing/product/events', 'thing/product/$/events_reply', (message)=>{
+    onMessage_Event = this.makeEventFunctionWithRespond<Message_Type_Event, Response_Type_Event>('thing/product/events', 'thing/product/$/events_reply', (message)=>{
         return {
             //@ts-ignore
             method: message.method
@@ -171,6 +171,17 @@ interface Message<MD extends MessageData> extends Message_Base {
 //TODO is gateway property and bid mandatory?
 type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE>
 
+//TODO
+type Message_Type_Status = Message<{todo: true}>
+
+
+//TODO
+type Message_Type_Osd = Message<{todo: true}>
+
+//TODO
+type Message_Type_Event = Message<{todo: true}>
+
+
 interface Response_Base {// response from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
     bid?: string //business UUID used for operations that require multiple transactions //TODO is this required or optional?
@@ -183,6 +194,15 @@ interface Response<RD extends ResponseData> extends Response_Base {
     data: RD
 }
 
+//TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
+type Response_Type_Status = Response<{
+    todo: true
+}>
+
+//TODO would be nice if the response type depends on a message type generic, so we cant make silly mistakes here
+type Response_Type_Event = Response<{
+    todo: true
+}>
 
 interface Response_With_Result extends Response_Base {
     data: {
@@ -215,29 +235,23 @@ export class DroneConnectionConnector {
 
     onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State']>
 
-    // this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
+    onMessage_Status: DroneConnection_EventFunctionWithRespond<Connector['onMessage_Status']>
 
-    // this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
+    onMessage_Osd: DroneConnection_EventFunction<Connector['onMessage_Osd']>
 
-    // this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
+    onMessage_Event: DroneConnection_EventFunctionWithRespond<Connector['onMessage_Event']>
 
     constructor(connector: Connector, droneId: number){
         this.connector = connector
         this.myDroneId = droneId
 
-        connector.onMessage_Event((connectionId, message, respond)=>{
-            if(connectionId !== this.myDroneId){
-                return
-            }
-        })
-
         this.onMessage_State = this.makeEventFunction(this.connector.onMessage_State)
 
-        // this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
+        this.onMessage_Status = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Status)
 
-        // this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
+        this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
 
-        // this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
+        this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
     }
 
     // definitions
@@ -248,7 +262,15 @@ export class DroneConnectionConnector {
         MD = M extends Message<infer G> ? G : unknown
     >(connectorEventFunction: EF): DroneConnection_EventFunction<EventFunction<Message<MD>>>{
         return (callback)=>{
-            //TODO
+
+            connectorEventFunction((connectionId, message)=>{
+
+                if(connectionId !== this.myDroneId){
+                    return
+                }
+
+                callback(message)
+            })
         }
     }
 
@@ -260,7 +282,15 @@ export class DroneConnectionConnector {
         RD = R extends Response<infer G> ? G : unknown
     >(connectorEventFunctionWithRespond: EF): DroneConnection_EventFunctionWithRespond<EventFunctionWithRespond<Message<MD>, Response<RD>>>{
         return (callback)=>{
-            //TODO
+
+            connectorEventFunctionWithRespond((connectionId, message, respond)=>{
+
+                if(connectionId !== this.myDroneId){
+                    return
+                }
+
+                callback(message, respond)
+            })
         }
     }
 }

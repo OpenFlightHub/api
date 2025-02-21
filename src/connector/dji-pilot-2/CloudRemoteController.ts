@@ -6,24 +6,35 @@ export default class CloudRemoteController {
 
     constructor(connector: DroneConnectionConnector){
         this.connector = connector
+
+        this.connector.onMessage_State((message)=>{
+            //TODO
+        })
+
+        this.connector.onMessage_Status((message, respond)=>{
+            //TODO
+        })
+
+        this.connector.onMessage_Osd((message)=>{
+            //TODO
+        })
+
+        this.connector.onMessage_Event((message, respond)=>{
+            //TODO
+        })
     }
 
 
     async startControl(){
-
-        this.connector.onMessage_State((message)=>{
-
-        })
-
-        this.connector
+        //TODO
     }
 
     async stopControl(){
-
+        //TODO
     }
 
     async takePicture(){
-
+        //TODO
     }
 
 }
