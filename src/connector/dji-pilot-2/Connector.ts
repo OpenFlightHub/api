@@ -114,11 +114,11 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         return (callback: EventCallbackWithResponse<M, R, MD, RD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, (response: RD)=>{
+                callback(c.connectionId, c.message as M, (responseData: RD)=>{//TODO dont hand over original message, instead a clone of it (so we cant accidentially mess up the originalMessage when we need it for responding)
                     if(typeof makeResponseBaseData === 'function'){
-                        Object.assign(response, makeResponseBaseData(c.message as M))
+                        Object.assign(responseData, makeResponseBaseData(c.message as M))
                     }
-                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, response)
+                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, responseData)
                 })
             })
         }
@@ -128,26 +128,18 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      * @param responseEventName the $ char will be replaced with the client id
      * @param response
      */
-    private async respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, response: ResponseData){
+    private async respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, responseData: ResponseData){
         const responseMessage: Response_Base = {
             tid: originalMessage.tid,//randomUUID(),
             bid: originalMessage.bid,
             timestamp: Date.now(),
-            data: {}
-        }
-
-        for(const key of Object.keys(response)){
-            if(['tid', 'bid', 'timestamp'].includes(key)){
-                console.warn('respondToMessage attempts to overwrite base response message property', key)
-            } else {
-                responseMessage[key] = response[key]
-            }
+            data: responseData
         }
 
         const topic = responseEventName
 
         try {
-            await this.sendMessage(connectionId, topic, responseMessage)
+            await this.sendMessage(client, connectionId, topic, responseMessage)
         } catch (err){
             console.warn('failed to send response to', connectionId, err)
         }
@@ -161,7 +153,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+    sendMessage(client: Client, connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
 
         // TODO implement tid and bid belonging to this message (for simple tids, we can use promises, for bids we need something special)
         // and the onReplyCallback
@@ -176,8 +168,6 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
 
         return new Promise<void>((resolve, reject)=>{
-            const client = this.clients.get(connectionId)
-
             client.publish({
                 cmd: 'publish',
                 dup: false,
@@ -193,6 +183,13 @@ export default class Connector extends EventManager<ConnectorEvents>  {
                 }
             })
         })
+    }
+
+    /**
+     * @see sendMessage()
+     */
+    sendMessageToConnection(connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+        return this.sendMessage(this.clients.get(connectionId), connectionId, topic, message, onResponseCallback)
     }
 
     static makeMessage<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown, >(base: Omit<M, keyof Message_Base>, data: MD) {
@@ -213,20 +210,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     onMessage_State = this.makeEventFunction<Message_Type_State>('thing/product/state')
 
-    onMessage_Status = this.makeEventFunctionWithRespond<Message_Type_Status, Response_Type_Status>('sys/product/status', 'sys/product/$/status_reply', (message)=>{
-        return {
-            method: message.method
-        }
-    })
+    onMessage_Status = this.makeEventFunctionWithRespond<Message_Type_Status, Response_Type_Status>('sys/product/status', 'sys/product/$/status_reply')
 
     onMessage_Osd = this.makeEventFunction<Message_Type_Osd>('thing/product/osd')
 
 
-    onMessage_Event = this.makeEventFunctionWithRespond<Message_Type_Event, Response_Type_Event>('thing/product/events', 'thing/product/$/events_reply', (message)=>{
-        return {
-            method: message.method
-        }
-    })
+    onMessage_Event = this.makeEventFunctionWithRespond<Message_Type_Event, Response_Type_Event>('thing/product/events', 'thing/product/$/events_reply')
 
 }
 
@@ -358,7 +347,7 @@ export class DroneConnectionConnector {
      * you should use makeMessage() to create a message
      */
     sendMessage(topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
-        return this.connector.sendMessage(this.myConnectionId, topic, message, onResponseCallback)
+        return this.connector.sendMessageToConnection(this.myConnectionId, topic, message, onResponseCallback)
     }
 
 

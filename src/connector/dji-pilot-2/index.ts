@@ -100,12 +100,9 @@ connector.onMessage_Osd(async (connectionId, message)=>{
 connector.onMessage_Event((connectionId, message, respond)=>{
     console.log('onMessage_Event', connectionId, message)
 
-    return
-    // respond({
-    //     data: {
-    //         result: 0
-    //     }
-    // })
+    respond({
+        result: 0
+    })
 })
 
 
