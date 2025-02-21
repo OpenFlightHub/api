@@ -73,7 +73,7 @@ export default class CloudRemoteController {
         //TODO
     }
 
-    async takePicture(){
+    async takePicture(){//TODO check if we need to have remote control for this to work
         // see https://developer.dji.com/doc/cloud-api-tutorial/en/api-reference/pilot-to-cloud/mqtt/rc-pro/drc.html#payload-control-start-capturing
 
 
