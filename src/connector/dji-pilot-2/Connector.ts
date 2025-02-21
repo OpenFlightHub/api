@@ -33,6 +33,13 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     private clients = new Map<ConnectionId, Client>()
 
+
+    private sentMessagesThatAwaitAResponse: {
+        tid: string
+        bid?: string
+        onResponseCallback: (message: Message<MessageData>)=>void
+    }[] = []
+
     handleMqttPacket(client: Client, connectionId: number, packet: PublishPacket){
 
         this.clients.set(connectionId, client)//TODO this is really not great. we should move all the management (including auth) code from ./index.ts into this class
@@ -43,6 +50,23 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         const topic = packet.topic
         const topicMatch = topic.match(/^([^\/]+\/product\/)[^/]+\/(.*)$/)
+
+        const sentMessageThatAWaitsAResponseIndex = this.sentMessagesThatAwaitAResponse.findIndex(m => {
+            if(message.tid === m.tid){
+                return true
+            }
+
+            if(typeof m.bid === 'string' && message.bid === m.bid){
+                return true
+            }
+        })
+
+        if(sentMessageThatAWaitsAResponseIndex >= 0){
+            // it is a response to a message we have sent before
+
+            this.sentMessagesThatAwaitAResponse[sentMessageThatAWaitsAResponseIndex].onResponseCallback(message)
+            this.sentMessagesThatAwaitAResponse.splice(sentMessageThatAWaitsAResponseIndex, 1)
+        }
 
         if(!topicMatch){
             this.dispatch('unsupported_topic', topic)
@@ -133,12 +157,23 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
     /**
      * @param topic the $ char will be replaced with the client id
+     * @param onResponseCallback depending on the method, this function may be called: never, once or multiple times
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(connectionId: number, topic: string, message: Message<MessageData>){
+    sendMessage(connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
 
         // TODO implement tid and bid belonging to this message (for simple tids, we can use promises, for bids we need something special)
+        // and the onReplyCallback
+        // NOTE: we currently use makeMessage() but this is maybe not the best approach?
+
+        if(onResponseCallback){
+            this.sentMessagesThatAwaitAResponse.push({
+                tid: message.tid,
+                bid: message.bid,
+                onResponseCallback
+            })
+        }
 
         return new Promise<void>((resolve, reject)=>{
             const client = this.clients.get(connectionId)
@@ -214,35 +249,35 @@ interface Message<MD extends MessageData> extends Message_Base {
     data: MD
 }
 
+export interface MessageWithMethod<MD extends MessageData> extends Message<MD> {
+    method: string
+}
+
 
 //TODO make this generic for many drones
 //TODO is gateway property and bid mandatory?
 export type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE | MqttMavic3EnterpriseProperties_STATE_CHANGE_TYPE>
 
 //TODO
-export interface Message_Type_Status extends Message<{
+export type Message_Type_Status = MessageWithMethod<{
     todo: string
-}> {
-    method: string
-}
+}>
 
 
 //TODO
 export type Message_Type_Osd = Message<{todo: true}>
 
 //TODO
-export interface Message_Type_Event extends Message<{
+export interface Message_Type_Event extends MessageWithMethod<{
     todo22: string
 }> {
-    method: string
     need_reply: 0 | 1 // 0 = false, 1 = true
 }
 
 //TODO
-export interface Message_Type_Services extends Message<{}> {// sent down to client
-    method: string
-}
+export type Message_Type_Services = MessageWithMethod<{}> // sent down to client
 
+export type Message_Type_Services_Method = 'cloud_control_auth_request' | 'camera_photo_take' //TODO use documented.ts types
 
 interface Response_Base {// response from cloud back to device
     tid: string //transaction UUID used when a response is required for this message
@@ -322,8 +357,8 @@ export class DroneConnectionConnector {
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(topic: string, message: Message<MessageData>){
-        return this.connector.sendMessage(this.myConnectionId, topic, message)
+    sendMessage(topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+        return this.connector.sendMessage(this.myConnectionId, topic, message, onResponseCallback)
     }
 
 
