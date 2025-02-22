@@ -51,21 +51,24 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         const topic = packet.topic
         const topicMatch = topic.match(/^([^\/]+\/product\/)[^/]+\/(.*)$/)
 
-        const sentMessageThatAWaitsAResponseIndex = this.sentMessagesThatAwaitAResponse.findIndex(m => {
-            if(message.tid === m.tid){
-                return true
+        if(message.tid !== '00000000-0000-0000-0000-000000000000'){// this is not a valid transaction id and indicates it does not need a a response
+
+            const sentMessageThatAWaitsAResponseIndex = this.sentMessagesThatAwaitAResponse.findIndex(m => {
+                if(message.tid === m.tid){
+                    return true
+                }
+
+                if(typeof m.bid === 'string' && message.bid === m.bid){
+                    return true
+                }
+            })
+
+            if(sentMessageThatAWaitsAResponseIndex >= 0){
+                // it is a response to a message we have sent before
+
+                this.sentMessagesThatAwaitAResponse[sentMessageThatAWaitsAResponseIndex].onResponseCallback(message)
+                this.sentMessagesThatAwaitAResponse.splice(sentMessageThatAWaitsAResponseIndex, 1)
             }
-
-            if(typeof m.bid === 'string' && message.bid === m.bid){
-                return true
-            }
-        })
-
-        if(sentMessageThatAWaitsAResponseIndex >= 0){
-            // it is a response to a message we have sent before
-
-            this.sentMessagesThatAwaitAResponse[sentMessageThatAWaitsAResponseIndex].onResponseCallback(message)
-            this.sentMessagesThatAwaitAResponse.splice(sentMessageThatAWaitsAResponseIndex, 1)
         }
 
         if(!topicMatch){
