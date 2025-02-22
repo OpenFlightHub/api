@@ -139,7 +139,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         const topic = responseEventName
 
         try {
-            await this.sendMessage(client, connectionId, topic, responseMessage)
+            await this.sendMessage(client, topic, responseMessage)
         } catch (err){
             console.warn('failed to send response to', connectionId, err)
         }
@@ -148,12 +148,11 @@ export default class Connector extends EventManager<ConnectorEvents>  {
     }
 
     /**
-     * @param topic the $ char will be replaced with the client id
      * @param onResponseCallback depending on the method, this function may be called: never, once or multiple times
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(client: Client, connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+    private sendMessage(client: Client, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
 
         // TODO implement tid and bid belonging to this message (for simple tids, we can use promises, for bids we need something special)
         // and the onReplyCallback
@@ -173,7 +172,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
                 dup: false,
                 qos: 1,
                 retain: false,
-                topic: topic.replace('$', client.id),
+                topic,
                 payload: JSON.stringify(message)
             }, (err)=>{
                 if(err){
@@ -185,11 +184,23 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         })
     }
 
+
     /**
-     * @see sendMessage()
+     * @param topic the "$" char will be replaced by the client id (TODO: for M300 Controller, the client id is not valid, so we need to read the serial number manually from the first "status" message. TODO: find out how it works for the other serial numbers, like aircraft and camera? maybe use the data from the jsbridge?)
+     * @param onResponseCallback depending on the method, this function may be called: never, once or multiple times
+     *
+     * you should use makeMessage() to create a message
      */
     sendMessageToConnection(connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
-        return this.sendMessage(this.clients.get(connectionId), connectionId, topic, message, onResponseCallback)
+
+        const client = this.clients.get(connectionId)
+        if(!client){
+            throw new Error('no client found for connectionId: ' + connectionId)
+        }
+
+        return this.sendMessage(client,
+            topic.replace('$', '1ZMLH4Q00100AD'),//client.id) TODO remove dirty dev fix for old m300 controller
+            message, onResponseCallback)
     }
 
     static makeMessage<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown, >(base: Omit<M, keyof Message_Base>, data: MD) {
