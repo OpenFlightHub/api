@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { deleteFile, deleteWorkspace, insertWorkspace, selectFile, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
@@ -160,11 +160,11 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    if(!req.file){
+    if(!(req as Request & {file: MulterFile}).file){
         throw GuardError._400_invalidBody('file')
     }
 
-    const file = await storeTmpMulterFileInDatabase(req.file, workspaceId, (await req.GM.getCurrentUser()).id)
+    const file = await storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
 
     res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
 }))
@@ -188,11 +188,11 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
         })
     })
 
-    if(!req.file){
+    if(!(req as Request & {file: MulterFile}).file){
         throw GuardError._400_invalidBody('file')
     }
 
-    const file = await storeTmpMulterFileInDatabase(req.file, workspaceId, (await req.GM.getCurrentUser()).id)
+    const file = await storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
 
     res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
 }))
