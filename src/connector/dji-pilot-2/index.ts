@@ -63,7 +63,11 @@ connector.onMessage_Osd(async (connectionId, message)=>{
                 }
             }
 
-            addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+
+            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+
+                addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+            }
 
             if(typeof messageData.battery?.capacity_percent === 'number'){
                 addDroneData(connection.drone_id, DRONE_DATA_TYPES.TELEMETRY, {capacity_percent_left: messageData.battery.capacity_percent})
@@ -92,7 +96,9 @@ connector.onMessage_Osd(async (connectionId, message)=>{
                 }
             }
 
-            addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+                addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+            }
         }
     }
 })
