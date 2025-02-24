@@ -56,7 +56,7 @@ export default class CloudRemoteController {
                 }
             })
 
-            this.connector.sendMessage('thing/product/$/services', this.connector.getGatewaySerialNumber(), Connector.makeMessage<Message_Type_Services>({//TODO use documented.ts types
+            this.connector.sendMessage('thing/product/$/services', Connector.makeMessage<Message_Type_Services>({//TODO use documented.ts types
                 method: 'cloud_control_auth_request'
             }, {
                 user_id: "someuserid",//TODO
@@ -93,7 +93,7 @@ export default class CloudRemoteController {
                 }
             })
 
-            this.connector.sendMessage('thing/product/$/services', this.connector.getGatewaySerialNumber(), Connector.makeMessage<Message_Type_Services>({//TODO use documented.ts types
+            this.connector.sendMessage('thing/product/$/services', Connector.makeMessage<Message_Type_Services>({//TODO use documented.ts types
                 method: 'camera_photo_take'
             }, {
                 payload_index: "mycamera" //TODO

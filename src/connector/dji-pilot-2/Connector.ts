@@ -145,7 +145,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         const topic = responseEventName.replace('$', serialNumber)
 
         try {
-            await this.sendMessage(client, topic, responseMessage)
+            await this.sendMessage(client, topic.replace('$', '1ZMLH4Q00100AD'), serialNumber, responseMessage)
         } catch (err){
             console.warn('failed to send response to', connectionId, err)
         }
@@ -158,7 +158,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
      *
      * you should use makeMessage() to create a message
      */
-    private sendMessage(client: Client, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+    private sendMessage(client: Client, topic: string, serialNumber: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
 
         // TODO implement tid and bid belonging to this message (for simple tids, we can use promises, for bids we need something special)
         // and the onReplyCallback
@@ -178,7 +178,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
                 dup: false,
                 qos: 1,
                 retain: false,
-                topic,
+                topic: topic.replace('$', serialNumber),
                 payload: JSON.stringify(message)
             }, (err)=>{
                 if(err){
@@ -205,7 +205,8 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
 
         return this.sendMessage(client,
-            topic.replace('$', serialNumber),
+            topic,
+            serialNumber,
             message, onResponseCallback)
     }
 
@@ -317,7 +318,7 @@ type Response_With_Result<R extends Record<string, any>> = Response<R & {
 
 type DroneConnectionEventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (message: M) => void
 
-type DroneConnectionEventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (message: M, serialNumber: string, respond: (data: RD) => void) => void
+type DroneConnectionEventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (message: M, respond: (data: RD) => void) => void
 
 type DroneConnection_EventFunction<E extends EventFunction<Message<MD>>, M = E extends EventFunction<infer G> ? G : unknown, MD = M extends Message<infer G> ? G : unknown> = (callback: DroneConnectionEventCallback<Message<MD>, MD>) => void
 
@@ -384,8 +385,8 @@ export class DroneConnectionConnector {
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(topic: string, serialNumber: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
-        return this.connector.sendMessageToConnection(this.myConnectionId, topic, serialNumber, message, onResponseCallback)
+    sendMessage(topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+        return this.connector.sendMessageToConnection(this.myConnectionId, topic, this.getGatewaySerialNumber(), message, onResponseCallback)
     }
 
 
@@ -424,7 +425,7 @@ export class DroneConnectionConnector {
                     return
                 }
 
-                callback(message, serialNumber, respond)
+                callback(message, respond)
             })
         }
     }
