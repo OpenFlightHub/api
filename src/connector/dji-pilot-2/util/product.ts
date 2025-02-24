@@ -231,7 +231,7 @@ export type CameraSubType = ('fpv')
 | ('dock_camera' | 'dock_2_camera')
 
 export type CameraGimbalPosition = ('fpv' | 'main_or_bottom_single_or_bottom_dual_portside' | 'bottom_starboard' | 'up' | 'vision_assist')
-| ('dock_inside_camera' | 'dock_2_inside_camera' | 'dock_2_outside_camera')
+| ('dock_camera')
 
 
 /**
@@ -755,7 +755,7 @@ export function getCameraInfo(type_subtype_gimbalindex: string): CameraInfo {
                         case 0: return {
                             type,
                             subType,
-                            gimbalPosition: 'dock_inside_camera'
+                            gimbalPosition: 'dock_camera'
                         }
 
                         default: throw new Error('invalid gimbalIndex: ' + gimbalIndexInt + ' for type: ' + typeInt + ' and subType: ' + subTypeInt)
@@ -765,8 +765,6 @@ export function getCameraInfo(type_subtype_gimbalindex: string): CameraInfo {
                 default: throw new Error('invalid subType: ' + subTypeInt + ' for type: ' + typeInt)
             }
         }
-
-        //TODO missing dji dock 2 cmaeras, the docs say it has the same id as dji dock2, but that makes no sense
 
         default: throw new Error('invalid type: ' + typeInt)
     }
