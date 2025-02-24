@@ -145,7 +145,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         const topic = responseEventName.replace('$', serialNumber)
 
         try {
-            await this.sendMessage(client, topic.replace('$', '1ZMLH4Q00100AD'), serialNumber, responseMessage)
+            await this.sendMessage(client, topic, serialNumber, responseMessage)
         } catch (err){
             console.warn('failed to send response to', connectionId, err)
         }
