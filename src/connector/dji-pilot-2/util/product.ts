@@ -743,7 +743,7 @@ export function getCameraInfo(type_subtype_gimbalindex: string): CameraInfo {
             }
         }
 
-        case 165: {
+        case 165: {// even though dji dock 2 has 2 cameras, they appear as the same id (says dji devs). You must use the api two switch between them
             const type: CameraType = 'dock'
 
             switch(subTypeInt){
