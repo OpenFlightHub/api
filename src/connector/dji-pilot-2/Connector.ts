@@ -24,6 +24,7 @@ type ConnectionId = number
 export default class Connector extends EventManager<ConnectorEvents>  {
 
     private internalEventManager = new EventManagerWithPublicDispatch<{[key: string]: {
+        serialNumber: string
         client: Client
         connectionId: number
         message: Message<any>
@@ -49,7 +50,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         const message = JSON.parse(packet.payload.toString())
 
         const topic = packet.topic
-        const topicMatch = topic.match(/^([^\/]+\/product\/)[^/]+\/(.*)$/)
+        const topicMatch = topic.match(/^([^\/]+\/product\/)([^/]+)\/(.*)$/)
 
         if(message.tid !== '00000000-0000-0000-0000-000000000000'){// this is not a valid transaction id and indicates it does not need a a response
 
@@ -76,10 +77,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
             return
         }
 
-        const eventName = topicMatch[1] + topicMatch[2]
+        const eventName = topicMatch[1] + topicMatch[3]
+        const serialNumber = topicMatch[2]
 
         if(this.validEvents.includes(eventName)){
             this.internalEventManager.dispatch(eventName, {
+                serialNumber,
                 client,
                 connectionId,
                 message
@@ -102,7 +105,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         return (callback: EventCallback<M, MD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M)
+                callback(c.connectionId, c.message as M, c.serialNumber)
             })
         }
     }
@@ -117,29 +120,29 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         return (callback: EventCallbackWithResponse<M, R, MD, RD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, (responseData: RD)=>{//TODO dont hand over original message, instead a clone of it (so we cant accidentially mess up the originalMessage when we need it for responding)
+                callback(c.connectionId, c.message as M, c.serialNumber, (responseData: RD)=>{//TODO dont hand over original message, instead a clone of it (so we cant accidentially mess up the originalMessage when we need it for responding)
                     if(typeof makeResponseBaseData === 'function'){
                         Object.assign(responseData, makeResponseBaseData(c.message as M))
                     }
-                    this.respondToMessage(c.client, c.connectionId, c.message, responseEventName, responseData)
+                    this.respondToMessage(c.client, c.connectionId, c.serialNumber, c.message, responseEventName, responseData)
                 })
             })
         }
     }
 
     /**
-     * @param responseEventName the $ char will be replaced with the client id
+     * @param responseEventName the $ char will be replaced with the serialNumber
      * @param response
      */
-    private async respondToMessage(client: Client, connectionId: number, originalMessage: Message<any>, responseEventName: string, responseData: ResponseData){
+    private async respondToMessage(client: Client, connectionId: number, serialNumber: string, originalMessage: Message<any>, responseEventName: string, responseData: ResponseData){
         const responseMessage: Response_Base = {
-            tid: originalMessage.tid,//randomUUID(),
+            tid: originalMessage.tid,
             bid: originalMessage.bid,
             timestamp: Date.now(),
             data: responseData
         }
 
-        const topic = responseEventName
+        const topic = responseEventName.replace('$', serialNumber)
 
         try {
             await this.sendMessage(client, topic, responseMessage)
@@ -189,12 +192,12 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
 
     /**
-     * @param topic the "$" char will be replaced by the client id (TODO: for M300 Controller, the client id is not valid, so we need to read the serial number manually from the first "status" message. TODO: find out how it works for the other serial numbers, like aircraft and camera? maybe use the data from the jsbridge?)
+     * @param topic the "$" char will be replaced with the serialNumber
      * @param onResponseCallback depending on the method, this function may be called: never, once or multiple times
      *
      * you should use makeMessage() to create a message
      */
-    sendMessageToConnection(connectionId: number, topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+    sendMessageToConnection(connectionId: number, topic: string, serialNumber: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
 
         const client = this.clients.get(connectionId)
         if(!client){
@@ -202,7 +205,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
         }
 
         return this.sendMessage(client,
-            topic.replace('$', '1ZMLH4Q00100AD'),//client.id) TODO remove dirty dev fix for old m300 controller
+            topic.replace('$', serialNumber),
             message, onResponseCallback)
     }
 
@@ -235,8 +238,8 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
 
 
-type EventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (connectionId: number, message: M) => void
-type EventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (connectionId: number, message: M, respond: (data: RD) => void) => void
+type EventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (connectionId: number, message: M, serialNumber: string) => void
+type EventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (connectionId: number, message: M, serialNumber: string, respond: (data: RD) => void) => void
 
 interface Message_Base {// coming from device to cloud
     tid: string //transaction UUID used when a response is required for this message
@@ -314,7 +317,7 @@ type Response_With_Result<R extends Record<string, any>> = Response<R & {
 
 type DroneConnectionEventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (message: M) => void
 
-type DroneConnectionEventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (message: M, respond: (data: RD) => void) => void
+type DroneConnectionEventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (message: M, serialNumber: string, respond: (data: RD) => void) => void
 
 type DroneConnection_EventFunction<E extends EventFunction<Message<MD>>, M = E extends EventFunction<infer G> ? G : unknown, MD = M extends Message<infer G> ? G : unknown> = (callback: DroneConnectionEventCallback<Message<MD>, MD>) => void
 
@@ -327,10 +330,10 @@ type DroneConnection_EventFunctionWithRespond<
 > = (callback: DroneConnectionEventCallbackWithResponse<Message<MD>, Response<RD>>) => void
 
 export class DroneConnectionConnector {
-
     private readonly connector: Connector
     private readonly myDroneId: number
     private readonly myConnectionId: number
+    private gatewaySerialNumber: string
 
     onMessage_State: DroneConnection_EventFunction<Connector['onMessage_State']>
 
@@ -352,16 +355,37 @@ export class DroneConnectionConnector {
         this.onMessage_Osd = this.makeEventFunction(()=>this.connector.onMessage_Osd)
 
         this.onMessage_Event = this.makeEventFunctionWithRespond(()=>this.connector.onMessage_Event)
+
+        const cb = data => {
+            const d = data as {
+                client: Client;
+                connectionId: number;
+                packet: PublishPacket;
+            }
+
+            if(d.connectionId === this.myConnectionId && d.packet.topic.endsWith('/status')){
+                const topicMatch = d.packet.topic.match(/^([^\/]+\/product\/)([^/]+)\/(.*)$/)
+                const serialNumber = topicMatch[2]
+
+                if(typeof serialNumber !== 'string'){
+                    console.warn('could not find serial number in topic product/status', d.packet.topic)
+                }
+
+                this.gatewaySerialNumber = serialNumber
+            }
+        }
+
+        this.connector.addListener('packet', cb)
     }
 
 
     /**
-     * @param topic the $ char will be replaced with the client id
+     * @param topic the $ char will be replaced with the serialNumber
      *
      * you should use makeMessage() to create a message
      */
-    sendMessage(topic: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
-        return this.connector.sendMessageToConnection(this.myConnectionId, topic, message, onResponseCallback)
+    sendMessage(topic: string, serialNumber: string, message: Message<MessageData>, onResponseCallback?: (message: Message<MessageData>) => void){
+        return this.connector.sendMessageToConnection(this.myConnectionId, topic, serialNumber, message, onResponseCallback)
     }
 
 
@@ -394,14 +418,24 @@ export class DroneConnectionConnector {
     >(connectorEventFunctionWithRespond: EF): DroneConnection_EventFunctionWithRespond<EventFunctionWithRespond<Message<MD>, Response<RD>>>{
         return (callback)=>{
 
-            connectorEventFunctionWithRespond((connectionId, message, respond)=>{
+            connectorEventFunctionWithRespond((connectionId, message, serialNumber, respond)=>{
 
                 if(connectionId !== this.myDroneId){
                     return
                 }
 
-                callback(message, respond)
+                callback(message, serialNumber, respond)
             })
         }
     }
+
+    getGatewaySerialNumber(): string {
+        if(typeof this.gatewaySerialNumber === 'string'){
+            return this.gatewaySerialNumber
+        } else {
+            throw new Error('gatewaySerialNumber is not yet set')
+        }
+
+    }
+
 }

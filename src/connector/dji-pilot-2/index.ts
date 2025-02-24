@@ -20,8 +20,8 @@ connector.onMessage_State((connectionId, message)=>{
 })
 
 
-connector.onMessage_Status((connectionId, message, respond)=>{
-    console.log('onMessage_Status', connectionId, message)
+connector.onMessage_Status((connectionId, message, serialNumber, respond)=>{
+    console.log('onMessage_Status', connectionId, serialNumber, message)
 
     respond({
         result: 0
@@ -103,8 +103,8 @@ connector.onMessage_Osd(async (connectionId, message)=>{
     }
 })
 
-connector.onMessage_Event((connectionId, message, respond)=>{
-    console.log('onMessage_Event', connectionId, message)
+connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
+    console.log('onMessage_Event', connectionId, message, serialNumber)
 
     respond({
         result: 0
