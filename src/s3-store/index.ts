@@ -8,7 +8,6 @@ import { fetchUrl } from "../util/http";
 import {generateUniqueTokenUrlSafe} from '../util/crypto'
 
 import SecretsLoader from '../util/SecretsLoader'
-import { S3Client } from '@aws-sdk/client-s3';
 import { AssumeRoleCommand, STSClient } from '@aws-sdk/client-sts';
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_web_url', 'minio_web_access_key_root', 'minio_web_secret_key_root', 'minio_region'])
