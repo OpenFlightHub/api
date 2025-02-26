@@ -5,6 +5,11 @@ export const ApiSchema_Id : JSONSchema  = {
     "example": 42
 }
 
+export const ApiSchema_Uuid : JSONSchema  = {
+    "type": "string",
+    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+}
+
 export const ApiSchema_Timestamptz : JSONSchema  = {
     "type": "string",
     "format": "timestamptz",
@@ -840,7 +845,6 @@ export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema  = {
 export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema  = {
     "type": "object",
     "required": [
-        "result",
         "name",
         "object_key"
     ],
@@ -859,7 +863,7 @@ export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema  = {
             "type": "string"
         },
         "sub_file_type": {
-            "type": "string"
+            "type": "number"
         },
         "ext": {
             "type": "object",

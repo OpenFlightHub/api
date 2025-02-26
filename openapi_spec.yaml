@@ -1088,18 +1088,18 @@ paths:
         - connection_link_auth: []
 
 
-  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/fast-upload:
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_uuid}/fast-upload:
     post:
       x-no-sdk: true
       tags:
         - dji-pilot-2-api
       summary: Upload media from a dji pilot 2 remote controller
       parameters:
-        - name: workspace_id
+        - name: workspace_uuid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/id'
+            $ref: '#/components/schemas/uuid'
       requestBody:
         content:
           multipart/form-data:
@@ -1124,18 +1124,18 @@ paths:
       security:
         - dji_pilot_2_api: []
 
-  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/files/tiny-fingerprints:
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_uuid}/files/tiny-fingerprints:
     post:
       x-no-sdk: true
       tags:
         - dji-pilot-2-api
       summary: Get all existing tiny fingerprints of files from a dji pilot 2 remote controller
       parameters:
-        - name: workspace_id
+        - name: workspace_uuid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/id'
+            $ref: '#/components/schemas/uuid'
       requestBody:
         content:
           multipart/form-data:
@@ -1160,14 +1160,14 @@ paths:
       security:
         - dji_pilot_2_api: []
 
-  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/sts:
+  /connection-link/dji-pilot-2/api/storage/api/v1/workspaces/{workspace_uuid}/sts:
     post:
       x-no-sdk: true
       tags:
         - dji-pilot-2-api
       summary: Get a temporary access token to upload a media from a dji pilot 2 remote controller
       parameters:
-        - name: workspace_id
+        - name: workspace_uuid
           in: path
           required: true
           schema:
@@ -1191,18 +1191,18 @@ paths:
       security:
         - dji_pilot_2_api: []
 
-  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/upload-callback:
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_uuid}/upload-callback:
     post:
       x-no-sdk: true
       tags:
         - dji-pilot-2-api
       summary: Get upload feedback from a dji pilot 2 remote controller
       parameters:
-        - name: workspace_id
+        - name: workspace_uuid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/id'
+            $ref: '#/components/schemas/uuid'
       requestBody:
         content:
           multipart/form-data:
@@ -1227,18 +1227,18 @@ paths:
       security:
         - dji_pilot_2_api: []
 
-  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_id}/group-upload-callback:
+  /connection-link/dji-pilot-2/api/media/api/v1/workspaces/{workspace_uuid}/group-upload-callback:
     post:
       x-no-sdk: true
       tags:
         - dji-pilot-2-api
       summary: Get upload feedback from a dji pilot 2 remote controller
       parameters:
-        - name: workspace_id
+        - name: workspace_uuid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/id'
+            $ref: '#/components/schemas/uuid'
       requestBody:
         content:
           multipart/form-data:
@@ -1277,6 +1277,11 @@ components:
     id:
       type: number
       example: 42
+
+    uuid:
+      type: string
+      example: "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+
     timestamptz:
       type: string
       format: timestamptz
@@ -1847,7 +1852,6 @@ components:
     dji_pilot_2_api_media_upload_callback_post:
       type: object
       required:
-        - result
         - name
         - object_key
       properties:
@@ -1861,7 +1865,7 @@ components:
         path:
           type: string
         sub_file_type:
-          type: string
+          type: number
         ext:
           type: object
           properties:

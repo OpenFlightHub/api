@@ -1,6 +1,9 @@
 export type ApiType_Id = number;
 
 
+export type ApiType_Uuid = string;
+
+
 /**
  * ISO 8601 format
  */
@@ -349,11 +352,11 @@ export type ApiType_DjiPilot2ApiMediaUploadCallbackPost = {
     /**
      * non-zero means failure
      */
-    result: number;
+    result?: number;
     name: string;
     object_key: string;
     path?: string;
-    sub_file_type?: string;
+    sub_file_type?: number;
     ext?: {
         file_group_id?: string;
         /**

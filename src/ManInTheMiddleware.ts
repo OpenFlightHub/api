@@ -127,6 +127,8 @@ export class GuardedMiddleware {
 
     private readonly requestBody: any
     private readonly requestParams: any
+    private currentError: any
+    private sentData: any
 
     currentUser: DBType_User | undefined
     currentConnection: DBType_Connection | undefined
@@ -206,13 +208,13 @@ export class GuardedMiddleware {
 
 
     async guardDjiPilot2ApiIsAuthenticated() : Promise<DBType_Connection> {
-        const cookie = this.req.cookies['x-auth-token']
+        const authToken = this.req.headers['x-auth-token'] as string
 
-        if(!cookie){
+        if(!authToken){
             throw GuardError._401_Unauthorized()
         }
 
-        const connection = await getConnectionForSecret(cookie)
+        const connection = await getConnectionForSecret(authToken)
 
         if(connection === false){ //invalid token
             throw GuardError._401_Unauthorized()
@@ -378,6 +380,7 @@ export class GuardedMiddleware {
         try {
             const filtered = filterObject(responseBody, schema)
             this.res.isGuarded = true
+            this.setSentData(filtered)
             this.res.send(filtered)
         } catch(err){
             if(err instanceof FilterError){
@@ -391,7 +394,24 @@ export class GuardedMiddleware {
 
     unguardedSend(responseBody: any){
         this.res.isGuarded = true
+        this.setSentData(responseBody)
         this.res.send(responseBody)
+    }
+
+    setCurrentError(error: any){
+        this.currentError = error
+    }
+
+    getCurrentError(){
+        return this.currentError
+    }
+
+    private setSentData(data: any){
+        this.sentData = data
+    }
+
+    getSentData(){
+        return this.sentData
     }
 }
 

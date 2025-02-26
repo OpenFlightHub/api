@@ -891,7 +891,6 @@ export type DBInsert_DroneMedia = {
     type: DBType_DroneMedia_TypeType
     file_id: number
     fingerprint: string
-    tiny_fingerprint: string
     meta?: string
 }
 
@@ -900,7 +899,6 @@ export type DBUpdate_DroneMedia = {
     type?: DBType_DroneMedia_TypeType
     file_id?: number
     fingerprint?: string
-    tiny_fingerprint?: string
     meta?: string
 }
 const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
@@ -919,9 +917,6 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "fingerprint"
-    },
-    {
-        "name": "tiny_fingerprint"
     },
     {
         "name": "meta",
@@ -948,10 +943,6 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "fingerprint",
-        "skip": col => !col.exists
-    },
-    {
-        "name": "tiny_fingerprint",
         "skip": col => !col.exists
     },
     {

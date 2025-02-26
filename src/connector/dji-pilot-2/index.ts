@@ -106,9 +106,12 @@ connector.onMessage_Osd(async (connectionId, message)=>{
 connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
     console.log('onMessage_Event', connectionId, message, serialNumber)
 
-    respond({
-        result: 0
-    })
+
+    if(message.need_reply === 1){// if this check is not done, it crashes the dji pilot 2 app on the remote controller
+        respond({
+            result: 0
+        })
+    }
 })
 
 

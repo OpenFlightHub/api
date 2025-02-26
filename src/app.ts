@@ -159,6 +159,9 @@ app.use((req, res, next)=> {
 
 // error handler at the very end of the use() chain
 app.use((err, req: express.Request, res: express.Response, next)=> {
+
+    res.GM.setCurrentError(err)
+
     if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
         res.status(err.statusCode)
         res.GM.unguardedSend(err.statusText)

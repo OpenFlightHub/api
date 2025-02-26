@@ -28,27 +28,39 @@ export default class ExpressApiLogger {
     logRequestMiddlerware(){
         return (req: Request, res: Response, next: NextFunction)=>{
 
-            res.on('close', ()=>{
-                this.writeStream.write(JSON.stringify({
-                    ip: req.ip,
-                    time: new Date().toLocaleString(),
-                    method: req.method,
-                    url: req.url,
-                    status: res.statusCode,
-                    body: req.body
-                }, null, 4) + '\n,')
-            })
+            const that = this
+            let isLogged = false
 
-            res.on('finished', ()=>{
-                this.writeStream.write(JSON.stringify({
-                    ip: req.ip,
-                    time: new Date().toLocaleString(),
-                    method: req.method,
-                    url: req.url,
-                    status: res.statusCode,
-                    body: req.body
-                }, null, 4) + '\n,')
-            })
+            res.on('close', logIt)
+            res.on('finished', logIt)
+
+            function logIt(){
+                if(!isLogged){
+                    isLogged = true
+
+                    const data: Record<string, any> = {
+                        ip: req.ip,
+                        time: new Date().toLocaleString(),
+                        method: req.method,
+                        url: req.originalUrl,
+                        status: res.statusCode,
+                        headers: req.headers,
+                        requestBody: req.body
+                    }
+
+                    const currentError = res.GM.getCurrentError()
+                    if(currentError){
+                        data.error = '' + currentError
+                    }
+
+                    const sentData = res.GM.getSentData()
+                    if(typeof sentData !== 'undefined'){
+                        data.responseBody = sentData
+                    }
+
+                    that.writeStream.write(JSON.stringify(data, null, 4) + '\n,')
+                }
+            }
 
             next()
         }

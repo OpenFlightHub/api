@@ -8,15 +8,19 @@ import { fetchUrl } from "../util/http";
 import {generateUniqueTokenUrlSafe} from '../util/crypto'
 
 import SecretsLoader from '../util/SecretsLoader'
+import { S3Client } from '@aws-sdk/client-s3';
+import { AssumeRoleCommand, STSClient } from '@aws-sdk/client-sts';
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_web_url', 'minio_web_access_key_root', 'minio_web_secret_key_root', 'minio_region'])
 
-const API_BASE_URL = secrets.minio_api_url + (('' + secrets.minio_api_url).endsWith('/') ? '' : '/' )
+const minioApiUrlWithTrailingSlash = secrets.minio_api_url + (('' + secrets.minio_api_url).endsWith('/') ? '' : '/' )
+
+const API_BASE_URL = 'http://' + minioApiUrlWithTrailingSlash
 
 const minioClientRoot = new minio.Client({
-    endPoint: API_BASE_URL.split(':')[0],
+    endPoint: minioApiUrlWithTrailingSlash.split(':')[0],
     useSSL: false,
-    port: parseInt(API_BASE_URL.split(':')[1]),
+    port: parseInt(minioApiUrlWithTrailingSlash.split(':')[1]),
     accessKey: secrets.minio_web_access_key_root,
     secretKey: secrets.minio_web_secret_key_root,
     region: secrets.minio_region
@@ -118,6 +122,15 @@ export async function createBucketForConnection(connectionId: number){
     return newBucketName
 }
 
+const stsClient= new STSClient({
+    endpoint: API_BASE_URL,
+    region: secrets.minio_region,
+    credentials: {
+        accessKeyId: secrets.minio_web_access_key_root,
+        secretAccessKey: secrets.minio_web_secret_key_root
+    }
+})
+
 export async function createTemporaryCredentialsForFileUpload(connectionId: number){
 
     const bucketExists = await minioClientRoot.bucketExists(getBucketNameForConnectionId(connectionId))
@@ -148,9 +161,26 @@ export async function createTemporaryCredentialsForFileUpload(connectionId: numb
         }
     })
 
+    const token = 'test' //generateUniqueTokenUrlSafe(36)
+
+
+    const res = await stsClient.send(new AssumeRoleCommand({
+        RoleArn: 'ofh',
+        RoleSessionName: token
+    }))
+
+    const cred = res.Credentials
+
+    // const assumeRoleResult = await fetchUrl({
+    //     url: API_BASE_URL + '?Action=AssumeRoleWithCustomToken?Token=' + token + '&Version=2011-06-15&RoleArn=ofh&DurationSeconds=3600&AUTHPARAMS=',
+    //     method: 'post',
+    //     headers: authenticatedHeaders
+    // })
+
     return {
-        accessKey,
-        secretKey
+        accessKey: cred.AccessKeyId,
+        secretKey: cred.SecretAccessKey,
+        token: cred.SessionToken
     }
 }
 
