@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiTypes';
 import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiSchemas';
+import { connectionLinkAuthMiddleware } from '..';
 const db : pgp.IDatabase<any> = global.db
 
 import SecretsLoader from '../../../util/SecretsLoader'
@@ -16,7 +17,7 @@ if(('' + secrets.platform_url).indexOf(':') >= 0){
     throw new Error('platform_url must not contain a port!')
 }
 
-router.get('/sdk-config', asyncHandler(async (req, res) => {
+router.get('/sdk-config', connectionLinkAuthMiddleware, asyncHandler(async (req, res) => {
 
     const currentConnection = await req.GM.getCurrentConnection()
 
@@ -32,9 +33,11 @@ router.get('/sdk-config', asyncHandler(async (req, res) => {
 }))
 
 
+import ExpressApiLogger from '../../../util/ExpressApiLogger'
+const apiLogger = new ExpressApiLogger('./dji_cloud_api_logs')
+
 import apiRoute from './api'
 
-router.use('/api', apiRoute)
-
+router.use('/api', apiLogger.logRequestMiddlerware(), apiRoute)
 
 export default router

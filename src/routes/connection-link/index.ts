@@ -10,7 +10,7 @@ const secrets = secretsLoader.getSecrets([
 const router = express.Router()
 
 
-const connectionLinkAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export function connectionLinkAuthMiddleware(req: Request, res: Response, next: NextFunction){
 
     req.GM.guardConnectionLinkIsAuthenticated().then(()=>{
         next()
@@ -45,7 +45,7 @@ router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)
 
 import djiPilot2Route from './dji-pilot-2'
 
-router.use('/dji-pilot-2', connectionLinkAuthMiddleware, djiPilot2Route)
+router.use('/dji-pilot-2', djiPilot2Route)
 
 
 export default router
