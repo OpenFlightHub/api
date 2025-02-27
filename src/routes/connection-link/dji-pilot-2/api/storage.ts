@@ -24,7 +24,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
         code: 0,
         data: {
             bucket: secrets.minio_bucket_dji_pilot_2_media,
-            endpoint: 'http://minio.alexh.rocks:9000',//ssecrets.minio_host,//TODO looks like the port and protocol is required
+            endpoint: secrets.minio_host,
             object_key_prefix: 'from_drone2_',
             provider: 'minio',
             region: secrets.minio_region,
