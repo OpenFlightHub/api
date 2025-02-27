@@ -416,17 +416,21 @@ export function deleteWorkspacePermission(id: number){
 import {} from "./DBTypes";
 
 export type DBInsert_Connection = {
+    name: string
     secret: string
     session_token?: string
     workspace_id: number
+    workspace_uuid: string
     remote_controller_id?: number
     drone_id?: number
 }
 
 export type DBUpdate_Connection = {
+    name?: string
     secret?: string
     session_token?: string
     workspace_id?: number
+    workspace_uuid?: string
     remote_controller_id?: number
     drone_id?: number
 }
@@ -434,6 +438,9 @@ const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "id",
         "cnd": true
+    },
+    {
+        "name": "name"
     },
     {
         "name": "secret"
@@ -444,6 +451,9 @@ const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "workspace_id"
+    },
+    {
+        "name": "workspace_uuid"
     },
     {
         "name": "remote_controller_id",
@@ -461,6 +471,10 @@ const COLUMN_SET_CONNECTIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
         "name": "secret",
         "skip": col => !col.exists
     },
@@ -470,6 +484,10 @@ const COLUMN_SET_CONNECTIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "workspace_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "workspace_uuid",
         "skip": col => !col.exists
     },
     {
@@ -891,6 +909,7 @@ export type DBInsert_DroneMedia = {
     type: DBType_DroneMedia_TypeType
     file_id: number
     fingerprint: string
+    tiny_fingerprint: string
     meta?: string
 }
 
@@ -899,6 +918,7 @@ export type DBUpdate_DroneMedia = {
     type?: DBType_DroneMedia_TypeType
     file_id?: number
     fingerprint?: string
+    tiny_fingerprint?: string
     meta?: string
 }
 const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
@@ -917,6 +937,9 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "fingerprint"
+    },
+    {
+        "name": "tiny_fingerprint"
     },
     {
         "name": "meta",
@@ -943,6 +966,10 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "fingerprint",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "tiny_fingerprint",
         "skip": col => !col.exists
     },
     {

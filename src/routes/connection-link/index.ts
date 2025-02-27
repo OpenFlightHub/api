@@ -21,7 +21,7 @@ export function connectionLinkAuthMiddleware(req: Request, res: Response, next: 
 }
 
 import authRoute from './auth'
-import { selectWorkspace } from '../../db/DBHelpers';
+import { selectWorkspace, updateConnection, updateWorkspace } from '../../db/DBHelpers';
 import { ApiSchema_ConnectionLinkConfig } from '../../definitions/ApiSchemas';
 import { ApiType_ConnectionLinkConfig } from '../../definitions/ApiTypes';
 
@@ -30,12 +30,14 @@ router.use('/auth', authRoute)
 router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)=>{
 
     const workspace = await selectWorkspace(req.GM.currentConnection.workspace_id)
+    console.log(req.GM.currentConnection)
 
     res.GM.guardSend<ApiType_ConnectionLinkConfig>({
         connection_id: '' + req.GM.currentConnection.id,
         platform_name: secrets.platform_name,
         platform_url: secrets.platform_url,
         workspace_id: '' + workspace.id,
+        workspace_uuid: req.GM.currentConnection.workspace_uuid,
         workspace_name: workspace.name,
         secret: req.GM.currentConnection.secret
     }, ApiSchema_ConnectionLinkConfig)
@@ -43,7 +45,19 @@ router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)
 }))
 
 
+router.post('/reset-workspace-uuid', connectionLinkAuthMiddleware, asyncHandler(async(req, res)=>{
+
+    await updateConnection({
+        workspace_uuid: getRandomUUIDFromWorkspaceId(req.GM.currentConnection.workspace_id)
+    }, req.GM.currentConnection.id)
+
+    res.status(200).send()
+
+}))
+
+
 import djiPilot2Route from './dji-pilot-2'
+import { getRandomUUIDFromWorkspaceId } from '../../util/connection';
 
 router.use('/dji-pilot-2', djiPilot2Route)
 

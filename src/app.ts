@@ -165,6 +165,10 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
     if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
         res.status(err.statusCode)
         res.GM.unguardedSend(err.statusText)
+
+        if(('' + err.statusCode).startsWith('5')){
+            console.error('Server Error:', err)
+        }
     } else {
         console.warn('Unhandled ' + err.name , '@url', req.method, req.baseUrl + req.url, err)
         res.status(500).GM.unguardedSend('Something went wrong')

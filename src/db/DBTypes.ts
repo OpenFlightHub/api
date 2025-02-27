@@ -72,12 +72,17 @@ export type DBType_WorkspacePermission = {
 
 export type DBType_Connection = {
   id: number;
+  name: string;
   /**
    * used as credential together with id
    */
   secret: string;
   session_token?: string;
   workspace_id: number;
+  /**
+   * used for dji pilot 2 communication, format: xxxxxxxx-0000-42ae-84e6-123456789abc where xxx is the workspace_id like "00000001", the rest is random
+   */
+  workspace_uuid: string;
   remote_controller_id?: number;
   drone_id?: number;
 }
@@ -165,6 +170,7 @@ export type DBType_DroneMedia = {
   type: DBType_DroneMedia_TypeType;
   file_id: number;
   fingerprint: string;
+  tiny_fingerprint: string;
   /**
    * json encoded meta data
    */

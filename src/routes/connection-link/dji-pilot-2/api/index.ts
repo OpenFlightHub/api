@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import {getWorkspaceIdFromUUID} from '../../../../util/djiPilot2SDK'
+import {getWorkspaceIdFromUUID} from '../../../../util/connection'
 import { GuardError } from '../../../../ManInTheMiddleware';
 
 const router = express.Router()

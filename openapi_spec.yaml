@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.3.0
+  version: 0.4.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1069,6 +1069,21 @@ paths:
         - connection_link_auth: []
 
 
+  /connection-link/reset-workspace-uuid:
+    post:
+      tags:
+        - connection-link
+      summary: Generates a new workspace uuid (important for dji pilot 2, in case of weird bugs)
+      responses:
+        '200':
+          description: Success (please use the /connection-link/config endpoint to get the updated config)
+
+        '401':
+          $ref: '#/components/responses/401'
+      security:
+        - connection_link_auth: []
+
+
   /connection-link/dji-pilot-2/sdk-config:
     get:
       tags:
@@ -1679,6 +1694,7 @@ components:
       required:
         - connection_id
         - workspace_id
+        - workspace_uuid
         - workspace_name
         - platform_name
         - platform_url
@@ -1692,6 +1708,8 @@ components:
           type: string
         workspace_id:
           type: string
+        workspace_uuid:
+          $ref: '#/components/schemas/uuid'
         workspace_name:
           type: string
         secret:

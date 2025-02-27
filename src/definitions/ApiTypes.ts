@@ -269,6 +269,7 @@ export type ApiType_ConnectionLinkConfig = {
     platform_name: string;
     platform_url: string;
     workspace_id: string;
+    workspace_uuid: string;
     workspace_name: string;
     secret: string;
 }

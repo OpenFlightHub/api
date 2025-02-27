@@ -608,6 +608,7 @@ export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
     "required": [
         "connection_id",
         "workspace_id",
+        "workspace_uuid",
         "workspace_name",
         "platform_name",
         "platform_url",
@@ -625,6 +626,10 @@ export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
         },
         "workspace_id": {
             "type": "string"
+        },
+        "workspace_uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
         },
         "workspace_name": {
             "type": "string"
