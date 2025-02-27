@@ -24,13 +24,14 @@ router.post('/sts', asyncHandler(async (req, res) => {
         code: 0,
         data: {
             bucket: secrets.minio_bucket_dji_pilot_2_media,
-            endpoint: secrets.minio_host,
-            object_key_prefix: 'from_drone_',
+            endpoint: 'http://minio.alexh.rocks:9000',//ssecrets.minio_host,//TODO looks like the port and protocol is required
+            object_key_prefix: 'from_drone2_',
             provider: 'minio',
             region: secrets.minio_region,
             credentials: {
                 access_key_id: credentials.accessKey,
                 access_key_secret: credentials.secretKey,
+                expire: 3600,
                 security_token: credentials.token// TODO looks like when this is missing, dji calls the /sts endpoint quite often (so probably it is a required property?)
             }
         },
