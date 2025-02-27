@@ -51,14 +51,14 @@ router.post('/fast-upload', asyncHandler(async (req, res) => {
 
 }))
 
-router.post('/tiny-fingerprints', asyncHandler(async (req, res) => {
+router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
 
     const connection = await req.GM.getCurrentConnection()
 
 
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost>(ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost)
 
-    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id' + pgp.as.format('WHERE connection.id = ${connectionId}', {
+    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id ' + pgp.as.format('WHERE connection.id = ${connectionId}', {
         connectionId: connection.id
     }))
 
@@ -83,7 +83,7 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     //TODO support differentiation between picture and panorama
 
-    await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType, body.fingerprint, JSON.stringify(body.ext))
+    await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify(body.ext))
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse>({
         code: 0,
@@ -114,7 +114,7 @@ router.post('/group-upload-callback', asyncHandler(async (req, res) => {
 export default router
 
 
-async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName: string, objectKey: string, type: DBType_DroneMedia_TypeType, fingerprint: string, meta: string){
+async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName: string, objectKey: string, type: DBType_DroneMedia_TypeType, fingerprint: string, tinyFingerprint: string, meta: string){
 
     const file = await insertFile({
         created_by: 0,
@@ -129,6 +129,7 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
             drone_id: connection.drone_id!,
             type,
             fingerprint,
+            tiny_fingerprint: tinyFingerprint,
             meta,
             file_id: file.id
         })
