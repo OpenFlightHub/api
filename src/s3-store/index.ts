@@ -160,7 +160,7 @@ export async function createTemporaryCredentialsForFileUpload(connectionId: numb
         }
     })
 
-    const token = 'test' //generateUniqueTokenUrlSafe(36)
+    const token = generateUniqueTokenUrlSafe(20)
 
 
     const res = await stsClient.send(new AssumeRoleCommand({
