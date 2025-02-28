@@ -1,11 +1,8 @@
 
-###TEXT_HEADER###
-###TEXT_MAIN###
+###HEADER###
+###CONTENT###
 
 ###BUTTON_TEXT###
 ###BUTTON_URL###
 
-###NOTE###
-
 ###FOOTER###
-###FOOTER_URL###

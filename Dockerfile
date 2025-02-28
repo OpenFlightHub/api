@@ -14,6 +14,8 @@ COPY . .
 RUN rm -rf dist
 RUN mkdir -p dist
 RUN cp -R public dist/public
+RUN cp -R src/mail/mail_templates dist/mail/mail_templates
+RUN cp -R src/mail/mail_templates_configurations dist/mail/mail_templates_configurations
 
 RUN npx @redocly/cli bundle public@latest -o bundled.yaml
 RUN npx @redocly/cli build-docs bundled.yaml

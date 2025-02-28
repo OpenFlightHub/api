@@ -1,8 +1,5 @@
 
-###TEXT_HEADER###
-###TEXT_MAIN###
-
-###NOTE###
+###HEADER###
+###CONTENT###
 
 ###FOOTER###
-###FOOTER_URL###

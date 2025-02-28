@@ -1,6 +1,6 @@
-import { generateUniqueToken, generateUniqueTokenUrlSafe, hashString } from './crypto'
+import { generateUniqueTokenUrlSafe, hashString } from './crypto'
 import {insertUser, selectUser, updateUser} from '../db/DBHelpers'
-import { sendMail, sendMailFromTemplate } from '../mail'
+import { sendMailFromTemplate } from '../mail'
 import $t from './i18n'
 import * as pgp from 'pg-promise'
 import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_WorkspacePermission } from '../db/DBTypes'
@@ -50,12 +50,12 @@ async function sendUserCreateEmail(user: DBType_User){
 
     //TODO localize mails
     await sendMailFromTemplate(await getDecryptedUserEmail(user), $t('mail.register.confirm.self.subject'), 'logo_header_text_button', {
-        TEXT_HEADER: $t('mail.register.confirm.self.header'),
+        HEADER: $t('mail.register.confirm.self.header'),
 
-        TEXT_MAIN: $t('mail.register.confirm.self.main'),
+        CONTENT: $t('mail.register.confirm.self.content'),
 
         BUTTON_TEXT: $t('mail.register.confirm.self.button'),
-        BUTTON_URL: 'https://openflighthub.org/?token=' + encodeURIComponent(loginToken)
+        BUTTON_URL: 'https://hub.openflighthub.org/?token=' + encodeURIComponent(loginToken)
     })
 }
 
@@ -81,12 +81,12 @@ export async function resetPasswordForEmail(email: string){
         const code = await makePasswordResetCode(user.id)
 
         await sendMailFromTemplate(await getDecryptedUserEmail(user), $t('mail.password_reset.subject'), 'logo_header_text_button', {
-            TEXT_HEADER: $t('mail.password_reset.header'),
+            HEADER: $t('mail.password_reset.header'),
 
-            TEXT_MAIN: $t('mail.password_reset.main'),
+            CONTENT: $t('mail.password_reset.content'),
 
             BUTTON_TEXT: $t('mail.password_reset.button'),
-            BUTTON_URL: 'https://openflighthub.org/auth/password-set-new?code=' + code
+            BUTTON_URL: 'https://hub.openflighthub.org/auth/password-set-new?code=' + code
         })
 
         return true
