@@ -85,7 +85,7 @@ make sure that you created an action secret called `SECRETS` here https://github
 
     "minio_api_url": "127.0.0.1:6003",
     "minio_web_url": "127.0.0.1:6005",
-    "minio_host": "http://minio.openflighthub.org:9000",
+    "minio_host": "http://hub.openflighthub.org:6003",
     "minio_region": "eu-1",
     "minio_web_access_key_root": "ofh",
     "minio_web_secret_key_root": "ofh-bucket",
