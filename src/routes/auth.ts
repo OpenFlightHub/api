@@ -22,9 +22,19 @@ const STREAM_TOKEN_BYTE_LENGTH = 21
 const router = express.Router()
 
 function delay(callback: ()=>void){
-    //TODO make delay match password hashing and user searching
+    return new Promise<void>((resolve, reject)=>{
+        //TODO make delay match password hashing and user searching
 
-    setTimeout(callback, 1000 * 0.5)
+        setTimeout(()=>{
+            try {
+                callback()
+                resolve()
+            } catch (err){
+                reject(err)
+            }
+        }, 1000 * 0.5)
+
+    })
 }
 
 router.post('/login', asyncHandler(async (req, res) => {
@@ -38,7 +48,7 @@ router.post('/login', asyncHandler(async (req, res) => {
             email: requestBody.username,
         })
     } catch {
-        delay(()=>{//delay request so people can't correlate that with email existance
+        await delay(()=>{//delay request so people can't correlate that with email existance
             res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
         })
 
@@ -46,7 +56,7 @@ router.post('/login', asyncHandler(async (req, res) => {
     }
 
     if(!user.password){// prevent login for users without password (e.g. invitation not yet complete)
-        delay(()=>{
+        await delay(()=>{
             res.status(418).send()
         })
 
