@@ -65,6 +65,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         return
     }
 
+    console.log('checking login for user:', requestBody.username, '...)
     const passwordMatches = await crypto.stringMatchesHash(requestBody.password, user.password)
 
     if(!passwordMatches){
