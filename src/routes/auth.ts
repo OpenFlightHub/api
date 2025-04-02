@@ -48,6 +48,7 @@ router.post('/login', asyncHandler(async (req, res) => {
             email: requestBody.username,
         })
     } catch {
+        console.log('invalid login: user does not exist', requestBody.username)
         await delay(()=>{//delay request so people can't correlate that with email existance
             res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
         })
@@ -56,6 +57,7 @@ router.post('/login', asyncHandler(async (req, res) => {
     }
 
     if(!user.password){// prevent login for users without password (e.g. invitation not yet complete)
+        console.log('invalid login: user has no password set not exist', requestBody.username)
         await delay(()=>{
             res.status(418).send()
         })
@@ -66,8 +68,10 @@ router.post('/login', asyncHandler(async (req, res) => {
     const passwordMatches = await crypto.stringMatchesHash(requestBody.password, user.password)
 
     if(!passwordMatches){
+        console.log('invalid login: wrong password', requestBody.username)
         res.status(418).send()
     } else {
+        console.log('successfull login:', requestBody.username)
 
         confirmUser(user.id)
 
