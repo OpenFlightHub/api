@@ -2,7 +2,7 @@ import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
-import { selectDrone, selectRemoteController } from './DBHelpers';
+import { selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
 import { getConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { DBType_DroneData } from './DBTypes';
@@ -64,7 +64,6 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
     })
 
 
-
     const subscribableEventHandlerRemoteControllerPosition = registerSubscribableEvent('remote_controller_position', async(event, filter, client)=>{
 
         const id = parseInt(filter)
@@ -78,6 +77,24 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
         const connection = await getConnectionForRemoteController(remoteController.id)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+    const subscribableEventHandlerWorkspaceDronesPosition = registerSubscribableEvent('workspace_drones_position', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const workspace = await selectWorkspace(id)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
 
         if(!hasPermission){
             return 'Permission denied'
@@ -119,15 +136,31 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
                     if(data.type === DRONE_DATA_TYPES.POSITION){
 
+                        const drone = await selectDrone(changedDroneId)
+
                         subscribableEventHandlerDronePosition.triggerListenerIfExists('' + changedDroneId, async()=>{
 
                             const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
 
                             return {
                                 id: changedDroneId,
-                                position: droneLastPosition
+                                position: droneLastPosition,
+                                serial_number: drone.serial_number
                             }
                         })
+
+                        const connection = await getConnectionForDrone(drone.id)
+
+                        subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + connection.workspace_id, async()=>{
+                            const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
+
+                            return {
+                                id: changedDroneId,
+                                position: droneLastPosition,
+                                serial_number: drone.serial_number
+                            }
+                        })
+
                     } else if(data.type === DRONE_DATA_TYPES.TELEMETRY){
 
                         subscribableEventHandlerDroneTelemetry.triggerListenerIfExists('' + changedDroneId, async()=>{
