@@ -21,6 +21,7 @@ const STREAM_TOKEN_BYTE_LENGTH = 21
 
 const router = express.Router()
 
+
 function delay(callback: ()=>void){
     return new Promise<void>((resolve, reject)=>{
         //TODO make delay match password hashing and user searching
@@ -49,18 +50,22 @@ router.post('/login', asyncHandler(async (req, res) => {
         })
     } catch {
         console.log('invalid login: user does not exist', requestBody.username)
-        await delay(()=>{//delay request so people can't correlate that with email existance
+        //TODO this implementation is bugged and can lead to no response sent back to the client at all
+        /*await delay(()=>{//delay request so people can't correlate that with email existance
             res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
-        })
+        })*/
+        res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
 
         return
     }
 
     if(!user.password){// prevent login for users without password (e.g. invitation not yet complete)
         console.log('invalid login: user has no password set not exist', requestBody.username)
-        await delay(()=>{
+        //TODO this implementation is bugged and can lead to no response sent back to the client at all
+        /*await delay(()=>{
             res.status(418).send()
-        })
+        })*/
+        res.status(418).send()
 
         return
     }
