@@ -40,9 +40,11 @@ router.post('/login', asyncHandler(async(req, res)=>{
 
     } catch {
 
-        delay(()=>{//delay request so people can't correlate that with email existance
-            res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
-        })
+        //TODO delay doesnt work
+        // delay(()=>{//delay request so people can't correlate that with email existance
+        //     res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
+        // })
+        res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
 
         return
     }
