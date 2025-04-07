@@ -159,19 +159,24 @@ app.use((req, res, next)=> {
 
 // error handler at the very end of the use() chain
 app.use((err, req: express.Request, res: express.Response, next)=> {
+    try {
 
-    res.GM.setCurrentError(err)
+        res.GM.setCurrentError(err)
 
-    if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
-        res.status(err.statusCode)
-        res.GM.unguardedSend(err.statusText)
+        if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
+            res.status(err.statusCode)
+            res.GM.unguardedSend(err.statusText)
 
-        if(('' + err.statusCode).startsWith('5')){
-            console.error('Server Error:', err)
+            if(('' + err.statusCode).startsWith('5')){
+                console.error('Server Error:', err)
+            }
+        } else {
+            console.warn('Unhandled ' + err.name , '@url', req.method, req.baseUrl + req.url, err)
+            res.status(500).GM.unguardedSend('Something went wrong')
         }
-    } else {
-        console.warn('Unhandled ' + err.name , '@url', req.method, req.baseUrl + req.url, err)
-        res.status(500).GM.unguardedSend('Something went wrong')
+    } catch (err){
+        console.error('unexpected error while handling a routes error:', req.originalUrl, err)
+        res.status(500).send()
     }
 })
 
