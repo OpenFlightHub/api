@@ -135,8 +135,11 @@ router.get('/check', asyncHandler(async (req, res) => {
 
     const sessionToken = req.cookies['user-auth']
 
+    console.log('checking session token', sessionToken)//TODO remove logging
+
     const validSessionToken = typeof sessionToken === 'string'
     if(!validSessionToken){
+        console.log('invalid session token')
         throw GuardError._401_Unauthorized('invalid session token')
     }
 
@@ -145,9 +148,14 @@ router.get('/check', asyncHandler(async (req, res) => {
             sessionToken
         }) as DBType_User
 
+        console.log('valid session token')
+
         res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
 
-    } catch {
+        console.log('user', user)
+
+    } catch (err) {
+        console.log('invalid session token (no user found)', err)
         throw GuardError._401_Unauthorized('invalid session token')
     }
 
