@@ -226,6 +226,30 @@ export class GuardedMiddleware {
     }
 
 
+    async guardDjiPilot2ApiWebsocketIsAuthenticated() : Promise<DBType_Connection> {
+        let authToken = this.req.query['x-auth-token'] as string
+
+        if(!authToken){
+            throw GuardError._401_Unauthorized()
+        }
+
+        let connection = await getConnectionForSecret(authToken)
+
+
+        if(connection === false && authToken.endsWith('/')){// dji pilot 2 app loves to append a slash after the query param ...
+            connection = await getConnectionForSecret(authToken.substring(0, authToken.length - 1))
+        }
+
+        if(connection === false){ //invalid token
+            throw GuardError._401_Unauthorized()
+        }
+
+        this.currentConnection = connection
+
+        return connection
+    }
+
+
     /**
      * if db query yields no result will execute res.status(410).send()
      * @param retrieveDBObject must return a pg promise like db.one()

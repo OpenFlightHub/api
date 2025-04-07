@@ -1,6 +1,7 @@
 rm -rf dist
 mkdir -p dist
 cp -R public dist/public
+mkdir -p dist/mail
 cp -R src/mail/mail_templates dist/mail/mail_templates
 cp -R src/mail/mail_templates_configurations dist/mail/mail_templates_configurations
 

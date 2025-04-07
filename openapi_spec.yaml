@@ -1279,6 +1279,160 @@ paths:
         - dji_pilot_2_api: []
 
 
+  /connection-link/dji-pilot-2/api/map/api/v1/workspaces/{workspace_uuid}/element-groups/{group_uuid}/elements:
+    post:
+      x-no-sdk: true
+      tags:
+        - dji-pilot-2-api
+      summary: create map elements from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: group_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_map_element_groups_elements_post'
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_map_element_groups_elements_post_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+
+  /connection-link/dji-pilot-2/api/map/api/v1/workspaces/{workspace_uuid}/element-groups:
+    get:
+      x-no-sdk: true
+      tags:
+        - dji-pilot-2-api
+      summary: Get map elements from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: is_distributed
+          in: query
+          schema:
+            type: boolean
+            description: "element group distributed status (default value: true if not existent)"
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_map_element_groups_get_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+
+  /connection-link/dji-pilot-2/api/map/api/v1/workspaces/{workspace_uuid}/elements/{element_uuid}:
+    put:
+      x-no-sdk: true
+      tags:
+        - dji-pilot-2-api
+      summary: update map elements from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: element_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dji_pilot_2_api_map_elements_put'
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_map_elements_put_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
+
+    delete:
+      x-no-sdk: true
+      tags:
+        - dji-pilot-2-api
+      summary: delete map elements from a dji pilot 2 remote controller
+      parameters:
+        - name: workspace_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: element_uuid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: Returns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dji_pilot_2_api_map_elements_delete_response'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - dji_pilot_2_api: []
 
 
 
@@ -1724,6 +1878,7 @@ components:
         - mqtt_url
         - rtmp_url
         - api_url
+        - ws_url
       properties:
         app_id:
           type: string
@@ -1736,6 +1891,8 @@ components:
         rtmp_url:
           type: string
         api_url:
+          type: string
+        ws_url:
           type: string
 
     # dji pilot 2 api
@@ -1978,6 +2135,164 @@ components:
         data:
           type: object
           description: TODO missing documentation
+
+
+    dji_pilot_2_api_map_element_groups_elements_post:
+      type: object
+      required:
+        - id
+        - name
+        - resource
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        resource:
+          type: object
+          description: TODO missing documentation
+          required:
+            - type
+            - content
+          properties:
+            type:
+              type: number
+            content:
+              type: object
+              required:
+                - type
+                - geometry
+              properties:
+                type:
+                  type: string
+                geometry:
+                  type: object
+                properties:
+                  type: object
+
+
+
+    dji_pilot_2_api_map_element_groups_elements_post_response:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: number
+          example: 0
+        message:
+          type: string
+          example: 'success'
+        data:
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+
+
+
+    dji_pilot_2_api_map_element_groups_get_response:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: number
+          example: 0
+        message:
+          type: string
+          example: 'success'
+        data:
+          type: array
+          items:
+            type: object
+            description: TODO fully write down documentation as schema
+            required:
+              - id
+            properties:
+              id:
+                $ref: '#/components/schemas/uuid'
+
+    dji_pilot_2_api_map_elements_put:
+      type: object
+      required:
+        - id
+        - name
+        - resource
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        resource:
+          type: object
+          description: TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?
+          required:
+            - type
+            - content
+          properties:
+            type:
+              type: number
+            content:
+              type: object
+              required:
+                - type
+                - geometry
+              properties:
+                type:
+                  type: string
+                geometry:
+                  type: object
+                properties:
+                  type: object
+
+    dji_pilot_2_api_map_elements_put_response:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: number
+          example: 0
+        message:
+          type: string
+          example: 'success'
+        data:
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+
+    dji_pilot_2_api_map_elements_delete_response:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: number
+          example: 0
+        message:
+          type: string
+          example: 'success'
+        data:
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
 
 
   responses:

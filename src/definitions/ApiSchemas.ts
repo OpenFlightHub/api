@@ -648,7 +648,8 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
         "app_license",
         "mqtt_url",
         "rtmp_url",
-        "api_url"
+        "api_url",
+        "ws_url"
     ],
     "properties": {
         "app_id": {
@@ -667,6 +668,9 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
             "type": "string"
         },
         "api_url": {
+            "type": "string"
+        },
+        "ws_url": {
             "type": "string"
         }
     }
@@ -998,6 +1002,232 @@ export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse : JSONSc
         "data": {
             "type": "object",
             "description": "TODO missing documentation"
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "resource"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "resource": {
+            "type": "object",
+            "description": "TODO missing documentation",
+            "required": [
+                "type",
+                "content"
+            ],
+            "properties": {
+                "type": {
+                    "type": "number"
+                },
+                "content": {
+                    "type": "object",
+                    "required": [
+                        "type",
+                        "geometry"
+                    ],
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "geometry": {
+                            "type": "object"
+                        },
+                        "properties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "data",
+        "message"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "example": 0
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "data",
+        "message"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "example": 0
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "TODO fully write down documentation as schema",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementsPut : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "resource"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "resource": {
+            "type": "object",
+            "description": "TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?",
+            "required": [
+                "type",
+                "content"
+            ],
+            "properties": {
+                "type": {
+                    "type": "number"
+                },
+                "content": {
+                    "type": "object",
+                    "required": [
+                        "type",
+                        "geometry"
+                    ],
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "geometry": {
+                            "type": "object"
+                        },
+                        "properties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementsPutResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "data",
+        "message"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "example": 0
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiMapElementsDeleteResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "data",
+        "message"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "example": 0
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                }
+            }
         }
     }
 }

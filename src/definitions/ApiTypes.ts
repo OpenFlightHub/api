@@ -282,6 +282,7 @@ export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
     mqtt_url: string;
     rtmp_url: string;
     api_url: string;
+    ws_url: string;
 }
 
 
@@ -418,6 +419,76 @@ export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse = {
      * TODO missing documentation
      */
     data: {};
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementGroupsElementsPost = {
+    id: string;
+    name: string;
+    /**
+     * TODO missing documentation
+     */
+    resource: {
+        type: number;
+        content: {
+            type: string;
+            geometry: {};
+            properties?: {};
+        };
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse = {
+    code: number;
+    message: string;
+    data: {
+        id: string;
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
+    code: number;
+    message: string;
+    data: {
+        id: string;
+    }[];
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementsPut = {
+    id: string;
+    name: string;
+    /**
+     * TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?
+     */
+    resource: {
+        type: number;
+        content: {
+            type: string;
+            geometry: {};
+            properties?: {};
+        };
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementsPutResponse = {
+    code: number;
+    message: string;
+    data: {
+        id: string;
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiMapElementsDeleteResponse = {
+    code: number;
+    message: string;
+    data: {
+        id: string;
+    };
 }
 
 

@@ -1013,3 +1013,117 @@ export function deleteDroneMedia(id: number){
 export function selectDroneMedia(id: number){
     return db.one<DBType_DroneMedia>('SELECT * FROM drone_media ' + pgp.as.format('WHERE id = ${id}', {id}))
 }
+
+
+//workspace_map_elements
+
+import {} from "./DBTypes";
+
+export type DBInsert_WorkspaceMapElement = {
+    uuid: string
+    workspace_id: number
+    connection_id: number
+    name: string
+    type: number
+    content: string
+}
+
+export type DBUpdate_WorkspaceMapElement = {
+    uuid?: string
+    workspace_id?: number
+    connection_id?: number
+    name?: string
+    type?: number
+    content?: string
+}
+const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "uuid"
+    },
+    {
+        "name": "workspace_id"
+    },
+    {
+        "name": "connection_id"
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "type"
+    },
+    {
+        "name": "content"
+    }
+], {table: "workspace_map_elements"})
+
+const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "uuid",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "workspace_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "connection_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "content",
+        "skip": col => !col.exists
+    }
+], {table: "workspace_map_elements"})
+import {DBType_WorkspaceMapElement} from './DBTypes'
+
+
+export function insertWorkspaceMapElement(values: DBInsert_WorkspaceMapElement){
+    return db.one<DBType_WorkspaceMapElement>(db.$config.pgp.helpers.insert(values, undefined, 'workspace_map_elements') + ' RETURNING *')
+}
+
+/**
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+*/
+export function updateWorkspaceMapElement<T extends number | string>(values: DBUpdate_WorkspaceMapElement, idOrWhereCondition: T): T extends number ? Promise<DBType_WorkspaceMapElement> : Promise<DBType_WorkspaceMapElement[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBTypeWorkspaceMapElement>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
+
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE) + ' ' + whereCondition)
+    }
+}
+
+export function deleteWorkspaceMapElement(id: number){
+    return db.none('DELETE FROM workspace_map_elements WHERE id = ${id}', {id})
+}
+
+
+
+
+export function selectWorkspaceMapElement(id: number){
+    return db.one<DBType_WorkspaceMapElement>('SELECT * FROM workspace_map_elements ' + pgp.as.format('WHERE id = ${id}', {id}))
+}

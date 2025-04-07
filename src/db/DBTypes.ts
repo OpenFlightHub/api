@@ -178,3 +178,17 @@ export type DBType_DroneMedia = {
 }
 
 
+export type DBType_WorkspaceMapElement = {
+  id: number;
+  uuid: string;
+  workspace_id: number;
+  connection_id: number;
+  name: string;
+  type: number;
+  /**
+   * json
+   */
+  content: string;
+}
+
+
