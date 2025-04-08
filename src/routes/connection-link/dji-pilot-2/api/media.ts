@@ -80,7 +80,7 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     //TODO support differentiation between picture and panorama
 
-    await addDroneMediaFromBucket(connection, getBucketNameForConnectionId(connection.id), body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify(body.ext))
+    await addDroneMediaFromBucket(connection, getBucketNameForConnectionId(connection.id), body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify({ext: body.ext, metadata: body.metadata}))
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse>({
         code: 0,
