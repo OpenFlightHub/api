@@ -5,14 +5,11 @@ import { ApiType_DjiPilot2ApiMediaFastUploadPost, ApiType_DjiPilot2ApiMediaFastU
 import { ApiSchema_DjiPilot2ApiMediaFastUploadPost, ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiSchema_DjiPilot2ApiMediaUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../definitions/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import {deleteObject, downloadObject} from '../../../../s3-store'
-import SecretsLoader from '../../../../util/SecretsLoader'
+import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import { insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
 import {getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
-const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_region', 'minio_bucket_dji_pilot_2_media'])
 
 const router = express.Router()
 
@@ -83,7 +80,7 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     //TODO support differentiation between picture and panorama
 
-    await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify(body.ext))
+    await addDroneMediaFromBucket(connection, getBucketNameForConnectionId(connection.id), body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify(body.ext))
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse>({
         code: 0,

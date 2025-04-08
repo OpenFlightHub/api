@@ -5,10 +5,10 @@ import { ApiType_DjiPilot2ApiMediaStsPostResponse } from '../../../../definition
 import { ApiSchema_DjiPilot2ApiMediaStsPostResponse } from '../../../../definitions/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import {createTemporaryCredentialsForFileUpload} from '../../../../s3-store'
+import {createTemporaryCredentialsForFileUpload, getBucketNameForConnectionId} from '../../../../s3-store'
 import SecretsLoader from '../../../../util/SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_host', 'minio_region', 'minio_bucket_dji_pilot_2_media'])
+const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_host', 'minio_region'])
 
 const router = express.Router()
 
@@ -23,7 +23,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaStsPostResponse>({
         code: 0,
         data: {
-            bucket: secrets.minio_bucket_dji_pilot_2_media,
+            bucket: getBucketNameForConnectionId(connection.id),
             endpoint: secrets.minio_host,
             object_key_prefix: 'from_drone2_',
             provider: 'minio',
