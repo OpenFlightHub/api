@@ -18,16 +18,26 @@ export async function addDroneData(droneId: number, type: DBType_DroneData_TypeT
 }
 
 export async function getLastPositionOfDrone(droneId: number){
-    const droneLastPosition = await db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains longitude and latitude
+    const droneLastPosition = await db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {
         type: DRONE_DATA_TYPES.POSITION,
         droneId
     })
 
+    return extractPositionFromDroneData(droneLastPosition)
+}
+
+
+export function extractPositionFromDroneData(droneData: DBType_DroneData){
+
+    if(typeof droneData.data.latitude !== 'number' || typeof droneData.data.longitude !== 'number' || typeof droneData.data.height !== 'number'){
+        return false
+    }
+
     return {
-        reported_at: droneLastPosition.created_at,
-        latitude: droneLastPosition.data.latitude as number,
-        longitude: droneLastPosition.data.longitude as number,
-        height: droneLastPosition.data.height as number
+        reported_at: droneData.created_at,
+        latitude: droneData.data.latitude as number,
+        longitude: droneData.data.longitude as number,
+        height: droneData.data.height as number
     }
 }
 
@@ -38,8 +48,18 @@ export async function getLastTelemetryOfDrone(droneId: number){
         droneId
     })
 
+    return extractTelemetryFromDroneData(droneLastTelemetry)
+}
+
+
+export function extractTelemetryFromDroneData(droneData: DBType_DroneData){
+
+    if(typeof droneData.data.capacity_percent_left !== 'number'){
+        return false
+    }
+
     return {
-        reported_at: droneLastTelemetry.created_at,
-        capacity_percent_left: droneLastTelemetry.data.capacity_percent_left as number
+        reported_at: droneData.created_at,
+        capacity_percent_left: droneData.data.capacity_percent_left as number
     }
 }

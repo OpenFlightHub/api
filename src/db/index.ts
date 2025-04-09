@@ -1,7 +1,7 @@
 import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent } from '../live-websocket/websocket'
-import { DRONE_DATA_TYPES, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
+import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
 import { selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
 import { getConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
@@ -140,7 +140,11 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
                         subscribableEventHandlerDronePosition.triggerListenerIfExists('' + changedDroneId, async()=>{
 
-                            const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
+                            const droneLastPosition = extractPositionFromDroneData(data)
+
+                            if(droneLastPosition === false){
+                                throw new Error('no valid drone position in data')
+                            }
 
                             return {
                                 id: changedDroneId,
@@ -152,7 +156,11 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                         const connection = await getConnectionForDrone(drone.id)
 
                         subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + connection.workspace_id, async()=>{
-                            const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
+                            const droneLastPosition = extractPositionFromDroneData(data)
+
+                            if(droneLastPosition === false){
+                                throw new Error('no valid drone position in data')
+                            }
 
                             return {
                                 id: changedDroneId,
@@ -165,7 +173,11 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
                         subscribableEventHandlerDroneTelemetry.triggerListenerIfExists('' + changedDroneId, async()=>{
 
-                            const droneLastTelemetry = await getLastTelemetryOfDrone(changedDroneId)
+                            const droneLastTelemetry = extractTelemetryFromDroneData(data)
+
+                            if(droneLastTelemetry === false){
+                                throw new Error('no valid drone telemetry in data')
+                            }
 
                             return {
                                 id: changedDroneId,
