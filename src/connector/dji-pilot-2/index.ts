@@ -58,8 +58,7 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
  */
 async function updateProductForConnection(connection: DBType_Connection, productSerialNumber: string, data: {domain: string, type: number, sub_type: number, sn?: string}){
 
-    //@ts-ignore
-    const productType = getProductType(message.data.domain, message.data.type, message.data.sub_type)
+    const productType = getProductType(data.domain, data.type, data.sub_type)
 
     if(productType.domain === 'controller'){
 
