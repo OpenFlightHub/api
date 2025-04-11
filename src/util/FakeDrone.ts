@@ -21,7 +21,7 @@ export default class FakeDrone {
                 height: this.fakeTrack.getCurrentHeight()
             })
 
-        }, 100)
+        }, 1000 * 2)
     }
 
 }
