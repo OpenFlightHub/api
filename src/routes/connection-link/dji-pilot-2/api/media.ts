@@ -27,7 +27,7 @@ router.post('/fast-upload', asyncHandler(async (req, res) => {
         throw GuardError._400_invalidBody('fingerprint')
     }
 
-    const existingMedia = await db.oneOrNone<DBType_DroneMedia>('SELECT * FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id ' + pgp.as.format('WHERE fingerprint = ${fingerprint} AND connections.id = ${connectionId}', {
+    const existingMedia = await db.oneOrNone<DBType_DroneMedia>('SELECT * FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE fingerprint = ${fingerprint} AND connections.id = ${connectionId}', {
         fingerprint: body.fingerprint,
         connectionId: connection.id
     }))
@@ -55,7 +55,7 @@ router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
 
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost>(ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost)
 
-    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
+    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
         connectionId: connection.id
     }))
 
