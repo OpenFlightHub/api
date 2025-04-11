@@ -34,11 +34,11 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
 
             const connection = await selectConnection(connectionId)
 
-            await updateProductForConnection(connection, productSerialNumber, message.data)
+            await updateProductForConnection(connection, productSerialNumber, message.data.domain, message.data.type, message.data.sub_type)
 
             if(message.data.sub_devices){
                 for(const subDevice of message.data.sub_devices){
-                    await updateProductForConnection(connection, productSerialNumber, subDevice)
+                    await updateProductForConnection(connection, subDevice.sn, subDevice.domain, subDevice.type, subDevice.sub_type)
                 }
             }
         }
@@ -56,9 +56,9 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
 /**
  * makes sure, the drones and remote controllers for this connection link are properly registered and referenced to each other
  */
-async function updateProductForConnection(connection: DBType_Connection, productSerialNumber: string, data: {domain: string, type: number, sub_type: number, sn?: string}){
+async function updateProductForConnection(connection: DBType_Connection, serialNumber: string, domain: string, type: number, sub_type: number){
 
-    const productType = getProductType(data.domain, data.type, data.sub_type)
+    const productType = getProductType(domain, type, sub_type)
 
     if(productType.domain === 'controller'){
 
@@ -70,7 +70,7 @@ async function updateProductForConnection(connection: DBType_Connection, product
                     : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
                     : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
                     : DBType_RemoteController_TYPES.unknown,
-                serial_number: productSerialNumber
+                serial_number: serialNumber
             })
 
             await updateConnection({
@@ -82,7 +82,7 @@ async function updateProductForConnection(connection: DBType_Connection, product
 
     } else if(productType.domain === 'drone'){
 
-        let drone = await getDroneForSerialNumber(productSerialNumber)
+        let drone = await getDroneForSerialNumber(serialNumber)
 
         if(drone){
             if(drone.last_connection_id !== connection.id){
@@ -95,17 +95,13 @@ async function updateProductForConnection(connection: DBType_Connection, product
             }
         } else {
 
-            if(typeof data.sn !== 'string'){
-                throw new Error('data.sn was not a string (for product type drone)')
-            }
-
             drone = await insertDrone({
                 type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
                     : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
                     : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
                     : productType.type === 'matrice_350_rtk' ? DBType_Drone_TYPES.dji_matrice_350
                     : DBType_Drone_TYPES.unknown,
-                serial_number: data.sn,
+                serial_number: serialNumber,
                 name: productType.subType,
                 last_connection_id: connection.id
             })
