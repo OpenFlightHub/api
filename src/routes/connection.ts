@@ -31,6 +31,9 @@ router.get('/:connection_id', asyncHandler(async (req, res) => {
         return selectConnection(connectionId)
     })
 
+    //@ts-ignore
+    connection.drone_id = connection.last_drone_id // fix for api description
+
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
     res.GM.guardSend<ApiType_Connection>(connection, ApiSchema_Connection)

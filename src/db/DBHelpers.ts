@@ -422,7 +422,7 @@ export type DBInsert_Connection = {
     workspace_id: number
     workspace_uuid: string
     remote_controller_id?: number
-    drone_id?: number
+    last_drone_id?: number
 }
 
 export type DBUpdate_Connection = {
@@ -432,7 +432,7 @@ export type DBUpdate_Connection = {
     workspace_id?: number
     workspace_uuid?: string
     remote_controller_id?: number
-    drone_id?: number
+    last_drone_id?: number
 }
 const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -460,7 +460,7 @@ const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "drone_id",
+        "name": "last_drone_id",
         "skip": col => !col.exists
     }
 ], {table: "connections"})
@@ -495,7 +495,7 @@ const COLUMN_SET_CONNECTIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "drone_id",
+        "name": "last_drone_id",
         "skip": col => !col.exists
     }
 ], {table: "connections"})
@@ -624,12 +624,14 @@ export type DBInsert_Drone = {
     serial_number: string
     name: string
     type?: DBType_Drone_TypeType
+    last_connection_id?: number
 }
 
 export type DBUpdate_Drone = {
     serial_number?: string
     name?: string
     type?: DBType_Drone_TypeType
+    last_connection_id?: number
 }
 const COLUMN_SET_DRONES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -644,6 +646,10 @@ const COLUMN_SET_DRONES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "last_connection_id",
         "skip": col => !col.exists
     }
 ], {table: "drones"})
@@ -663,6 +669,10 @@ const COLUMN_SET_DRONES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "last_connection_id",
         "skip": col => !col.exists
     }
 ], {table: "drones"})

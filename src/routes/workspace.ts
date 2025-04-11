@@ -105,6 +105,9 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
         workspaceId
     })
 
+    //@ts-ignore
+    connections.forEach(c => c.drone_id = c.last_drone_id)// fix for api description
+
     req.GM.guardSend<ApiType_WorkspaceConnections>(connections, ApiSchema_WorkspaceConnections)
 
 }))

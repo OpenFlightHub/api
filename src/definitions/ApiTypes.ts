@@ -153,6 +153,7 @@ export type ApiType_WorkspaceFilePatch = {
 
 export type ApiType_WorkspaceConnections = {
     id: number;
+    name: string;
     remote_controller_id?: number;
     drone_id?: number;
 }[];
@@ -171,6 +172,7 @@ export type ApiType_WorkspaceConnectionsPostResponse = {
 
 export type ApiType_Connection = {
     id: number;
+    name: string;
     remote_controller_id?: number;
     drone_id?: number;
 }
@@ -211,6 +213,7 @@ export type ApiType_Drone = {
      */
     type: number;
     name: string;
+    last_connection_id?: number;
 }
 
 

@@ -1,7 +1,7 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
 import { insertDroneData } from '../db/DBHelpers'
-import { DBType_DroneData, DBType_DroneData_TypeType } from '../db/DBTypes'
+import { DBType_Drone, DBType_DroneData, DBType_DroneData_TypeType } from '../db/DBTypes'
 
 export const DRONE_DATA_TYPES = {
     POSITION: 0 as DBType_DroneData_TypeType,
@@ -62,4 +62,10 @@ export function extractTelemetryFromDroneData(droneData: DBType_DroneData){
         reported_at: droneData.created_at,
         capacity_percent_left: droneData.data.capacity_percent_left as number
     }
+}
+
+export async function getDroneForSerialNumber(serialNumber: string){
+    return db.oneOrNone<DBType_Drone>('SELECT * FROM drones WHERE serial_number = ${serialNumber};', {
+        serialNumber
+    })
 }

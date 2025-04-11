@@ -2,12 +2,13 @@ import { Client, PublishPacket } from "aedes";
 import Connector from "./Connector";
 import Logger from "./ConnectorLogger";
 import path from "path";
-import {addDroneData, DRONE_DATA_TYPES} from '../../util/drone'
+import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber} from '../../util/drone'
 import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
-import { DBType_Connection, DBType_RemoteController_TYPES } from "../../db/DBTypes";
-import { insertDrone, insertRemoteController, selectConnection, updateConnection } from "../../db/DBHelpers";
+import { DBType_Connection, DBType_Drone, DBType_Drone_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
+import { insertDrone, insertRemoteController, selectConnection, selectDrone, updateConnection, updateDrone } from "../../db/DBHelpers";
+import {getProductType} from './util/product'
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
@@ -20,8 +21,31 @@ connector.onMessage_State((connectionId, message)=>{
 })
 
 
-connector.onMessage_Status((connectionId, message, serialNumber, respond)=>{
-    console.log('onMessage_Status', connectionId, serialNumber, message)
+connector.onMessage_Status(async (connectionId, message, productSerialNumber, respond)=>{
+    console.log('onMessage_Status', connectionId, productSerialNumber, message)
+
+    try {
+
+        if(message.method === 'update_topo'){
+            //@ts-ignore
+            if(message.data.thing_version !== '1.2.0'){
+                console.warn('thing_version of mqtt message update_topo was not 1.2.0: ', message)
+            }
+
+            const connection = await selectConnection(connectionId)
+
+            await updateProductForConnection(connection, productSerialNumber, message.data)
+
+            if(message.data.sub_devices){
+                for(const subDevice of message.data.sub_devices){
+                    await updateProductForConnection(connection, productSerialNumber, subDevice)
+                }
+            }
+        }
+
+    } catch (err){
+        console.error('error while running onMessage_Status', err)
+    }
 
     respond({
         result: 0
@@ -29,78 +53,145 @@ connector.onMessage_Status((connectionId, message, serialNumber, respond)=>{
 })
 
 
+/**
+ * makes sure, the drones and remote controllers for this connection link are properly registered and referenced to each other
+ */
+async function updateProductForConnection(connection: DBType_Connection, productSerialNumber: string, data: {domain: string, type: number, sub_type: number, sn?: string}){
+
+    //@ts-ignore
+    const productType = getProductType(message.data.domain, message.data.type, message.data.sub_type)
+
+    if(productType.domain === 'controller'){
+
+        if(typeof connection.remote_controller_id !== 'number'){
+
+            const newRemoteController = await insertRemoteController({
+                type: productType.type === 'rc_plus' ? DBType_RemoteController_TYPES.dji_rc_plus
+                    : productType.type === 'rc_plus_2' ? DBType_RemoteController_TYPES.dji_rc_plus_2
+                    : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
+                    : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
+                    : DBType_RemoteController_TYPES.unknown,
+                serial_number: productSerialNumber
+            })
+
+            await updateConnection({
+                remote_controller_id: newRemoteController.id
+            }, connection.id)
+
+            connection.remote_controller_id = newRemoteController.id
+        }
+
+    } else if(productType.domain === 'drone'){
+
+        let drone = await getDroneForSerialNumber(productSerialNumber)
+
+        if(drone){
+            if(drone.last_connection_id !== connection.id){
+                console.warn('transferring drone connection from', drone.last_connection_id, 'to', connection.id)
+                drone.last_connection_id = connection.id
+
+                await updateDrone({
+                    last_connection_id: connection.id
+                }, drone.id)
+            }
+        } else {
+
+            if(typeof data.sn !== 'string'){
+                throw new Error('data.sn was not a string (for product type drone)')
+            }
+
+            drone = await insertDrone({
+                type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
+                    : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
+                    : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
+                    : productType.type === 'matrice_350_rtk' ? DBType_Drone_TYPES.dji_matrice_350
+                    : DBType_Drone_TYPES.unknown,
+                serial_number: data.sn,
+                name: productType.subType,
+                last_connection_id: connection.id
+            })
+        }
+
+        if(connection.last_drone_id !== drone.id){
+            console.warn('replacing connection drone', connection.last_drone_id, 'with', drone.id)
+
+            await updateConnection({
+                last_drone_id: drone.id
+            }, connection.id)
+
+            connection.last_drone_id = drone.id
+        }
+
+    } else {
+        //TODO implement camera and dock?
+    }
+
+}
 
 
-connector.onMessage_Osd(async (connectionId, message)=>{
+connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
     const _m = message as {data: {longitude?: number, latitude?: number, height?: number}}
 
     const connection = await selectConnection(connectionId)
 
-    if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number'){
 
-        //@ts-ignore
-        if(typeof _m.data.elevation === 'number'){// DRONE //TODO better detection of what type it is
-            const messageData = _m.data as MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE
-
-            if(typeof connection.drone_id !== 'number'){
-
-                if(typeof message.gateway !== 'string'){
-                    console.error('expected osd message to have the property "gateway"', message)
-                    return
-                } else {
-                    const newDrone = await insertDrone({
-                        //TODO: detect type type: DBType_RemoteController_TYPES.dji_rc_plus
-                        serial_number: message.gateway, //TODO detect correct serial number
-                        name: 'unknown'
-                    })
-
-                    await updateConnection({
-                        drone_id: newDrone.id
-                    }, connection.id)
-
-                    connection.drone_id = newDrone.id
-                }
-            }
+    if(typeof message.gateway !== 'string'){
+        console.error('expected osd message to have the property "gateway"', message)
+        return
+    }
 
 
-            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+    const messageType = productSerialNumber === message.gateway ? 'fromGateway' : 'notFromGateway' //TODO: check if this works correctly for all drones (especially m300)
 
-                addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
-            }
+    if(messageType === 'fromGateway'){
 
-            if(typeof messageData.battery?.capacity_percent === 'number'){
-                addDroneData(connection.drone_id, DRONE_DATA_TYPES.TELEMETRY, {capacity_percent_left: messageData.battery.capacity_percent})
-            }
+        //TODO is a dock a gateway or not? i guess it is?
 
-        } else {// RC
+        if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number'){
 
             const messageData = _m.data as MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE
 
-            if(typeof connection.remote_controller_id !== 'number'){
-
-                if(typeof message.gateway !== 'string'){
-                    console.error('expected osd message to have the property "gateway"', message)
-                    return
-                } else {
-                    const newRemoteController = await insertRemoteController({
-                        //TODO: detect type type: DBType_RemoteController_TYPES.dji_rc_plus
-                        serial_number: message.gateway
-                    })
-
-                    await updateConnection({
-                        remote_controller_id: newRemoteController.id
-                    }, connection.id)
-
-                    connection.remote_controller_id = newRemoteController.id
-                }
-            }
-
             if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
-                addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+                addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {
+                    longitude: messageData.longitude,
+                    latitude: messageData.latitude,
+                    height: messageData.height
+                })
             }
         }
+
+    } else {
+        const drone = await getDroneForSerialNumber(productSerialNumber)
+
+        if(drone){
+
+            //@ts-ignore
+            if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number' && typeof _m.data.elevation === 'number'){
+                const messageData = _m.data as MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE
+
+                if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+
+                    addDroneData(drone.id, DRONE_DATA_TYPES.POSITION, {
+                        longitude: messageData.longitude,
+                        latitude: messageData.latitude,
+                        height: messageData.height
+                    })
+                }
+
+                if(typeof messageData.battery?.capacity_percent === 'number'){
+                    addDroneData(drone.id, DRONE_DATA_TYPES.TELEMETRY, {
+                        capacity_percent_left: messageData.battery.capacity_percent
+                    })
+                }
+
+            }
+
+        } else {
+            //TODO support camera
+        }
     }
+
 })
 
 connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{

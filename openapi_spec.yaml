@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.4.0
+  version: 0.5.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1554,11 +1554,15 @@ components:
 
     connection:
       type: object
+      description: "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)"
       required:
         - id
+        - name
       properties:
         id:
           $ref: '#/components/schemas/id'
+        name:
+          type: string
         remote_controller_id:
           $ref: '#/components/schemas/id'
         drone_id:
@@ -1615,6 +1619,8 @@ components:
           $ref: '#/components/schemas/drone_type'
         name:
           type: string
+        last_connection_id:
+          $ref: '#/components/schemas/id'
 
     drone_type:
       type: integer

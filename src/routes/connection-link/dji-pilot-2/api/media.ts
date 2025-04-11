@@ -123,7 +123,7 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
     let droneMedia: DBType_DroneMedia
     try {
         droneMedia = await insertDroneMedia({
-            drone_id: connection.drone_id!,
+            drone_id: connection.last_drone_id!,
             type,
             fingerprint,
             tiny_fingerprint: tinyFingerprint,

@@ -197,6 +197,7 @@ new FakeDrone(1, new FakeTrack([
 
 
 import {setupTrafficSensing} from './aircraft_sensing'
+import { DBType_Drone } from './db/DBTypes'
 setupTrafficSensing()
 
 
@@ -207,6 +208,7 @@ declare global {
         export interface Request {
             GM: GuardedMiddleware
             //query: {[key: string] : string} // hpp middleware TODO uncomment this line again and fix the ts error in express
+            _drone?: DBType_Drone
         }
 
         /**

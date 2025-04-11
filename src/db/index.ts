@@ -2,8 +2,8 @@ import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
-import { selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
-import { getConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
+import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
+import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { DBType_DroneData } from './DBTypes';
 
@@ -32,7 +32,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
         const drone = await selectDrone(id)
 
-        const connection = await getConnectionForDrone(drone.id)
+        const connection = await selectConnection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -53,7 +53,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
         const drone = await selectDrone(id)
 
-        const connection = await getConnectionForDrone(drone.id)
+        const connection = await selectConnection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -153,21 +153,24 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                             }
                         })
 
-                        const connection = await getConnectionForDrone(drone.id)
+                        const connection = await getActiveConnectionForDrone(drone.id)
 
-                        subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + connection.workspace_id, async()=>{
-                            const droneLastPosition = extractPositionFromDroneData(data)
+                        if(connection){
 
-                            if(droneLastPosition === false){
-                                throw new Error('no valid drone position in data')
-                            }
+                            subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + connection.workspace_id, async()=>{
+                                const droneLastPosition = extractPositionFromDroneData(data)
 
-                            return {
-                                id: changedDroneId,
-                                position: droneLastPosition,
-                                serial_number: drone.serial_number
-                            }
-                        })
+                                if(droneLastPosition === false){
+                                    throw new Error('no valid drone position in data')
+                                }
+
+                                return {
+                                    id: changedDroneId,
+                                    position: droneLastPosition,
+                                    serial_number: drone.serial_number
+                                }
+                            })
+                        }
 
                     } else if(data.type === DRONE_DATA_TYPES.TELEMETRY){
 

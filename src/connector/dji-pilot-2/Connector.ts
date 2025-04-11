@@ -239,8 +239,8 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
 
 
-type EventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (connectionId: number, message: M, serialNumber: string) => void
-type EventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (connectionId: number, message: M, serialNumber: string, respond: (data: RD) => void) => void
+type EventCallback<M extends Message<MD>, MD = M extends Message<infer G> ? G : unknown> = (connectionId: number, message: M, productSerialNumber: string) => void
+type EventCallbackWithResponse<M extends Message<MD>, R extends Response<RD>, MD = M extends Message<infer G> ? G : unknown, RD = R extends Response<infer G> ? G : unknown> = (connectionId: number, message: M, productSerialNumber: string, respond: (data: RD) => void) => void
 
 interface Message_Base {// coming from device to cloud
     tid: string //transaction UUID used when a response is required for this message
@@ -256,8 +256,8 @@ interface Message<MD extends MessageData> extends Message_Base {
     data: MD
 }
 
-export interface MessageWithMethod<MD extends MessageData> extends Message<MD> {
-    method: string
+export interface MessageWithMethod<MD extends MessageData, Method = string> extends Message<MD> {
+    method: Method
 }
 
 
@@ -267,8 +267,22 @@ export type Message_Type_State = Message<MqttMavic3EnterpriseProperties_STABLE_F
 
 //TODO
 export type Message_Type_Status = MessageWithMethod<{
-    todo: string
-}>
+    domain: string
+    type: number
+    sub_type: number
+    device_secret: string
+    nonce: string
+    thing_version: string
+    sub_devices: {
+        sn: string
+        domain: string
+        type: number
+        sub_type: number
+        device_secret: string
+        nonce: string
+        thing_version: string
+    }[]
+}, 'update_topo'>
 
 
 //TODO

@@ -350,13 +350,18 @@ export const ApiSchema_WorkspaceConnections : JSONSchema  = {
     "type": "array",
     "items": {
         "type": "object",
+        "description": "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)",
         "required": [
-            "id"
+            "id",
+            "name"
         ],
         "properties": {
             "id": {
                 "type": "number",
                 "example": 42
+            },
+            "name": {
+                "type": "string"
             },
             "remote_controller_id": {
                 "type": "number",
@@ -400,13 +405,18 @@ export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
 
 export const ApiSchema_Connection : JSONSchema  = {
     "type": "object",
+    "description": "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)",
     "required": [
-        "id"
+        "id",
+        "name"
     ],
     "properties": {
         "id": {
             "type": "number",
             "example": 42
+        },
+        "name": {
+            "type": "string"
         },
         "remote_controller_id": {
             "type": "number",
@@ -495,6 +505,10 @@ export const ApiSchema_Drone : JSONSchema  = {
         },
         "name": {
             "type": "string"
+        },
+        "last_connection_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }

@@ -84,37 +84,48 @@ export type DBType_Connection = {
    */
   workspace_uuid: string;
   remote_controller_id?: number;
-  drone_id?: number;
+  /**
+   * the "currently" connected drone (does not mean, the drone is currently online)
+   */
+  last_drone_id?: number;
 }
 
 
-export type DBType_RemoteController_TypeType = 0|1
+export type DBType_RemoteController_TypeType = 0|1|2|3|4
 export const DBType_RemoteController_TYPES = {
-  dji_rc_pro_enterprise: 0 as DBType_RemoteController_TypeType,
-  dji_rc_plus: 1 as DBType_RemoteController_TypeType
+  unknown: 0 as DBType_RemoteController_TypeType,
+  dji_rc_plus: 1 as DBType_RemoteController_TypeType,
+  dji_rc_pro_enterprise: 2 as DBType_RemoteController_TypeType,
+  dji_rc_plus_2: 3 as DBType_RemoteController_TypeType,
+  dji_smart_controller: 4 as DBType_RemoteController_TypeType
 }
 export type DBType_RemoteController = {
   id: number;
   serial_number: string;
   /**
-   * 0 = dji rc pro enterprise, 1 = dji rc plus
+   * 0 = unknown, 1 = dji rc plus, 2 = dji rc pro enterprise, 3 = dji rc plus 2, 4 = dji smart controller
    */
   type: DBType_RemoteController_TypeType;
 }
 
 
-export type DBType_Drone_TypeType = 0
+export type DBType_Drone_TypeType = 0|1|2|3|4
 export const DBType_Drone_TYPES = {
-  dji_mavic_3: 0 as DBType_Drone_TypeType
+  unknown: 0 as DBType_Drone_TypeType,
+  dji_matrice_300: 1 as DBType_Drone_TypeType,
+  dji_matrice_30: 2 as DBType_Drone_TypeType,
+  dji_matrice_350: 3 as DBType_Drone_TypeType,
+  dji_mavic_3: 4 as DBType_Drone_TypeType
 }
 export type DBType_Drone = {
   id: number;
   serial_number: string;
   name: string;
   /**
-   * 0 = dji mavic 3
+   * 0 = unknown, 1 = dji matrice 300, 2 = dji matrice 30, 3 = dji matrice 350, 4 = dji mavic 3
    */
   type: DBType_Drone_TypeType;
+  last_connection_id?: number;
 }
 
 
