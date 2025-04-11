@@ -30,7 +30,6 @@ router.use('/auth', authRoute)
 router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)=>{
 
     const workspace = await selectWorkspace(req.GM.currentConnection.workspace_id)
-    console.log(req.GM.currentConnection)
 
     res.GM.guardSend<ApiType_ConnectionLinkConfig>({
         connection_id: '' + req.GM.currentConnection.id,
