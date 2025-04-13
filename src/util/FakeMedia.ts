@@ -13,6 +13,7 @@ export default class FakeMedia {
 
             const currentPosition = this.drone.getTrack().getCurrentPosition()
             const currentHeight = this.drone.getTrack().getCurrentHeight()
+            const currentHeading = this.drone.getTrack().getCurrentHeading()
 
             const media = await insertDroneMedia({
                 drone_id: this.drone.getId(),
@@ -20,7 +21,7 @@ export default class FakeMedia {
                 fingerprint: 'fake',
                 tiny_fingerprint: 'fake',
                 type: DBType_DroneMedia_TYPES.picture,
-                meta: JSON.stringify({"ext":{"drone_model_key":"0-60-0","file_group_id":"","is_original":true,"line_name":"","payload_model_key":"1-43-0","shoot_position":0,"sn":"DRONE_FAKE","task_name":"","tinny_fingerprint":"b1cd370ab26d0f9a44adb0c7353f8d6d_2025_4_11_17_19_30"},"metadata":{"absolute_altitude":currentHeight,"created_time": new Date().toISOString(),"gimbal_yaw_degree": 42,"photoed_position":{"lat":0,"lng":0},"relative_altitude":0,"shoot_position":{"lat": currentPosition.latitude,"lng":currentPosition.longitude}}})
+                meta: JSON.stringify({"ext":{"drone_model_key":"0-60-0","file_group_id":"","is_original":true,"line_name":"","payload_model_key":"1-43-0","shoot_position":0,"sn":"DRONE_FAKE","task_name":"","tinny_fingerprint":"b1cd370ab26d0f9a44adb0c7353f8d6d_2025_4_11_17_19_30"},"metadata":{"absolute_altitude":currentHeight,"created_time": new Date().toISOString(),"gimbal_yaw_degree": currentHeading,"photoed_position":{"lat":0,"lng":0},"relative_altitude":0,"shoot_position":{"lat": currentPosition.latitude,"lng":currentPosition.longitude}}})
             })
 
             setTimeout(()=>{

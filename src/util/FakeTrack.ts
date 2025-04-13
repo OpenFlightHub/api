@@ -9,6 +9,8 @@ export default class FakeTrack {
     private currentDistance = 0 // in meters
     private currentPosition: Feature<Point>
 
+    private lastPosition: Feature<Point> | false = false
+
     private speed: number // in meters per tick
 
     private lastTick = Date.now()
@@ -43,6 +45,7 @@ export default class FakeTrack {
             this.currentDistance = 0
         }
 
+        this.lastPosition = this.currentPosition
         this.currentPosition = turf.along(this.line, this.currentDistance, {units: "meters"})
     }
 
@@ -55,6 +58,20 @@ export default class FakeTrack {
             longitude: this.currentPosition.geometry.coordinates[0],
             latitude: this.currentPosition.geometry.coordinates[1]
         }
+    }
+
+    getCurrentHeading(){
+        if(this.lastPosition === false){
+            return 0
+        }
+
+        return turf.bearing([
+            this.lastPosition.geometry.coordinates[0],
+            this.lastPosition.geometry.coordinates[1]
+        ], [
+            this.currentPosition.geometry.coordinates[0],
+            this.currentPosition.geometry.coordinates[1]
+        ])
     }
 
 }
