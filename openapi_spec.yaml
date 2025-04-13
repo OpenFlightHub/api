@@ -1698,8 +1698,12 @@ components:
         - type
         - file_id
         - created_at
+        - drone_id
+        - file_name
       properties:
         id:
+          $ref: '#/components/schemas/id'
+        drone_id:
           $ref: '#/components/schemas/id'
         type:
           type: number
@@ -1708,6 +1712,8 @@ components:
           type: number
           example: 42
           description: see `/file` endpoint
+        file_name:
+          type: string
         created_at:
           $ref: '#/components/schemas/timestamptz'
         meta:

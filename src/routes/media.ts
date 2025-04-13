@@ -29,7 +29,7 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
     const mediaId = req.GM.guardParam('media_id', 'id')
 
     const media = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_DroneMedia & {created_at: string}>('SELECT drone_media.*, files.created_at FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_media.id = ${mediaId}', {
+        return db.one<DBType_DroneMedia & {created_at: string, file_name: string}>('SELECT drone_media.*, files.created_a files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_media.id = ${mediaId}', {
             mediaId
         })
     })

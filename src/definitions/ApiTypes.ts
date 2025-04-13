@@ -245,6 +245,7 @@ export type ApiType_DroneBattery = {
 
 export type ApiType_DroneMedia = {
     id: number;
+    drone_id: number;
     /**
      * 0 = image, 1 = video
      */
@@ -253,6 +254,7 @@ export type ApiType_DroneMedia = {
      * see `/file` endpoint
      */
     file_id: number;
+    file_name: string;
     /**
      * ISO 8601 format
      */
@@ -263,6 +265,7 @@ export type ApiType_DroneMedia = {
 
 export type ApiType_Media = {
     id: number;
+    drone_id: number;
     /**
      * 0 = image, 1 = video
      */
@@ -271,6 +274,7 @@ export type ApiType_Media = {
      * see `/file` endpoint
      */
     file_id: number;
+    file_name: string;
     /**
      * ISO 8601 format
      */

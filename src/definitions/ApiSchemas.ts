@@ -572,10 +572,16 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
             "id",
             "type",
             "file_id",
-            "created_at"
+            "created_at",
+            "drone_id",
+            "file_name"
         ],
         "properties": {
             "id": {
+                "type": "number",
+                "example": 42
+            },
+            "drone_id": {
                 "type": "number",
                 "example": 42
             },
@@ -587,6 +593,9 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
                 "type": "number",
                 "example": 42,
                 "description": "see `/file` endpoint"
+            },
+            "file_name": {
+                "type": "string"
             },
             "created_at": {
                 "type": "string",
@@ -607,10 +616,16 @@ export const ApiSchema_Media : JSONSchema  = {
         "id",
         "type",
         "file_id",
-        "created_at"
+        "created_at",
+        "drone_id",
+        "file_name"
     ],
     "properties": {
         "id": {
+            "type": "number",
+            "example": 42
+        },
+        "drone_id": {
             "type": "number",
             "example": 42
         },
@@ -622,6 +637,9 @@ export const ApiSchema_Media : JSONSchema  = {
             "type": "number",
             "example": 42,
             "description": "see `/file` endpoint"
+        },
+        "file_name": {
+            "type": "string"
         },
         "created_at": {
             "type": "string",

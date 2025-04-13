@@ -96,7 +96,7 @@ router.get('/:drone_id/media', asyncHandler(async (req, res) => {
 
     const droneId = req.GM.guardParam('drone_id', 'id')
 
-    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {created_at: string}>('SELECT drone_media.*, files.created_at FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId} ORDER BY drone_media.id DESC', {
+    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {created_at: string, file_name: string}>('SELECT drone_media.*, files.created_at, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId} ORDER BY drone_media.id DESC', {
         droneId
     })
 
