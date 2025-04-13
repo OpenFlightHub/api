@@ -8,7 +8,7 @@ const db : pgp.IDatabase<any> = global.db
 import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
-import { insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
+import { deleteFile, insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
 import {getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
 
 const router = express.Router()
@@ -120,6 +120,19 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
         ext: getFileExtension(objectKey)
     })
 
+    try {
+        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
+    } catch (err){
+
+        try {
+            await deleteFile(file.id)
+        } catch (err){
+            console.error('failed to cleanup file after downloading did not work', err)
+        }
+
+        throw err
+    }
+
     let droneMedia: DBType_DroneMedia
     try {
         droneMedia = await insertDroneMedia({
@@ -134,13 +147,6 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
     } catch (err){
         //TODO delete file
 
-        throw err
-    }
-
-    try {
-        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
-    } catch (err){
-        //TODO delete file and delete dronemedia
         throw err
     }
 
