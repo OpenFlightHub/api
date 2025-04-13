@@ -601,6 +601,40 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
     }
 }
 
+export const ApiSchema_Media : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "type",
+        "file_id",
+        "created_at"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "type": {
+            "type": "number",
+            "description": "0 = image, 1 = video"
+        },
+        "file_id": {
+            "type": "number",
+            "example": 42,
+            "description": "see `/file` endpoint"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "meta": {
+            "type": "string"
+        }
+    }
+}
+
 export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [

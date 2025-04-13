@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.5.0
+  version: 0.6.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1012,6 +1012,36 @@ paths:
         - user_auth: []
 
 
+  /media/{media_id}:
+    get:
+      tags:
+        - drone
+      summary: Get a uploaded media
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/media'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
   # connection-link
 
   /connection-link/auth/check:
@@ -1659,26 +1689,29 @@ components:
     drone_media:
       type: array
       items:
-        type: object
-        required:
-          - id
-          - type
-          - file_id
-          - created_at
-        properties:
-          id:
-            $ref: '#/components/schemas/id'
-          type:
-            type: number
-            description: 0 = image, 1 = video
-          file_id:
-            type: number
-            example: 42
-            description: see `/file` endpoint
-          created_at:
-            $ref: '#/components/schemas/timestamptz'
-          meta:
-            type: string
+        $ref: '#/components/schemas/media'
+
+    media:
+      type: object
+      required:
+        - id
+        - type
+        - file_id
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        type:
+          type: number
+          description: 0 = image, 1 = video
+        file_id:
+          type: number
+          example: 42
+          description: see `/file` endpoint
+        created_at:
+          $ref: '#/components/schemas/timestamptz'
+        meta:
+          type: string
 
 
     # connection-link

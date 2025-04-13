@@ -136,6 +136,9 @@ app.use('/connection', connectionRoute)
 import droneRoute from './routes/drone'
 app.use('/drone', droneRoute)
 
+import mediaRoute from './routes/media'
+app.use('/media', mediaRoute)
+
 import remoteControllerRoute from './routes/remote-controller'
 app.use('/remote-controller', remoteControllerRoute)
 
@@ -185,7 +188,7 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 import FakeDrone from './util/FakeDrone'
 import FakeTrack from './util/FakeTrack'
 
-new FakeDrone(1, new FakeTrack([
+const fakeDrone = new FakeDrone(1, new FakeTrack([
     [10.31123970862481,47.54303902438443,1470],
     [10.31111796634494,47.54531198554595,1610],
     [10.31363253702402,47.5465021623194,1580],
@@ -193,8 +196,11 @@ new FakeDrone(1, new FakeTrack([
     [10.31861243453544,47.54735457272334,1489],
     [10.31844535319701,47.54608003223191,1510],
     [10.31523131736515,47.54569312904921,1501],
-    [10.31363964096565,47.54483188962758,1450]], 5))
+    [10.31363964096565,47.54483188962758,1450]], 5)
+)
 
+import FakeMedia from './util/FakeMedia'
+new FakeMedia(fakeDrone)
 
 import {setupTrafficSensing} from './aircraft_sensing'
 import { DBType_Drone } from './db/DBTypes'

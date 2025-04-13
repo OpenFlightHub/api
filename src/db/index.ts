@@ -1,7 +1,7 @@
 import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent } from '../live-websocket/websocket'
-import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
+import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
 import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
 import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
@@ -63,7 +63,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
     })
 
-
+    //TODO reimplement live remote controller position (got removed at some point around probably 10th April 25 ?)
     const subscribableEventHandlerRemoteControllerPosition = registerSubscribableEvent('remote_controller_position', async(event, filter, client)=>{
 
         const id = parseInt(filter)
@@ -85,6 +85,46 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
     })
 
     const subscribableEventHandlerWorkspaceDronesPosition = registerSubscribableEvent('workspace_drones_position', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const workspace = await selectWorkspace(id)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+
+    const subscribableEventHandlerDroneMedia = registerSubscribableEvent('drone_media', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const drone = await selectDrone(id)
+
+        const connection = await selectConnection(drone.last_connection_id!)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+
+    const subscribableEventHandlerWorkspaceDronesMedia = registerSubscribableEvent('workspace_drones_media', async(event, filter, client)=>{
 
         const id = parseInt(filter)
 
@@ -187,7 +227,32 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                                 telemetry: droneLastTelemetry
                             }
                         })
+
                     }
+                } else if(changedTable === 'drone_media'){
+
+                    const mediaId = parseInt(parsed.data.id)
+                    const droneId = parseInt(parsed.data.drone_id)
+
+                    const drone = await selectDrone(droneId)
+
+                    const connection = await getActiveConnectionForDrone(drone.id)
+
+                    if(connection === false){
+                        return
+                    }
+
+                    subscribableEventHandlerDroneMedia.triggerListener('' + droneId, {
+                        id: mediaId,
+                        drone_id: droneId,
+                        workspace_id: connection.workspace_id
+                    })
+
+                    subscribableEventHandlerWorkspaceDronesMedia.triggerListener('' + connection.workspace_id, {
+                        id: mediaId,
+                        drone_id: droneId,
+                        workspace_id: connection.workspace_id
+                    })
                 }
             }
         }

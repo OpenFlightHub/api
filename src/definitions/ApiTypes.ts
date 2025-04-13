@@ -261,6 +261,24 @@ export type ApiType_DroneMedia = {
 }[];
 
 
+export type ApiType_Media = {
+    id: number;
+    /**
+     * 0 = image, 1 = video
+     */
+    type: number;
+    /**
+     * see `/file` endpoint
+     */
+    file_id: number;
+    /**
+     * ISO 8601 format
+     */
+    created_at: string;
+    meta?: string;
+}
+
+
 export type ApiType_ConnectionLinkAuthLoginPost = {
     connection_id: string;
     secret: string;

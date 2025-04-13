@@ -85,7 +85,7 @@ export type DBType_Connection = {
   workspace_uuid: string;
   remote_controller_id?: number;
   /**
-   * the "currently" connected drone (does not mean, the drone is currently online)
+   * the "currently" connected drone (does not mean that the drone is currently online)
    */
   last_drone_id?: number;
 }
