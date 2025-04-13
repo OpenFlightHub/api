@@ -24,4 +24,12 @@ export default class FakeDrone {
         }, 1000 * 2)
     }
 
+    public getId(){
+        return this.droneId
+    }
+
+    public getTrack(){
+        return this.fakeTrack
+    }
+
 }
