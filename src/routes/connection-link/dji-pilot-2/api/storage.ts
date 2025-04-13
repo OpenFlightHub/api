@@ -25,7 +25,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
         data: {
             bucket: getBucketNameForConnectionId(connection.id),
             endpoint: secrets.minio_host,
-            object_key_prefix: 'from_drone2_',
+            object_key_prefix: '',
             provider: 'minio',
             region: secrets.minio_region,
             credentials: {
