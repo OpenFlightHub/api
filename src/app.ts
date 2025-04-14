@@ -242,7 +242,7 @@ setInterval(async ()=>{
         await generateThumbnailForFile(file.id)
     }
 
-}, 1000 * 6)
+}, 1000 * 60)
 
 declare global {
 
