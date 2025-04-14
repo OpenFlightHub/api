@@ -206,6 +206,21 @@ import {setupTrafficSensing} from './aircraft_sensing'
 import { DBType_Drone } from './db/DBTypes'
 setupTrafficSensing()
 
+
+
+import {getMetaFromImage} from './util/media'
+import { readFile } from 'fs/promises'
+readFile('./dev/example_media/M300_T.JPG').then(buffer => {
+    getMetaFromImage(buffer)
+})
+readFile('./dev/example_media/M300_W.JPG').then(buffer => {
+    getMetaFromImage(buffer)
+})
+readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
+    getMetaFromImage(buffer)
+})
+
+
 import { generateThumbnailForFile } from './util/file'
 generateThumbnailForFile(1).catch(err => {
     console.error('failed to generate thumbnail for file 1', err)
