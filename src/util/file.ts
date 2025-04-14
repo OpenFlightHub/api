@@ -8,6 +8,7 @@ const secrets = secretsLoader.getSecrets(['files_path'])
 
 const THUMBNAILS_FOLDER = 'thumbnails'
 const THUMBNAILS_EXT = 'jpg'
+const THUMBNAIL_WIDTH = 300
 
 const thumbnailsFolderPath = path.join(path.resolve(secrets.files_path), THUMBNAILS_FOLDER)
 if(fs.existsSync(thumbnailsFolderPath) === false){
@@ -90,7 +91,7 @@ export async function generateThumbnailForFile(fileId: number){
     const filePath = await getAbsoluteFilePathForFileId(fileId)
 
     const thumbnail = await imageThumbnail(filePath, {
-        width: 200,
+        width: THUMBNAIL_WIDTH,
         jpegOptions: {
             force: true
         }
