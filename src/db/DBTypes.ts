@@ -56,6 +56,7 @@ export type DBType_File = {
   created_at: string;
   created_by: number;
   has_thumbnail: boolean;
+  thumbnail_generation_has_failed: boolean;
 }
 
 

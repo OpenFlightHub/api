@@ -222,9 +222,27 @@ readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
 
 
 import { generateThumbnailForFile } from './util/file'
+import { selectFile } from './db/DBHelpers'
 generateThumbnailForFile(1).catch(err => {
     console.error('failed to generate thumbnail for file 1', err)
 })
+
+setInterval(async ()=>{
+    // every 60 seconds try to generate thumbnails for supported files that are missing thumbnails for some reason
+
+    const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
+
+    for(const file of filesThatRequireThumbnails){
+        const upToDateFile = await selectFile(file.id)
+        if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
+            continue
+        }
+
+        console.log('generate missing thumbnail for file', file.id)
+        await generateThumbnailForFile(file.id)
+    }
+
+}, 1000 * 6)
 
 declare global {
 

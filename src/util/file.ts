@@ -87,20 +87,37 @@ async function deleteThumbnailIfExists(fileId: number){
 }
 
 import imageThumbnail from 'image-thumbnail'
+
+/**
+ * generates a thumbnail for this file, and updates the file database entry. If it fails to generate one, the file database entry is marked as "generation_failed" and after that an error is thrown
+ */
 export async function generateThumbnailForFile(fileId: number){
     const filePath = await getAbsoluteFilePathForFileId(fileId)
 
-    const thumbnail = await imageThumbnail(filePath, {
-        width: THUMBNAIL_WIDTH,
-        jpegOptions: {
-            force: true
+    let thumbnailBuffer: any
+    try {
+        thumbnailBuffer = await imageThumbnail(filePath, {
+            width: THUMBNAIL_WIDTH,
+            jpegOptions: {
+                force: true
+            }
+        })
+    } catch (err){
+        try {
+            await updateFile({
+                thumbnail_generation_has_failed: true
+            }, fileId)
+        } catch (err){
+            console.error('failed to mark thumbnail_generation_has_failed', err)
         }
-    })
+
+        throw err
+    }
 
     const thumbnailPath = await getAbsoluteThumbnailPathForFileId(fileId)
 
     const writeStream = fs.createWriteStream(thumbnailPath)
-    writeStream.write(thumbnail)
+    writeStream.write(thumbnailBuffer)
     writeStream.close()
 
     await updateFile({
