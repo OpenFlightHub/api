@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.7.0
+  version: 0.8.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -432,6 +432,32 @@ paths:
         - user_auth: []
 
 
+  /file/thumbnail/{file_id}:
+    get:
+      x-no-sdk: true
+      tags:
+        - file
+      summary: Get a files thumbnail (to download or show as <img>)
+      parameters:
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns a file
+
+        '400':
+            $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
 
   # workspace
 
@@ -1495,6 +1521,7 @@ components:
         - id
         - name
         - created_at
+        - has_thumbnail
       properties:
         id:
           $ref: '#/components/schemas/id'
@@ -1502,6 +1529,9 @@ components:
           type: string
         created_at:
           $ref: '#/components/schemas/timestamptz'
+        has_thumbnail:
+          type: boolean
+          description: if a thumbnail is available at /file/thumbnail/
 
 
     # workspace

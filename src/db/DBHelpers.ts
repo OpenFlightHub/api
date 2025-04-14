@@ -181,6 +181,7 @@ export type DBInsert_File = {
     name: string
     created_at?: string
     created_by: number
+    has_thumbnail?: boolean
 }
 
 export type DBUpdate_File = {
@@ -189,6 +190,7 @@ export type DBUpdate_File = {
     name?: string
     created_at?: string
     created_by?: number
+    has_thumbnail?: boolean
 }
 const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -210,6 +212,10 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "created_by"
+    },
+    {
+        "name": "has_thumbnail",
+        "skip": col => !col.exists
     }
 ], {table: "files"})
 
@@ -236,6 +242,10 @@ const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "created_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "has_thumbnail",
         "skip": col => !col.exists
     }
 ], {table: "files"})

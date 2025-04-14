@@ -116,6 +116,10 @@ export type ApiType_File = {
      * ISO 8601 format
      */
     created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
 }
 
 

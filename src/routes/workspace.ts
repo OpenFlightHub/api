@@ -6,7 +6,7 @@ import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnection
 import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFilePost, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace } from '../db/DBTypes';
 import { createConnection } from '../util/connection';
-import { deleteFileFromDatabaseAndFilesystem, multerMiddleware, storeTmpMulterFileInDatabase } from '../util/file';
+import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../util/file';
 import { MulterFile } from '../app';
 import { GuardError } from '../ManInTheMiddleware';
 const db : pgp.IDatabase<any> = global.db
@@ -168,6 +168,12 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
     }
 
     const file = await storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
+
+    try {
+        await generateThumbnailForFile(file.id)
+    } catch (err){
+        console.warn('failed to generate thumbnail for workspace file', file.id, file.ext, err)
+    }
 
     res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
 }))

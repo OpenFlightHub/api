@@ -247,7 +247,8 @@ export const ApiSchema_File : JSONSchema  = {
     "required": [
         "id",
         "name",
-        "created_at"
+        "created_at",
+        "has_thumbnail"
     ],
     "properties": {
         "id": {
@@ -262,6 +263,10 @@ export const ApiSchema_File : JSONSchema  = {
             "format": "timestamptz",
             "description": "ISO 8601 format",
             "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "has_thumbnail": {
+            "type": "boolean",
+            "description": "if a thumbnail is available at /file/thumbnail/"
         }
     }
 }
