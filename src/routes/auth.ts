@@ -152,7 +152,7 @@ router.get('/check', asyncHandler(async (req, res) => {
 
         res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
 
-        console.log('user', user)
+        console.log('user', user.id)
 
     } catch (err) {
         console.log('invalid session token (no user found)', err)
