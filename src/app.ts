@@ -206,6 +206,7 @@ import {setupTrafficSensing} from './aircraft_sensing'
 import { DBType_Drone } from './db/DBTypes'
 setupTrafficSensing()
 
+import { generateThumbnailForFile } from './util/file'
 generateThumbnailForFile(1).catch(err => {
     console.error('failed to generate thumbnail for file 1', err)
 })
