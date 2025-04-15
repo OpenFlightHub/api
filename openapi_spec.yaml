@@ -1068,6 +1068,29 @@ paths:
       security:
         - user_auth: []
 
+
+  /media/ground-coverage/{media_id}:
+    get:
+      tags:
+        - media
+      summary: get ground coverage for this media
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+          '200':
+            description: ground coverage
+            content:
+              application/json:
+                schema:
+                   $ref: '#/components/schemas/media_ground_coverage'
+
+          '410':
+            description: ground coverage not available
+
   # connection-link
 
   /connection-link/auth/check:
@@ -1749,6 +1772,42 @@ components:
         meta:
           type: string
 
+    media_ground_coverage:
+      type: object
+      required:
+        - coverage
+      properties:
+        coverage:
+          type: object
+          required:
+            - all
+          properties:
+            all:
+              type: array
+              items:
+                $ref: '#/components/schemas/ground-coverage-location'
+
+    ground-coverage-location:
+      type: object
+      required:
+        - position
+        - elevation
+      properties:
+        position:
+          type: object
+          required:
+            - longitude
+            - latitude
+          properties:
+            longitude:
+              type: number
+              description: in degree
+            latitude:
+              type: number
+              description: in degree
+        elevation:
+          type: number
+          description: in meters
 
     # connection-link
 

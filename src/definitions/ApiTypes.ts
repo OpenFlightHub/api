@@ -287,6 +287,46 @@ export type ApiType_Media = {
 }
 
 
+export type ApiType_MediaGroundCoverage = {
+    coverage: {
+        all: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+        }[];
+    };
+}
+
+
+export type ApiType_GroundCoverageLocation = {
+    position: {
+        /**
+         * in degree
+         */
+        longitude: number;
+        /**
+         * in degree
+         */
+        latitude: number;
+    };
+    /**
+     * in meters
+     */
+    elevation: number;
+}
+
+
 export type ApiType_ConnectionLinkAuthLoginPost = {
     connection_id: string;
     secret: string;

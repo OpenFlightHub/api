@@ -658,6 +658,87 @@ export const ApiSchema_Media : JSONSchema  = {
     }
 }
 
+export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "coverage"
+    ],
+    "properties": {
+        "coverage": {
+            "type": "object",
+            "required": [
+                "all"
+            ],
+            "properties": {
+                "all": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "position",
+                            "elevation"
+                        ],
+                        "properties": {
+                            "position": {
+                                "type": "object",
+                                "required": [
+                                    "longitude",
+                                    "latitude"
+                                ],
+                                "properties": {
+                                    "longitude": {
+                                        "type": "number",
+                                        "description": "in degree"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "description": "in degree"
+                                    }
+                                }
+                            },
+                            "elevation": {
+                                "type": "number",
+                                "description": "in meters"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_GroundCoverageLocation : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "position",
+        "elevation"
+    ],
+    "properties": {
+        "position": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number",
+                    "description": "in degree"
+                },
+                "latitude": {
+                    "type": "number",
+                    "description": "in degree"
+                }
+            }
+        },
+        "elevation": {
+            "type": "number",
+            "description": "in meters"
+        }
+    }
+}
+
 export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     "type": "object",
     "required": [
