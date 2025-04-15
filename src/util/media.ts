@@ -1,5 +1,6 @@
-import { ExifData, getExifData } from "./exif";
-import turf from '@turf/turf'
+import { getExifData } from "./exif";
+
+type ExifData = Awaited<ReturnType<typeof getExifData>>
 
 export type MediaMeta = {
     position?: {
@@ -10,7 +11,22 @@ export type MediaMeta = {
     thumbnail: File
 }
 
-export async function getMetaFromImage(fileOrBuffer: File | Blob | ArrayBuffer){
+export type ImageMeta = {
+    position?: {
+        longitude: number
+        latitude: number
+    }
+    altitude?: number
+    fov?: FOV
+    createdAt?: string //ISO
+    gimbal: {
+        pitch?: number
+        yaw?: number
+        roll?: number
+    }
+}
+
+export async function getMetaFromImage(fileOrBuffer: File | Blob | ArrayBuffer): Promise<ImageMeta> {
 
     let exifData: ExifData
 
@@ -21,34 +37,116 @@ export async function getMetaFromImage(fileOrBuffer: File | Blob | ArrayBuffer){
     }
 
 
-    const gpsParsed = parseExifGps(exifData.gps)
+    const gpsParsed = parseExifGps(exifData)
+
+    const fovParsed = parseExifFOV(exifData)
+
+    const gimbalParsed = parseExifGimbal(exifData)
+
+    const createDateIso = exifData["CreateDate"]?.description
 
     return {
         position: gpsParsed === false ? undefined : gpsParsed.position,
         altitude: gpsParsed === false ? undefined : gpsParsed.altitude,
-        focalLength: exifData.exif?.FocalLength,
-        focalLengthIn35mmFormat: exifData.exif?.FocalLengthIn35mmFormat,
-        createdAt: exifData.exif?.CreateDate
+        fov: fovParsed === false ? undefined : fovParsed,
+        createdAt: typeof createDateIso === 'undefined' ? undefined : createDateIso,
+        gimbal: gimbalParsed
     }
 }
+
 // see https://exiv2.org/tags.html
-function parseExifGps(gps: any){
-    const gpsLon = gps.GPSLongitude
-    const gpsLat = gps.GPSLatitude
+function parseExifGps(exif: ExifData){
+    const gpsLon = parseFloat('' + exif.GPSLongitude.description)
+    const gpsLat = parseFloat('' + exif.GPSLatitude.description)
 
-    //TODO support the GPSLongitudeRef and other gps map datum
+    const gpsAltitude = parseFloat('' + exif.GPSAltitude.description)
 
-    if(gpsLon instanceof Array === false || gpsLat instanceof Array === false || gps.GPSLatitudeRef !== 'N' || gps.GPSLongitudeRef !== 'E'){
+    if(isNaN(gpsLon)){
         return false
     }
 
-    //TODO are those fields always an array of [degree, minutes, seconds]?
+    if(isNaN(gpsLat)){
+        return false
+    }
 
     return {
         position: {
-            longitude: gpsLon[0] + (typeof gpsLon[1] === 'number' ? gpsLon[1]/60 : 0) + (typeof gpsLon[2] === 'number' ? gpsLon[2]/3600 : 0),
-            latitude: gpsLat[0] + (typeof gpsLat[1] === 'number' ? gpsLat[1]/60 : 0) + (typeof gpsLat[2] === 'number' ? gpsLat[2]/3600 : 0),
+            longitude: gpsLon,
+            latitude: gpsLat,
         },
-        altitude: (typeof gps.GPSAltitude === 'number' && gps.GPSAltitudeRef !== 1) ? gps.GPSAltitude : undefined
+        altitude: (exif.GPSAltitudeRef?.value !== 1) ? gpsAltitude : undefined
     }
+}
+
+export type FOV = {
+    angular: {
+        horizontal: number
+        vertical: number
+    }
+}
+
+function parseExifFOV(exif: ExifData): false | FOV {
+    // see https://www.bobatkins.com/photography/technical/field_of_view.html
+
+    const focalLength = parseFloat('' + exif.FocalLengthIn35mmFilm.value)
+
+
+    if(isNaN(focalLength)){
+        return false
+    }
+
+    return {
+        angular: {
+            horizontal: getFovRectilinear(36, focalLength),
+            vertical: getFovRectilinear(24, focalLength)
+        }
+
+    }
+}
+
+/**
+ *
+ * @returns angular fov in degrees
+ */
+function getFovRectilinear(frameSize: number, focalLength: number){
+    return toDegrees(2 * Math.atan(frameSize / (focalLength * 2)))
+}
+
+/**
+  * @param str format: '2000:08:04 18:22:57'
+  * returns ISO Date string
+ */
+function parseExifTimestamp(str?: string){
+    if(typeof str !== 'string'){
+        return false
+    }
+
+    const match = str.match(/\s*(\d\d\d\d):(\d\d):(\d\d)\s+(\d\d):(\d\d):(\d\d)\s*/)
+
+    if(!match){
+        return false
+    }
+
+    return `${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}Z`
+}
+
+/**
+  * @param str format: '2000:08:04 18:22:57'
+  * returns ISO Date string
+ */
+function parseExifGimbal(exif: ExifData){
+
+    const gimbalPitch = parseFloat('' + exif.GimbalPitchDegree.value)
+    const gimbalYaw = parseFloat('' + exif.GimbalYawDegree.value)
+    const gimbalRoll = parseFloat('' + exif.GimbalRollDegree.value)
+
+    return {
+        pitch: isNaN(gimbalPitch) ? undefined : gimbalPitch,
+        yaw: isNaN(gimbalYaw) ? undefined : gimbalYaw,
+        roll: isNaN(gimbalRoll) ? undefined : gimbalRoll
+    }
+}
+
+function toDegrees(rad: number){
+    return rad / (Math.PI/180)
 }

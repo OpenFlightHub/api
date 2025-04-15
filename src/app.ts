@@ -210,15 +210,16 @@ setupTrafficSensing()
 
 import {getMetaFromImage} from './util/media'
 import { readFile } from 'fs/promises'
-readFile('./dev/example_media/M300_T.JPG').then(buffer => {
-    getMetaFromImage(buffer)
-})
 readFile('./dev/example_media/M300_W.JPG').then(buffer => {
-    getMetaFromImage(buffer)
+    getMetaFromImage(buffer).then(meta => console.log('image meta', meta))
 })
-readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
-    getMetaFromImage(buffer)
-})
+// readFile('./dev/example_media/M300_T.JPG').then(buffer => {
+//     getMetaFromImage(buffer)
+// })
+
+// readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
+//     getMetaFromImage(buffer)
+//})
 
 
 import { generateThumbnailForFile } from './util/file'
