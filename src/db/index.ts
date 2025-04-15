@@ -245,13 +245,17 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                     subscribableEventHandlerDroneMedia.triggerListener('' + droneId, {
                         id: mediaId,
                         drone_id: droneId,
-                        workspace_id: connection.workspace_id
+                        workspace_id: connection.workspace_id,
+                        drone_serial_number: drone.serial_number,
+                        file_id: parsed.data.file_id
                     })
 
                     subscribableEventHandlerWorkspaceDronesMedia.triggerListener('' + connection.workspace_id, {
                         id: mediaId,
                         drone_id: droneId,
-                        workspace_id: connection.workspace_id
+                        workspace_id: connection.workspace_id,
+                        drone_serial_number: drone.serial_number,
+                        file_id: parsed.data.file_id
                     })
                 }
             }
