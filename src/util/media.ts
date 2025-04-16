@@ -4,6 +4,7 @@ import { ApiType_Media, ApiType_MediaGroundCoverage } from "../definitions/ApiTy
 import { getExifData } from "./exif";
 import { getExifDataForFile } from "./file";
 import { DBType_DroneMedia } from "../db/DBTypes";
+import sleep from '../util/sleep'
 
 
 import SecretsLoader from './SecretsLoader'
@@ -41,7 +42,7 @@ export async function getMediaCoverage(media: DBType_DroneMedia){
     if(!media.coverage || media.coverage && dayjs(media.coverage_generated_at).isBefore(dayjs().subtract(90, 'days'))){//regenerate if older then 90 days
         return await fetchMediaCoverage(media)
     } else {
-
+        await sleep(3000)//TODO remove this debug code
         return JSON.parse(media.coverage) as ApiType_MediaGroundCoverage
     }
 }
