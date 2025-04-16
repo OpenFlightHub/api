@@ -1,4 +1,9 @@
+import dayjs from "dayjs";
+import { selectFile, updateDroneMedia } from "../db/DBHelpers";
+import { ApiType_Media, ApiType_MediaGroundCoverage } from "../definitions/ApiTypes";
 import { getExifData } from "./exif";
+import { getExifDataForFile } from "./file";
+import { DBType_DroneMedia } from "../db/DBTypes";
 
 type ExifData = Awaited<ReturnType<typeof getExifData>>
 
@@ -26,16 +31,79 @@ export type ImageMeta = {
     }
 }
 
-export async function getMetaFromImage(fileOrBuffer: File | Blob | ArrayBuffer): Promise<ImageMeta> {
+export async function getMediaCoverage(media: DBType_DroneMedia){
 
-    let exifData: ExifData
+    if(!media.coverage || media.coverage && dayjs(media.coverage_generated_at).isBefore(dayjs().subtract(90, 'days'))){//regenerate if older then 90 days
+        return await fetchMediaCoverage(media)
+    } else {
 
-    if(fileOrBuffer instanceof Blob || fileOrBuffer instanceof File){
-        exifData = await getExifData(await fileOrBuffer.arrayBuffer())
-    } else if (fileOrBuffer instanceof Buffer){
-        exifData = await getExifData(fileOrBuffer)
+        return JSON.parse(media.coverage) as ApiType_MediaGroundCoverage
+    }
+}
+
+
+export async function fetchMediaCoverage(media: DBType_DroneMedia){
+
+    const meta = await getDroneMetaFromFile(media.file_id)
+
+    if(meta === false){
+        return false
     }
 
+    const response = await fetch('http://localhost:6007/camera-ground-coverage', {
+        body: JSON.stringify({
+            longitude: meta.position.longitude,
+            latitude: meta.position.latitude,
+            altitude: meta.altitude - 50,//TODO remove this dirty geoid fix
+            heading: meta.gimbal.yaw,
+            pitch: meta.gimbal.pitch,
+            fovVertical: meta.fov.angular.vertical,
+            fovHorizontal: meta.fov.angular.horizontal
+            //TODO implement camera roll?
+        }),
+        method: 'post',
+        cache: 'no-store',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    })
+
+    if(('' + response.status).startsWith('2') === false){
+        throw new Error(response.statusText + ': ' + await response.text())
+    }
+
+    const responseJson = await response.text()
+    const obj = JSON.parse(responseJson)
+
+    try {
+        await updateDroneMedia({
+            coverage: responseJson,
+            coverage_generated_at: new Date().toISOString()
+        }, media.id)
+    } catch (err){
+        console.error('failed to update coverage of drone_media', err)
+    }
+
+    return obj as ApiType_MediaGroundCoverage
+}
+
+
+export async function getDroneMetaFromFile(fileId: number){
+
+    const exifData = await getExifDataForFile(fileId)
+
+    if(exifData === false){
+        return false
+    } else {
+        return getMetaFromExifData(exifData)
+    }
+}
+
+export async function getMetaFromExifData(exifData: ExifData): Promise<ImageMeta> {
 
     const gpsParsed = parseExifGps(exifData)
 

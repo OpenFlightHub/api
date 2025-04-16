@@ -183,6 +183,8 @@ export type DBInsert_File = {
     created_by: number
     has_thumbnail?: boolean
     thumbnail_generation_has_failed?: boolean
+    exif_data?: string
+    exif_data_generation_has_failed?: boolean
 }
 
 export type DBUpdate_File = {
@@ -193,6 +195,8 @@ export type DBUpdate_File = {
     created_by?: number
     has_thumbnail?: boolean
     thumbnail_generation_has_failed?: boolean
+    exif_data?: string
+    exif_data_generation_has_failed?: boolean
 }
 const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -221,6 +225,14 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "thumbnail_generation_has_failed",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data_generation_has_failed",
         "skip": col => !col.exists
     }
 ], {table: "files"})
@@ -256,6 +268,14 @@ const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "thumbnail_generation_has_failed",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data_generation_has_failed",
         "skip": col => !col.exists
     }
 ], {table: "files"})
@@ -941,6 +961,8 @@ export type DBInsert_DroneMedia = {
     fingerprint: string
     tiny_fingerprint: string
     meta?: string
+    coverage?: string
+    coverage_generated_at?: string
 }
 
 export type DBUpdate_DroneMedia = {
@@ -950,6 +972,8 @@ export type DBUpdate_DroneMedia = {
     fingerprint?: string
     tiny_fingerprint?: string
     meta?: string
+    coverage?: string
+    coverage_generated_at?: string
 }
 const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -973,6 +997,14 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "meta",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage_generated_at",
         "skip": col => !col.exists
     }
 ], {table: "drone_media"})
@@ -1004,6 +1036,14 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "meta",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage_generated_at",
         "skip": col => !col.exists
     }
 ], {table: "drone_media"})

@@ -21,6 +21,7 @@
     "aedes": "^0.51.3",
     "ajv": "^8.17.1",
     "cookie-parser": "^1.4.7",
+    "dayjs": "^1.11.13",
     "deasync": "^0.1.30",
     "exifreader": "^4.28.1",
     "express": "^4.21.2",
@@ -38,6 +39,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "pg-promise": "^11.10.2",
+    "safe-json-stringify": "^1.2.0",
     "typescript": "^5.7.2"
   }
 }

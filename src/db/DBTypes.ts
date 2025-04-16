@@ -57,6 +57,11 @@ export type DBType_File = {
   created_by: number;
   has_thumbnail: boolean;
   thumbnail_generation_has_failed: boolean;
+  /**
+   * json encoded exif data
+   */
+  exif_data?: string;
+  exif_data_generation_has_failed: boolean;
 }
 
 
@@ -188,6 +193,11 @@ export type DBType_DroneMedia = {
    * json encoded meta data
    */
   meta?: string;
+  /**
+   * json encoded coverage data
+   */
+  coverage?: string;
+  coverage_generated_at: string;
 }
 
 

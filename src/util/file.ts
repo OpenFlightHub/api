@@ -1,3 +1,4 @@
+import safeJsonStringify from 'safe-json-stringify'
 import fs from 'fs'
 import path from 'path'
 import {deleteFile, insertFile, selectFile, updateFile} from '../db/DBHelpers'
@@ -60,6 +61,12 @@ export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, works
         workspace_id: workspaceId
     })
 
+    try {
+        await generateExifDataForFile(file.id)
+    } catch (err){
+        console.warn('failed to generateExifDataForFile', file.id, err)
+    }
+
     deleteTmpMulterFile(multerFile).catch(err => {
         console.warn('failed to delete tmp multer file', err)
     })
@@ -87,6 +94,9 @@ async function deleteThumbnailIfExists(fileId: number){
 }
 
 import imageThumbnail from 'image-thumbnail'
+import { readFile } from 'fs/promises'
+import { getExifData } from './exif'
+import { Tags } from 'exifreader'
 
 /**
  * generates a thumbnail for this file, and updates the file database entry. If it fails to generate one, the file database entry is marked as "generation_failed" and after that an error is thrown
@@ -125,6 +135,70 @@ export async function generateThumbnailForFile(fileId: number){
     }, fileId)
 
     return thumbnailPath
+}
+
+/**
+ * generates the exif data for this file, and updates the file database entry.
+ */
+export async function generateExifDataForFile(fileId: number){
+    const filePath = await getAbsoluteFilePathForFileId(fileId)
+
+    const buf = await readFile(filePath)
+
+    const exifData = await getExifData(buf)
+
+    try {
+
+        const clean = {}
+        for(const key of Object.keys(exifData)){
+            const safeJSON = safeJsonStringify(exifData[key]) as string
+
+            if(safeJSON.length > 1000){
+                console.log('removed key', key, safeJSON.length)
+            } else {
+                clean[key] = JSON.parse(safeJSON)
+            }
+        }
+
+        const cleanJson = JSON.stringify(clean)
+
+        const len = cleanJson.length
+
+        await updateFile({
+            exif_data: cleanJson
+        }, fileId)
+    } catch (err){
+
+        try {
+            await updateFile({
+                exif_data_generation_has_failed: true
+            }, fileId)
+        } catch (err){
+            console.error('failed to mark exif_data_generation_has_failed', err)
+        }
+
+        throw err
+    }
+
+    return exifData
+}
+
+export async function getExifDataForFile(fileId: number){
+    const file = await selectFile(fileId)
+
+    if(file.exif_data){
+        return JSON.parse(file.exif_data) as Tags
+    } else {
+        if(file.exif_data_generation_has_failed){
+            return false
+        } else {
+            try {
+                return await generateExifDataForFile(fileId)
+            } catch (err){
+                return false
+            }
+        }
+    }
 }
 
 export { multerMiddleware }

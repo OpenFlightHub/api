@@ -9,7 +9,7 @@ import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import { deleteFile, insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
-import {generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
+import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
 
 const router = express.Router()
 
@@ -137,6 +137,12 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
         await generateThumbnailForFile(file.id)
     } catch (err){
         console.warn('failed to generate thumbnail for file', file.id, err)
+    }
+
+    try {
+        await generateExifDataForFile(file.id)
+    } catch (err){
+        console.warn('failed to generateExifDataForFile', file.id, err)
     }
 
     let droneMedia: DBType_DroneMedia

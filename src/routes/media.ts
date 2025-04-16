@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone } from '../db/DBHelpers';
+import { selectDrone, updateDroneMedia } from '../db/DBHelpers';
 import { ApiSchema_Media, ApiSchema_MediaGroundCoverage } from '../definitions/ApiSchemas';
 import { DBType_DroneMedia } from '../db/DBTypes';
 import { ApiType_Media, ApiType_MediaGroundCoverage } from '../definitions/ApiTypes';
@@ -9,7 +9,8 @@ import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { readFile } from 'fs/promises';
 import { getAbsoluteFilePathForFileId } from '../util/file';
-import { getMetaFromImage } from '../util/media';
+import { getDroneMetaFromFile, getMediaCoverage } from '../util/media';
+import dayjs from 'dayjs';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -72,43 +73,23 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
 
-    const buf = await readFile(await getAbsoluteFilePathForFileId(media.file_id))
+    const meta = await getDroneMetaFromFile(media.file_id)
 
-    const meta = await getMetaFromImage(buf)
+    if(meta === false){
+        throw GuardError._410_Gone()
+    }
 
     if(!meta.position || !meta.altitude || !meta.fov || !meta.gimbal){
         throw GuardError._410_Gone()
     }
 
-    const response = await fetch('http://localhost:6007/camera-ground-coverage', {
-        body: JSON.stringify({
-            longitude: meta.position.longitude,
-            latitude: meta.position.latitude,
-            altitude: meta.altitude - 50,//TODO remove this dirty geoid fix
-            heading: meta.gimbal.yaw,
-            pitch: meta.gimbal.pitch,
-            fovVertical: meta.fov.angular.vertical,
-            fovHorizontal: meta.fov.angular.horizontal
-            //TODO implement camera roll?
-        }),
-        method: 'post',
-        cache: 'no-store',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        }
-    })
+    const coverage = await getMediaCoverage(media)
 
-
-    if(('' + response.status).startsWith('2') === false){
-        throw new Error(response.statusText + ': ' + await response.text())
+    if(coverage === false){
+        throw GuardError._410_Gone()
     }
 
-    const obj = JSON.parse(await response.text())
-    res.GM.guardSend(obj, ApiSchema_MediaGroundCoverage)
+    res.GM.guardSend(coverage, ApiSchema_MediaGroundCoverage)
 
 }))
 
