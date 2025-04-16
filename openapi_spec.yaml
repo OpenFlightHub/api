@@ -1781,11 +1781,23 @@ components:
           type: object
           required:
             - all
+            - outer
+            - holes
           properties:
             all:
               type: array
               items:
                 $ref: '#/components/schemas/ground-coverage-location'
+            outer:
+              type: array
+              items:
+                $ref: '#/components/schemas/ground-coverage-location'
+            holes:
+              type: array
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ground-coverage-location'
 
     ground-coverage-location:
       type: object
@@ -1808,6 +1820,9 @@ components:
         elevation:
           type: number
           description: in meters
+        debug:
+          type: string
+          description: for debugging only
 
     # connection-link
 

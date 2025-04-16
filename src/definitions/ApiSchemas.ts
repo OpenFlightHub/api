@@ -667,7 +667,9 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
         "coverage": {
             "type": "object",
             "required": [
-                "all"
+                "all",
+                "outer",
+                "holes"
             ],
             "properties": {
                 "all": {
@@ -699,6 +701,87 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
                             "elevation": {
                                 "type": "number",
                                 "description": "in meters"
+                            },
+                            "debug": {
+                                "type": "string",
+                                "description": "for debugging only"
+                            }
+                        }
+                    }
+                },
+                "outer": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "position",
+                            "elevation"
+                        ],
+                        "properties": {
+                            "position": {
+                                "type": "object",
+                                "required": [
+                                    "longitude",
+                                    "latitude"
+                                ],
+                                "properties": {
+                                    "longitude": {
+                                        "type": "number",
+                                        "description": "in degree"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "description": "in degree"
+                                    }
+                                }
+                            },
+                            "elevation": {
+                                "type": "number",
+                                "description": "in meters"
+                            },
+                            "debug": {
+                                "type": "string",
+                                "description": "for debugging only"
+                            }
+                        }
+                    }
+                },
+                "holes": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "position",
+                                "elevation"
+                            ],
+                            "properties": {
+                                "position": {
+                                    "type": "object",
+                                    "required": [
+                                        "longitude",
+                                        "latitude"
+                                    ],
+                                    "properties": {
+                                        "longitude": {
+                                            "type": "number",
+                                            "description": "in degree"
+                                        },
+                                        "latitude": {
+                                            "type": "number",
+                                            "description": "in degree"
+                                        }
+                                    }
+                                },
+                                "elevation": {
+                                    "type": "number",
+                                    "description": "in meters"
+                                },
+                                "debug": {
+                                    "type": "string",
+                                    "description": "for debugging only"
+                                }
                             }
                         }
                     }
@@ -735,6 +818,10 @@ export const ApiSchema_GroundCoverageLocation : JSONSchema  = {
         "elevation": {
             "type": "number",
             "description": "in meters"
+        },
+        "debug": {
+            "type": "string",
+            "description": "for debugging only"
         }
     }
 }

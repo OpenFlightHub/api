@@ -304,7 +304,51 @@ export type ApiType_MediaGroundCoverage = {
              * in meters
              */
             elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
         }[];
+        outer: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
+        }[];
+        holes: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
+        }[][];
     };
 }
 
@@ -324,6 +368,10 @@ export type ApiType_GroundCoverageLocation = {
      * in meters
      */
     elevation: number;
+    /**
+     * for debugging only
+     */
+    debug?: string;
 }
 
 

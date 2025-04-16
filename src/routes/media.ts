@@ -107,7 +107,8 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
         throw new Error(response.statusText + ': ' + await response.text())
     }
 
-    res.GM.guardSend(JSON.parse(await response.text()), ApiSchema_MediaGroundCoverage)
+    const obj = JSON.parse(await response.text())
+    res.GM.guardSend(obj, ApiSchema_MediaGroundCoverage)
 
 }))
 
