@@ -73,7 +73,8 @@ export async function fetchMediaCoverage(media: DBType_DroneMedia){
     })
 
     if(('' + response.status).startsWith('2') === false){
-        throw new Error(response.statusText + ': ' + await response.text())
+        console.error('failed to generate coverage for media', media.id, response.statusText + ': ' + await response.text())
+        return false
     }
 
     const responseJson = await response.text()
