@@ -5,6 +5,11 @@ import { getExifData } from "./exif";
 import { getExifDataForFile } from "./file";
 import { DBType_DroneMedia } from "../db/DBTypes";
 
+
+import SecretsLoader from './SecretsLoader'
+const secretsLoader = new SecretsLoader('secrets.json')
+const secrets = secretsLoader.getSecrets(['terrain_service_adress'])
+
 type ExifData = Awaited<ReturnType<typeof getExifData>>
 
 export type MediaMeta = {
@@ -50,7 +55,7 @@ export async function fetchMediaCoverage(media: DBType_DroneMedia){
         return false
     }
 
-    const response = await fetch('http://localhost:6007/camera-ground-coverage', {
+    const response = await fetch(secrets.terrain_service_adress + (secrets.terrain_service_adress.endsWith('/') ? '' : '/') + 'camera-ground-coverage', {
         body: JSON.stringify({
             longitude: meta.position.longitude,
             latitude: meta.position.latitude,

@@ -42,7 +42,9 @@ example contents:
     "minio_host": "http://hub.openflighthub.org:6003",
     "minio_region": "eu-1",
     "minio_web_access_key_root": "ofh",
-    "minio_web_secret_key_root": "ofh-bucket"
+    "minio_web_secret_key_root": "ofh-bucket",
+
+    "terrain_service_adress": "http://localhost:6007"
 }
 ```
 
@@ -87,7 +89,10 @@ make sure that you created an action secret called `SECRETS` here https://github
     "minio_host": "http://hub.openflighthub.org:6003",
     "minio_region": "eu-1",
     "minio_web_access_key_root": "ofh",
-    "minio_web_secret_key_root": "ofh-bucket"
+    "minio_web_secret_key_root": "ofh-bucket",
+
+
+    "terrain_service_adress": "ofh-terrain:6007"
 }
 ```
 
