@@ -17,6 +17,7 @@ export default class FakeMedia {
 
             const media = await insertDroneMedia({
                 drone_id: this.drone.getId(),
+                flight_id: await this.drone.getFlightId(),
                 file_id: 1,
                 fingerprint: 'fake',
                 tiny_fingerprint: 'fake',

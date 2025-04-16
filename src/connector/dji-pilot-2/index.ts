@@ -2,12 +2,12 @@ import { Client, PublishPacket } from "aedes";
 import Connector from "./Connector";
 import Logger from "./ConnectorLogger";
 import path from "path";
-import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber} from '../../util/drone'
+import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber, setDroneInFlightState} from '../../util/drone'
 import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
-import { DBType_Connection, DBType_Drone, DBType_Drone_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
-import { insertDrone, insertRemoteController, selectConnection, selectDrone, updateConnection, updateDrone } from "../../db/DBHelpers";
+import { DBType_Connection, DBType_Drone_TYPES, DBType_FlightData_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
+import { deleteFlight, insertDrone, insertFlight, insertFlightData, insertRemoteController, selectConnection, updateConnection, updateDrone, updateFlight } from "../../db/DBHelpers";
 import {getProductType} from './util/product'
 const db : pgp.IDatabase<any> = global.db
 
@@ -95,16 +95,31 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
             }
         } else {
 
-            drone = await insertDrone({
-                type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
-                    : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
-                    : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
-                    : productType.type === 'matrice_350_rtk' ? DBType_Drone_TYPES.dji_matrice_350
-                    : DBType_Drone_TYPES.unknown,
-                serial_number: serialNumber,
-                name: productType.subType,
-                last_connection_id: connection.id
-            })
+            try {
+                drone = await insertDrone({
+                    type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
+                        : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
+                        : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
+                        : productType.type === 'matrice_350_rtk' ? DBType_Drone_TYPES.dji_matrice_350
+                        : DBType_Drone_TYPES.unknown,
+                    serial_number: serialNumber,
+                    name: productType.subType,
+                    last_connection_id: connection.id
+                })
+
+                const flight = await insertFlight({
+                    drone_id: drone.id
+                })
+
+                drone = await updateDrone({
+                    current_flight_id: flight.id
+                }, drone.id)
+
+            } catch (err){
+
+                throw err
+            }
+
         }
 
         if(connection.last_drone_id !== drone.id){
@@ -126,7 +141,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
 
 connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
-    const _m = message as {data: {longitude?: number, latitude?: number, height?: number}}
+    const _m = message as {data: {longitude?: number, latitude?: number, height?: number, elevation?: number}}
 
     const connection = await selectConnection(connectionId)
 
@@ -172,6 +187,24 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
                         latitude: messageData.latitude,
                         height: messageData.height
                     })
+
+                    setDroneInFlightState(drone, _m.data.elevation !== 0).then(drone=>{
+
+                        insertFlightData({
+                            created_at: new Date(message.timestamp).toISOString(),
+                            data: JSON.stringify({
+                                longitude: messageData.longitude,
+                                latitude: messageData.latitude,
+                                height: messageData.height
+                            }),
+                            flight_id: drone.current_flight_id,
+                            type: DBType_FlightData_TYPES.position
+                        }).catch(err => {
+                            console.error('failed to insert flight data', err)
+                        })
+
+                    }).catch(err => console.error('failed to setDroneInFlightState', err))
+
                 }
 
                 if(typeof messageData.battery?.capacity_percent === 'number'){

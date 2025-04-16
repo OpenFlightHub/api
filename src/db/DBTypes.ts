@@ -133,6 +133,48 @@ export type DBType_Drone = {
    */
   type: DBType_Drone_TypeType;
   last_connection_id?: number;
+  /**
+   * should never every be null
+   */
+  current_flight_id?: number;
+  in_flight: boolean;
+}
+
+
+export type DBType_Flight = {
+  id: number;
+  drone_id: number;
+  started_at: string;
+  /**
+   * when drone lands
+   */
+  landed_at?: string;
+  ended_at?: string;
+}
+
+
+export type DBType_FlightData_TypeType = 0
+export const DBType_FlightData_TYPES = {
+  position: 0 as DBType_FlightData_TypeType
+}
+export type DBType_FlightData = {
+  id: number;
+  flight_id: number;
+  /**
+   * when stored in db
+   */
+  received_at: string;
+  /**
+   * when drone created the data
+   */
+  created_at: string;
+  /**
+   * 0 = position
+   */
+  type: DBType_FlightData_TypeType;
+  data: {
+    [k: string]: unknown;
+  };
 }
 
 
@@ -162,6 +204,7 @@ export const DBType_DroneData_TYPES = {
 export type DBType_DroneData = {
   id: number;
   drone_id: number;
+  flight_id: number;
   /**
    * 0 = position, 1 = telemetry
    */
@@ -182,6 +225,7 @@ export const DBType_DroneMedia_TYPES = {
 export type DBType_DroneMedia = {
   id: number;
   drone_id: number;
+  flight_id: number;
   /**
    * 0 = video, 1 = picture, 2 = panorama
    */

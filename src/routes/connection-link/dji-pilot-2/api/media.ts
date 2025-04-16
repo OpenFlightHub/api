@@ -8,7 +8,7 @@ const db : pgp.IDatabase<any> = global.db
 import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
-import { deleteFile, insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
+import { deleteFile, insertDroneMedia, insertFile, selectDrone } from '../../../../db/DBHelpers';
 import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
 
 const router = express.Router()
@@ -153,7 +153,8 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
             fingerprint,
             tiny_fingerprint: tinyFingerprint,
             meta,
-            file_id: file.id
+            file_id: file.id,
+            flight_id: (await selectDrone(connection.last_drone_id!)).current_flight_id
         })
 
     } catch (err){

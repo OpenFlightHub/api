@@ -1,5 +1,8 @@
+import * as pgp from 'pg-promise'
+const db : pgp.IDatabase<any> = global.db
 import { addDroneData, DRONE_DATA_TYPES } from "./drone"
 import FakeTrack from './FakeTrack'
+import { selectDrone } from '../db/DBHelpers'
 
 export default class FakeDrone {
 
@@ -30,6 +33,10 @@ export default class FakeDrone {
 
     public getTrack(){
         return this.fakeTrack
+    }
+
+    public async getFlightId(){
+        return (await selectDrone(this.droneId)).current_flight_id
     }
 
 }
