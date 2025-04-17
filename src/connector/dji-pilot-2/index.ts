@@ -3,12 +3,13 @@ import Connector from "./Connector";
 import Logger from "./ConnectorLogger";
 import path from "path";
 import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber, setDroneInFlightState} from '../../util/drone'
-import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
+import {addRemoteControllerData, getRemoteControllerForSerialNumber, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
 import { DBType_Connection, DBType_Drone_TYPES, DBType_FlightData_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
 import { deleteFlight, insertDrone, insertFlight, insertFlightData, insertRemoteController, selectConnection, updateConnection, updateDrone, updateFlight } from "../../db/DBHelpers";
 import {getProductType} from './util/product'
+import { getConnectionForRemoteController } from "../../util/connection";
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
@@ -64,20 +65,34 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
 
         if(typeof connection.remote_controller_id !== 'number'){
 
-            const newRemoteController = await insertRemoteController({
-                type: productType.type === 'rc_plus' ? DBType_RemoteController_TYPES.dji_rc_plus
-                    : productType.type === 'rc_plus_2' ? DBType_RemoteController_TYPES.dji_rc_plus_2
-                    : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
-                    : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
-                    : DBType_RemoteController_TYPES.unknown,
-                serial_number: serialNumber
-            })
+            let remoteController = await getRemoteControllerForSerialNumber(serialNumber)
+
+            if(remoteController){
+
+                try {
+                    const oldConnection = await getConnectionForRemoteController(remoteController.id)
+
+                    console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
+                } catch (err){
+                    //ignore
+                }
+
+            } else {
+                remoteController = await insertRemoteController({
+                    type: productType.type === 'rc_plus' ? DBType_RemoteController_TYPES.dji_rc_plus
+                        : productType.type === 'rc_plus_2' ? DBType_RemoteController_TYPES.dji_rc_plus_2
+                        : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
+                        : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
+                        : DBType_RemoteController_TYPES.unknown,
+                    serial_number: serialNumber
+                })
+            }
 
             await updateConnection({
-                remote_controller_id: newRemoteController.id
+                remote_controller_id: remoteController.id
             }, connection.id)
 
-            connection.remote_controller_id = newRemoteController.id
+            connection.remote_controller_id = remoteController.id
         }
 
     } else if(productType.domain === 'drone'){
@@ -163,11 +178,17 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
             const messageData = _m.data as MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE
 
             if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
-                addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {
-                    longitude: messageData.longitude,
-                    latitude: messageData.latitude,
-                    height: messageData.height
-                })
+
+                if(typeof connection.remote_controller_id !== 'number'){
+                    console.warn('got remote controller data, but remote controller was not yet created', connection.id)
+                } else {
+
+                    addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {
+                        longitude: messageData.longitude,
+                        latitude: messageData.latitude,
+                        height: messageData.height
+                    })
+                }
             }
         }
 
