@@ -151,6 +151,11 @@ export async function generateExifDataForFile(fileId: number){
 
         const clean = {}
         for(const key of Object.keys(exifData)){
+
+            if(key === 'Images' || key === 'Thumbnail'){
+                continue //skip to safe storage space
+            }
+
             const safeJSON = safeJsonStringify(exifData[key]) as string
 
             if(safeJSON.length > 1000){
