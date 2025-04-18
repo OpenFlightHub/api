@@ -1,11 +1,11 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectConnection, selectDrone } from '../db/DBHelpers';
-import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneFlights, ApiSchema_DroneMedia, ApiSchema_DronePosition } from '../definitions/ApiSchemas';
-import { DBType_Connection, DBType_Drone, DBType_DroneData, DBType_DroneMedia, DBType_Flight } from '../db/DBTypes';
-import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneFlights, ApiType_DroneMedia, ApiType_DronePosition } from '../definitions/ApiTypes';
-import { DRONE_DATA_TYPES, getLastPositionOfDrone as getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
+import { selectDrone } from '../db/DBHelpers';
+import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneFlights, ApiSchema_DroneMedia, ApiSchema_DronePosition, ApiSchema_Flight } from '../definitions/ApiSchemas';
+import { DBType_DroneMedia, DBType_Flight } from '../db/DBTypes';
+import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneFlights, ApiType_DroneMedia, ApiType_DronePosition, ApiType_Flight } from '../definitions/ApiTypes';
+import { getLastPositionOfDrone as getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
@@ -124,6 +124,18 @@ router.get('/:drone_id/flights', asyncHandler(async (req, res) => {
 
     res.GM.guardSend<ApiType_DroneFlights>(ret, ApiSchema_DroneFlights)
 }))
+
+router.get('/:drone_id/current-flight', asyncHandler(async (req, res) => {
+
+    const droneId = req.GM.guardParam('drone_id', 'id')
+
+    const currentFlight = await db.one<DBType_Flight>('SELECT * FROM flights WHERE drone_id = ${droneId} ORDER BY id DESC LIMIT 1', {
+        droneId
+    })
+
+    res.GM.guardSend<ApiType_Flight>(assignObject({track: await getTrackForFlight(currentFlight.id)}, currentFlight), ApiSchema_Flight)
+}))
+
 
 
 export default router
