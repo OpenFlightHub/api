@@ -46,7 +46,8 @@ describe('general status codes', ()=>{
 
                 const res = await f.send()
 
-                expect(res.statusCode).not.toEqual(404)
+                expect(res.statusCode).not.toEqual(404)//TODO this check does not work!
+                expect(('' + res.statusCode).startsWith('5')).not.toBeTruthy()
                 expect(res).toSatisfyApiSpec()
             })
 
