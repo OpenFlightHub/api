@@ -70,8 +70,14 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                     const oldConnection = await getConnectionForRemoteController(remoteController.id)
 
                     console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
+
+                    await updateConnection({
+                        remote_controller_id: null
+                    }, oldConnection.id)
+
                 } catch (err){
                     //ignore
+                    console.log('failed to remove remote controller from old connection', err)
                 }
 
             } else {
