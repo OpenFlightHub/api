@@ -26,7 +26,7 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
 
         if(message.method === 'update_topo'){
             //@ts-ignore
-            if(message.data.thing_version !== '1.2.0' || message.data.version !== 1){
+            if(message.data.thing_version !== '1.2.0' && message.data.version !== 1){
                 console.warn('thing_version of mqtt message update_topo was not 1.2.0 or 1: ', message)
             }
 
