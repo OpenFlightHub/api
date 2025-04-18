@@ -1116,11 +1116,11 @@ paths:
             $ref: '#/components/schemas/id'
       responses:
         '200':
-          description: Returns the drones current flight
+          description: Returns the drones current flight (equivalent to /flight/{flight_id})
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/reference'
+                $ref: '#/components/schemas/flight'
 
         '400':
           $ref: '#/components/responses/400'
