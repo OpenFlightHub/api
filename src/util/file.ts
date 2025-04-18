@@ -158,7 +158,7 @@ export async function generateExifDataForFile(fileId: number){
 
             const safeJSON = safeJsonStringify(exifData[key]) as string
 
-            if(safeJSON.length > 1000){
+            if(safeJSON.length > 100000 && ['MakerNote'].includes(key) === false){
                 console.log('removed key', key, safeJSON.length)
             } else {
                 clean[key] = JSON.parse(safeJSON)
