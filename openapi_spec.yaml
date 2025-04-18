@@ -394,7 +394,39 @@ paths:
                 $ref: '#/components/schemas/file'
 
         '400':
-            $ref: '#/components/responses/400'
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /file/get-multiple:
+    post:
+      tags:
+        - file
+      summary: Get multiple files at once
+      description: Only returns file meta data, For the actual file see /file/data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/file_get_multiple_post'
+        required: true
+      responses:
+        '200':
+          description: Returns a file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file_get_multiple'
+
+        '400':
+          $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -1038,6 +1070,104 @@ paths:
         - user_auth: []
 
 
+
+  /drone/{drone_id}/flights:
+    get:
+      tags:
+        - drone
+      summary: Get all the flights of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drones flights
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone_flights'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+
+  /drone/{drone_id}/current-flight:
+    get:
+      tags:
+        - drone
+      summary: Get the current flight of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drones current flight
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  # flight
+
+  /flight/{flight_id}:
+    get:
+      tags:
+        - drone
+      summary: Get a flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the flight
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flight'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  # media
+
   /media/{media_id}:
     get:
       tags:
@@ -1081,15 +1211,21 @@ paths:
           schema:
             $ref: '#/components/schemas/id'
       responses:
-          '200':
-            description: ground coverage
-            content:
-              application/json:
-                schema:
-                   $ref: '#/components/schemas/media_ground_coverage'
+        '200':
+          description: ground coverage
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/media_ground_coverage'
 
-          '410':
-            description: ground coverage not available
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          description: ground coverage not available
 
   # connection-link
 
@@ -1557,6 +1693,21 @@ components:
           description: if a thumbnail is available at /file/thumbnail/
 
 
+    file_get_multiple:
+      type: array
+      items:
+        $ref: '#/components/schemas/file'
+
+    file_get_multiple_post:
+      type: object
+      required:
+        - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+
     # workspace
 
 
@@ -1743,6 +1894,50 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/media'
+
+
+    drone_flights:
+      type: array
+      items:
+        $ref: '#/components/schemas/flight'
+
+    flight:
+      type: object
+      required:
+        - id
+        - drone_id
+        - started_at
+        - track
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        drone_id:
+          $ref: '#/components/schemas/id'
+        started_at:
+          $ref: '#/components/schemas/timestamptz'
+        landed_at:
+          $ref: '#/components/schemas/timestamptz'
+        ended_at:
+          $ref: '#/components/schemas/timestamptz'
+        track:
+          type: array
+          items:
+            type: object
+            required:
+              - height
+              - longitude
+              - latitude
+            properties:
+              height:
+                type: number
+              longitude:
+                type: number
+              latitude:
+                type: number
+              time:
+                $ref: '#/components/schemas/timestamptz'
+
+
 
     media:
       type: object

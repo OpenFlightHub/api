@@ -48,7 +48,7 @@ router.post('/fast-upload', asyncHandler(async (req, res) => {
 
 }))
 
-router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
+router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {// this endpoint is used by m300 (not by mavic 3)
 
     const connection = await req.GM.getCurrentConnection()
 

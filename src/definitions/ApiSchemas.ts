@@ -271,6 +271,54 @@ export const ApiSchema_File : JSONSchema  = {
     }
 }
 
+export const ApiSchema_FileGetMultiple : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name",
+            "created_at",
+            "has_thumbnail"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "has_thumbnail": {
+                "type": "boolean",
+                "description": "if a thumbnail is available at /file/thumbnail/"
+            }
+        }
+    }
+}
+
+export const ApiSchema_FileGetMultiplePost : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "ids"
+    ],
+    "properties": {
+        "ids": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "example": 42
+            }
+        }
+    }
+}
+
 export const ApiSchema_Workspace : JSONSchema  = {
     "type": "object",
     "required": [
@@ -610,6 +658,141 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
             },
             "meta": {
                 "type": "string"
+            }
+        }
+    }
+}
+
+export const ApiSchema_DroneFlights : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "drone_id",
+            "started_at",
+            "track"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "drone_id": {
+                "type": "number",
+                "example": 42
+            },
+            "started_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "landed_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "ended_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "track": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "height",
+                        "longitude",
+                        "latitude"
+                    ],
+                    "properties": {
+                        "height": {
+                            "type": "number"
+                        },
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "time": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Flight : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "drone_id",
+        "started_at",
+        "track"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "drone_id": {
+            "type": "number",
+            "example": 42
+        },
+        "started_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "landed_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "ended_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "track": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "height",
+                    "longitude",
+                    "latitude"
+                ],
+                "properties": {
+                    "height": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "time": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    }
+                }
             }
         }
     }

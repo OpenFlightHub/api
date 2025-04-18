@@ -123,6 +123,25 @@ export type ApiType_File = {
 }
 
 
+export type ApiType_FileGetMultiple = {
+    id: number;
+    name: string;
+    /**
+     * ISO 8601 format
+     */
+    created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
+}[];
+
+
+export type ApiType_FileGetMultiplePost = {
+    ids: number[];
+}
+
+
 export type ApiType_Workspace = {
     id: number;
     name: string;
@@ -265,6 +284,60 @@ export type ApiType_DroneMedia = {
     created_at: string;
     meta?: string;
 }[];
+
+
+export type ApiType_DroneFlights = {
+    id: number;
+    drone_id: number;
+    /**
+     * ISO 8601 format
+     */
+    started_at: string;
+    /**
+     * ISO 8601 format
+     */
+    landed_at?: string;
+    /**
+     * ISO 8601 format
+     */
+    ended_at?: string;
+    track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format
+         */
+        time?: string;
+    }[];
+}[];
+
+
+export type ApiType_Flight = {
+    id: number;
+    drone_id: number;
+    /**
+     * ISO 8601 format
+     */
+    started_at: string;
+    /**
+     * ISO 8601 format
+     */
+    landed_at?: string;
+    /**
+     * ISO 8601 format
+     */
+    ended_at?: string;
+    track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format
+         */
+        time?: string;
+    }[];
+}
 
 
 export type ApiType_Media = {

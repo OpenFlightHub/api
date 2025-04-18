@@ -4,10 +4,11 @@ import asyncHandler from 'express-async-handler'
 const db : pgp.IDatabase<any> = global.db
 
 import { selectFile } from '../db/DBHelpers';
-import { ApiSchema_File } from '../definitions/ApiSchemas';
-import { ApiType_File } from '../definitions/ApiTypes';
+import { ApiSchema_File, ApiSchema_FileGetMultiple, ApiSchema_FileGetMultiplePost } from '../definitions/ApiSchemas';
+import { ApiType_File, ApiType_FileGetMultiple, ApiType_FileGetMultiplePost } from '../definitions/ApiTypes';
 import { getAbsoluteFilePathForFile, getAbsoluteThumbnailPathForFile } from '../util/file';
 import { GuardError } from '../ManInTheMiddleware';
+import { DBType_File } from '../db/DBTypes';
 
 const router = express.Router()
 
@@ -24,6 +25,23 @@ router.get('/:file_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
 
     res.GM.guardSend<ApiType_File>(file, ApiSchema_File)
+}))
+
+router.post('/get-multiple', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const fileIds = req.GM.guardBodySchema<ApiType_FileGetMultiplePost>(ApiSchema_FileGetMultiplePost)
+
+    const files = await req.GM.guardDBGone(()=>{
+        return db.manyOrNone<DBType_File>('SELCT * FROM files WHERE ID in ${fileIds}', {fileIds})
+    })
+
+    for(const file of files){
+        await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
+    }
+
+    res.GM.guardSend<ApiType_FileGetMultiple>(files, ApiSchema_FileGetMultiple)
 }))
 
 router.get('/data/:file_id', asyncHandler(async (req, res) => {

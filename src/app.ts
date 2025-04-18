@@ -139,6 +139,9 @@ app.use('/drone', droneRoute)
 import mediaRoute from './routes/media'
 app.use('/media', mediaRoute)
 
+import flightRoute from './routes/flight'
+app.use('/flight', flightRoute)
+
 import remoteControllerRoute from './routes/remote-controller'
 app.use('/remote-controller', remoteControllerRoute)
 
@@ -203,7 +206,7 @@ import FakeMedia from './util/FakeMedia'
 new FakeMedia(fakeDrone)
 
 import {setupTrafficSensing} from './aircraft_sensing'
-import { DBType_Drone } from './db/DBTypes'
+import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
 setupTrafficSensing()
 
 
@@ -255,7 +258,8 @@ declare global {
         export interface Request {
             GM: GuardedMiddleware
             //query: {[key: string] : string} // hpp middleware TODO uncomment this line again and fix the ts error in express
-            _drone?: DBType_Drone
+            _drone?: DBType_Drone // for /drone endpoint auth middlewar
+            _flight?: DBType_Flight // for /flight endpoint auth middlewar
         }
 
         /**
