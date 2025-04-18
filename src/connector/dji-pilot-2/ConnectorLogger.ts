@@ -27,6 +27,7 @@ export default class Logger {
             writeStreamPackets.write(JSON.stringify({
                 connectionId: data.connectionId,
                 clientId: data.client.id,
+                received_at: new Date().toISOString(),
                 packet: {
                     topic: data.packet.topic,
                     payload: data.packet.payload.toString()
