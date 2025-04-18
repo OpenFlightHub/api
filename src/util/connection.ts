@@ -22,9 +22,12 @@ export async function createConnection(workspaceId: number, name: string){
 
 
 export async function getActiveConnectionForDrone(droneId: number){
-    const connection = await db.oneOrNone<DBType_Connection>('SELECT * FROM connections WHERE last_drone_id = ${droneId}', {
-        droneId
-    })
+    const drone = await selectDrone(droneId)
+    if(typeof drone.last_connection_id === 'number'){
+        return false
+    }
+
+    const connection = await selectConnection(drone.last_connection_id)
 
     if(!connection){
         return false
