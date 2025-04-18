@@ -55,7 +55,7 @@ router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
 
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost>(ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost)
 
-    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
+    const existingTinyFingerprints = await db.manyOrNone<{tiny_fingerprint: string}>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
         connectionId: connection.id
     }))
 
@@ -63,7 +63,7 @@ router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
         code: 0,
         message: 'success',
         data: {
-            tiny_fingerprints: existingTinyFingerprints
+            tiny_fingerprints: existingTinyFingerprints.map(etf => etf.tiny_fingerprint)
         }
     }, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse)
 
