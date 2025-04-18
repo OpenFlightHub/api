@@ -15,15 +15,12 @@ const db : pgp.IDatabase<any> = global.db
 const connector = new Connector()
 
 connector.onMessage_State((connectionId, message)=>{
-    console.log('onMessage_State', connectionId, message)
-
     //TODO save live_capacity information of rc (and use that to determine if rc can do livestreaming)
     //TODO website on rc needs to reqest aircraft and rc serial number, send to server so it can identify rc and drone by serial number
 })
 
 
 connector.onMessage_Status(async (connectionId, message, productSerialNumber, respond)=>{
-    console.log('onMessage_Status', connectionId, productSerialNumber, message)
 
     try {
 
@@ -244,8 +241,6 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 })
 
 connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
-    console.log('onMessage_Event', connectionId, message, serialNumber)
-
 
     if(message.need_reply === 1){// if this check is not done, it crashes the dji pilot 2 app on the remote controller
         respond({
