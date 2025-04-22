@@ -278,6 +278,7 @@ export type ApiType_DroneBattery = {
 export type ApiType_DroneMedia = {
     id: number;
     drone_id: number;
+    flight_id: number;
     /**
      * 0 = image, 1 = video
      */
@@ -352,6 +353,7 @@ export type ApiType_Flight = {
 export type ApiType_FlightMedia = {
     id: number;
     drone_id: number;
+    flight_id: number;
     /**
      * 0 = image, 1 = video
      */
@@ -372,6 +374,7 @@ export type ApiType_FlightMedia = {
 export type ApiType_Media = {
     id: number;
     drone_id: number;
+    flight_id: number;
     /**
      * 0 = image, 1 = video
      */

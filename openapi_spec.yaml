@@ -1983,11 +1983,14 @@ components:
         - file_id
         - created_at
         - drone_id
+        - flight_id
         - file_name
       properties:
         id:
           $ref: '#/components/schemas/id'
         drone_id:
+          $ref: '#/components/schemas/id'
+        flight_id:
           $ref: '#/components/schemas/id'
         type:
           type: number

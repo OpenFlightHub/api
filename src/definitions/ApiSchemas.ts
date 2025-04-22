@@ -643,6 +643,7 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
             "file_id",
             "created_at",
             "drone_id",
+            "flight_id",
             "file_name"
         ],
         "properties": {
@@ -651,6 +652,10 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
                 "example": 42
             },
             "drone_id": {
+                "type": "number",
+                "example": 42
+            },
+            "flight_id": {
                 "type": "number",
                 "example": 42
             },
@@ -824,6 +829,7 @@ export const ApiSchema_FlightMedia : JSONSchema  = {
             "file_id",
             "created_at",
             "drone_id",
+            "flight_id",
             "file_name"
         ],
         "properties": {
@@ -832,6 +838,10 @@ export const ApiSchema_FlightMedia : JSONSchema  = {
                 "example": 42
             },
             "drone_id": {
+                "type": "number",
+                "example": 42
+            },
+            "flight_id": {
                 "type": "number",
                 "example": 42
             },
@@ -868,6 +878,7 @@ export const ApiSchema_Media : JSONSchema  = {
         "file_id",
         "created_at",
         "drone_id",
+        "flight_id",
         "file_name"
     ],
     "properties": {
@@ -876,6 +887,10 @@ export const ApiSchema_Media : JSONSchema  = {
             "example": 42
         },
         "drone_id": {
+            "type": "number",
+            "example": 42
+        },
+        "flight_id": {
             "type": "number",
             "example": 42
         },
