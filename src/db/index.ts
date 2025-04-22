@@ -30,7 +30,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
 
         const connection = await selectConnection(drone.last_connection_id!)
 
@@ -51,7 +51,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
 
         const connection = await selectConnection(drone.last_connection_id!)
 
@@ -111,7 +111,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
 
         const connection = await selectConnection(drone.last_connection_id!)
 
