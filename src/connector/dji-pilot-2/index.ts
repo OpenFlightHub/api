@@ -256,7 +256,7 @@ connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
 })
 
 
-new Logger(connector, path.resolve('connector_logs'))
+new Logger(connector, path.resolve(path.join('/ofh_logs', 'connector_logs')))
 
 const authedClientIdToConnectionIdMap = new Map<string, {
     connection_id: number,

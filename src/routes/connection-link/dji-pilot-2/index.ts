@@ -4,6 +4,7 @@ import pgp from 'pg-promise'
 import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiTypes';
 import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiSchemas';
 import { connectionLinkAuthMiddleware } from '..';
+import path from 'path';
 const db : pgp.IDatabase<any> = global.db
 
 import SecretsLoader from '../../../util/SecretsLoader'
@@ -27,14 +28,14 @@ router.get('/sdk-config', connectionLinkAuthMiddleware, asyncHandler(async (req,
         app_key: secrets.dji_cloud_app_key as string,
         app_license: secrets.dji_cloud_app_license as string,
         mqtt_url: 'tcp://' + secrets.platform_url + ':' + secrets.mqtt_port,
-        rtmp_url: 'rtmp://' + secrets.rtmp_url + '/' + +currentConnection.id + '?auth=' + currentConnection.secret
+        rtmp_url: 'rtmp://' + secrets.rtmp_url + '/' + currentConnection.id + '?auth=' + currentConnection.secret
     }, ApiSchema_ConnectionLinkDjiPilot2SdkConfig)
 
 }))
 
 
 import ExpressApiLogger from '../../../util/ExpressApiLogger'
-const apiLogger = new ExpressApiLogger('./dji_cloud_api_logs')
+const apiLogger = new ExpressApiLogger(path.resolve(path.join('/ofh_logs', 'dji_cloud_api_logs')))
 
 import apiRoute from './api'
 

@@ -36,4 +36,4 @@ jobs:
         run: docker rm ${{ env.PROJECT_NAME }} || true
 
       - name: Start new docker container
-        run: docker run --restart unless-stopped -p 127.0.0.1:6001:6001 -p 6002:6002 --add-host host.docker.internal:host-gateway --network=ofh -v /ofh_files:/ofh_files --name ${{ env.PROJECT_NAME }} -d ${{ env.PROJECT_NAME }}
+        run: docker run --restart unless-stopped -p 127.0.0.1:6001:6001 -p 6002:6002 --add-host host.docker.internal:host-gateway --network=ofh -v /ofh_files:/ofh_files -v /ofh_logs:/ofh_logs --name ${{ env.PROJECT_NAME }} -d ${{ env.PROJECT_NAME }}
