@@ -25,7 +25,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
         data: {
             bucket: getBucketNameForConnectionId(connection.id),
             endpoint: secrets.minio_host,
-            object_key_prefix: '',
+            object_key_prefix: '',//TODO check if we can safely remove this prefix (because empty prefix means all photos are uploaded with a leading slash "/")
             provider: 'minio',
             region: secrets.minio_region,
             credentials: {
