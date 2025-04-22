@@ -34,7 +34,7 @@ router.post('/get-multiple', asyncHandler(async (req, res) => {
     const fileIds = req.GM.guardBodySchema<ApiType_FileGetMultiplePost>(ApiSchema_FileGetMultiplePost)
 
     const files = await req.GM.guardDBGone(()=>{
-        return db.manyOrNone<DBType_File>('SELCT * FROM files WHERE ID in ${fileIds}', {fileIds})
+        return db.manyOrNone<DBType_File>('SELECT * FROM files WHERE ID in ${fileIds}', {fileIds})
     })
 
     for(const file of files){

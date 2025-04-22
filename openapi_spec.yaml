@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.9.0
+  version: 0.10.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1166,6 +1166,38 @@ paths:
       security:
         - user_auth: []
 
+
+  /flight/{flight_id}/media:
+    get:
+      tags:
+        - drone
+      summary: Get all the uploaded media of this flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the flights media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flight_media'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
   # media
 
   /media/{media_id}:
@@ -1742,7 +1774,7 @@ components:
     workspace_files:
       type: array
       items:
-          $ref: '#/components/schemas/reference'
+          $ref: '#/components/schemas/file'
 
     workspace_file_post:
       type: object
@@ -1938,6 +1970,10 @@ components:
                 $ref: '#/components/schemas/timestamptz'
 
 
+    flight_media:
+      type: array
+      items:
+        $ref: '#/components/schemas/media'
 
     media:
       type: object

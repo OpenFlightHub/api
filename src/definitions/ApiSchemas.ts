@@ -362,12 +362,28 @@ export const ApiSchema_WorkspaceFiles : JSONSchema  = {
     "items": {
         "type": "object",
         "required": [
-            "id"
+            "id",
+            "name",
+            "created_at",
+            "has_thumbnail"
         ],
         "properties": {
             "id": {
                 "type": "number",
                 "example": 42
+            },
+            "name": {
+                "type": "string"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "has_thumbnail": {
+                "type": "boolean",
+                "description": "if a thumbnail is available at /file/thumbnail/"
             }
         }
     }
@@ -793,6 +809,52 @@ export const ApiSchema_Flight : JSONSchema  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     }
                 }
+            }
+        }
+    }
+}
+
+export const ApiSchema_FlightMedia : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "type",
+            "file_id",
+            "created_at",
+            "drone_id",
+            "file_name"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "drone_id": {
+                "type": "number",
+                "example": 42
+            },
+            "type": {
+                "type": "number",
+                "description": "0 = image, 1 = video"
+            },
+            "file_id": {
+                "type": "number",
+                "example": 42,
+                "description": "see `/file` endpoint"
+            },
+            "file_name": {
+                "type": "string"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "meta": {
+                "type": "string"
             }
         }
     }

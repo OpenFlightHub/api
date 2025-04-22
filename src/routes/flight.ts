@@ -2,12 +2,13 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { selectFlight } from '../db/DBHelpers';
-import { ApiSchema_Flight } from '../definitions/ApiSchemas';
-import { ApiType_Flight } from '../definitions/ApiTypes';
+import { ApiSchema_Flight, ApiSchema_FlightMedia } from '../definitions/ApiSchemas';
+import { ApiType_Flight, ApiType_FlightMedia } from '../definitions/ApiTypes';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import {getTrackForFlight} from '../util/flight'
+import { DBType_DroneMedia } from '../db/DBTypes';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -56,5 +57,18 @@ router.get('/:flight_id', asyncHandler(async (req, res) => {
 
     res.GM.guardSend<ApiType_Flight>(assignObject({track}, req._flight), ApiSchema_Flight)
 }))
+
+
+router.get('/:flight_id/media', asyncHandler(async (req, res) => {
+
+    const flightId = req.GM.guardParam('flight_id', 'id')
+
+    const flightMedia = await db.manyOrNone<DBType_DroneMedia & {created_at: string, file_name: string}>('SELECT drone_media.*, files.created_at, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE flight_id = ${flightId}', {
+        flightId
+    })
+
+    res.GM.guardSend<ApiType_FlightMedia>(flightMedia, ApiSchema_FlightMedia)
+}))
+
 
 export default router

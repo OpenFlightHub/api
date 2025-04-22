@@ -160,6 +160,15 @@ export type ApiType_WorkspacesPost = {
 
 export type ApiType_WorkspaceFiles = {
     id: number;
+    name: string;
+    /**
+     * ISO 8601 format
+     */
+    created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
 }[];
 
 
@@ -338,6 +347,26 @@ export type ApiType_Flight = {
         time?: string;
     }[];
 }
+
+
+export type ApiType_FlightMedia = {
+    id: number;
+    drone_id: number;
+    /**
+     * 0 = image, 1 = video
+     */
+    type: number;
+    /**
+     * see `/file` endpoint
+     */
+    file_id: number;
+    file_name: string;
+    /**
+     * ISO 8601 format
+     */
+    created_at: string;
+    meta?: string;
+}[];
 
 
 export type ApiType_Media = {
