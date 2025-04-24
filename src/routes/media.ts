@@ -1,16 +1,13 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone, updateDroneMedia } from '../db/DBHelpers';
+import { selectDrone } from '../db/DBHelpers';
 import { ApiSchema_Media, ApiSchema_MediaGroundCoverage } from '../definitions/ApiSchemas';
 import { DBType_DroneMedia } from '../db/DBTypes';
-import { ApiType_Media, ApiType_MediaGroundCoverage } from '../definitions/ApiTypes';
+import { ApiType_Media } from '../definitions/ApiTypes';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
-import { readFile } from 'fs/promises';
-import { getAbsoluteFilePathForFileId } from '../util/file';
-import { getDroneMetaFromFile, getMediaCoverage } from '../util/media';
-import dayjs from 'dayjs';
+import { getDroneMetaFromFile, getMediaCoverage, parseCameraMetaOfMedia } from '../util/media';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -32,7 +29,7 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
     const mediaId = req.GM.guardParam('media_id', 'id')
 
     const media = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_DroneMedia & {created_at: string, file_name: string}>('SELECT drone_media.*, files.created_at, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_media.id = ${mediaId}', {
+        return db.one<DBType_DroneMedia & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_media.id = ${mediaId}', {
             mediaId
         })
     })
@@ -47,7 +44,7 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    res.GM.guardSend<ApiType_Media>(media, ApiSchema_Media)
+    res.GM.guardSend<ApiType_Media>(parseCameraMetaOfMedia(media), ApiSchema_Media)
 }))
 
 

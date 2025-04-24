@@ -5,9 +5,15 @@ export type ApiType_Uuid = string;
 
 
 /**
- * ISO 8601 format
+ * ISO 8601 format with a timezone
  */
 export type ApiType_Timestamptz = string;
+
+
+/**
+ * ISO 8601 format without a timezone
+ */
+export type ApiType_Timestamp = string;
 
 
 export type ApiType_Email = string;
@@ -94,7 +100,7 @@ export type ApiType_UserSelf = {
     name: string;
     email: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
     locale: string;
@@ -113,7 +119,7 @@ export type ApiType_File = {
     id: number;
     name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
     /**
@@ -127,7 +133,7 @@ export type ApiType_FileGetMultiple = {
     id: number;
     name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
     /**
@@ -157,6 +163,8 @@ export type ApiType_WorkspacePatch = {
 
 export type ApiType_WorkspacesPost = {
     name: string;
+    longitude: number;
+    latitude: number;
 }
 
 
@@ -164,7 +172,7 @@ export type ApiType_WorkspaceFiles = {
     id: number;
     name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
     /**
@@ -233,7 +241,7 @@ export type ApiType_RemoteControllerPosition = {
     latitude: number;
     height: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -262,7 +270,7 @@ export type ApiType_DronePosition = {
     latitude: number;
     height: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -271,7 +279,7 @@ export type ApiType_DronePosition = {
 export type ApiType_DroneBattery = {
     capacity_percent_left: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -291,10 +299,26 @@ export type ApiType_DroneMedia = {
     file_id: number;
     file_name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
-    created_at: string;
+    received_at: string;
     meta?: string;
+    /**
+     * ISO 8601 format without a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
 }[];
 
 
@@ -302,15 +326,15 @@ export type ApiType_DroneFlights = {
     id: number;
     drone_id: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     started_at: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     landed_at?: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     ended_at?: string;
     track: {
@@ -318,7 +342,7 @@ export type ApiType_DroneFlights = {
         longitude: number;
         latitude: number;
         /**
-         * ISO 8601 format
+         * ISO 8601 format with a timezone
          */
         time?: string;
     }[];
@@ -329,15 +353,15 @@ export type ApiType_Flight = {
     id: number;
     drone_id: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     started_at: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     landed_at?: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     ended_at?: string;
     track: {
@@ -345,7 +369,7 @@ export type ApiType_Flight = {
         longitude: number;
         latitude: number;
         /**
-         * ISO 8601 format
+         * ISO 8601 format with a timezone
          */
         time?: string;
     }[];
@@ -366,10 +390,26 @@ export type ApiType_FlightMedia = {
     file_id: number;
     file_name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
-    created_at: string;
+    received_at: string;
     meta?: string;
+    /**
+     * ISO 8601 format without a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
 }[];
 
 
@@ -387,10 +427,26 @@ export type ApiType_Media = {
     file_id: number;
     file_name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
-    created_at: string;
+    received_at: string;
     meta?: string;
+    /**
+     * ISO 8601 format without a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
 }
 
 

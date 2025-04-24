@@ -10,6 +10,7 @@ import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_D
 import { GuardError } from '../../../../ManInTheMiddleware';
 import { deleteFile, insertDroneMedia, insertFile, selectDrone } from '../../../../db/DBHelpers';
 import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
+import { getDroneMetaFromFile } from '../../../../util/media';
 
 const router = express.Router()
 
@@ -145,6 +146,9 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
         console.warn('failed to generateExifDataForFile', file.id, err)
     }
 
+
+    const droneMeta = await getDroneMetaFromFile(file.id)
+
     let droneMedia: DBType_DroneMedia
     try {
         droneMedia = await insertDroneMedia({
@@ -154,6 +158,9 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
             tiny_fingerprint: tinyFingerprint,
             meta,
             file_id: file.id,
+            captured_at: droneMeta === false ? undefined : droneMeta.createdAt,
+            camera_location: droneMeta === false ? undefined : JSON.stringify({position: droneMeta.position, height: droneMeta.altitude}),
+            camera_angles: droneMeta === false ? undefined : JSON.stringify({heading: droneMeta.gimbal.yaw, pitch: droneMeta.gimbal.pitch, roll: droneMeta.gimbal.roll}),
             flight_id: (await selectDrone(connection.last_drone_id!)).current_flight_id
         })
 

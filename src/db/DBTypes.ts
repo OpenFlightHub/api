@@ -239,11 +239,24 @@ export type DBType_DroneMedia = {
    * json encoded meta data
    */
   meta?: string;
+  captured_at?: string;
+  /**
+   * when stored in db
+   */
+  received_at: string;
   /**
    * json encoded coverage data
    */
   coverage?: string;
   coverage_generated_at: string;
+  /**
+   * json encoded {position: {longitude: number, latitude: number}, height: number}
+   */
+  camera_location?: string;
+  /**
+   * json encoded {heading: number, pitch: number, roll: number}
+   */
+  camera_angles?: string;
 }
 
 

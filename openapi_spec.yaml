@@ -1547,8 +1547,14 @@ components:
     timestamptz:
       type: string
       format: timestamptz
-      description: ISO 8601 format
+      description: ISO 8601 format with a timezone
       example: "2023-12-11 23:06:52.7879+00"
+
+    timestamp:
+      type: string
+      format: timestamptz
+      description: ISO 8601 format without a timezone
+      example: "2023-12-11 23:06:52.7879"
 
     email:
       type: string
@@ -1772,9 +1778,15 @@ components:
       type: object
       required:
         - name
+        - longitude
+        - latitude
       properties:
         name:
           type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
 
 
     workspace_files:
@@ -1987,7 +1999,7 @@ components:
         - id
         - type
         - file_id
-        - created_at
+        - received_at
         - drone_id
         - flight_id
         - file_name
@@ -2007,10 +2019,36 @@ components:
           description: see `/file` endpoint
         file_name:
           type: string
-        created_at:
+        received_at:
           $ref: '#/components/schemas/timestamptz'
         meta:
           type: string
+        captured_at:
+          $ref: '#/components/schemas/timestamp'
+        camera_location:
+          type: object
+          properties:
+            position:
+              type: object
+              required:
+                - longitude
+                - latitude
+              properties:
+                longitude:
+                  type: number
+                latitude:
+                  type: number
+            height:
+              type: number
+        camera_angles:
+          type: object
+          properties:
+            heading:
+              type: number
+            pitch:
+              type: number
+            roll:
+              type: number
 
     media_ground_coverage:
       type: object

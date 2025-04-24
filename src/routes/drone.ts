@@ -10,6 +10,7 @@ import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import { getTrackForFlight } from '../util/flight';
+import { parseCameraMetaOfMedia } from '../util/media';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -98,11 +99,11 @@ router.get('/:drone_id/media', asyncHandler(async (req, res) => {
 
     const droneId = req.GM.guardParam('drone_id', 'id')
 
-    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {created_at: string, file_name: string}>('SELECT drone_media.*, files.created_at, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId}', {
+    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId}', {
         droneId
     })
 
-    res.GM.guardSend<ApiType_DroneMedia>(droneMedia, ApiSchema_DroneMedia)
+    res.GM.guardSend<ApiType_DroneMedia>(droneMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_DroneMedia)
 }))
 
 

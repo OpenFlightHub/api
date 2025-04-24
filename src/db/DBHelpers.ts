@@ -1214,8 +1214,12 @@ export type DBInsert_DroneMedia = {
     fingerprint: string
     tiny_fingerprint: string
     meta?: string
+    captured_at?: string
+    received_at?: string
     coverage?: string
     coverage_generated_at?: string
+    camera_location?: string
+    camera_angles?: string
 }
 
 export type DBUpdate_DroneMedia = {
@@ -1226,8 +1230,12 @@ export type DBUpdate_DroneMedia = {
     fingerprint?: string
     tiny_fingerprint?: string
     meta?: string
+    captured_at?: string
+    received_at?: string
     coverage?: string
     coverage_generated_at?: string
+    camera_location?: string
+    camera_angles?: string
 }
 const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -1257,11 +1265,27 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
+        "name": "captured_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
         "name": "coverage",
         "skip": col => !col.exists
     },
     {
         "name": "coverage_generated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_location",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_angles",
         "skip": col => !col.exists
     }
 ], {table: "drone_media"})
@@ -1300,11 +1324,27 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
+        "name": "captured_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
         "name": "coverage",
         "skip": col => !col.exists
     },
     {
         "name": "coverage_generated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_location",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_angles",
         "skip": col => !col.exists
     }
 ], {table: "drone_media"})

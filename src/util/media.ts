@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
-import { selectFile, updateDroneMedia } from "../db/DBHelpers";
-import { ApiType_Media, ApiType_MediaGroundCoverage } from "../definitions/ApiTypes";
+import { updateDroneMedia } from "../db/DBHelpers";
+import { ApiType_MediaGroundCoverage } from "../definitions/ApiTypes";
 import { getExifData } from "./exif";
 import { getExifDataForFile } from "./file";
-import { DBType_DroneMedia } from "../db/DBTypes";
-import sleep from '../util/sleep'
+import { DBType_DroneMedia, DBType_DroneMedia_TYPES } from "../db/DBTypes";
+import { parseExifTimestamp } from './exif'
 
 
 import SecretsLoader from './SecretsLoader'
+import { assignObject } from "./typescript";
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['terrain_service_adress'])
 
@@ -29,7 +30,7 @@ export type ImageMeta = {
     }
     altitude?: number
     fov?: FOV
-    createdAt?: string //ISO
+    createdAt?: string //ISO without timezone
     gimbal: {
         pitch?: number
         yaw?: number
@@ -37,9 +38,14 @@ export type ImageMeta = {
     }
 }
 
+const LAST_UPDATE_OF_TERRAIN_MODEL = dayjs('2025-04-01T00:00:00Z')
+const LAST_UPDATE_OF_COVERAGE_ALGORITHM = dayjs('2025-04-17T03:00:00Z')
+
 export async function getMediaCoverage(media: DBType_DroneMedia){
 
-    if(!media.coverage || media.coverage && dayjs(media.coverage_generated_at).isBefore(dayjs().subtract(90, 'days'))){//regenerate if older then 90 days
+    const generatedAt = dayjs(media.coverage_generated_at)
+
+    if(!media.coverage || media.coverage && (generatedAt.isBefore(LAST_UPDATE_OF_TERRAIN_MODEL) || generatedAt.isBefore(LAST_UPDATE_OF_COVERAGE_ALGORITHM))){
         return await fetchMediaCoverage(media)
     } else {
         return JSON.parse(media.coverage) as ApiType_MediaGroundCoverage
@@ -123,7 +129,7 @@ export async function getMetaFromExifData(exifData: ExifData): Promise<ImageMeta
         position: gpsParsed === false ? undefined : gpsParsed.position,
         altitude: gpsParsed === false ? undefined : gpsParsed.altitude,
         fov: fovParsed === false ? undefined : fovParsed,
-        createdAt: typeof createDateIso === 'undefined' ? undefined : createDateIso,
+        createdAt: parseExifTimestamp(createDateIso),
         gimbal: gimbalParsed
     }
 }
@@ -186,28 +192,6 @@ function getFovRectilinear(frameSize: number, focalLength: number){
     return toDegrees(2 * Math.atan(frameSize / (focalLength * 2)))
 }
 
-/**
-  * @param str format: '2000:08:04 18:22:57'
-  * returns ISO Date string
- */
-function parseExifTimestamp(str?: string){
-    if(typeof str !== 'string'){
-        return false
-    }
-
-    const match = str.match(/\s*(\d\d\d\d):(\d\d):(\d\d)\s+(\d\d):(\d\d):(\d\d)\s*/)
-
-    if(!match){
-        return false
-    }
-
-    return `${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}Z`
-}
-
-/**
-  * @param str format: '2000:08:04 18:22:57'
-  * returns ISO Date string
- */
 function parseExifGimbal(exif: ExifData){
 
     const gimbalPitch = parseFloat('' + exif.GimbalPitchDegree.value)
@@ -223,4 +207,11 @@ function parseExifGimbal(exif: ExifData){
 
 function toDegrees(rad: number){
     return rad / (Math.PI/180)
+}
+
+export function parseCameraMetaOfMedia<M extends DBType_DroneMedia>(media: M){
+    return assignObject(media, {
+        camera_angles: typeof media.camera_angles === 'string' ? JSON.parse(media.camera_angles) : undefined,
+        camera_location: typeof media.camera_location === 'string' ? JSON.parse(media.camera_location) : undefined
+    })
 }
