@@ -129,7 +129,7 @@ export async function getMetaFromExifData(exifData: ExifData): Promise<ImageMeta
         position: gpsParsed === false ? undefined : gpsParsed.position,
         altitude: gpsParsed === false ? undefined : gpsParsed.altitude,
         fov: fovParsed === false ? undefined : fovParsed,
-        createdAt: parseExifTimestamp(createDateIso),
+        createdAt: createDateIso,
         gimbal: gimbalParsed
     }
 }

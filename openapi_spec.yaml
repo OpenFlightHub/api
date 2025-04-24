@@ -2024,7 +2024,7 @@ components:
         meta:
           type: string
         captured_at:
-          $ref: '#/components/schemas/timestamp'
+          $ref: '#/components/schemas/timestamptz'
         camera_location:
           type: object
           properties:

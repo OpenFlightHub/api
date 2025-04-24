@@ -304,7 +304,7 @@ export type ApiType_DroneMedia = {
     received_at: string;
     meta?: string;
     /**
-     * ISO 8601 format without a timezone
+     * ISO 8601 format with a timezone
      */
     captured_at?: string;
     camera_location?: {
@@ -395,7 +395,7 @@ export type ApiType_FlightMedia = {
     received_at: string;
     meta?: string;
     /**
-     * ISO 8601 format without a timezone
+     * ISO 8601 format with a timezone
      */
     captured_at?: string;
     camera_location?: {
@@ -432,7 +432,7 @@ export type ApiType_Media = {
     received_at: string;
     meta?: string;
     /**
-     * ISO 8601 format without a timezone
+     * ISO 8601 format with a timezone
      */
     captured_at?: string;
     camera_location?: {

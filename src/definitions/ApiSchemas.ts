@@ -706,8 +706,8 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
             "captured_at": {
                 "type": "string",
                 "format": "timestamptz",
-                "description": "ISO 8601 format without a timezone",
-                "example": "2023-12-11 23:06:52.7879"
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
             },
             "camera_location": {
                 "type": "object",
@@ -935,8 +935,8 @@ export const ApiSchema_FlightMedia : JSONSchema  = {
             "captured_at": {
                 "type": "string",
                 "format": "timestamptz",
-                "description": "ISO 8601 format without a timezone",
-                "example": "2023-12-11 23:06:52.7879"
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
             },
             "camera_location": {
                 "type": "object",
@@ -1027,8 +1027,8 @@ export const ApiSchema_Media : JSONSchema  = {
         "captured_at": {
             "type": "string",
             "format": "timestamptz",
-            "description": "ISO 8601 format without a timezone",
-            "example": "2023-12-11 23:06:52.7879"
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
         },
         "camera_location": {
             "type": "object",
