@@ -181,6 +181,10 @@ router.post('/password-change', asyncHandler(async (req, res) => {
         throw GuardError._400_invalidBody('new_password')
     }
 
+    if([0, 1, 2, 3, 4, 5, 6].includes(user.id)){
+        throw GuardError._400_BadRequest('Not allowed for this user')
+    }
+
     await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
 
     res.status(200)
