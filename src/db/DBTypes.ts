@@ -68,6 +68,8 @@ export type DBType_File = {
 export type DBType_Workspace = {
   id: number;
   name: string;
+  longitude: number;
+  latitude: number;
 }
 
 

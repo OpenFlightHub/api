@@ -145,6 +145,8 @@ export type ApiType_FileGetMultiplePost = {
 export type ApiType_Workspace = {
     id: number;
     name: string;
+    longitude: number;
+    latitude: number;
 }
 
 

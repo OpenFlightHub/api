@@ -323,7 +323,9 @@ export const ApiSchema_Workspace : JSONSchema  = {
     "type": "object",
     "required": [
         "id",
-        "name"
+        "name",
+        "longitude",
+        "latitude"
     ],
     "properties": {
         "id": {
@@ -332,6 +334,12 @@ export const ApiSchema_Workspace : JSONSchema  = {
         },
         "name": {
             "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
         }
     }
 }

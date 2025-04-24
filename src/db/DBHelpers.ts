@@ -323,10 +323,14 @@ import {} from "./DBTypes";
 
 export type DBInsert_Workspace = {
     name: string
+    longitude: number
+    latitude: number
 }
 
 export type DBUpdate_Workspace = {
     name?: string
+    longitude?: number
+    latitude?: number
 }
 const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -335,6 +339,12 @@ const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "name"
+    },
+    {
+        "name": "longitude"
+    },
+    {
+        "name": "latitude"
     }
 ], {table: "workspaces"})
 
@@ -345,6 +355,14 @@ const COLUMN_SET_WORKSPACES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "longitude",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "latitude",
         "skip": col => !col.exists
     }
 ], {table: "workspaces"})

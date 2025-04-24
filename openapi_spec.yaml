@@ -1748,11 +1748,17 @@ components:
       required:
         - id
         - name
+        - longitude
+        - latitude
       properties:
         id:
           $ref: '#/components/schemas/id'
         name:
           type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
 
 
     workspace_patch:
