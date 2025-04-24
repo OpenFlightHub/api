@@ -23,7 +23,7 @@ export async function createConnection(workspaceId: number, name: string){
 
 export async function getActiveConnectionForDrone(droneId: number){
     const drone = await selectDrone(droneId)
-    if(typeof drone.last_connection_id === 'number'){
+    if(typeof drone.last_connection_id !== 'number'){
         return false
     }
 
