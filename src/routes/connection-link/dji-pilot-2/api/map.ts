@@ -39,7 +39,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
 
 }))
 
-
+// note: already existing pins on the controller are not being synced when you link the controller (sync can be triggered by changing e.g. the color)
 router.get('/element-groups', asyncHandler(async (req, res) => {
 
     const connection = await req.GM.getCurrentConnection()
