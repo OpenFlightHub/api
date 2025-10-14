@@ -181,6 +181,10 @@ export type DBInsert_File = {
     name: string
     created_at?: string
     created_by: number
+    has_thumbnail?: boolean
+    thumbnail_generation_has_failed?: boolean
+    exif_data?: string
+    exif_data_generation_has_failed?: boolean
 }
 
 export type DBUpdate_File = {
@@ -189,6 +193,10 @@ export type DBUpdate_File = {
     name?: string
     created_at?: string
     created_by?: number
+    has_thumbnail?: boolean
+    thumbnail_generation_has_failed?: boolean
+    exif_data?: string
+    exif_data_generation_has_failed?: boolean
 }
 const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -210,6 +218,22 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "created_by"
+    },
+    {
+        "name": "has_thumbnail",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "thumbnail_generation_has_failed",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data_generation_has_failed",
+        "skip": col => !col.exists
     }
 ], {table: "files"})
 
@@ -236,6 +260,22 @@ const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "created_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "has_thumbnail",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "thumbnail_generation_has_failed",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "exif_data_generation_has_failed",
         "skip": col => !col.exists
     }
 ], {table: "files"})
@@ -283,10 +323,14 @@ import {} from "./DBTypes";
 
 export type DBInsert_Workspace = {
     name: string
+    longitude: number
+    latitude: number
 }
 
 export type DBUpdate_Workspace = {
     name?: string
+    longitude?: number
+    latitude?: number
 }
 const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -295,6 +339,12 @@ const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "name"
+    },
+    {
+        "name": "longitude"
+    },
+    {
+        "name": "latitude"
     }
 ], {table: "workspaces"})
 
@@ -305,6 +355,14 @@ const COLUMN_SET_WORKSPACES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "longitude",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "latitude",
         "skip": col => !col.exists
     }
 ], {table: "workspaces"})
@@ -422,7 +480,7 @@ export type DBInsert_Connection = {
     workspace_id: number
     workspace_uuid: string
     remote_controller_id?: number
-    drone_id?: number
+    last_drone_id?: number
 }
 
 export type DBUpdate_Connection = {
@@ -432,7 +490,7 @@ export type DBUpdate_Connection = {
     workspace_id?: number
     workspace_uuid?: string
     remote_controller_id?: number
-    drone_id?: number
+    last_drone_id?: number
 }
 const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -460,7 +518,7 @@ const COLUMN_SET_CONNECTIONS = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "drone_id",
+        "name": "last_drone_id",
         "skip": col => !col.exists
     }
 ], {table: "connections"})
@@ -495,7 +553,7 @@ const COLUMN_SET_CONNECTIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "drone_id",
+        "name": "last_drone_id",
         "skip": col => !col.exists
     }
 ], {table: "connections"})
@@ -624,12 +682,18 @@ export type DBInsert_Drone = {
     serial_number: string
     name: string
     type?: DBType_Drone_TypeType
+    last_connection_id?: number
+    current_flight_id?: number
+    in_flight?: boolean
 }
 
 export type DBUpdate_Drone = {
     serial_number?: string
     name?: string
     type?: DBType_Drone_TypeType
+    last_connection_id?: number
+    current_flight_id?: number
+    in_flight?: boolean
 }
 const COLUMN_SET_DRONES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -644,6 +708,18 @@ const COLUMN_SET_DRONES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "last_connection_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "current_flight_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "in_flight",
         "skip": col => !col.exists
     }
 ], {table: "drones"})
@@ -663,6 +739,18 @@ const COLUMN_SET_DRONES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "last_connection_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "current_flight_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "in_flight",
         "skip": col => !col.exists
     }
 ], {table: "drones"})
@@ -701,6 +789,211 @@ export function deleteDrone(id: number){
 
 export function selectDrone(id: number){
     return db.one<DBType_Drone>('SELECT * FROM drones ' + pgp.as.format('WHERE id = ${id}', {id}))
+}
+
+
+//flights
+
+import {} from "./DBTypes";
+
+export type DBInsert_Flight = {
+    drone_id: number
+    started_at?: string
+    landed_at?: string
+    ended_at?: string
+}
+
+export type DBUpdate_Flight = {
+    drone_id?: number
+    started_at?: string
+    landed_at?: string
+    ended_at?: string
+}
+const COLUMN_SET_FLIGHTS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "drone_id"
+    },
+    {
+        "name": "started_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "landed_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "ended_at",
+        "skip": col => !col.exists
+    }
+], {table: "flights"})
+
+const COLUMN_SET_FLIGHTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "drone_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "started_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "landed_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "ended_at",
+        "skip": col => !col.exists
+    }
+], {table: "flights"})
+import {DBType_Flight} from './DBTypes'
+
+
+export function insertFlight(values: DBInsert_Flight){
+    return db.one<DBType_Flight>(db.$config.pgp.helpers.insert(values, undefined, 'flights') + ' RETURNING *')
+}
+
+/**
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+*/
+export function updateFlight<T extends number | string>(values: DBUpdate_Flight, idOrWhereCondition: T): T extends number ? Promise<DBType_Flight> : Promise<DBType_Flight[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBTypeFlight>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
+
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' ' + whereCondition)
+    }
+}
+
+export function deleteFlight(id: number){
+    return db.none('DELETE FROM flights WHERE id = ${id}', {id})
+}
+
+
+
+
+export function selectFlight(id: number){
+    return db.one<DBType_Flight>('SELECT * FROM flights ' + pgp.as.format('WHERE id = ${id}', {id}))
+}
+
+
+//flight_data
+
+import {DBType_FlightData_TypeType} from "./DBTypes";
+
+export type DBInsert_FlightData = {
+    flight_id: number
+    received_at?: string
+    created_at: string
+    type: DBType_FlightData_TypeType
+    data: string
+}
+
+export type DBUpdate_FlightData = {
+    flight_id?: number
+    received_at?: string
+    created_at?: string
+    type?: DBType_FlightData_TypeType
+    data?: string
+}
+const COLUMN_SET_FLIGHT_DATA = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "flight_id"
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at"
+    },
+    {
+        "name": "type"
+    },
+    {
+        "name": "data"
+    }
+], {table: "flight_data"})
+
+const COLUMN_SET_FLIGHT_DATA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "flight_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "data",
+        "skip": col => !col.exists
+    }
+], {table: "flight_data"})
+import {DBType_FlightData} from './DBTypes'
+
+
+export function insertFlightData(values: DBInsert_FlightData){
+    return db.one<DBType_FlightData>(db.$config.pgp.helpers.insert(values, undefined, 'flight_data') + ' RETURNING *')
+}
+
+/**
+ @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+*/
+export function updateFlightData<T extends number | string>(values: DBUpdate_FlightData, idOrWhereCondition: T): T extends number ? Promise<DBType_FlightData> : Promise<DBType_FlightData[]>{
+    if(typeof idOrWhereCondition === 'number'){
+        const id = idOrWhereCondition as number
+        //@ts-ignore
+        return db.one<DBTypeFlightData>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+    } else {
+        let whereCondition = idOrWhereCondition as string
+        whereCondition = whereCondition.trim()
+        if(whereCondition.endsWith(';')){
+            whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+        }
+
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' ' + whereCondition)
+    }
+}
+
+export function deleteFlightData(id: number){
+    return db.none('DELETE FROM flight_data WHERE id = ${id}', {id})
+}
+
+
+
+
+export function selectFlightData(id: number){
+    return db.one<DBType_FlightData>('SELECT * FROM flight_data ' + pgp.as.format('WHERE id = ${id}', {id}))
 }
 
 
@@ -808,6 +1101,7 @@ import {DBType_DroneData_TypeType} from "./DBTypes";
 
 export type DBInsert_DroneData = {
     drone_id: number
+    flight_id: number
     type?: DBType_DroneData_TypeType
     data: string
     created_at?: string
@@ -815,6 +1109,7 @@ export type DBInsert_DroneData = {
 
 export type DBUpdate_DroneData = {
     drone_id?: number
+    flight_id?: number
     type?: DBType_DroneData_TypeType
     data?: string
     created_at?: string
@@ -826,6 +1121,9 @@ const COLUMN_SET_DRONE_DATA = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id"
+    },
+    {
+        "name": "flight_id"
     },
     {
         "name": "type",
@@ -847,6 +1145,10 @@ const COLUMN_SET_DRONE_DATA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "flight_id",
         "skip": col => !col.exists
     },
     {
@@ -906,20 +1208,34 @@ import {DBType_DroneMedia_TypeType} from "./DBTypes";
 
 export type DBInsert_DroneMedia = {
     drone_id: number
+    flight_id: number
     type: DBType_DroneMedia_TypeType
     file_id: number
     fingerprint: string
     tiny_fingerprint: string
     meta?: string
+    captured_at?: string
+    received_at?: string
+    coverage?: string
+    coverage_generated_at?: string
+    camera_location?: string
+    camera_angles?: string
 }
 
 export type DBUpdate_DroneMedia = {
     drone_id?: number
+    flight_id?: number
     type?: DBType_DroneMedia_TypeType
     file_id?: number
     fingerprint?: string
     tiny_fingerprint?: string
     meta?: string
+    captured_at?: string
+    received_at?: string
+    coverage?: string
+    coverage_generated_at?: string
+    camera_location?: string
+    camera_angles?: string
 }
 const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -928,6 +1244,9 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id"
+    },
+    {
+        "name": "flight_id"
     },
     {
         "name": "type"
@@ -944,6 +1263,30 @@ const COLUMN_SET_DRONE_MEDIA = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "meta",
         "skip": col => !col.exists
+    },
+    {
+        "name": "captured_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage_generated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_location",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_angles",
+        "skip": col => !col.exists
     }
 ], {table: "drone_media"})
 
@@ -954,6 +1297,10 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "flight_id",
         "skip": col => !col.exists
     },
     {
@@ -974,6 +1321,30 @@ const COLUMN_SET_DRONE_MEDIA_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "meta",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "captured_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "received_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "coverage_generated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_location",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "camera_angles",
         "skip": col => !col.exists
     }
 ], {table: "drone_media"})

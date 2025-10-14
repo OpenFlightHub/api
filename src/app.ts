@@ -136,6 +136,12 @@ app.use('/connection', connectionRoute)
 import droneRoute from './routes/drone'
 app.use('/drone', droneRoute)
 
+import mediaRoute from './routes/media'
+app.use('/media', mediaRoute)
+
+import flightRoute from './routes/flight'
+app.use('/flight', flightRoute)
+
 import remoteControllerRoute from './routes/remote-controller'
 app.use('/remote-controller', remoteControllerRoute)
 
@@ -159,28 +165,31 @@ app.use((req, res, next)=> {
 
 // error handler at the very end of the use() chain
 app.use((err, req: express.Request, res: express.Response, next)=> {
+    try {
 
-    res.GM.setCurrentError(err)
+        res.GM.setCurrentError(err)
 
-    if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
-        res.status(err.statusCode)
-        res.GM.unguardedSend(err.statusText)
+        if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
+            res.status(err.statusCode)
+            res.GM.unguardedSend(err.statusText)
 
-        if(('' + err.statusCode).startsWith('5')){
-            console.error('Server Error:', err)
+            if(('' + err.statusCode).startsWith('5')){
+                console.error('Server Error:', err)
+            }
+        } else {
+            console.warn('Unhandled ' + err.name , '@url', req.method, req.baseUrl + req.url, err)
+            res.status(500).GM.unguardedSend('Something went wrong')
         }
-    } else {
-        console.warn('Unhandled ' + err.name , '@url', req.method, req.baseUrl + req.url, err)
-        res.status(500).GM.unguardedSend('Something went wrong')
+    } catch (err){
+        console.error('unexpected error while handling a routes error:', req.originalUrl, err)
+        res.status(500).send()
     }
 })
-
-
 
 import FakeDrone from './util/FakeDrone'
 import FakeTrack from './util/FakeTrack'
 
-new FakeDrone(1, new FakeTrack([
+const fakeDrone = new FakeDrone(1, new FakeTrack([
     [10.31123970862481,47.54303902438443,1470],
     [10.31111796634494,47.54531198554595,1610],
     [10.31363253702402,47.5465021623194,1580],
@@ -188,12 +197,57 @@ new FakeDrone(1, new FakeTrack([
     [10.31861243453544,47.54735457272334,1489],
     [10.31844535319701,47.54608003223191,1510],
     [10.31523131736515,47.54569312904921,1501],
-    [10.31363964096565,47.54483188962758,1450]], 5))
+    [10.31363964096565,47.54483188962758,1450]], 5)
+)
 
+import FakeMedia from './util/FakeMedia'
+new FakeMedia(fakeDrone)
 
 import {setupTrafficSensing} from './aircraft_sensing'
+import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
 setupTrafficSensing()
 
+
+
+// import {getMetaFromImage} from './util/media'
+// import { readFile } from 'fs/promises'
+// readFile('./dev/example_media/xw.JPG').then(buffer => {
+//     getMetaFromImage(buffer).then(meta => console.log('image meta xt', meta))
+// })
+// readFile('./dev/example_media/xt.JPG').then(buffer => {
+//     getMetaFromImage(buffer).then(meta => console.log('image meta xw', meta))
+// })
+// readFile('./dev/example_media/M300_T.JPG').then(buffer => {
+//     getMetaFromImage(buffer)
+// })
+
+// readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
+//     getMetaFromImage(buffer)
+//})
+
+
+import { generateThumbnailForFile } from './util/file'
+import { selectFile } from './db/DBHelpers'
+generateThumbnailForFile(1).catch(err => {
+    console.error('failed to generate thumbnail for file 1', err)
+})
+
+setInterval(async ()=>{
+    // every 60 seconds try to generate thumbnails for supported files that are missing thumbnails for some reason
+
+    const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
+
+    for(const file of filesThatRequireThumbnails){
+        const upToDateFile = await selectFile(file.id)
+        if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
+            continue
+        }
+
+        console.log('generate missing thumbnail for file', file.id)
+        await generateThumbnailForFile(file.id)
+    }
+
+}, 1000 * 60)
 
 declare global {
 
@@ -202,6 +256,8 @@ declare global {
         export interface Request {
             GM: GuardedMiddleware
             //query: {[key: string] : string} // hpp middleware TODO uncomment this line again and fix the ts error in express
+            _drone?: DBType_Drone // for /drone endpoint auth middlewar
+            _flight?: DBType_Flight // for /flight endpoint auth middlewar
         }
 
         /**

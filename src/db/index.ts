@@ -1,9 +1,9 @@
 import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent } from '../live-websocket/websocket'
-import { DRONE_DATA_TYPES, getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
-import { selectDrone, selectRemoteController } from './DBHelpers';
-import { getConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
+import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
+import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
+import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { DBType_DroneData } from './DBTypes';
 
@@ -30,9 +30,9 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
 
-        const connection = await getConnectionForDrone(drone.id)
+        const connection = await selectConnection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -51,9 +51,9 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
 
-        const connection = await getConnectionForDrone(drone.id)
+        const connection = await selectConnection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -63,8 +63,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
     })
 
-
-
+    //TODO reimplement live remote controller position (got removed at some point around probably 10th April 25 ?)
     const subscribableEventHandlerRemoteControllerPosition = registerSubscribableEvent('remote_controller_position', async(event, filter, client)=>{
 
         const id = parseInt(filter)
@@ -78,6 +77,64 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
         const connection = await getConnectionForRemoteController(remoteController.id)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+    const subscribableEventHandlerWorkspaceDronesPosition = registerSubscribableEvent('workspace_drones_position', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const workspace = await selectWorkspace(id)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+
+    const subscribableEventHandlerDroneMedia = registerSubscribableEvent('drone_media', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
+
+        const connection = await selectConnection(drone.last_connection_id!)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
+
+        if(!hasPermission){
+            return 'Permission denied'
+        }
+
+    })
+
+
+    const subscribableEventHandlerWorkspaceDronesMedia = registerSubscribableEvent('workspace_drones_media', async(event, filter, client)=>{
+
+        const id = parseInt(filter)
+
+        if(isNaN(id) || id < 0){
+            return 'invalid filter: ' + id
+        }
+
+        const workspace = await selectWorkspace(id)
+
+        const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
 
         if(!hasPermission){
             return 'Permission denied'
@@ -119,27 +176,89 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
 
                     if(data.type === DRONE_DATA_TYPES.POSITION){
 
+                        const drone = await selectDrone(changedDroneId)
+
                         subscribableEventHandlerDronePosition.triggerListenerIfExists('' + changedDroneId, async()=>{
 
-                            const droneLastPosition = await getLastPositionOfDrone(changedDroneId)
+                            const droneLastPosition = extractPositionFromDroneData(data)
+
+                            if(droneLastPosition === false){
+                                throw new Error('no valid drone position in data')
+                            }
 
                             return {
                                 id: changedDroneId,
-                                position: droneLastPosition
+                                position: droneLastPosition,
+                                serial_number: drone.serial_number
                             }
                         })
+
+                        const connection = await getActiveConnectionForDrone(drone.id)
+
+                        if(connection){
+
+                            subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + connection.workspace_id, async()=>{
+                                const droneLastPosition = extractPositionFromDroneData(data)
+
+                                if(droneLastPosition === false){
+                                    throw new Error('no valid drone position in data')
+                                }
+
+                                return {
+                                    id: changedDroneId,
+                                    position: droneLastPosition,
+                                    serial_number: drone.serial_number
+                                }
+                            })
+                        }
+
                     } else if(data.type === DRONE_DATA_TYPES.TELEMETRY){
 
                         subscribableEventHandlerDroneTelemetry.triggerListenerIfExists('' + changedDroneId, async()=>{
 
-                            const droneLastTelemetry = await getLastTelemetryOfDrone(changedDroneId)
+                            const droneLastTelemetry = extractTelemetryFromDroneData(data)
+
+                            if(droneLastTelemetry === false){
+                                throw new Error('no valid drone telemetry in data')
+                            }
 
                             return {
                                 id: changedDroneId,
                                 telemetry: droneLastTelemetry
                             }
                         })
+
                     }
+                } else if(changedTable === 'drone_media'){
+
+                    const mediaId = parseInt(parsed.data.id)
+                    const droneId = parseInt(parsed.data.drone_id)
+
+                    const drone = await selectDrone(droneId)
+
+                    const connection = await getActiveConnectionForDrone(drone.id)
+
+                    if(connection === false){
+                        return
+                    }
+
+                    subscribableEventHandlerDroneMedia.triggerListener('' + droneId, {
+                        id: mediaId,
+                        drone_id: droneId,
+                        workspace_id: connection.workspace_id,
+                        drone_serial_number: drone.serial_number,
+                        file_id: parsed.data.file_id,
+                        flight_id: parsed.data.flight_id
+                    })
+
+                    subscribableEventHandlerWorkspaceDronesMedia.triggerListener('' + connection.workspace_id, {
+                        id: mediaId,
+                        drone_id: droneId,
+                        workspace_id: connection.workspace_id,
+                        drone_serial_number: drone.serial_number,
+                        file_id: parsed.data.file_id,
+                        flight_id: parsed.data.flight_id
+                    })
                 }
             }
         }

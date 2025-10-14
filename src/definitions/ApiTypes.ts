@@ -5,9 +5,15 @@ export type ApiType_Uuid = string;
 
 
 /**
- * ISO 8601 format
+ * ISO 8601 format with a timezone
  */
 export type ApiType_Timestamptz = string;
+
+
+/**
+ * ISO 8601 format without a timezone
+ */
+export type ApiType_Timestamp = string;
 
 
 export type ApiType_Email = string;
@@ -94,7 +100,7 @@ export type ApiType_UserSelf = {
     name: string;
     email: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
     locale: string;
@@ -113,15 +119,40 @@ export type ApiType_File = {
     id: number;
     name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
+}
+
+
+export type ApiType_FileGetMultiple = {
+    id: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
+}[];
+
+
+export type ApiType_FileGetMultiplePost = {
+    ids: number[];
 }
 
 
 export type ApiType_Workspace = {
     id: number;
     name: string;
+    longitude: number;
+    latitude: number;
 }
 
 
@@ -132,11 +163,22 @@ export type ApiType_WorkspacePatch = {
 
 export type ApiType_WorkspacesPost = {
     name: string;
+    longitude: number;
+    latitude: number;
 }
 
 
 export type ApiType_WorkspaceFiles = {
     id: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * if a thumbnail is available at /file/thumbnail/
+     */
+    has_thumbnail: boolean;
 }[];
 
 
@@ -153,6 +195,7 @@ export type ApiType_WorkspaceFilePatch = {
 
 export type ApiType_WorkspaceConnections = {
     id: number;
+    name: string;
     remote_controller_id?: number;
     drone_id?: number;
 }[];
@@ -171,6 +214,7 @@ export type ApiType_WorkspaceConnectionsPostResponse = {
 
 export type ApiType_Connection = {
     id: number;
+    name: string;
     remote_controller_id?: number;
     drone_id?: number;
 }
@@ -197,7 +241,7 @@ export type ApiType_RemoteControllerPosition = {
     latitude: number;
     height: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -211,6 +255,7 @@ export type ApiType_Drone = {
      */
     type: number;
     name: string;
+    last_connection_id?: number;
 }
 
 
@@ -225,7 +270,7 @@ export type ApiType_DronePosition = {
     latitude: number;
     height: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -234,7 +279,7 @@ export type ApiType_DronePosition = {
 export type ApiType_DroneBattery = {
     capacity_percent_left: number;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
     reported_at: string;
 }
@@ -242,6 +287,8 @@ export type ApiType_DroneBattery = {
 
 export type ApiType_DroneMedia = {
     id: number;
+    drone_id: number;
+    flight_id: number;
     /**
      * 0 = image, 1 = video
      */
@@ -250,12 +297,245 @@ export type ApiType_DroneMedia = {
      * see `/file` endpoint
      */
     file_id: number;
+    file_name: string;
     /**
-     * ISO 8601 format
+     * ISO 8601 format with a timezone
      */
-    created_at: string;
+    received_at: string;
     meta?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
 }[];
+
+
+export type ApiType_DroneFlights = {
+    id: number;
+    drone_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    started_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    landed_at?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    ended_at?: string;
+    track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format with a timezone
+         */
+        time?: string;
+    }[];
+}[];
+
+
+export type ApiType_Flight = {
+    id: number;
+    drone_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    started_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    landed_at?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    ended_at?: string;
+    track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format with a timezone
+         */
+        time?: string;
+    }[];
+}
+
+
+export type ApiType_FlightMedia = {
+    id: number;
+    drone_id: number;
+    flight_id: number;
+    /**
+     * 0 = image, 1 = video
+     */
+    type: number;
+    /**
+     * see `/file` endpoint
+     */
+    file_id: number;
+    file_name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    received_at: string;
+    meta?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
+}[];
+
+
+export type ApiType_Media = {
+    id: number;
+    drone_id: number;
+    flight_id: number;
+    /**
+     * 0 = image, 1 = video
+     */
+    type: number;
+    /**
+     * see `/file` endpoint
+     */
+    file_id: number;
+    file_name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    received_at: string;
+    meta?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    captured_at?: string;
+    camera_location?: {
+        position?: {
+            longitude: number;
+            latitude: number;
+        };
+        height?: number;
+    };
+    camera_angles?: {
+        heading?: number;
+        pitch?: number;
+        roll?: number;
+    };
+}
+
+
+export type ApiType_MediaGroundCoverage = {
+    coverage: {
+        all: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
+        }[];
+        outer: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
+        }[];
+        holes: {
+            position: {
+                /**
+                 * in degree
+                 */
+                longitude: number;
+                /**
+                 * in degree
+                 */
+                latitude: number;
+            };
+            /**
+             * in meters
+             */
+            elevation: number;
+            /**
+             * for debugging only
+             */
+            debug?: string;
+        }[][];
+    };
+}
+
+
+export type ApiType_GroundCoverageLocation = {
+    position: {
+        /**
+         * in degree
+         */
+        longitude: number;
+        /**
+         * in degree
+         */
+        latitude: number;
+    };
+    /**
+     * in meters
+     */
+    elevation: number;
+    /**
+     * for debugging only
+     */
+    debug?: string;
+}
 
 
 export type ApiType_ConnectionLinkAuthLoginPost = {

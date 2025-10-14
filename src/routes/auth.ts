@@ -21,10 +21,21 @@ const STREAM_TOKEN_BYTE_LENGTH = 21
 
 const router = express.Router()
 
-function delay(callback: ()=>void){
-    //TODO make delay match password hashing and user searching
 
-    setTimeout(callback, 1000 * 0.5)
+function delay(callback: ()=>void){
+    return new Promise<void>((resolve, reject)=>{
+        //TODO make delay match password hashing and user searching
+
+        setTimeout(()=>{
+            try {
+                callback()
+                resolve()
+            } catch (err){
+                reject(err)
+            }
+        }, 1000 * 0.5)
+
+    })
 }
 
 router.post('/login', asyncHandler(async (req, res) => {
@@ -38,26 +49,35 @@ router.post('/login', asyncHandler(async (req, res) => {
             email: requestBody.username,
         })
     } catch {
-        delay(()=>{//delay request so people can't correlate that with email existance
+        console.log('invalid login: user does not exist', requestBody.username)
+        //TODO this implementation is bugged and can lead to no response sent back to the client at all
+        /*await delay(()=>{//delay request so people can't correlate that with email existance
             res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
-        })
+        })*/
+        res.status(418).send()//should be 410 gone, but we dont want to tell anyone!
 
         return
     }
 
     if(!user.password){// prevent login for users without password (e.g. invitation not yet complete)
-        delay(()=>{
+        console.log('invalid login: user has no password set not exist', requestBody.username)
+        //TODO this implementation is bugged and can lead to no response sent back to the client at all
+        /*await delay(()=>{
             res.status(418).send()
-        })
+        })*/
+        res.status(418).send()
 
         return
     }
 
+    console.log('checking login for user:', requestBody.username, '...')
     const passwordMatches = await crypto.stringMatchesHash(requestBody.password, user.password)
 
     if(!passwordMatches){
+        console.log('invalid login: wrong password', requestBody.username)
         res.status(418).send()
     } else {
+        console.log('successfull login:', requestBody.username)
 
         confirmUser(user.id)
 
@@ -115,8 +135,11 @@ router.get('/check', asyncHandler(async (req, res) => {
 
     const sessionToken = req.cookies['user-auth']
 
+    console.log('checking session token', sessionToken)//TODO remove logging
+
     const validSessionToken = typeof sessionToken === 'string'
     if(!validSessionToken){
+        console.log('invalid session token')
         throw GuardError._401_Unauthorized('invalid session token')
     }
 
@@ -125,9 +148,14 @@ router.get('/check', asyncHandler(async (req, res) => {
             sessionToken
         }) as DBType_User
 
+        console.log('valid session token')
+
         res.GM.guardSend<ApiType_Reference>(user, ApiSchema_Reference)
 
-    } catch {
+        console.log('user', user.id)
+
+    } catch (err) {
+        console.log('invalid session token (no user found)', err)
         throw GuardError._401_Unauthorized('invalid session token')
     }
 
@@ -151,6 +179,10 @@ router.post('/password-change', asyncHandler(async (req, res) => {
 
     if(!isSafePassword(body.new_password)){
         throw GuardError._400_invalidBody('new_password')
+    }
+
+    if([0, 1, 2, 3, 4, 5, 6].includes(user.id)){
+        throw GuardError._400_BadRequest('Not allowed for this user')
     }
 
     await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))

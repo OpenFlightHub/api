@@ -2,26 +2,48 @@ import { Client, PublishPacket } from "aedes";
 import Connector from "./Connector";
 import Logger from "./ConnectorLogger";
 import path from "path";
-import {addDroneData, DRONE_DATA_TYPES} from '../../util/drone'
-import {addRemoteControllerData, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
+import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber, setDroneInFlightState} from '../../util/drone'
+import {addRemoteControllerData, getRemoteControllerForSerialNumber, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
-import { DBType_Connection, DBType_RemoteController_TYPES } from "../../db/DBTypes";
-import { insertDrone, insertRemoteController, selectConnection, updateConnection } from "../../db/DBHelpers";
+import { DBType_Connection, DBType_Drone_TYPES, DBType_FlightData_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
+import { deleteFlight, insertDrone, insertFlight, insertFlightData, insertRemoteController, selectConnection, updateConnection, updateDrone, updateFlight } from "../../db/DBHelpers";
+import {getProductType} from './util/product'
+import { getConnectionForRemoteController } from "../../util/connection";
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
 
 connector.onMessage_State((connectionId, message)=>{
-    console.log('onMessage_State', connectionId, message)
-
     //TODO save live_capacity information of rc (and use that to determine if rc can do livestreaming)
     //TODO website on rc needs to reqest aircraft and rc serial number, send to server so it can identify rc and drone by serial number
 })
 
 
-connector.onMessage_Status((connectionId, message, serialNumber, respond)=>{
-    console.log('onMessage_Status', connectionId, serialNumber, message)
+connector.onMessage_Status(async (connectionId, message, productSerialNumber, respond)=>{
+
+    try {
+
+        if(message.method === 'update_topo'){
+            //@ts-ignore
+            if(message.data.thing_version !== '1.2.0' && message.data.version !== 1){
+                console.warn('thing_version of mqtt message update_topo was not 1.2.0 or 1: ', message)
+            }
+
+            const connection = await selectConnection(connectionId)
+
+            await updateProductForConnection(connection, productSerialNumber, message.data.domain, message.data.type, message.data.sub_type)
+
+            if(message.data.sub_devices){
+                for(const subDevice of message.data.sub_devices){
+                    await updateProductForConnection(connection, subDevice.sn, subDevice.domain, subDevice.type, subDevice.sub_type)
+                }
+            }
+        }
+
+    } catch (err){
+        console.error('error while running onMessage_Status', err)
+    }
 
     respond({
         result: 0
@@ -29,83 +51,202 @@ connector.onMessage_Status((connectionId, message, serialNumber, respond)=>{
 })
 
 
+/**
+ * makes sure, the drones and remote controllers for this connection link are properly registered and referenced to each other
+ */
+async function updateProductForConnection(connection: DBType_Connection, serialNumber: string, domain: string, type: number, sub_type: number){
+
+    const productType = getProductType(domain, type, sub_type)
+
+    if(productType.domain === 'controller'){
+
+        if(typeof connection.remote_controller_id !== 'number'){
+
+            let remoteController = await getRemoteControllerForSerialNumber(serialNumber)
+
+            if(remoteController){
+
+                try {
+                    const oldConnection = await getConnectionForRemoteController(remoteController.id)
+
+                    console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
+
+                    await updateConnection({
+                        remote_controller_id: null
+                    }, oldConnection.id)
+
+                } catch (err){
+                    //ignore
+                    console.log('failed to remove remote controller from old connection', err)
+                }
+
+            } else {
+                remoteController = await insertRemoteController({
+                    type: productType.type === 'rc_plus' ? DBType_RemoteController_TYPES.dji_rc_plus
+                        : productType.type === 'rc_plus_2' ? DBType_RemoteController_TYPES.dji_rc_plus_2
+                        : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
+                        : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
+                        : DBType_RemoteController_TYPES.unknown,
+                    serial_number: serialNumber
+                })
+            }
+
+            await updateConnection({
+                remote_controller_id: remoteController.id
+            }, connection.id)
+
+            connection.remote_controller_id = remoteController.id
+        }
+
+    } else if(productType.domain === 'drone'){
+
+        let drone = await getDroneForSerialNumber(serialNumber)
+
+        if(drone){
+            if(drone.last_connection_id !== connection.id){
+                console.warn('transferring drone connection from', drone.last_connection_id, 'to', connection.id)
+                drone.last_connection_id = connection.id
+
+                await updateDrone({
+                    last_connection_id: connection.id
+                }, drone.id)
+            }
+        } else {
+
+            try {
+                drone = await insertDrone({
+                    type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
+                        : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
+                        : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
+                        : productType.type === 'matrice_350_rtk' ? DBType_Drone_TYPES.dji_matrice_350
+                        : DBType_Drone_TYPES.unknown,
+                    serial_number: serialNumber,
+                    name: productType.subType,
+                    last_connection_id: connection.id
+                })
+
+                const flight = await insertFlight({
+                    drone_id: drone.id
+                })
+
+                drone = await updateDrone({
+                    current_flight_id: flight.id
+                }, drone.id)
+
+            } catch (err){
+
+                throw err
+            }
+
+        }
+
+        if(connection.last_drone_id !== drone.id){
+            console.warn('replacing connection drone', connection.last_drone_id, 'with', drone.id)
+
+            await updateConnection({
+                last_drone_id: drone.id
+            }, connection.id)
+
+            connection.last_drone_id = drone.id
+        }
+
+    } else {
+        //TODO implement camera and dock?
+    }
+
+}
 
 
-connector.onMessage_Osd(async (connectionId, message)=>{
+connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
-    const _m = message as {data: {longitude?: number, latitude?: number, height?: number}}
+    const _m = message as {data: {longitude?: number, latitude?: number, height?: number, elevation?: number}}
 
     const connection = await selectConnection(connectionId)
 
-    if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number'){
 
-        //@ts-ignore
-        if(typeof _m.data.elevation === 'number'){// DRONE //TODO better detection of what type it is
-            const messageData = _m.data as MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE
-
-            if(typeof connection.drone_id !== 'number'){
-
-                if(typeof message.gateway !== 'string'){
-                    console.error('expected osd message to have the property "gateway"', message)
-                    return
-                } else {
-                    const newDrone = await insertDrone({
-                        //TODO: detect type type: DBType_RemoteController_TYPES.dji_rc_plus
-                        serial_number: message.gateway, //TODO detect correct serial number
-                        name: 'unknown'
-                    })
-
-                    await updateConnection({
-                        drone_id: newDrone.id
-                    }, connection.id)
-
-                    connection.drone_id = newDrone.id
-                }
-            }
+    if(typeof message.gateway !== 'string'){
+        console.error('expected osd message to have the property "gateway"', message)
+        return
+    }
 
 
-            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+    const messageType = productSerialNumber === message.gateway ? 'fromGateway' : 'notFromGateway' //TODO: check if this works correctly for all drones (especially m300)
 
-                addDroneData(connection.drone_id, DRONE_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
-            }
+    if(messageType === 'fromGateway'){
 
-            if(typeof messageData.battery?.capacity_percent === 'number'){
-                addDroneData(connection.drone_id, DRONE_DATA_TYPES.TELEMETRY, {capacity_percent_left: messageData.battery.capacity_percent})
-            }
+        //TODO is a dock a gateway or not? i guess it is?
 
-        } else {// RC
+        if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number'){
 
             const messageData = _m.data as MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE
 
-            if(typeof connection.remote_controller_id !== 'number'){
+            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
 
-                if(typeof message.gateway !== 'string'){
-                    console.error('expected osd message to have the property "gateway"', message)
-                    return
+                if(typeof connection.remote_controller_id !== 'number'){
+                    console.warn('got remote controller data, but remote controller was not yet created', connection.id)
                 } else {
-                    const newRemoteController = await insertRemoteController({
-                        //TODO: detect type type: DBType_RemoteController_TYPES.dji_rc_plus
-                        serial_number: message.gateway
+
+                    addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {
+                        longitude: messageData.longitude,
+                        latitude: messageData.latitude,
+                        height: messageData.height
                     })
-
-                    await updateConnection({
-                        remote_controller_id: newRemoteController.id
-                    }, connection.id)
-
-                    connection.remote_controller_id = newRemoteController.id
                 }
             }
+        }
 
-            if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
-                addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {longitude: messageData.longitude, latitude: messageData.latitude, height: messageData.height})
+    } else {
+        const drone = await getDroneForSerialNumber(productSerialNumber)
+
+        if(drone){
+
+            //@ts-ignore
+            if(typeof _m.data.longitude === 'number' && typeof _m.data.latitude === 'number' && typeof _m.data.height === 'number' && typeof _m.data.elevation === 'number'){
+                const messageData = _m.data as MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE
+
+                if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
+
+                    addDroneData(drone.id, DRONE_DATA_TYPES.POSITION, {
+                        longitude: messageData.longitude,
+                        latitude: messageData.latitude,
+                        height: messageData.height
+                    })
+
+                    setDroneInFlightState(drone, _m.data.elevation !== 0).then(drone=>{
+
+                        insertFlightData({
+                            created_at: new Date(message.timestamp).toISOString(),
+                            data: JSON.stringify({
+                                longitude: messageData.longitude,
+                                latitude: messageData.latitude,
+                                height: messageData.height
+                            }),
+                            flight_id: drone.current_flight_id,
+                            type: DBType_FlightData_TYPES.position
+                        }).catch(err => {
+                            console.error('failed to insert flight data', err)
+                        })
+
+                    }).catch(err => console.error('failed to setDroneInFlightState', err))
+
+                }
+
+                if(typeof messageData.battery?.capacity_percent === 'number'){
+                    addDroneData(drone.id, DRONE_DATA_TYPES.TELEMETRY, {
+                        capacity_percent_left: messageData.battery.capacity_percent
+                    })
+                }
+
             }
+
+        } else {
+            //TODO support camera
         }
     }
+
 })
 
 connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
-    console.log('onMessage_Event', connectionId, message, serialNumber)
-
 
     if(message.need_reply === 1){// if this check is not done, it crashes the dji pilot 2 app on the remote controller
         respond({
@@ -115,7 +256,7 @@ connector.onMessage_Event((connectionId, message, serialNumber, respond)=>{
 })
 
 
-new Logger(connector, path.resolve('connector_logs'))
+new Logger(connector, path.resolve(path.join('/ofh_logs', 'connector_logs')))
 
 const authedClientIdToConnectionIdMap = new Map<string, {
     connection_id: number,

@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.4.0
+  version: 0.12.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -394,7 +394,39 @@ paths:
                 $ref: '#/components/schemas/file'
 
         '400':
-            $ref: '#/components/responses/400'
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /file/get-multiple:
+    post:
+      tags:
+        - file
+      summary: Get multiple files at once
+      description: Only returns file meta data, For the actual file see /file/data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/file_get_multiple_post'
+        required: true
+      responses:
+        '200':
+          description: Returns a file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file_get_multiple'
+
+        '400':
+          $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -432,6 +464,32 @@ paths:
         - user_auth: []
 
 
+  /file/thumbnail/{file_id}:
+    get:
+      x-no-sdk: true
+      tags:
+        - file
+      summary: Get a files thumbnail (to download or show as <img>)
+      parameters:
+        - name: file_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns a file
+
+        '400':
+            $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
 
   # workspace
 
@@ -681,7 +739,7 @@ paths:
   /workspace/{workspace_id}/files:
     get:
       tags:
-        - connection
+        - workspace
       summary: Get all files for this workspace
       parameters:
         - name: workspace_id
@@ -1011,6 +1069,195 @@ paths:
       security:
         - user_auth: []
 
+
+
+  /drone/{drone_id}/flights:
+    get:
+      tags:
+        - drone
+      summary: Get all the flights of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drones flights
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drone_flights'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+
+  /drone/{drone_id}/current-flight:
+    get:
+      tags:
+        - drone
+      summary: Get the current flight of the drone
+      parameters:
+        - name: drone_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the drones current flight (equivalent to /flight/{flight_id})
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flight'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  # flight
+
+  /flight/{flight_id}:
+    get:
+      tags:
+        - drone
+      summary: Get a flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the flight
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flight'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /flight/{flight_id}/media:
+    get:
+      tags:
+        - drone
+      summary: Get all the uploaded media of this flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the flights media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flight_media'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  # media
+
+  /media/{media_id}:
+    get:
+      tags:
+        - drone
+      summary: Get a uploaded media
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/media'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /media/ground-coverage/{media_id}:
+    get:
+      tags:
+        - media
+      summary: get ground coverage for this media
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: ground coverage
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/media_ground_coverage'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          description: ground coverage not available
 
   # connection-link
 
@@ -1454,8 +1701,14 @@ components:
     timestamptz:
       type: string
       format: timestamptz
-      description: ISO 8601 format
+      description: ISO 8601 format with a timezone
       example: "2023-12-11 23:06:52.7879+00"
+
+    timestamp:
+      type: string
+      format: timestamptz
+      description: ISO 8601 format without a timezone
+      example: "2023-12-11 23:06:52.7879"
 
     email:
       type: string
@@ -1619,6 +1872,7 @@ components:
         - id
         - name
         - created_at
+        - has_thumbnail
       properties:
         id:
           $ref: '#/components/schemas/id'
@@ -1626,7 +1880,25 @@ components:
           type: string
         created_at:
           $ref: '#/components/schemas/timestamptz'
+        has_thumbnail:
+          type: boolean
+          description: if a thumbnail is available at /file/thumbnail/
 
+
+    file_get_multiple:
+      type: array
+      items:
+        $ref: '#/components/schemas/file'
+
+    file_get_multiple_post:
+      type: object
+      required:
+        - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
 
     # workspace
 
@@ -1636,11 +1908,17 @@ components:
       required:
         - id
         - name
+        - longitude
+        - latitude
       properties:
         id:
           $ref: '#/components/schemas/id'
         name:
           type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
 
 
     workspace_patch:
@@ -1654,15 +1932,21 @@ components:
       type: object
       required:
         - name
+        - longitude
+        - latitude
       properties:
         name:
           type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
 
 
     workspace_files:
       type: array
       items:
-          $ref: '#/components/schemas/reference'
+          $ref: '#/components/schemas/file'
 
     workspace_file_post:
       type: object
@@ -1708,11 +1992,15 @@ components:
 
     connection:
       type: object
+      description: "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)"
       required:
         - id
+        - name
       properties:
         id:
           $ref: '#/components/schemas/id'
+        name:
+          type: string
         remote_controller_id:
           $ref: '#/components/schemas/id'
         drone_id:
@@ -1769,6 +2057,8 @@ components:
           $ref: '#/components/schemas/drone_type'
         name:
           type: string
+        last_connection_id:
+          $ref: '#/components/schemas/id'
 
     drone_type:
       type: integer
@@ -1807,27 +2097,164 @@ components:
     drone_media:
       type: array
       items:
-        type: object
-        required:
-          - id
-          - type
-          - file_id
-          - created_at
-        properties:
-          id:
-            $ref: '#/components/schemas/id'
-          type:
-            type: number
-            description: 0 = image, 1 = video
-          file_id:
-            type: number
-            example: 42
-            description: see `/file` endpoint
-          created_at:
-            $ref: '#/components/schemas/timestamptz'
-          meta:
-            type: string
+        $ref: '#/components/schemas/media'
 
+
+    drone_flights:
+      type: array
+      items:
+        $ref: '#/components/schemas/flight'
+
+    flight:
+      type: object
+      required:
+        - id
+        - drone_id
+        - started_at
+        - track
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        drone_id:
+          $ref: '#/components/schemas/id'
+        started_at:
+          $ref: '#/components/schemas/timestamptz'
+        landed_at:
+          $ref: '#/components/schemas/timestamptz'
+        ended_at:
+          $ref: '#/components/schemas/timestamptz'
+        track:
+          type: array
+          items:
+            type: object
+            required:
+              - height
+              - longitude
+              - latitude
+            properties:
+              height:
+                type: number
+              longitude:
+                type: number
+              latitude:
+                type: number
+              time:
+                $ref: '#/components/schemas/timestamptz'
+
+
+    flight_media:
+      type: array
+      items:
+        $ref: '#/components/schemas/media'
+
+    media:
+      type: object
+      required:
+        - id
+        - type
+        - file_id
+        - received_at
+        - drone_id
+        - flight_id
+        - file_name
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        drone_id:
+          $ref: '#/components/schemas/id'
+        flight_id:
+          $ref: '#/components/schemas/id'
+        type:
+          type: number
+          description: 0 = image, 1 = video
+        file_id:
+          type: number
+          example: 42
+          description: see `/file` endpoint
+        file_name:
+          type: string
+        received_at:
+          $ref: '#/components/schemas/timestamptz'
+        meta:
+          type: string
+        captured_at:
+          $ref: '#/components/schemas/timestamptz'
+        camera_location:
+          type: object
+          properties:
+            position:
+              type: object
+              required:
+                - longitude
+                - latitude
+              properties:
+                longitude:
+                  type: number
+                latitude:
+                  type: number
+            height:
+              type: number
+        camera_angles:
+          type: object
+          properties:
+            heading:
+              type: number
+            pitch:
+              type: number
+            roll:
+              type: number
+
+    media_ground_coverage:
+      type: object
+      required:
+        - coverage
+      properties:
+        coverage:
+          type: object
+          required:
+            - all
+            - outer
+            - holes
+          properties:
+            all:
+              type: array
+              items:
+                $ref: '#/components/schemas/ground-coverage-location'
+            outer:
+              type: array
+              items:
+                $ref: '#/components/schemas/ground-coverage-location'
+            holes:
+              type: array
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ground-coverage-location'
+
+    ground-coverage-location:
+      type: object
+      required:
+        - position
+        - elevation
+      properties:
+        position:
+          type: object
+          required:
+            - longitude
+            - latitude
+          properties:
+            longitude:
+              type: number
+              description: in degree
+            latitude:
+              type: number
+              description: in degree
+        elevation:
+          type: number
+          description: in meters
+        debug:
+          type: string
+          description: for debugging only
 
     # connection-link
 

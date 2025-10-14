@@ -55,12 +55,21 @@ export type DBType_File = {
   name: string;
   created_at: string;
   created_by: number;
+  has_thumbnail: boolean;
+  thumbnail_generation_has_failed: boolean;
+  /**
+   * json encoded exif data
+   */
+  exif_data?: string;
+  exif_data_generation_has_failed: boolean;
 }
 
 
 export type DBType_Workspace = {
   id: number;
   name: string;
+  longitude: number;
+  latitude: number;
 }
 
 
@@ -84,37 +93,90 @@ export type DBType_Connection = {
    */
   workspace_uuid: string;
   remote_controller_id?: number;
-  drone_id?: number;
+  /**
+   * the "currently" connected drone (does not mean that the drone is currently online)
+   */
+  last_drone_id?: number;
 }
 
 
-export type DBType_RemoteController_TypeType = 0|1
+export type DBType_RemoteController_TypeType = 0|1|2|3|4
 export const DBType_RemoteController_TYPES = {
-  dji_rc_pro_enterprise: 0 as DBType_RemoteController_TypeType,
-  dji_rc_plus: 1 as DBType_RemoteController_TypeType
+  unknown: 0 as DBType_RemoteController_TypeType,
+  dji_rc_plus: 1 as DBType_RemoteController_TypeType,
+  dji_rc_pro_enterprise: 2 as DBType_RemoteController_TypeType,
+  dji_rc_plus_2: 3 as DBType_RemoteController_TypeType,
+  dji_smart_controller: 4 as DBType_RemoteController_TypeType
 }
 export type DBType_RemoteController = {
   id: number;
   serial_number: string;
   /**
-   * 0 = dji rc pro enterprise, 1 = dji rc plus
+   * 0 = unknown, 1 = dji rc plus, 2 = dji rc pro enterprise, 3 = dji rc plus 2, 4 = dji smart controller
    */
   type: DBType_RemoteController_TypeType;
 }
 
 
-export type DBType_Drone_TypeType = 0
+export type DBType_Drone_TypeType = 0|1|2|3|4
 export const DBType_Drone_TYPES = {
-  dji_mavic_3: 0 as DBType_Drone_TypeType
+  unknown: 0 as DBType_Drone_TypeType,
+  dji_matrice_300: 1 as DBType_Drone_TypeType,
+  dji_matrice_30: 2 as DBType_Drone_TypeType,
+  dji_matrice_350: 3 as DBType_Drone_TypeType,
+  dji_mavic_3: 4 as DBType_Drone_TypeType
 }
 export type DBType_Drone = {
   id: number;
   serial_number: string;
   name: string;
   /**
-   * 0 = dji mavic 3
+   * 0 = unknown, 1 = dji matrice 300, 2 = dji matrice 30, 3 = dji matrice 350, 4 = dji mavic 3
    */
   type: DBType_Drone_TypeType;
+  last_connection_id?: number;
+  /**
+   * should never every be null
+   */
+  current_flight_id?: number;
+  in_flight: boolean;
+}
+
+
+export type DBType_Flight = {
+  id: number;
+  drone_id: number;
+  started_at: string;
+  /**
+   * when drone lands
+   */
+  landed_at?: string;
+  ended_at?: string;
+}
+
+
+export type DBType_FlightData_TypeType = 0
+export const DBType_FlightData_TYPES = {
+  position: 0 as DBType_FlightData_TypeType
+}
+export type DBType_FlightData = {
+  id: number;
+  flight_id: number;
+  /**
+   * when stored in db
+   */
+  received_at: string;
+  /**
+   * when drone created the data
+   */
+  created_at: string;
+  /**
+   * 0 = position
+   */
+  type: DBType_FlightData_TypeType;
+  data: {
+    [k: string]: unknown;
+  };
 }
 
 
@@ -144,6 +206,7 @@ export const DBType_DroneData_TYPES = {
 export type DBType_DroneData = {
   id: number;
   drone_id: number;
+  flight_id: number;
   /**
    * 0 = position, 1 = telemetry
    */
@@ -164,6 +227,7 @@ export const DBType_DroneMedia_TYPES = {
 export type DBType_DroneMedia = {
   id: number;
   drone_id: number;
+  flight_id: number;
   /**
    * 0 = video, 1 = picture, 2 = panorama
    */
@@ -175,6 +239,24 @@ export type DBType_DroneMedia = {
    * json encoded meta data
    */
   meta?: string;
+  captured_at?: string;
+  /**
+   * when stored in db
+   */
+  received_at: string;
+  /**
+   * json encoded coverage data
+   */
+  coverage?: string;
+  coverage_generated_at: string;
+  /**
+   * json encoded {position: {longitude: number, latitude: number}, height: number}
+   */
+  camera_location?: string;
+  /**
+   * json encoded {heading: number, pitch: number, roll: number}
+   */
+  camera_angles?: string;
 }
 
 

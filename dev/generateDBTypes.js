@@ -247,6 +247,9 @@ function convertDBMLTypeToJSONSchemaType(type){
 
         case 'decimal':
         case 'numeric':
+        case 'float':
+        case 'number':
+        case 'float8':
         case 'double': return 'number'
 
         case 'timestamp':

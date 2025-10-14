@@ -1,17 +1,57 @@
 import fs from 'fs'
 import path from 'path'
-import { deleteObject, uploadObject, downloadObject, createTemporaryCredentialsForFileUpload, createBucketForConnection } from '../../s3-store'
+import { deleteObject, uploadObject, downloadObject, createTemporaryCredentialsForFileUpload, createBucketForConnection, createBucket, deleteBucket, getBucketNameForConnectionId } from '../../s3-store'
 import { randomUUID } from 'crypto'
 
 const TEST_BUCKET_NAME = 'test'
 
-test('createBucketForConnection()', async ()=>{
+describe('createBucket()', ()=>{
 
-    await createBucketForConnection(2)
+    afterAll(async ()=>{
+        await deleteBucket(TEST_BUCKET_NAME)
+    })
+
+    test('createBucket()', async ()=>{
+        await createBucket(TEST_BUCKET_NAME)
+    })
 
 })
 
+describe('deleteBucket()', ()=>{
+
+    beforeAll(async ()=>{
+        await createBucket(TEST_BUCKET_NAME)
+    })
+
+    test('deleteBucket()', async ()=>{
+        await deleteBucket(TEST_BUCKET_NAME)
+    })
+
+})
+
+
+describe('createBucketForConnection()', ()=>{
+
+    afterAll(async ()=>{
+        await deleteBucket(getBucketNameForConnectionId(2))
+    })
+
+    test('createBucketForConnection()', async ()=>{
+
+        await createBucketForConnection(2)
+
+    })
+})
+
 describe('sts', ()=>{
+
+    beforeAll(async ()=>{
+        await createBucketForConnection(2)
+    })
+
+    afterAll(async ()=>{
+        await deleteBucket(getBucketNameForConnectionId(2))
+    })
 
     test('createTemporaryCredentialsForFileUpload', async()=>{
         const credentials = await createTemporaryCredentialsForFileUpload(2)
@@ -22,6 +62,14 @@ describe('sts', ()=>{
 })
 
 describe('object manipulation', ()=>{
+
+    beforeAll(async ()=>{
+        await createBucket(TEST_BUCKET_NAME)
+    })
+
+    afterAll(async ()=>{
+        await deleteBucket(TEST_BUCKET_NAME)
+    })
 
     test('upload and overwrite object', async()=>{
 

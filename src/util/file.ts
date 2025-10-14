@@ -1,10 +1,20 @@
+import safeJsonStringify from 'safe-json-stringify'
 import fs from 'fs'
 import path from 'path'
-import {deleteFile, insertFile, selectFile} from '../db/DBHelpers'
+import {deleteFile, insertFile, selectFile, updateFile} from '../db/DBHelpers'
 
 import SecretsLoader from './SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['files_path'])
+
+const THUMBNAILS_FOLDER = 'thumbnails'
+const THUMBNAILS_EXT = 'jpg'
+const THUMBNAIL_WIDTH = 300
+
+const thumbnailsFolderPath = path.join(path.resolve(secrets.files_path), THUMBNAILS_FOLDER)
+if(fs.existsSync(thumbnailsFolderPath) === false){
+    fs.mkdirSync(thumbnailsFolderPath)
+}
 
 export async function getAbsoluteFilePathForFileId(fileId: number){
     const file = await selectFile(fileId)
@@ -12,8 +22,16 @@ export async function getAbsoluteFilePathForFileId(fileId: number){
     return getAbsoluteFilePathForFile(file)
 }
 
+export function getAbsoluteThumbnailPathForFileId(fileId: number){
+    return path.join(path.resolve(secrets.files_path), THUMBNAILS_FOLDER, '' + fileId + '.' + THUMBNAILS_EXT)
+}
+
 export function getAbsoluteFilePathForFile(file: DBType_File){
     return path.join(path.resolve(secrets.files_path), '' + file.id + '.' + file.ext)
+}
+
+export function getAbsoluteThumbnailPathForFile(file: DBType_File){
+    return getAbsoluteThumbnailPathForFileId(file.id)
 }
 
 import multer from 'multer'
@@ -43,6 +61,12 @@ export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, works
         workspace_id: workspaceId
     })
 
+    try {
+        await generateExifDataForFile(file.id)
+    } catch (err){
+        console.warn('failed to generateExifDataForFile', file.id, err)
+    }
+
     deleteTmpMulterFile(multerFile).catch(err => {
         console.warn('failed to delete tmp multer file', err)
     })
@@ -53,11 +77,133 @@ export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, works
 export async function deleteFileFromDatabaseAndFilesystem(file: DBType_File){
     await fs.promises.rm(getAbsoluteFilePathForFile(file))
     await deleteFile(file.id)
+    await deleteThumbnailIfExists(file.id)
 }
 
 export async function deleteFileIdFromDatabaseAndFilesystem(fileId: number){
     await fs.promises.rm(await getAbsoluteFilePathForFileId(fileId))
     await deleteFile(fileId)
+    await deleteThumbnailIfExists(fileId)
+}
+
+async function deleteThumbnailIfExists(fileId: number){
+    const thumbnailPath = getAbsoluteThumbnailPathForFileId(fileId)
+    if(fs.promises.access(thumbnailPath), fs.constants.W_OK){
+        await fs.promises.rm(thumbnailPath)
+    }
+}
+
+import imageThumbnail from 'image-thumbnail'
+import { readFile } from 'fs/promises'
+import { getExifData } from './exif'
+import { Tags } from 'exifreader'
+
+/**
+ * generates a thumbnail for this file, and updates the file database entry. If it fails to generate one, the file database entry is marked as "generation_failed" and after that an error is thrown
+ */
+export async function generateThumbnailForFile(fileId: number){
+    const filePath = await getAbsoluteFilePathForFileId(fileId)
+
+    let thumbnailBuffer: any
+    try {
+        thumbnailBuffer = await imageThumbnail(filePath, {
+            width: THUMBNAIL_WIDTH,
+            jpegOptions: {
+                force: true
+            }
+        })
+    } catch (err){
+        try {
+            await updateFile({
+                thumbnail_generation_has_failed: true
+            }, fileId)
+        } catch (err){
+            console.error('failed to mark thumbnail_generation_has_failed', err)
+        }
+
+        throw err
+    }
+
+    const thumbnailPath = await getAbsoluteThumbnailPathForFileId(fileId)
+
+    const writeStream = fs.createWriteStream(thumbnailPath)
+    writeStream.write(thumbnailBuffer)
+    writeStream.close()
+
+    await updateFile({
+        has_thumbnail: true
+    }, fileId)
+
+    return thumbnailPath
+}
+
+/**
+ * generates the exif data for this file, and updates the file database entry.
+ */
+export async function generateExifDataForFile(fileId: number){
+    const filePath = await getAbsoluteFilePathForFileId(fileId)
+
+    const buf = await readFile(filePath)
+
+    const exifData = await getExifData(buf)
+
+    try {
+
+        const clean = {}
+        for(const key of Object.keys(exifData)){
+
+            if(key === 'Images' || key === 'Thumbnail'){
+                continue //skip to safe storage space
+            }
+
+            const safeJSON = safeJsonStringify(exifData[key]) as string
+
+            if(safeJSON.length > 100000 && ['MakerNote'].includes(key) === false){
+                console.log('removed key', key, safeJSON.length)
+            } else {
+                clean[key] = JSON.parse(safeJSON)
+            }
+        }
+
+        const cleanJson = JSON.stringify(clean)
+
+        const len = cleanJson.length
+
+        await updateFile({
+            exif_data: cleanJson
+        }, fileId)
+    } catch (err){
+
+        try {
+            await updateFile({
+                exif_data_generation_has_failed: true
+            }, fileId)
+        } catch (err){
+            console.error('failed to mark exif_data_generation_has_failed', err)
+        }
+
+        throw err
+    }
+
+    return exifData
+}
+
+export async function getExifDataForFile(fileId: number){
+    const file = await selectFile(fileId)
+
+    if(file.exif_data){
+        return JSON.parse(file.exif_data) as Tags
+    } else {
+        if(file.exif_data_generation_has_failed){
+            return false
+        } else {
+            try {
+                return await generateExifDataForFile(fileId)
+            } catch (err){
+                return false
+            }
+        }
+    }
 }
 
 export { multerMiddleware }

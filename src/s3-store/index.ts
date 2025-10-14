@@ -2,6 +2,9 @@
 // see https://min.io/docs/minio/linux/developers/security-token-service.html
 // and https://github.com/minio/minio/blob/master/docs/sts/assume-role.md
 
+// and
+// and https://min.io/docs/minio/linux/reference/s3-api-compatibility.html
+
 import * as fs from 'fs'
 import * as minio from 'minio'
 import { fetchUrl } from "../util/http";
@@ -28,25 +31,15 @@ const minioClientRoot = new minio.Client({
 const WEB_API_BASE_URL = 'http://' + secrets.minio_web_url + (('' + secrets.minio_web_url).endsWith('/') ? '' : '/') + 'api/v1'
 
 
-export function getBucketNameForConnectionId(connectionId: number){
-    return 'connection-' + connectionId
-}
-
 /**
  * creates new bucket and a user that only has access to exactly this bucket. You can call this multiple times, and it will skip the steps that are already complete (So if this function fails, you can simple execute it again later and try again).
  *
- * @param connectionId
- * @returns bucket name form getBucketNameForConnectionId()
  */
-export async function createBucketForConnection(connectionId: number){
+export async function createBucket(bucketName: string){
 
     const authenticatedHeaders = await loginAsRoot()
 
-
-    const newBucketName = getBucketNameForConnectionId(connectionId)
-
-
-    const bucketExistsAlready = await minioClientRoot.bucketExists(newBucketName)
+    const bucketExistsAlready = await minioClientRoot.bucketExists(bucketName)
 
     if(!bucketExistsAlready){
         // create new bucket
@@ -56,7 +49,7 @@ export async function createBucketForConnection(connectionId: number){
             method: 'post',
             headers: authenticatedHeaders,
             data: {
-                name: newBucketName,
+                name: bucketName,
                 versioning: {
                     enabled: false,
                     excludePrefixes: [],
@@ -69,7 +62,7 @@ export async function createBucketForConnection(connectionId: number){
 
 
 
-    const policyExistsAlready = await policyExists(newBucketName, authenticatedHeaders)
+    const policyExistsAlready = await policyExists(bucketName, authenticatedHeaders)
 
     if(!policyExistsAlready){
         // create new policy
@@ -79,7 +72,7 @@ export async function createBucketForConnection(connectionId: number){
             method: 'post',
             headers: authenticatedHeaders,
             data: {
-                name: newBucketName,
+                name: bucketName,
                 policy: JSON.stringify({
                     "Version": "2012-10-17",
                     "Statement": [
@@ -87,8 +80,8 @@ export async function createBucketForConnection(connectionId: number){
                             "Effect": "Allow",
                             "Action": "s3:*",
                             "Resource": [
-                                "arn:aws:s3:::" + newBucketName + "/*",
-                                "arn:aws:s3:::" + newBucketName
+                                "arn:aws:s3:::" + bucketName + "/*",
+                                "arn:aws:s3:::" + bucketName
                             ]
                         }
                     ]
@@ -98,7 +91,7 @@ export async function createBucketForConnection(connectionId: number){
     }
 
 
-    const userExistsAlready = await userExists(newBucketName, authenticatedHeaders)
+    const userExistsAlready = await userExists(bucketName, authenticatedHeaders)
 
     if(!userExistsAlready){
 
@@ -109,14 +102,70 @@ export async function createBucketForConnection(connectionId: number){
             method: 'post',
             headers: authenticatedHeaders,
             data: {
-                accessKey: newBucketName,
+                accessKey: bucketName,
                 secretKey: generateUniqueTokenUrlSafe(42),
                 groups: [],
-                policies: [newBucketName]
+                policies: [bucketName]
             }
         })
     }
+}
 
+
+/**
+ * creates new bucket and a user that only has access to exactly this bucket. You can call this multiple times, and it will skip the steps that are already complete (So if this function fails, you can simple execute it again later and try again).
+ *
+ */
+export async function deleteBucket(bucketName: string){
+
+    const authenticatedHeaders = await loginAsRoot()
+
+    const userDoesExist = await userExists(bucketName, authenticatedHeaders)
+
+    if(userDoesExist){
+
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/user/' + bucketName,
+            method: 'delete',
+            headers: authenticatedHeaders
+        })
+    }
+
+    const bucketDoesExists = await minioClientRoot.bucketExists(bucketName)
+
+    if(bucketDoesExists){
+        await minioClientRoot.removeBucket(bucketName)
+    }
+
+    const policyDoesExist = await policyExists(bucketName, authenticatedHeaders)
+
+    if(policyDoesExist){
+
+        await fetchUrl({
+            url: WEB_API_BASE_URL + '/policy/' + bucketName,
+            method: 'delete',
+            headers: authenticatedHeaders
+        })
+    }
+
+}
+
+export function getBucketNameForConnectionId(connectionId: number){
+    return 'connection-' + connectionId
+}
+
+
+/**
+ * creates new bucket and a user that only has access to exactly this bucket. You can call this multiple times, and it will skip the steps that are already complete (So if this function fails, you can simple execute it again later and try again).
+ *
+ * @param connectionId
+ * @returns bucket name form getBucketNameForConnectionId()
+ */
+export async function createBucketForConnection(connectionId: number){
+
+    const newBucketName = getBucketNameForConnectionId(connectionId)
+
+    await createBucket(newBucketName)
 
     return newBucketName
 }

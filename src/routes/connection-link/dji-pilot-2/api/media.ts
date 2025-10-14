@@ -5,14 +5,12 @@ import { ApiType_DjiPilot2ApiMediaFastUploadPost, ApiType_DjiPilot2ApiMediaFastU
 import { ApiSchema_DjiPilot2ApiMediaFastUploadPost, ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiSchema_DjiPilot2ApiMediaUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../definitions/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import {deleteObject, downloadObject} from '../../../../s3-store'
-import SecretsLoader from '../../../../util/SecretsLoader'
+import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
-import { insertDroneMedia, insertFile } from '../../../../db/DBHelpers';
-import {getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
-const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_region', 'minio_bucket_dji_pilot_2_media'])
+import { deleteFile, insertDroneMedia, insertFile, selectDrone } from '../../../../db/DBHelpers';
+import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
+import { getDroneMetaFromFile } from '../../../../util/media';
 
 const router = express.Router()
 
@@ -30,7 +28,7 @@ router.post('/fast-upload', asyncHandler(async (req, res) => {
         throw GuardError._400_invalidBody('fingerprint')
     }
 
-    const existingMedia = await db.oneOrNone<DBType_DroneMedia>('SELECT * FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id ' + pgp.as.format('WHERE fingerprint = ${fingerprint} AND connections.id = ${connectionId}', {
+    const existingMedia = await db.oneOrNone<DBType_DroneMedia>('SELECT * FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE fingerprint = ${fingerprint} AND connections.id = ${connectionId}', {
         fingerprint: body.fingerprint,
         connectionId: connection.id
     }))
@@ -51,14 +49,14 @@ router.post('/fast-upload', asyncHandler(async (req, res) => {
 
 }))
 
-router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
+router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {// this endpoint is used by m300 (not by mavic 3)
 
     const connection = await req.GM.getCurrentConnection()
 
 
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost>(ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost)
 
-    const existingTinyFingerprints = await db.manyOrNone<string>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
+    const existingTinyFingerprints = await db.manyOrNone<{tiny_fingerprint: string}>('SELECT tiny_fingerprint FROM drone_media INNER JOIN connections ON drone_media.drone_id = connections.last_drone_id ' + pgp.as.format('WHERE connections.id = ${connectionId}', {
         connectionId: connection.id
     }))
 
@@ -66,7 +64,7 @@ router.post('/files/tiny-fingerprints', asyncHandler(async (req, res) => {
         code: 0,
         message: 'success',
         data: {
-            tiny_fingerprints: existingTinyFingerprints
+            tiny_fingerprints: existingTinyFingerprints.map(etf => etf.tiny_fingerprint)
         }
     }, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse)
 
@@ -83,7 +81,7 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     //TODO support differentiation between picture and panorama
 
-    await addDroneMediaFromBucket(connection, secrets.minio_bucket_dji_pilot_2_media, body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify(body.ext))
+    await addDroneMediaFromBucket(connection, getBucketNameForConnectionId(connection.id), body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify({ext: body.ext, metadata: body.metadata}))
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse>({
         code: 0,
@@ -123,27 +121,52 @@ async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName
         ext: getFileExtension(objectKey)
     })
 
-    let droneMedia: DBType_DroneMedia
     try {
-        droneMedia = await insertDroneMedia({
-            drone_id: connection.drone_id!,
-            type,
-            fingerprint,
-            tiny_fingerprint: tinyFingerprint,
-            meta,
-            file_id: file.id
-        })
-
+        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
     } catch (err){
-        //TODO delete file
+
+        try {
+            await deleteFile(file.id)
+        } catch (err){
+            console.error('failed to cleanup file after downloading did not work', err)
+        }
 
         throw err
     }
 
     try {
-        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
+        await generateThumbnailForFile(file.id)
     } catch (err){
-        //TODO delete file and delete dronemedia
+        console.warn('failed to generate thumbnail for file', file.id, err)
+    }
+
+    try {
+        await generateExifDataForFile(file.id)
+    } catch (err){
+        console.warn('failed to generateExifDataForFile', file.id, err)
+    }
+
+
+    const droneMeta = await getDroneMetaFromFile(file.id)
+
+    let droneMedia: DBType_DroneMedia
+    try {
+        droneMedia = await insertDroneMedia({
+            drone_id: connection.last_drone_id!,
+            type,
+            fingerprint,
+            tiny_fingerprint: tinyFingerprint,
+            meta,
+            file_id: file.id,
+            captured_at: droneMeta === false ? undefined : droneMeta.createdAt,
+            camera_location: droneMeta === false ? undefined : JSON.stringify({position: droneMeta.position, height: droneMeta.altitude}),
+            camera_angles: droneMeta === false ? undefined : JSON.stringify({heading: droneMeta.gimbal.yaw, pitch: droneMeta.gimbal.pitch, roll: droneMeta.gimbal.roll}),
+            flight_id: (await selectDrone(connection.last_drone_id!)).current_flight_id
+        })
+
+    } catch (err){
+        //TODO delete file
+
         throw err
     }
 

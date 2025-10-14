@@ -1,8 +1,5 @@
 import { Request } from 'express';
 import * as ws from 'ws';
-import { userHasPermissionForWorkspace } from '../util/user';
-import { selectDrone } from '../db/DBHelpers';
-import { getConnectionForDrone } from '../util/connection';
 import { DBType_User } from '../db/DBTypes';
 import * as server_to_client from './definitions/server_to_client'
 import * as client_to_server from './definitions/client_to_server'
