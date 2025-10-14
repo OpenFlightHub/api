@@ -7,6 +7,8 @@ import {ISSocket} from 'js-aprs-is'
 import {aprsPacket, aprsParser} from 'js-aprs-fap'
 import { TrafficData } from "../TrafficSensing";
 
+
+
 export default class GliderNetSensingArea extends SensingSourceArea {
 
     private receiver: GliderNetReceiver
@@ -15,8 +17,10 @@ export default class GliderNetSensingArea extends SensingSourceArea {
         this.receiver = new GliderNetReceiver(this.latitude, this.longitude, this.radius)
 
         this.receiver.addListener('aircraft', data=>{
+
             this.dispatch('traffic', {
-                id: '[Glidernet] ' + data.id,
+                id: data.id,
+                name: '[Glidernet] ' + data.id,
                 position: data.position
             })
         })
@@ -100,8 +104,11 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
                     return
                 }
 
+                const id = parsed.flarm?.id || parsed.sourceCallsign || ('' + parsed.id)//TODO sourceCallsign and parsed.id are not really helpfull...
+
                 this.dispatch('aircraft', {
-                    id: parsed.flarm?.id || parsed.sourceCallsign || ('' + parsed.id),//TODO sourceCallsign and parsed.id are not really helpfull...
+                    id,
+                    name: id,
                     position: {
                         latitude: parsed.latitude,
                         longitude: parsed.longitude,

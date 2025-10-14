@@ -1,10 +1,12 @@
+import { randomUUID } from 'crypto'
 import { EventManager } from '../util/event_manager'
 import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './Source'
 import FakeSensingArea from './sources/Fake'
 import GliderNetSensingArea from './sources/GliderNet'
 
 export type TrafficData = {
-    id: string
+    id: string //uuid v4
+    name: string
     position: {
         latitude: number
         longitude: number
@@ -56,6 +58,8 @@ export class SensingHandle extends EventManager<SensingHandleEvents> {
 
     private readonly sourceHandles: SensingSourceHandle[]
 
+    private idToUuidMap = new Map<string, string>()
+
     constructor(sourceHandles: SensingSourceHandle[]){
         super()
 
@@ -63,7 +67,11 @@ export class SensingHandle extends EventManager<SensingHandleEvents> {
 
         for(const sourceHandle of this.sourceHandles){
             sourceHandle.addListener('traffic', data => {
-                this.dispatch('traffic', data)
+                this.dispatch('traffic', {
+                    id: this.getUuidForId(data.id),
+                    name: data.name,
+                    position: data.position
+                })
             })
         }
     }
@@ -75,6 +83,20 @@ export class SensingHandle extends EventManager<SensingHandleEvents> {
         }
 
         this.dispatch('stopped', undefined)
+    }
+
+    private getUuidForId(id: string){
+        const existing = this.idToUuidMap.get(id)
+
+        if(typeof existing !== 'undefined'){
+            return existing
+        } else {
+            const newUuid = randomUUID()
+
+            this.idToUuidMap.set(id, newUuid)
+
+            return newUuid
+        }
     }
 }
 

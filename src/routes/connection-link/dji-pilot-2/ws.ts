@@ -1,21 +1,35 @@
 import express from 'express';
 import ws from 'ws'
 import pgp from 'pg-promise'
-import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiTypes';
-import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiSchemas';
-import { connectionLinkAuthMiddleware } from '..';
-import { handleNewClient } from '../../../live-websocket/websocket';
-import { DBType_Connection } from '../../../db/DBTypes';
-import { randomUUID } from 'crypto';
+import TrafficSensing, { SensingHandle } from '../../../aircraft_sensing/TrafficSensing';
+import { getLastPositionOfDrone } from '../../../util/drone';
 const db : pgp.IDatabase<any> = global.db
+const trafficSense : TrafficSensing = global.trafficSense
+
+if(!trafficSense){
+    throw new Error('missing global trafficSense')
+}
 
 const router = express.Router()
+
+const DRONE_SENSING_RADIUS_ON_MAP = 1000 * 50
+
+const connectedDjiPilot2Clients = new Map<number /* connectionId */, {
+    ws: ws.WebSocket
+    droneSensingHandle?: SensingHandle,
+    existingMapElementIds: string[]
+}>()
 
 router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when user is not authenticated (right now we open the connection, then check, then close) https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketserveroptions-callback https://github.com/websockets/ws/issues/377 https://github.com/expressjs/express/issues/2556
 
     req.GM.guardDjiPilot2ApiWebsocketIsAuthenticated().then(connection=>{
 
         console.log('/dji-pilot-2 ws has connected to workspace', connection.workspace_id)
+
+        connectedDjiPilot2Clients.set(connection.id, {
+            ws,
+            existingMapElementIds: []
+        })
 
         ws.on('message', (data, isBinary)=>{
             if(isBinary){
@@ -27,54 +41,7 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                     console.log('got ping')
                     //TODO should we respond with "pong" ? ws.send("pong")
 
-                    ws.send('ping')// if we dont respond with ping or pong, webcoskcet closes with code 4000
-
-                    // setTimeout(()=>{
-
-                    //     console.log('sending map element create')
-
-                    //     ws.send(JSON.stringify({
-                    //         "biz_code":"map_element_create",
-                    //         "version":"1.0",
-                    //         "timestamp": Date.now(),
-                    //         "data":{
-                    //             "group_id":"group_test",
-                    //             "id": "508969b6-95dd-4198-b6d6-4b5d7e924514",
-                    //             "name": "Test Map Element",
-                    //             "resource":{
-                    //                 "user_name": "API Test",
-                    //                 "content":{
-                    //                     "type":"Feature",
-                    //                     "properties":{
-                    //                         "color":"#212121"
-                    //                     },
-                    //                     "geometry":{
-                    //                         "type":"LineString",
-                    //                         "coordinates":[
-                    //                             [
-                    //                                 -114.59526255248164,
-                    //                                 44.52039593722584
-                    //                             ],
-                    //                             [
-                    //                                 -96.91234166804537,
-                    //                                 47.39200791922252
-                    //                             ],
-                    //                             [
-                    //                                 -101.53652432009943,
-                    //                                 39.10142503321269
-                    //                             ]
-                    //                         ]
-                    //                     }
-                    //                 },
-                    //                 "type": 0
-                    //             }
-                    //         }
-                    //     }), (err)=>{
-                    //         if(err){
-                    //             console.error('failed to send to client', err)
-                    //         }
-                    //     })
-                    // }, 1000)
+                    ws.send('ping')// if we dont respond with ping or pong, webcsocket closes with code 4000
 
                     return
                 }
@@ -101,7 +68,83 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
 
         ws.on('close', (code, reason)=>{
             console.log('dji pilot 2 ws has closed for workspace', connection.workspace_id, code, reason.toString())
+
+            const existingClient = connectedDjiPilot2Clients.get(connection.id)
+
+            if(!existingClient){
+                return
+            }
+
+            if(existingClient.droneSensingHandle){
+                existingClient.droneSensingHandle.stop()
+            }
+
+            connectedDjiPilot2Clients.delete(connection.id)
         })
+
+        //TODO also implement sensing for position of remote controller
+        if(typeof connection.last_drone_id === 'number'){
+            getLastPositionOfDrone(connection.last_drone_id).then(lastDronePosition => {
+                if(lastDronePosition === false){
+                    console.warn('did not start traffic sensing, drone has no last position', connection)//TODO we should update the traffic sensing area when we receive a new position from the drone
+                } else {
+                    const handle = trafficSense.startSensing(lastDronePosition.latitude, lastDronePosition.longitude, DRONE_SENSING_RADIUS_ON_MAP)
+
+                    const theConnectedClient = connectedDjiPilot2Clients.get(connection.id)
+
+                    if(!theConnectedClient){
+                        return
+                    }
+
+                    theConnectedClient.droneSensingHandle = handle
+
+
+                    //TODO implement removing existing map element ids after we havent received an update for a long time
+
+                    handle.addListener('traffic', trafficData=>{
+
+
+
+                        const existsAlready = theConnectedClient.existingMapElementIds.includes(trafficData.id)
+
+                        ws.send(JSON.stringify({
+                            biz_code: existsAlready ? 'map_element_update' : 'map_element_create',
+                            version: '1.0',
+                            timestamp: Date.now(),
+                            data: {
+                                group_id: connection.workspace_uuid,
+                                id: trafficData.id,
+                                name: trafficData.name,
+                                resource: {
+                                    type: 0,
+                                    user_name: 'OpenFlightHub Server',
+                                    content: {
+                                        type: 'Feature',
+                                        properties: {
+                                            color: '#0091FF'
+                                        },
+                                        geometry: {
+                                            type: 'Point',
+                                            coordinates: [trafficData.position.longitude, trafficData.position.latitude, trafficData.position.height]
+                                        }
+                                    }
+                                }
+                            }
+                        }))
+
+                        if(!existsAlready){
+                            theConnectedClient.existingMapElementIds.push(trafficData.id)
+                        }
+                    })
+
+                    console.log('done with setting up traffic map markers for dji pilot 2 ws', connection)
+                }
+            }).catch(err => {
+                console.error('failed to get last position of drone in order to set up traffic sensing', err)
+            })
+        } else {
+            console.warn('did not start traffic sensing, connection has no last_drone_id', connection)
+        }
 
     }).catch(()=>{
         ws.close(4001, 'Unauthorized')
@@ -109,32 +152,21 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
 })
 
 function handleMessage(ws: ws.WebSocket, connectionId: number, data: any){
-    if(typeof data.biz_code !== 'string'){
-        throw new Error('property .biz_code invalid: ' + data.biz_code)
+    console.warn('received unexpected message from dji pilot 2 ws client', connectionId, data)
+}
+
+/**
+ * @param messageData will be stringified as json
+ * @returns false if no client for this connectionId is connected
+ */
+export function sendToConnection(connectionId: number, messageData: object): boolean {
+    const client = connectedDjiPilot2Clients.get(connectionId)
+
+    if(typeof client === 'undefined'){
+       return false
     }
 
-
-    switch(data.biz_code as string){
-        case 'map_element_create': {
-            //TODO
-        }; break;
-
-        case 'map_element_delete': {
-            //TODO
-        }; break;
-
-        case 'map_element_update': {
-            //TODO
-        }; break;
-
-        case 'map_group_refresh': {
-            //TODO
-        }; break;
-
-        default: {
-            throw new Error('unsupported biz_code: ' + data.biz_code)
-        }
-    }
+    client.ws.send(JSON.stringify(messageData))
 }
 
 export default router

@@ -47,6 +47,10 @@ db.connect({
 })
 
 
+import {setupTrafficSensing} from './aircraft_sensing'
+global.trafficSense = setupTrafficSensing()
+
+
 
 
 
@@ -203,10 +207,11 @@ const fakeDrone = new FakeDrone(1, new FakeTrack([
 import FakeMedia from './util/FakeMedia'
 new FakeMedia(fakeDrone)
 
-import {setupTrafficSensing} from './aircraft_sensing'
 import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
 
-setupTrafficSensing()
+
+import { marks } from './map'
+marks.setupMapMarks()
 
 
 // import {getMetaFromImage} from './util/media'
