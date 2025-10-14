@@ -1698,6 +1698,11 @@ components:
       type: string
       example: "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
 
+    unixms:
+      type: number
+      example: "1239213862"
+      description: Time in milliseconds since Unix Epoch time (January 1st, 1970 )
+
     timestamptz:
       type: string
       format: timestamptz
@@ -2639,12 +2644,91 @@ components:
           type: array
           items:
             type: object
-            description: TODO fully write down documentation as schema
             required:
               - id
+              - create_time
+              - elements
+              - is_lock
+              - name
+              - type
             properties:
               id:
                 $ref: '#/components/schemas/uuid'
+              name:
+                type: string
+              create_time:
+                $ref: '#/components/schemas/unixms'
+              is_lock:
+                type: boolean
+                description: if locked, elements of this group can not be deleted/modified
+              type:
+                type: number
+                description: 0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)
+              elements:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - name
+                    - create_time
+                    - update_time
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/uuid'
+                    name:
+                      type: string
+                    create_time:
+                      $ref: '#/components/schemas/unixms'
+                    update_time:
+                      $ref: '#/components/schemas/unixms'
+                    resource:
+                      type: object
+                      required:
+                        - type
+                        - content
+                      properties:
+                        type:
+                          type: number
+                          description: 0 = point, 1 = line, 2 = polygon
+                        content:
+                          type: object
+                          required:
+                            - type
+                            - properties
+                            - geometry
+                          properties:
+                            type:
+                              type: string
+                              description: geojson format
+                            properties:
+                              type: object
+                              required:
+                                - clampToGround
+                                - color
+                              properties:
+                                clampToGround:
+                                  type: boolean
+                                is3d:
+                                  type: boolean
+                                color:
+                                  type: string
+                                  description: "allowed values: BLUE, GREEN, YELLOW, ORANGE, RED, PURPLE"
+                                  example: BLUE
+                            geometry:
+                              type: object
+                              required:
+                                - type
+                                - coordinates
+                              properties:
+                                type:
+                                  type: string
+                                  description: geojson format
+                                coordinates:
+                                  type: array
+                                  items:
+                                    type: number
+                                  description: geojson format
 
     dji_pilot_2_api_map_elements_put:
       type: object
@@ -2720,6 +2804,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/uuid'
+
+
 
 
   responses:

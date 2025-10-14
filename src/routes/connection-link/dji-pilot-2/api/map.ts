@@ -50,6 +50,50 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
         workspace_id: connection.workspace_id
     })
 
+    //TODO remove temporary test code
+
+    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsGetResponse>({
+        code: 0,
+        data: [
+            {
+
+                "id": connection.workspace_uuid,
+                "type": 2,
+                'name': 'Server Group',
+                "is_lock": false,
+                "create_time": 1637158501230,
+                "elements": [
+                    {
+                        "id":"00000001-ac39-42bf-9580-4c8a94c11989",
+                        "name":"Server Point",
+                        "create_time":1637158501230,
+                        "update_time":1637158501230,
+                        "resource":{
+                            "type": 0,
+                            "content":{
+                                "type":"Feature",
+                                "properties":{
+                                    "color": "BLUE",
+                                    "clampToGround":false
+                                },
+                                "geometry":{
+                                    "type":"Point",
+                                    "coordinates": [
+                                        10.2411037,
+                                        47.5654997,
+                                        40.2
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        message: 'success'
+    }, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse)
+
+
     res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsGetResponse>({
         code: 0,
         data: mapElements.map(m => {

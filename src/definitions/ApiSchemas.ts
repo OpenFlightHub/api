@@ -10,6 +10,12 @@ export const ApiSchema_Uuid : JSONSchema  = {
     "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
 }
 
+export const ApiSchema_Unixms : JSONSchema  = {
+    "type": "number",
+    "example": "1239213862",
+    "description": "Time in milliseconds since Unix Epoch time (January 1st, 1970 )"
+}
+
 export const ApiSchema_Timestamptz : JSONSchema  = {
     "type": "string",
     "format": "timestamptz",
@@ -1757,14 +1763,132 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "TODO fully write down documentation as schema",
                 "required": [
-                    "id"
+                    "id",
+                    "create_time",
+                    "elements",
+                    "is_lock",
+                    "name",
+                    "type"
                 ],
                 "properties": {
                     "id": {
                         "type": "string",
                         "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "create_time": {
+                        "type": "number",
+                        "example": "1239213862",
+                        "description": "Time in milliseconds since Unix Epoch time (January 1st, 1970 )"
+                    },
+                    "is_lock": {
+                        "type": "boolean",
+                        "description": "if locked, elements of this group can not be deleted/modified"
+                    },
+                    "type": {
+                        "type": "number",
+                        "description": "0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)"
+                    },
+                    "elements": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "name",
+                                "create_time",
+                                "update_time"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "create_time": {
+                                    "type": "number",
+                                    "example": "1239213862",
+                                    "description": "Time in milliseconds since Unix Epoch time (January 1st, 1970 )"
+                                },
+                                "update_time": {
+                                    "type": "number",
+                                    "example": "1239213862",
+                                    "description": "Time in milliseconds since Unix Epoch time (January 1st, 1970 )"
+                                },
+                                "resource": {
+                                    "type": "object",
+                                    "required": [
+                                        "type",
+                                        "content"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "number",
+                                            "description": "0 = point, 1 = line, 2 = polygon"
+                                        },
+                                        "content": {
+                                            "type": "object",
+                                            "required": [
+                                                "type",
+                                                "properties",
+                                                "geometry"
+                                            ],
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "description": "geojson format"
+                                                },
+                                                "properties": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "clampToGround",
+                                                        "color"
+                                                    ],
+                                                    "properties": {
+                                                        "clampToGround": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "is3d": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "color": {
+                                                            "type": "string",
+                                                            "description": "allowed values: BLUE, GREEN, YELLOW, ORANGE, RED, PURPLE",
+                                                            "example": "BLUE"
+                                                        }
+                                                    }
+                                                },
+                                                "geometry": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "type",
+                                                        "coordinates"
+                                                    ],
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "description": "geojson format"
+                                                        },
+                                                        "coordinates": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "number"
+                                                            },
+                                                            "description": "geojson format"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

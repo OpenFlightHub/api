@@ -27,54 +27,54 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                     console.log('got ping')
                     //TODO should we respond with "pong" ? ws.send("pong")
 
-                    ws.send('ping')// TODO if we respond with ping or pong, webcoskcet closes with code 4000
+                    ws.send('ping')// if we dont respond with ping or pong, webcoskcet closes with code 4000
 
+                    // setTimeout(()=>{
 
+                    //     console.log('sending map element create')
 
-                    setTimeout(()=>{
-
-                        ws.send(JSON.stringify({
-                            "biz_code":"map_element_create",
-                            "version":"1.0",
-                            "timestamp": Date.now(),
-                            "data":{
-                                "group_id":"group_test",
-                                "id": "508969b6-95dd-4198-b6d6-4b5d7e924514",
-                                "name": "Test Map Element",
-                                "resource":{
-                                    "user_name": "API Test",
-                                    "content":{
-                                        "type":"Feature",
-                                        "properties":{
-                                            "color":"#212121"
-                                        },
-                                        "geometry":{
-                                            "type":"LineString",
-                                            "coordinates":[
-                                                [
-                                                    -114.59526255248164,
-                                                    44.52039593722584
-                                                ],
-                                                [
-                                                    -96.91234166804537,
-                                                    47.39200791922252
-                                                ],
-                                                [
-                                                    -101.53652432009943,
-                                                    39.10142503321269
-                                                ]
-                                            ]
-                                        }
-                                    },
-                                    "type": 0
-                                }
-                            }
-                        }), (err)=>{
-                            if(err){
-                                console.error('failed to send to client', err)
-                            }
-                        })
-                    }, 1000)
+                    //     ws.send(JSON.stringify({
+                    //         "biz_code":"map_element_create",
+                    //         "version":"1.0",
+                    //         "timestamp": Date.now(),
+                    //         "data":{
+                    //             "group_id":"group_test",
+                    //             "id": "508969b6-95dd-4198-b6d6-4b5d7e924514",
+                    //             "name": "Test Map Element",
+                    //             "resource":{
+                    //                 "user_name": "API Test",
+                    //                 "content":{
+                    //                     "type":"Feature",
+                    //                     "properties":{
+                    //                         "color":"#212121"
+                    //                     },
+                    //                     "geometry":{
+                    //                         "type":"LineString",
+                    //                         "coordinates":[
+                    //                             [
+                    //                                 -114.59526255248164,
+                    //                                 44.52039593722584
+                    //                             ],
+                    //                             [
+                    //                                 -96.91234166804537,
+                    //                                 47.39200791922252
+                    //                             ],
+                    //                             [
+                    //                                 -101.53652432009943,
+                    //                                 39.10142503321269
+                    //                             ]
+                    //                         ]
+                    //                     }
+                    //                 },
+                    //                 "type": 0
+                    //             }
+                    //         }
+                    //     }), (err)=>{
+                    //         if(err){
+                    //             console.error('failed to send to client', err)
+                    //         }
+                    //     })
+                    // }, 1000)
 
                     return
                 }

@@ -5,6 +5,12 @@ export type ApiType_Uuid = string;
 
 
 /**
+ * Time in milliseconds since Unix Epoch time (January 1st, 1970 )
+ */
+export type ApiType_Unixms = number;
+
+
+/**
  * ISO 8601 format with a timezone
  */
 export type ApiType_Timestamptz = string;
@@ -733,6 +739,61 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
     message: string;
     data: {
         id: string;
+        name: string;
+        /**
+         * Time in milliseconds since Unix Epoch time (January 1st, 1970 )
+         */
+        create_time: number;
+        /**
+         * if locked, elements of this group can not be deleted/modified
+         */
+        is_lock: boolean;
+        /**
+         * 0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)
+         */
+        type: number;
+        elements: {
+            id: string;
+            name: string;
+            /**
+             * Time in milliseconds since Unix Epoch time (January 1st, 1970 )
+             */
+            create_time: number;
+            /**
+             * Time in milliseconds since Unix Epoch time (January 1st, 1970 )
+             */
+            update_time: number;
+            resource?: {
+                /**
+                 * 0 = point, 1 = line, 2 = polygon
+                 */
+                type: number;
+                content: {
+                    /**
+                     * geojson format
+                     */
+                    type: string;
+                    properties: {
+                        clampToGround: boolean;
+                        is3d?: boolean;
+                        /**
+                         * allowed values: BLUE, GREEN, YELLOW, ORANGE, RED, PURPLE
+                         */
+                        color: string;
+                    };
+                    geometry: {
+                        /**
+                         * geojson format
+                         */
+                        type: string;
+                        /**
+                         * geojson format
+                         */
+                        coordinates: number[];
+                    };
+                };
+            };
+        }[];
     }[];
 }
 

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import Connector from './Connector'
 import path from 'path';
+import { log } from 'util';
 
 export default class Logger {
 
@@ -19,6 +20,7 @@ export default class Logger {
         if(!fs.existsSync(logFilesDirectory)){
             fs.mkdirSync(logFilesDirectory)
         }
+        console.info('writting connector logs to', logFilesDirectory)
 
         const writeStreamPackets = fs.createWriteStream(path.join(logFilesDirectory, 'packets.json'), 'utf-8')
         writeStreamPackets.write('[\n')
