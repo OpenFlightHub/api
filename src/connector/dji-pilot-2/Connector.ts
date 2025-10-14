@@ -120,7 +120,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         return (callback: EventCallbackWithResponse<M, R, MD, RD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, c.serialNumber, (responseData: RD)=>{//TODO dont hand over original message, instead a clone of it (so we cant accidentially mess up the originalMessage when we need it for responding)
+                return callback(c.connectionId, c.message as M, c.serialNumber, (responseData: RD)=>{//TODO dont hand over original message, instead a clone of it (so we cant accidentially mess up the originalMessage when we need it for responding)
                     if(typeof makeResponseBaseData === 'function'){
                         Object.assign(responseData, makeResponseBaseData(c.message as M))
                     }
