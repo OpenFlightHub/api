@@ -739,7 +739,7 @@ paths:
   /workspace/{workspace_id}/files:
     get:
       tags:
-        - connection
+        - workspace
       summary: Get all files for this workspace
       parameters:
         - name: workspace_id
