@@ -1860,7 +1860,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
                                                         },
                                                         "color": {
                                                             "type": "string",
-                                                            "description": "allowed values: BLUE, GREEN, YELLOW, ORANGE, RED, PURPLE",
+                                                            "description": "only valid colors. BLUE: #2D8CF0, GREEN: #19BE6B, YELLOW: #FFBB00, RED: #E23C39, PURPLE: #B620E0",
                                                             "example": "BLUE"
                                                         }
                                                     }

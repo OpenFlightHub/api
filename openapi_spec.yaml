@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.12.0
+  version: 0.13.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -2715,7 +2715,7 @@ components:
                                   type: boolean
                                 color:
                                   type: string
-                                  description: "allowed values: BLUE, GREEN, YELLOW, ORANGE, RED, PURPLE"
+                                  description: "only valid colors. BLUE: #2D8CF0, GREEN: #19BE6B, YELLOW: #FFBB00, RED: #E23C39, PURPLE: #B620E0"
                                   example: BLUE
                             geometry:
                               type: object
