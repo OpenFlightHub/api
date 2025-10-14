@@ -29,6 +29,8 @@ export function setupTrafficSensing(){
             handle.stop()
         }
     })
+
+    return aircraftSensing
 }
 
 function parseFilter(filter: string){

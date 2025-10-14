@@ -1687,7 +1687,8 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema  = 
             ],
             "properties": {
                 "type": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "0 = point, 1 = line, 2 = polygon"
                 },
                 "content": {
                     "type": "object",
@@ -1790,7 +1791,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
                     },
                     "type": {
                         "type": "number",
-                        "description": "0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)"
+                        "description": "0 = custom element group, 1 = default element group, 2 = app shared element group (the only visible group on dji pilot 2 app)"
                     },
                     "elements": {
                         "type": "array",
@@ -1800,7 +1801,8 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
                                 "id",
                                 "name",
                                 "create_time",
-                                "update_time"
+                                "update_time",
+                                "resource"
                             ],
                             "properties": {
                                 "id": {
@@ -1899,46 +1901,29 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
 export const ApiSchema_DjiPilot2ApiMapElementsPut : JSONSchema  = {
     "type": "object",
     "required": [
-        "id",
         "name",
-        "resource"
+        "content"
     ],
     "properties": {
-        "id": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
         "name": {
             "type": "string"
         },
-        "resource": {
+        "content": {
             "type": "object",
-            "description": "TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?",
             "required": [
                 "type",
-                "content"
+                "geometry",
+                "properties"
             ],
             "properties": {
                 "type": {
-                    "type": "number"
+                    "type": "string"
                 },
-                "content": {
-                    "type": "object",
-                    "required": [
-                        "type",
-                        "geometry"
-                    ],
-                    "properties": {
-                        "type": {
-                            "type": "string"
-                        },
-                        "geometry": {
-                            "type": "object"
-                        },
-                        "properties": {
-                            "type": "object"
-                        }
-                    }
+                "geometry": {
+                    "type": "object"
+                },
+                "properties": {
+                    "type": "object"
                 }
             }
         }

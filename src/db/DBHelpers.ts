@@ -1388,15 +1388,17 @@ export function selectDroneMedia(id: number){
 
 //workspace_map_elements
 
-import {} from "./DBTypes";
+import {DBType_WorkspaceMapElement_TypeType} from "./DBTypes";
 
 export type DBInsert_WorkspaceMapElement = {
     uuid: string
     workspace_id: number
     connection_id: number
     name: string
-    type: number
+    type: DBType_WorkspaceMapElement_TypeType
     content: string
+    created_at?: string
+    updated_at?: string
 }
 
 export type DBUpdate_WorkspaceMapElement = {
@@ -1404,8 +1406,10 @@ export type DBUpdate_WorkspaceMapElement = {
     workspace_id?: number
     connection_id?: number
     name?: string
-    type?: number
+    type?: DBType_WorkspaceMapElement_TypeType
     content?: string
+    created_at?: string
+    updated_at?: string
 }
 const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -1429,6 +1433,14 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "content"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
+        "skip": col => !col.exists
     }
 ], {table: "workspace_map_elements"})
 
@@ -1459,6 +1471,14 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.Colu
     },
     {
         "name": "content",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
         "skip": col => !col.exists
     }
 ], {table: "workspace_map_elements"})

@@ -715,6 +715,9 @@ export type ApiType_DjiPilot2ApiMapElementGroupsElementsPost = {
      * TODO missing documentation
      */
     resource: {
+        /**
+         * 0 = point, 1 = line, 2 = polygon
+         */
         type: number;
         content: {
             type: string;
@@ -749,7 +752,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
          */
         is_lock: boolean;
         /**
-         * 0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)
+         * 0 = custom element group, 1 = default element group, 2 = app shared element group (the only visible group on dji pilot 2 app)
          */
         type: number;
         elements: {
@@ -763,7 +766,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
              * Time in milliseconds since Unix Epoch time (January 1st, 1970 )
              */
             update_time: number;
-            resource?: {
+            resource: {
                 /**
                  * 0 = point, 1 = line, 2 = polygon
                  */
@@ -799,18 +802,11 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
 
 
 export type ApiType_DjiPilot2ApiMapElementsPut = {
-    id: string;
     name: string;
-    /**
-     * TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?
-     */
-    resource: {
-        type: number;
-        content: {
-            type: string;
-            geometry: {};
-            properties?: {};
-        };
+    content: {
+        type: string;
+        geometry: {};
+        properties: {};
     };
 }
 

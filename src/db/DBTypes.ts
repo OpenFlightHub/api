@@ -260,17 +260,28 @@ export type DBType_DroneMedia = {
 }
 
 
+export type DBType_WorkspaceMapElement_TypeType = 0|1|2
+export const DBType_WorkspaceMapElement_TYPES = {
+  point: 0 as DBType_WorkspaceMapElement_TypeType,
+  line: 1 as DBType_WorkspaceMapElement_TypeType,
+  polygon: 2 as DBType_WorkspaceMapElement_TypeType
+}
 export type DBType_WorkspaceMapElement = {
   id: number;
   uuid: string;
   workspace_id: number;
   connection_id: number;
   name: string;
-  type: number;
+  /**
+   * 0 = point, 1 = line, 2 = polygon
+   */
+  type: DBType_WorkspaceMapElement_TypeType;
   /**
    * json
    */
   content: string;
+  created_at: string;
+  updated_at: string;
 }
 
 

@@ -205,8 +205,8 @@ new FakeMedia(fakeDrone)
 
 import {setupTrafficSensing} from './aircraft_sensing'
 import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
-setupTrafficSensing()
 
+setupTrafficSensing()
 
 
 // import {getMetaFromImage} from './util/media'

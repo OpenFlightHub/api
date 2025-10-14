@@ -168,6 +168,12 @@ export class GuardedMiddleware {
         return userHasPermissionForWorkspace(user.id, workspaceId)
     }
 
+    async guardConnectionHasPermissionForWorkspace(workspaceId: number) : Promise<boolean> {
+        const connection = await this.getCurrentConnection()
+
+        return connection.workspace_id === workspaceId
+    }
+
     async getCurrentUser(){
         if(this.currentUser){
             return this.currentUser

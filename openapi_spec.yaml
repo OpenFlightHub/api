@@ -2589,6 +2589,7 @@ components:
           properties:
             type:
               type: number
+              description: 0 = point, 1 = line, 2 = polygon
             content:
               type: object
               required:
@@ -2663,7 +2664,7 @@ components:
                 description: if locked, elements of this group can not be deleted/modified
               type:
                 type: number
-                description: 0 = custom element group, 1 = default element group, 2 = app shared elemeount group (the default group of dji pilot 2 app)
+                description: 0 = custom element group, 1 = default element group, 2 = app shared element group (the only visible group on dji pilot 2 app)
               elements:
                 type: array
                 items:
@@ -2673,6 +2674,7 @@ components:
                     - name
                     - create_time
                     - update_time
+                    - resource
                   properties:
                     id:
                       $ref: '#/components/schemas/uuid'
@@ -2733,35 +2735,24 @@ components:
     dji_pilot_2_api_map_elements_put:
       type: object
       required:
-        - id
         - name
-        - resource
+        - content
       properties:
-        id:
-          $ref: '#/components/schemas/uuid'
         name:
           type: string
-        resource:
+        content:
           type: object
-          description: TODO is this the same as /map/api/v1/workspaces/{workspace_id}/element-groups/{group_id}/elements?
           required:
             - type
-            - content
+            - geometry
+            - properties
           properties:
             type:
-              type: number
-            content:
+              type: string
+            geometry:
               type: object
-              required:
-                - type
-                - geometry
-              properties:
-                type:
-                  type: string
-                geometry:
-                  type: object
-                properties:
-                  type: object
+            properties:
+              type: object
 
     dji_pilot_2_api_map_elements_put_response:
       type: object

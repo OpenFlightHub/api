@@ -1,15 +1,15 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
+import {getMillisecondsSinceUnix} from '../../../../util/time'
 import { ApiType_DjiPilot2ApiMapElementGroupsElementsPost, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiType_DjiPilot2ApiMapElementGroupsGetResponse, ApiType_DjiPilot2ApiMapElementsDeleteResponse, ApiType_DjiPilot2ApiMapElementsPut, ApiType_DjiPilot2ApiMapElementsPutResponse } from '../../../../definitions/ApiTypes';
 import { ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse, ApiSchema_DjiPilot2ApiMapElementsPut, ApiSchema_DjiPilot2ApiMapElementsPutResponse } from '../../../../definitions/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import SecretsLoader from '../../../../util/SecretsLoader'
-import { DBType_WorkspaceMapElement } from '../../../../db/DBTypes';
-import { deleteWorkspaceMapElement, insertWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../db/DBHelpers';
-const secretsLoader = new SecretsLoader('secrets.json')
-const secrets = secretsLoader.getSecrets(['minio_api_url', 'minio_region', 'minio_bucket_dji_pilot_2_media'])
+import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TypeType } from '../../../../db/DBTypes';
+import { deleteWorkspaceMapElement, insertWorkspaceMapElement, selectWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../db/DBHelpers';
+import { GuardError } from '../../../../ManInTheMiddleware';
+import dayjs from 'dayjs';
 
 const router = express.Router()
 
@@ -18,8 +18,6 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
 
     const connection = await req.GM.getCurrentConnection()
 
-    const groupUUID = req.GM.guardParam('group_id', 'uuid')//TODO what do we need this for?
-
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMapElementGroupsElementsPost>(ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost)
 
     const mapElement = await insertWorkspaceMapElement({
@@ -27,7 +25,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
         name: body.name,
         connection_id: connection.id,
         workspace_id: connection.workspace_id,
-        type: body.resource.type,
+        type: validateResourceType(body.resource.type),
         content: JSON.stringify(body.resource.content)
     })
 
@@ -50,8 +48,6 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
         workspace_id: connection.workspace_id
     })
 
-    //TODO remove temporary test code
-
     res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsGetResponse>({
         code: 0,
         data: [
@@ -59,48 +55,37 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
 
                 "id": connection.workspace_uuid,
                 "type": 2,
-                'name': 'Server Group',
+                'name': 'From OpenFlightHub Server',
                 "is_lock": false,
-                "create_time": 1637158501230,
-                "elements": [
-                    {
-                        "id":"00000001-ac39-42bf-9580-4c8a94c11989",
-                        "name":"Server Point",
-                        "create_time":1637158501230,
-                        "update_time":1637158501230,
-                        "resource":{
-                            "type": 0,
-                            "content":{
-                                "type":"Feature",
-                                "properties":{
-                                    "color": "BLUE",
-                                    "clampToGround":false
-                                },
-                                "geometry":{
-                                    "type":"Point",
-                                    "coordinates": [
-                                        10.2411037,
-                                        47.5654997,
-                                        40.2
-                                    ]
-                                }
-                            }
+                "create_time": 1,
+                "elements": mapElements.map(element=>{
+
+                    let parsedContent: any
+
+                    try {
+                        parsedContent = JSON.parse(element.content)
+                    } catch (err){
+                        console.error('failed to parse map element content', element, err)
+                        return false
+                    }
+
+                    const ret: ApiType_DjiPilot2ApiMapElementGroupsGetResponse['data'][0]['elements'][0] = {
+                        id: element.uuid,
+                        name: element.name,
+                        create_time: getMillisecondsSinceUnix(element.created_at),
+                        update_time: getMillisecondsSinceUnix(element.updated_at),
+                        resource: {
+                            type: element.type,
+                            content: parsedContent
                         }
                     }
-                ]
+
+                    return ret
+                }).filter(elem => {
+                    return elem !== false
+                })
             }
         ],
-        message: 'success'
-    }, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse)
-
-
-    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsGetResponse>({
-        code: 0,
-        data: mapElements.map(m => {
-            return {
-                id: m.uuid
-            }
-        }),
         message: 'success'
     }, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse)
 
@@ -112,13 +97,19 @@ router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     const elementUUID = req.GM.guardParam('element_uuid', 'uuid')
 
+    const existingElement = await req.GM.guardDBGone(()=>{
+        return db.one<DBType_WorkspaceMapElement>('SELECT * FROM workspace_map_elements ' + pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
+    })
+
+    await req.GM.guardConnectionHasPermissionForWorkspace(existingElement.workspace_id)
+
     const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMapElementsPut>(ApiSchema_DjiPilot2ApiMapElementsPut)
 
     await req.GM.guardDBGone(()=>{
         return updateWorkspaceMapElement({
+            updated_at: dayjs().toISOString(),
             name: body.name,
-            type: body.resource.type,
-            content: JSON.stringify(body.resource.content)
+            content: JSON.stringify(body.content)
         }, pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
     })
 
@@ -138,22 +129,33 @@ router.delete('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     const elementUUID = req.GM.guardParam('element_uuid', 'uuid')
 
-    const mapElement = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_WorkspaceMapElement>('SELECT * FROM workspace_map_elements WHERE uuid = ${uuid}', {
-            uuid: elementUUID
-        })
+
+    const existingElement = await req.GM.guardDBGone(()=>{
+        return db.one<DBType_WorkspaceMapElement>('SELECT * FROM workspace_map_elements ' + pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
     })
 
-    await deleteWorkspaceMapElement(mapElement.id)
+    await req.GM.guardConnectionHasPermissionForWorkspace(existingElement.workspace_id)
+
+    await deleteWorkspaceMapElement(existingElement.id)
 
     res.GM.guardSend<ApiType_DjiPilot2ApiMapElementsDeleteResponse>({
         code: 0,
         data: {
-            id: mapElement.uuid
+            id: existingElement.uuid
         },
         message: 'success'
     }, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse)
 
 }))
+
+
+function validateResourceType(type: number): DBType_WorkspaceMapElement_TypeType {
+
+    if(type === 0 || type === 1 || type === 2){
+        return type
+    } else {
+        throw GuardError._400_invalidBody('resource.type')
+    }
+}
 
 export default router
