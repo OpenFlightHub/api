@@ -1,4 +1,3 @@
-
 export class EventManager<M extends {[key: string] : any}> {
     private listeners = new Map<String, {
         func: Function
@@ -39,7 +38,19 @@ export class EventManager<M extends {[key: string] : any}> {
             for(let li = 0; li < list.length; li++){
                 const listEntry = list[li]
 
-                listEntry.func(data)
+                try {
+
+                    const ret = listEntry.func(data)
+
+                    if(ret instanceof Promise){
+                        ret.catch(err => {
+                            console.error('unhandled error while executing listener callback [async] for event', eventName, err)
+                        })
+                    }
+
+                } catch (err){
+                    console.error('unhandled error while executing listener callback [sync] for event', eventName, err)
+                }
 
                 if(listEntry.once){
                     list.splice(li, 1)

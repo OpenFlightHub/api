@@ -186,8 +186,6 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
     }
 })
 
-
-
 import FakeDrone from './util/FakeDrone'
 import FakeTrack from './util/FakeTrack'
 

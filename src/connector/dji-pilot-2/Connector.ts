@@ -105,7 +105,7 @@ export default class Connector extends EventManager<ConnectorEvents>  {
 
         return (callback: EventCallback<M, MD>)=>{
             this.internalEventManager.addListener(eventName, (c)=>{
-                callback(c.connectionId, c.message as M, c.serialNumber)
+                return callback(c.connectionId, c.message as M, c.serialNumber)
             })
         }
     }
