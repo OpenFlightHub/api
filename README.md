@@ -27,6 +27,7 @@ example contents:
 
     "platform_name": "OpenFlightHub DEV",
     "platform_url": "dev.openflighthub.org",
+    "platform_ip": "23.75.345.200",
     "platform_uuid": "d97dd32f-5977-44f9-ab4d-e34205012dce",
 
     "dji_cloud_app_id": "12345",
@@ -75,6 +76,7 @@ make sure that you created an action secret called `SECRETS` here https://github
 
     "platform_name": "OpenFlightHub",
     "platform_url": "hub.openflighthub.org",
+    "platform_ip": "23.75.345.200",
     "platform_uuid": "f97dd32f-5977-44f9-ab4d-e34205012dce",
 
     "dji_cloud_app_id": "12345",
