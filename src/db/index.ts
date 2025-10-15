@@ -305,10 +305,8 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
 
                  if(changedTable === 'workspace_map_elements'){
 
-                    const oldData = JSON.parse(deletedData)
-
-                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + oldData.workspace_id, ()=>{
-                        const apiMapElement = convertDbMapElementToApiMapElement(oldData)
+                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + deletedData.workspace_id, ()=>{
+                        const apiMapElement = convertDbMapElementToApiMapElement(deletedData)
 
                         return {
                             event_type: 'delete',
