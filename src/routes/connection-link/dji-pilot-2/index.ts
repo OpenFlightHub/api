@@ -27,9 +27,9 @@ router.get('/sdk-config', connectionLinkAuthMiddleware, asyncHandler(async (req,
         app_id: secrets.dji_cloud_app_id as string,
         app_key: secrets.dji_cloud_app_key as string,
         app_license: secrets.dji_cloud_app_license as string,
-        mqtt_url: 'tcp://217.92.71.192' + ':' + secrets.mqtt_port,
+        mqtt_url: 'tcp://' + secrets.platform_url + ':' + secrets.mqtt_port,
         rtmp_url: 'rtmp://' + secrets.rtmp_url + '/' + currentConnection.id + '?auth=' + currentConnection.secret,
-        ws_url: 'wss://217.92.71.192' + '/api/connection-link/dji-pilot-2/ws'
+        ws_url: 'wss://' + secrets.platform_url + '/api/connection-link/dji-pilot-2/ws'
     }, ApiSchema_ConnectionLinkDjiPilot2SdkConfig)
 
 }))
