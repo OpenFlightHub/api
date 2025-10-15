@@ -477,6 +477,19 @@ export type ApiType_MediaGroundCoverage = {
              * for debugging only
              */
             debug?: string;
+            ray?: {
+                bearing: number;
+                pitch: number;
+                imagePosition: {
+                    x: number;
+                    y: number;
+                };
+            };
+            directDistance?: number;
+            meterSize?: {
+                vertical: number;
+                horizontal: number;
+            };
         }[];
         outer: {
             position: {
@@ -497,6 +510,19 @@ export type ApiType_MediaGroundCoverage = {
              * for debugging only
              */
             debug?: string;
+            ray?: {
+                bearing: number;
+                pitch: number;
+                imagePosition: {
+                    x: number;
+                    y: number;
+                };
+            };
+            directDistance?: number;
+            meterSize?: {
+                vertical: number;
+                horizontal: number;
+            };
         }[];
         holes: {
             position: {
@@ -517,6 +543,19 @@ export type ApiType_MediaGroundCoverage = {
              * for debugging only
              */
             debug?: string;
+            ray?: {
+                bearing: number;
+                pitch: number;
+                imagePosition: {
+                    x: number;
+                    y: number;
+                };
+            };
+            directDistance?: number;
+            meterSize?: {
+                vertical: number;
+                horizontal: number;
+            };
         }[][];
     };
 }
@@ -541,6 +580,19 @@ export type ApiType_GroundCoverageLocation = {
      * for debugging only
      */
     debug?: string;
+    ray?: {
+        bearing: number;
+        pitch: number;
+        imagePosition: {
+            x: number;
+            y: number;
+        };
+    };
+    directDistance?: number;
+    meterSize?: {
+        vertical: number;
+        horizontal: number;
+    };
 }
 
 

@@ -39,7 +39,7 @@ export type ImageMeta = {
 }
 
 const LAST_UPDATE_OF_TERRAIN_MODEL = dayjs('2025-04-01T00:00:00Z')
-const LAST_UPDATE_OF_COVERAGE_ALGORITHM = dayjs('2025-04-17T03:00:00Z')
+const LAST_UPDATE_OF_COVERAGE_ALGORITHM = dayjs('2025-10-15T10:12:00Z')
 
 export async function getMediaCoverage(media: DBType_DroneMedia){
 

@@ -1123,6 +1123,55 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
                             "debug": {
                                 "type": "string",
                                 "description": "for debugging only"
+                            },
+                            "ray": {
+                                "type": "object",
+                                "required": [
+                                    "bearing",
+                                    "pitch",
+                                    "imagePosition"
+                                ],
+                                "properties": {
+                                    "bearing": {
+                                        "type": "number"
+                                    },
+                                    "pitch": {
+                                        "type": "number"
+                                    },
+                                    "imagePosition": {
+                                        "type": "object",
+                                        "required": [
+                                            "x",
+                                            "y"
+                                        ],
+                                        "properties": {
+                                            "x": {
+                                                "type": "number"
+                                            },
+                                            "y": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "directDistance": {
+                                "type": "number"
+                            },
+                            "meterSize": {
+                                "type": "object",
+                                "required": [
+                                    "vertical",
+                                    "horizontal"
+                                ],
+                                "properties": {
+                                    "vertical": {
+                                        "type": "number"
+                                    },
+                                    "horizontal": {
+                                        "type": "number"
+                                    }
+                                }
                             }
                         }
                     }
@@ -1160,6 +1209,55 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
                             "debug": {
                                 "type": "string",
                                 "description": "for debugging only"
+                            },
+                            "ray": {
+                                "type": "object",
+                                "required": [
+                                    "bearing",
+                                    "pitch",
+                                    "imagePosition"
+                                ],
+                                "properties": {
+                                    "bearing": {
+                                        "type": "number"
+                                    },
+                                    "pitch": {
+                                        "type": "number"
+                                    },
+                                    "imagePosition": {
+                                        "type": "object",
+                                        "required": [
+                                            "x",
+                                            "y"
+                                        ],
+                                        "properties": {
+                                            "x": {
+                                                "type": "number"
+                                            },
+                                            "y": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "directDistance": {
+                                "type": "number"
+                            },
+                            "meterSize": {
+                                "type": "object",
+                                "required": [
+                                    "vertical",
+                                    "horizontal"
+                                ],
+                                "properties": {
+                                    "vertical": {
+                                        "type": "number"
+                                    },
+                                    "horizontal": {
+                                        "type": "number"
+                                    }
+                                }
                             }
                         }
                     }
@@ -1199,6 +1297,55 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
                                 "debug": {
                                     "type": "string",
                                     "description": "for debugging only"
+                                },
+                                "ray": {
+                                    "type": "object",
+                                    "required": [
+                                        "bearing",
+                                        "pitch",
+                                        "imagePosition"
+                                    ],
+                                    "properties": {
+                                        "bearing": {
+                                            "type": "number"
+                                        },
+                                        "pitch": {
+                                            "type": "number"
+                                        },
+                                        "imagePosition": {
+                                            "type": "object",
+                                            "required": [
+                                                "x",
+                                                "y"
+                                            ],
+                                            "properties": {
+                                                "x": {
+                                                    "type": "number"
+                                                },
+                                                "y": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "directDistance": {
+                                    "type": "number"
+                                },
+                                "meterSize": {
+                                    "type": "object",
+                                    "required": [
+                                        "vertical",
+                                        "horizontal"
+                                    ],
+                                    "properties": {
+                                        "vertical": {
+                                            "type": "number"
+                                        },
+                                        "horizontal": {
+                                            "type": "number"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1240,6 +1387,55 @@ export const ApiSchema_GroundCoverageLocation : JSONSchema  = {
         "debug": {
             "type": "string",
             "description": "for debugging only"
+        },
+        "ray": {
+            "type": "object",
+            "required": [
+                "bearing",
+                "pitch",
+                "imagePosition"
+            ],
+            "properties": {
+                "bearing": {
+                    "type": "number"
+                },
+                "pitch": {
+                    "type": "number"
+                },
+                "imagePosition": {
+                    "type": "object",
+                    "required": [
+                        "x",
+                        "y"
+                    ],
+                    "properties": {
+                        "x": {
+                            "type": "number"
+                        },
+                        "y": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "directDistance": {
+            "type": "number"
+        },
+        "meterSize": {
+            "type": "object",
+            "required": [
+                "vertical",
+                "horizontal"
+            ],
+            "properties": {
+                "vertical": {
+                    "type": "number"
+                },
+                "horizontal": {
+                    "type": "number"
+                }
+            }
         }
     }
 }
