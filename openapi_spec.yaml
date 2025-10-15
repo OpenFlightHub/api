@@ -7,7 +7,10 @@ info:
   description: |-
     # Welcome to the API!
 
-    Check out our typescript client sdk [on github](https://github.com/)
+    **This API does not document the WebSocket API**
+    A reference can be found in our [typescript client sdk documentation](https://github.com/OpenFlightHub/api-client-sdk-typescript/blob/master/dev/LIVE_WEBSOCKET.md)
+
+    Check out our typescript client sdk [on github](https://github.com/OpenFlightHub/api-client-sdk-typescript)
 
     # Some important notes:
     - HTTP Response Code 410 (Gone) is used to indicate that you reached a valid API endpoint, but the item you where looking for does not exist in the database. 404 (Not found) indicates that the API endpoint does not exist, so probably your code is wrong!
@@ -48,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.14.0
+  version: 0.15.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -3274,7 +3277,7 @@ components:
                       properties:
                         type:
                           type: number
-                          description: 0 = point, 1 = line, 2 = polygon
+                          description: 0 = point, 1 = line, 2 = polygon, 7 = circle
                         content:
                           type: object
                           required:
@@ -3313,6 +3316,8 @@ components:
                                   items:
                                     type: number
                                   description: geojson format
+                                radius:
+                                  type: number
 
     dji_pilot_2_api_map_elements_put:
       type: object

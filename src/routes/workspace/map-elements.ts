@@ -6,6 +6,7 @@ import { ApiSchema_MapElement, ApiSchema_MapElementCircle, ApiSchema_MapElementC
 import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES } from '../../db/DBTypes';
 import { ApiType_MapElementCircle, ApiType_MapElementCirclePatch, ApiType_MapElementLine, ApiType_MapElementLinePatch, ApiType_MapElementPoint, ApiType_MapElementPointPatch, ApiType_MapElementPolygon, ApiType_MapElementPolygonPatch, ApiType_Reference, ApiType_WorkspaceMapElementsCreateCircle, ApiType_WorkspaceMapElementsCreateLine, ApiType_WorkspaceMapElementsCreatePoint, ApiType_WorkspaceMapElementsCreatePolygon, ApiType_WorkspaceMapElementsGet } from '../../definitions/ApiTypes';
 import { randomUUID } from 'crypto';
+import { convertDbMapElementToApiMapElement, parseColorOfContentOrDefault } from '../../map/map_marks';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -21,67 +22,7 @@ router.get('/', asyncHandler(async(req, res) => {
         workspaceId
     })
 
-    const result = mapElements.map(mapElement=>{
-
-        const ret = {
-            id: mapElement.id,
-            uuid: mapElement.uuid,
-            name: mapElement.name,
-            created_at: mapElement.created_at,
-            updated_at: mapElement.created_at,
-            type: mapElement.type,
-
-            color: parseColorOfContentOrDefault(mapElement.content)
-        }
-
-
-        const parsedCoordinates = parseCoordinatesOfContent(mapElement.content)
-
-        switch(mapElement.type){
-            case 0: {
-                (ret as ApiType_MapElementPoint).longitude = parsedCoordinates[0];
-                (ret as ApiType_MapElementPoint).latitude = parsedCoordinates[1];
-
-                (ret as ApiType_MapElementPoint).elevation = parsedCoordinates[2];
-            } break
-
-            case 1: {
-                (ret as ApiType_MapElementLine).coordinates = parsedCoordinates.map(c => {
-                    return {
-                        longitude: c[0],
-                        latitude: c[1],
-                        elevation: c[2]
-                    }
-                })
-            } break
-
-            case 2: {
-                (ret as ApiType_MapElementPolygon).coordinates = parsedCoordinates.map(p => {
-                    return p.map(c => {
-                        return {
-                            longitude: c[0],
-                            latitude: c[1],
-                            elevation: c[2]
-                        }
-                    })
-                })
-            } break
-
-            case 7: {
-                (ret as ApiType_MapElementCircle).longitude = parsedCoordinates[0];
-                (ret as ApiType_MapElementCircle).latitude = parsedCoordinates[1];
-
-                (ret as ApiType_MapElementCircle).radius = JSON.parse(mapElement.content).geometry.radius;
-            } break
-
-            default: {
-                throw new Error('unsupported map_element type: ' + mapElement.type)
-            }
-        }
-
-        return ret as ApiType_WorkspaceMapElementsGet[0]
-
-    })
+    const result = mapElements.map(mapElement => convertDbMapElementToApiMapElement(mapElement))
 
     res.GM.guardSend<ApiType_WorkspaceMapElementsGet>(result, {type: 'array', items: {type: 'object'}})//TODO should be ApiSchema_WorkspaceMapElementsGet, but since circle and point overlap, a circle will have its radius removed :(
 }))
@@ -320,37 +261,5 @@ router.delete('/:map_element_id', asyncHandler(async(req, res) => {
     res.send()
 }))
 
-
-
-function parseColorOfContentOrDefault(contentString: string){
-    const DEFAULT_COLOR = '#2D8CF0'
-
-    let parsed: any
-
-    try {
-        parsed = JSON.parse(contentString)
-    } catch (err){
-        console.warn('invalid content json string:', err)
-        return DEFAULT_COLOR
-    }
-
-    try {
-        return parsed.properties.color
-    } catch (_){
-        return DEFAULT_COLOR
-    }
-}
-
-function parseCoordinatesOfContent(contentString: string){
-    let parsed: any
-
-    try {
-        parsed = JSON.parse(contentString)
-    } catch (err){
-        throw new Error('invalid content json string:', err)
-    }
-
-    return parsed.geometry.coordinates
-}
 
 export default router

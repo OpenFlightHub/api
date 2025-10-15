@@ -35,13 +35,18 @@ global.db = db
 
 import {setupDB} from './db'
 
+import { registerSubscribableEvent } from './live-websocket/websocket'
+const subscribableEventHandlerMapElements = registerSubscribableEvent('map_element')
+
 db.connect({
     direct: true,
     onLost: ()=>{
         console.warn('lost db connection, restarting')
         process.exit(1)
     }
-}).then(setupDB).catch(error => {
+}).then(sco=>{
+    setupDB(sco, subscribableEventHandlerMapElements)
+}).catch(error => {
     console.error(error)
     process.exit(1)
 })
@@ -211,7 +216,7 @@ import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
 
 
 import { marks } from './map'
-marks.setupMapMarks()
+marks.setupMapMarks(subscribableEventHandlerMapElements)
 
 
 // import {getMetaFromImage} from './util/media'

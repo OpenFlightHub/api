@@ -1393,7 +1393,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
             update_time: number;
             resource: {
                 /**
-                 * 0 = point, 1 = line, 2 = polygon
+                 * 0 = point, 1 = line, 2 = polygon, 7 = circle
                  */
                 type: number;
                 content: {
@@ -1418,6 +1418,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
                          * geojson format
                          */
                         coordinates: number[];
+                        radius?: number;
                     };
                 };
             };

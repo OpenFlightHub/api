@@ -1,13 +1,14 @@
 import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
-import { registerSubscribableEvent } from '../live-websocket/websocket'
+import { registerSubscribableEvent, SubscribableEventHandler } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
-import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from './DBHelpers';
+import { selectConnection, selectDrone, selectRemoteController, selectWorkspace, selectWorkspaceMapElement } from './DBHelpers';
 import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { DBType_DroneData } from './DBTypes';
+import { convertDbMapElementToApiMapElement } from '../map/map_marks';
 
-export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
+export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSubscribableEventHandler: SubscribableEventHandler<'map_element'>){
     const subscribableEventHandlerDbRowUpdate = registerSubscribableEvent('db_row_update', (event, filters, client)=>{
 
         const table = filters[0]
@@ -159,6 +160,23 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                     id: changedId
                 })
 
+
+                if(changedTable === 'workspace_map_elements'){
+                    const mapElementId = parseInt(changedId)
+
+                    const mapElement = await selectWorkspaceMapElement(mapElementId)
+
+                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + mapElement.workspace_id, ()=>{
+                        const apiMapElement = convertDbMapElementToApiMapElement(mapElement)
+
+                        return {
+                            event_type: 'update',
+                            uuid: apiMapElement.uuid,//TODO why do we need this? only for delete?
+                            data: apiMapElement
+                        }
+                    })
+                }
+
                 break;
             }
 
@@ -259,13 +277,52 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>){
                         file_id: parsed.data.file_id,
                         flight_id: parsed.data.flight_id
                     })
+                } else if(changedTable === 'workspace_map_elements'){
+
+                    const mapElementId = parseInt(parsed.data.id)
+
+                    const mapElement = await selectWorkspaceMapElement(mapElementId)
+
+                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + mapElement.workspace_id, ()=>{
+                        const apiMapElement = convertDbMapElementToApiMapElement(mapElement)
+
+                        return {
+                            event_type: 'create',
+                            uuid: apiMapElement.uuid,//TODO why do we need this? only for delete?
+                            data: apiMapElement
+                        }
+                    })
                 }
-            }
+            } break
+
+            case 'notify_delete': {
+
+                const parsed = JSON.parse(data.payload)
+
+                const changedTable : string = parsed.table
+                const deletedId: number = parseInt(parsed.id)
+                const deletedData = parsed.data
+
+                 if(changedTable === 'workspace_map_elements'){
+
+                    const oldData = JSON.parse(deletedData)
+
+                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + oldData.workspace_id, ()=>{
+                        const apiMapElement = convertDbMapElementToApiMapElement(oldData)
+
+                        return {
+                            event_type: 'delete',
+                            uuid: apiMapElement.uuid
+                        }
+                    })
+                }
+            } break
         }
 
     })
 
     await sco.none('LISTEN $1:name', 'notify_change')
     await sco.none('LISTEN $1:name', 'notify_insert')
+    await sco.none('LISTEN $1:name', 'notify_delete')
 
 }

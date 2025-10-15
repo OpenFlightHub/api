@@ -3332,7 +3332,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
                                     "properties": {
                                         "type": {
                                             "type": "number",
-                                            "description": "0 = point, 1 = line, 2 = polygon"
+                                            "description": "0 = point, 1 = line, 2 = polygon, 7 = circle"
                                         },
                                         "content": {
                                             "type": "object",
@@ -3383,6 +3383,9 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
                                                                 "type": "number"
                                                             },
                                                             "description": "geojson format"
+                                                        },
+                                                        "radius": {
+                                                            "type": "number"
                                                         }
                                                     }
                                                 }
