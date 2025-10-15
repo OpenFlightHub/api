@@ -3,6 +3,7 @@
 create the file `secrets.json`
 
 platform_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
+platform_ip MUST BE THE ACTUAL IP OF THE TARGET SERVER!
 rtmp_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
 
 example contents:
@@ -54,6 +55,11 @@ emailHashPepper should be generated via crypto.getBase64(generateSalt(saltLength
 
 ## Github Action -> Runner
 make sure that you created an action secret called `SECRETS` here https://github.com/settings/secrets/actions
+
+platform_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
+platform_ip MUST BE THE ACTUAL IP OF THE TARGET SERVER!
+rtmp_url MUST NOT CONTAIN ANY PROTOCOL OR PORT!
+
 
 ```json
 {
