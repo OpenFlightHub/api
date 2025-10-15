@@ -77,11 +77,13 @@ function compileSync(schema, schemaName){
             tabWidth: 4
         }
     }).then(type=>{
-        const indexOfFirstCurly = type.indexOf('{')
-        if(indexOfFirstCurly === -1){
-            res = type
-        } else {// force to export type and not interface, for nicer intellisense in vs code
+        if(type.startsWith('export interface')){
+            const indexOfFirstCurly = type.indexOf('{')
+
+            // force to export type and not interface, for nicer intellisense in vs code
             res = 'export type ' + name + ' = ' + type.substring(indexOfFirstCurly)
+        } else {
+            res = type
         }
     })
 

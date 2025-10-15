@@ -182,13 +182,13 @@ export type DBType_FlightData = {
 
 export type DBType_RemoteControllerData_TypeType = 0
 export const DBType_RemoteControllerData_TYPES = {
-  todo: 0 as DBType_RemoteControllerData_TypeType
+  position: 0 as DBType_RemoteControllerData_TypeType
 }
 export type DBType_RemoteControllerData = {
   id: number;
   remote_controller_id: number;
   /**
-   * 0 = todo
+   * 0 = position
    */
   type: DBType_RemoteControllerData_TypeType;
   data: {
@@ -260,20 +260,20 @@ export type DBType_DroneMedia = {
 }
 
 
-export type DBType_WorkspaceMapElement_TypeType = 0|1|2
+export type DBType_WorkspaceMapElement_TypeType = 0|1|2|7
 export const DBType_WorkspaceMapElement_TYPES = {
   point: 0 as DBType_WorkspaceMapElement_TypeType,
   line: 1 as DBType_WorkspaceMapElement_TypeType,
-  polygon: 2 as DBType_WorkspaceMapElement_TypeType
+  polygon: 2 as DBType_WorkspaceMapElement_TypeType,
+  circle: 7 as DBType_WorkspaceMapElement_TypeType
 }
 export type DBType_WorkspaceMapElement = {
   id: number;
   uuid: string;
   workspace_id: number;
-  connection_id: number;
   name: string;
   /**
-   * 0 = point, 1 = line, 2 = polygon
+   * 0 = point, 1 = line, 2 = polygon, 7 = circle
    */
   type: DBType_WorkspaceMapElement_TypeType;
   /**

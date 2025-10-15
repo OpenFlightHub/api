@@ -527,6 +527,1311 @@ export const ApiSchema_Connection : JSONSchema  = {
     }
 }
 
+export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
+    "type": "array",
+    "items": {
+        "anyOf": [
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uuid",
+                    "name",
+                    "type",
+                    "color",
+                    "created_at",
+                    "updated_at",
+                    "latitude",
+                    "longitude"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "type": {
+                        "type": "number"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "elevation": {
+                        "type": "number"
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uuid",
+                    "name",
+                    "type",
+                    "color",
+                    "created_at",
+                    "updated_at",
+                    "coordinates"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "type": {
+                        "type": "number"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ],
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                },
+                                "elevation": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uuid",
+                    "name",
+                    "type",
+                    "color",
+                    "created_at",
+                    "updated_at",
+                    "coordinates"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "type": {
+                        "type": "number"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "latitude",
+                                    "longitude"
+                                ],
+                                "properties": {
+                                    "latitude": {
+                                        "type": "number"
+                                    },
+                                    "longitude": {
+                                        "type": "number"
+                                    },
+                                    "elevation": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uuid",
+                    "name",
+                    "type",
+                    "color",
+                    "created_at",
+                    "updated_at",
+                    "latitude",
+                    "longitude",
+                    "radius"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "type": {
+                        "type": "number"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "radius": {
+                        "type": "number"
+                    }
+                }
+            }
+        ]
+    }
+}
+
+export const ApiSchema_MapElementCreateBase : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name",
+        "color"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceMapElementsCreatePoint : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name",
+        "color",
+        "longitude",
+        "latitude"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "elevation": {
+            "type": "number"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceMapElementsCreateLine : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name",
+        "color",
+        "coordinates"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "longitude",
+                    "latitude"
+                ],
+                "properties": {
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "elevation": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceMapElementsCreatePolygon : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name",
+        "color",
+        "coordinates"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "elevation": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceMapElementsCreateCircle : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "name",
+        "color",
+        "longitude",
+        "latitude",
+        "radius"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "radius": {
+            "type": "number"
+        }
+    }
+}
+
+export const ApiSchema_WorkspaceMapElementPatch : JSONSchema  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "elevation": {
+                    "type": "number"
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "latitude",
+                            "longitude"
+                        ],
+                        "properties": {
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "elevation": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ],
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                },
+                                "elevation": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "radius": {
+                    "type": "number"
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_MapElement : JSONSchema  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "type",
+                "color",
+                "created_at",
+                "updated_at",
+                "latitude",
+                "longitude"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "elevation": {
+                    "type": "number"
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "type",
+                "color",
+                "created_at",
+                "updated_at",
+                "coordinates"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "latitude",
+                            "longitude"
+                        ],
+                        "properties": {
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "elevation": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "type",
+                "color",
+                "created_at",
+                "updated_at",
+                "coordinates"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ],
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                },
+                                "elevation": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "type",
+                "color",
+                "created_at",
+                "updated_at",
+                "latitude",
+                "longitude",
+                "radius"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "radius": {
+                    "type": "number"
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_MapElementBase : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "type",
+        "color",
+        "created_at",
+        "updated_at"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer",
+            "description": "0 = point, 1 = line, 2 = polygon"
+        },
+        "color": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_MapElementPoint : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "type",
+        "color",
+        "created_at",
+        "updated_at",
+        "latitude",
+        "longitude"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "color": {
+            "type": "string"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "elevation": {
+            "type": "number"
+        }
+    }
+}
+
+export const ApiSchema_MapElementLine : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "type",
+        "color",
+        "created_at",
+        "updated_at",
+        "coordinates"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "latitude",
+                    "longitude"
+                ],
+                "properties": {
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "elevation": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_MapElementPolygon : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "type",
+        "color",
+        "created_at",
+        "updated_at",
+        "coordinates"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "latitude",
+                        "longitude"
+                    ],
+                    "properties": {
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "elevation": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_MapElementCircle : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "type",
+        "color",
+        "created_at",
+        "updated_at",
+        "latitude",
+        "longitude",
+        "radius"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "color": {
+            "type": "string"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "radius": {
+            "type": "number"
+        }
+    }
+}
+
+export const ApiSchema_MapElementPatch : JSONSchema  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "elevation": {
+                    "type": "number"
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "latitude",
+                            "longitude"
+                        ],
+                        "properties": {
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "elevation": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ],
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                },
+                                "elevation": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "radius": {
+                    "type": "number"
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_MapElementPatchBase : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_MapElementPointPatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "elevation": {
+            "type": "number"
+        }
+    }
+}
+
+export const ApiSchema_MapElementLinePatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "latitude",
+                    "longitude"
+                ],
+                "properties": {
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "elevation": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_MapElementPolygonPatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "latitude",
+                        "longitude"
+                    ],
+                    "properties": {
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "elevation": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_MapElementCirclePatch : JSONSchema  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "color": {
+            "type": "string"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "radius": {
+            "type": "number"
+        }
+    }
+}
+
 export const ApiSchema_RemoteController : JSONSchema  = {
     "type": "object",
     "required": [
@@ -1884,7 +3189,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema  = 
             "properties": {
                 "type": {
                     "type": "number",
-                    "description": "0 = point, 1 = line, 2 = polygon"
+                    "description": "0 = point, 1 = line, 2 = polygon, 7 = circle"
                 },
                 "content": {
                     "type": "object",

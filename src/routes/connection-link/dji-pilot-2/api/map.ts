@@ -6,8 +6,8 @@ import { ApiType_DjiPilot2ApiMapElementGroupsElementsPost, ApiType_DjiPilot2ApiM
 import { ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse, ApiSchema_DjiPilot2ApiMapElementsPut, ApiSchema_DjiPilot2ApiMapElementsPutResponse } from '../../../../definitions/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TypeType } from '../../../../db/DBTypes';
-import { deleteWorkspaceMapElement, insertWorkspaceMapElement, selectWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../db/DBHelpers';
+import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES, DBType_WorkspaceMapElement_TypeType } from '../../../../db/DBTypes';
+import { deleteWorkspaceMapElement, insertWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../db/DBHelpers';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import dayjs from 'dayjs';
 
@@ -23,7 +23,6 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
     const mapElement = await insertWorkspaceMapElement({
         uuid: body.id,
         name: body.name,
-        connection_id: connection.id,
         workspace_id: connection.workspace_id,
         type: validateResourceType(body.resource.type),
         content: JSON.stringify(body.resource.content)
@@ -149,13 +148,15 @@ router.delete('/elements/:element_uuid', asyncHandler(async (req, res) => {
 }))
 
 
-function validateResourceType(type: number): DBType_WorkspaceMapElement_TypeType {
+function validateResourceType(type: number){
 
-    if(type === 0 || type === 1 || type === 2){
-        return type
-    } else {
-        throw GuardError._400_invalidBody('resource.type')
+    for(const key of Object.keys(DBType_WorkspaceMapElement_TYPES)){
+        if(DBType_WorkspaceMapElement_TYPES[key] === type){
+            return type as DBType_WorkspaceMapElement_TypeType
+        }
     }
+
+    throw GuardError._400_invalidBody('resource.type')
 }
 
 export default router

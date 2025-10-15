@@ -48,7 +48,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.13.0
+  version: 0.14.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -61,6 +61,7 @@ tags:
   - name: user
   - name: workspace
   - name: connection
+  - name: map-element
   - name: remote-controller
   - name: drone
   - name: connection-link
@@ -873,6 +874,248 @@ paths:
       responses:
         '200':
           description: Deleted the connection successfully
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+
+  /workspace/{workspace_id}/map-elements:
+    get:
+      tags:
+        - map-element
+      summary: Get all map-elements for this workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Returns the map-elements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspace_map_elements_get'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/map-elements/create/point:
+    post:
+      tags:
+        - map-element
+      summary: Create a new Point map-element for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_map_elements_create_point'
+      responses:
+        '200':
+          description: Returns the id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/map-elements/create/line:
+    post:
+      tags:
+        - map-element
+      summary: Create a new Line map-element for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_map_elements_create_line'
+      responses:
+        '200':
+          description: Returns the id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/map-elements/create/polygon:
+    post:
+      tags:
+        - map-element
+      summary: Create a new Polygon map-element for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_map_elements_create_polygon'
+      responses:
+        '200':
+          description: Returns the id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/map-elements/create/circle:
+    post:
+      tags:
+        - map-element
+      summary: Create a new Circle map-element for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_map_elements_create_circle'
+      responses:
+        '200':
+          description: Returns the id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reference'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/map-element/{map_element_id}:
+    patch:
+      tags:
+        - map-element
+      summary: Modify a map element
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: map_element_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        content:
+         application/json:
+            schema:
+              $ref: '#/components/schemas/workspace_map_element_patch'
+        required: true
+      responses:
+        '200':
+          description: Map Element was modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/map_element'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '410':
+          $ref: '#/components/responses/410'
+      security:
+        - user_auth: []
+
+    delete:
+      tags:
+        - map-element
+      summary: Delete a map element
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+        - name: map_element_id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Deleted the map element successfully
 
         '400':
           $ref: '#/components/responses/400'
@@ -2011,6 +2254,311 @@ components:
         drone_id:
           $ref: '#/components/schemas/id'
 
+    workspace_map_elements_get:
+      type: array
+      items:
+          $ref: '#/components/schemas/map_element'
+
+    map_element_create_base:
+      type: object
+      required:
+        - name
+        - color
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        color:
+          type: string
+
+    workspace_map_elements_create_point:
+      allOf:
+        - $ref: '#/components/schemas/map_element_create_base'
+        - type: object
+          required:
+            - longitude
+            - latitude
+          properties:
+            longitude:
+              type: number
+            latitude:
+              type: number
+            elevation:
+              type: number
+
+    workspace_map_elements_create_line:
+      allOf:
+        - $ref: '#/components/schemas/map_element_create_base'
+        - type: object
+          required:
+            - coordinates
+          properties:
+            coordinates:
+              type: array
+              items:
+                type: object
+                required:
+                  - longitude
+                  - latitude
+                properties:
+                  longitude:
+                    type: number
+                  latitude:
+                    type: number
+                  elevation:
+                    type: number
+
+    workspace_map_elements_create_polygon:
+      allOf:
+        - $ref: '#/components/schemas/map_element_create_base'
+        - type: object
+          required:
+            - coordinates
+          properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - longitude
+                    - latitude
+                  properties:
+                    longitude:
+                      type: number
+                    latitude:
+                      type: number
+                    elevation:
+                      type: number
+
+    workspace_map_elements_create_circle:
+      allOf:
+        - $ref: '#/components/schemas/map_element_create_base'
+        - type: object
+          required:
+            - longitude
+            - latitude
+            - radius
+          properties:
+            longitude:
+              type: number
+            latitude:
+              type: number
+            radius:
+              type: number
+
+    workspace_map_element_patch:
+      $ref: '#/components/schemas/map_element_patch'
+
+
+    map_element:
+      anyOf:
+        - $ref: '#/components/schemas/map_element_point'
+        - $ref: '#/components/schemas/map_element_line'
+        - $ref: '#/components/schemas/map_element_polygon'
+        - $ref: '#/components/schemas/map_element_circle'
+
+    map_element_base:
+      type: object
+      required:
+        - id
+        - uuid
+        - name
+        - type
+        - color
+        - created_at
+        - updated_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/timestamptz'
+        updated_at:
+          $ref: '#/components/schemas/timestamptz'
+        type:
+          type: integer
+          description: 0 = point, 1 = line, 2 = polygon
+        color:
+          type: string
+
+    map_element_point:
+      allOf:
+        - $ref: '#/components/schemas/map_element_base'
+        - type: object
+          required:
+            - latitude
+            - longitude
+          properties:
+            type:
+              type: number
+              x-const: 0
+            latitude:
+              type: number
+            longitude:
+              type: number
+            elevation:
+              type: number
+
+    map_element_line:
+      allOf:
+        - $ref: '#/components/schemas/map_element_base'
+        - type: object
+          required:
+            - coordinates
+          properties:
+            type:
+              type: number
+              x-const: 1
+            coordinates:
+              type: array
+              items:
+                type: object
+                required:
+                  - latitude
+                  - longitude
+                properties:
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  elevation:
+                    type: number
+
+    map_element_polygon:
+      allOf:
+        - $ref: '#/components/schemas/map_element_base'
+        - type: object
+          required:
+            - coordinates
+          properties:
+            type:
+              type: number
+              x-const: 2
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - latitude
+                    - longitude
+                  properties:
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+                    elevation:
+                      type: number
+
+    map_element_circle:
+      allOf:
+        - $ref: '#/components/schemas/map_element_base'
+        - type: object
+          required:
+            - latitude
+            - longitude
+            - radius
+          properties:
+            type:
+              type: number
+              x-const: 7
+            latitude:
+              type: number
+            longitude:
+              type: number
+            radius:
+              type: number
+
+
+    map_element_patch:
+      anyOf:
+        - $ref: '#/components/schemas/map_element_point_patch'
+        - $ref: '#/components/schemas/map_element_line_patch'
+        - $ref: '#/components/schemas/map_element_polygon_patch'
+        - $ref: '#/components/schemas/map_element_circle_patch'
+
+    map_element_patch_base:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+
+    map_element_point_patch:
+      allOf:
+        - $ref: '#/components/schemas/map_element_patch_base'
+        - type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            elevation:
+              type: number
+
+    map_element_line_patch:
+      allOf:
+        - $ref: '#/components/schemas/map_element_patch_base'
+        - type: object
+          properties:
+            coordinates:
+              type: array
+              items:
+                type: object
+                required:
+                  - latitude
+                  - longitude
+                properties:
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  elevation:
+                    type: number
+
+    map_element_polygon_patch:
+      allOf:
+        - $ref: '#/components/schemas/map_element_patch_base'
+        - type: object
+          properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - latitude
+                    - longitude
+                  properties:
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+                    elevation:
+                      type: number
+
+
+    map_element_circle_patch:
+      allOf:
+        - $ref: '#/components/schemas/map_element_patch_base'
+        - type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            radius:
+              type: number
+
     remote_controller:
       type: object
       required:
@@ -2623,7 +3171,7 @@ components:
           properties:
             type:
               type: number
-              description: 0 = point, 1 = line, 2 = polygon
+              description: 0 = point, 1 = line, 2 = polygon, 7 = circle
             content:
               type: object
               required:

@@ -9,7 +9,60 @@ let api = undefined
 
 const deasync = require('deasync')
 OpenApiParser.dereference('./openapi_spec.yaml').then(res => {
+
+    // delete all x- node properties
+    recursivelyWalkSchema(res, entry => {
+        if(entry instanceof Object && entry instanceof Array === false){
+            for(const key of Object.keys(entry)){
+                if(key.startsWith('x-')){
+                    delete entry[key]
+                }
+            }
+        }
+    })
+
+    // combine allOf schemas (otherwise it leads to bugs with ajv)
+    recursivelyWalkSchema(res, entry => {
+        if(entry instanceof Object && entry instanceof Array === false){
+            if(entry['allOf']){
+
+                const combinedType = {}
+
+                for(const subSchema of entry['allOf']){
+                    for(const jsonSchemaKey of Object.keys(subSchema)){
+                        if(jsonSchemaKey === 'required'){
+                            if(typeof combinedType['required'] === 'undefined'){
+                                combinedType['required'] = []
+                            }
+
+                            for(const requiredEntry of subSchema[jsonSchemaKey]){
+                                if(combinedType['required'].includes(requiredEntry) === false){
+                                    combinedType['required'].push(requiredEntry)
+                                }
+                            }
+                        } else if (jsonSchemaKey === 'properties'){
+                            if(typeof combinedType['properties'] === 'undefined'){
+                                combinedType['properties'] = {}
+                            }
+
+                            for(const propertyName of Object.keys(subSchema[jsonSchemaKey])){
+                                combinedType['properties'][propertyName] = subSchema[jsonSchemaKey][propertyName]
+                            }
+                        } else if(typeof combinedType[jsonSchemaKey] === 'undefined'){
+                            combinedType[jsonSchemaKey] = subSchema[jsonSchemaKey]
+                        }
+                    }
+                }
+
+                delete entry['allOf']
+
+                Object.assign(entry, combinedType)
+            }
+        }
+    })
+
     api = res
+
 }).catch(error => {
     console.error('Error loading api spec', error)
     process.exit(1)
@@ -29,6 +82,21 @@ for(const schemaName of Object.keys(api.components.schemas)){
     str += `export const ${'ApiSchema_' + camelcasify(schemaName) + ' : JSONSchema '} = ` + JSON.stringify(schema, null, 4) + '\n\n'
 }
 
+
+function recursivelyWalkSchema(schema, callback){
+
+    callback(schema)
+
+    if(schema instanceof Array){
+        for(const s of schema){
+            recursivelyWalkSchema(s, callback)
+        }
+    } else if(schema instanceof Object){
+        for(const k of Object.keys(schema)){
+            recursivelyWalkSchema(schema[k], callback)
+        }
+    }
+}
 
 
 const schemaPath = path.resolve('./src/definitions/ApiSchemas.ts')

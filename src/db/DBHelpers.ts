@@ -1393,7 +1393,6 @@ import {DBType_WorkspaceMapElement_TypeType} from "./DBTypes";
 export type DBInsert_WorkspaceMapElement = {
     uuid: string
     workspace_id: number
-    connection_id: number
     name: string
     type: DBType_WorkspaceMapElement_TypeType
     content: string
@@ -1404,7 +1403,6 @@ export type DBInsert_WorkspaceMapElement = {
 export type DBUpdate_WorkspaceMapElement = {
     uuid?: string
     workspace_id?: number
-    connection_id?: number
     name?: string
     type?: DBType_WorkspaceMapElement_TypeType
     content?: string
@@ -1421,9 +1419,6 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "workspace_id"
-    },
-    {
-        "name": "connection_id"
     },
     {
         "name": "name"
@@ -1455,10 +1450,6 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.Colu
     },
     {
         "name": "workspace_id",
-        "skip": col => !col.exists
-    },
-    {
-        "name": "connection_id",
         "skip": col => !col.exists
     },
     {

@@ -1,14 +1,14 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteFile, deleteWorkspace, insertWorkspace, selectFile, selectWorkspace, updateWorkspace } from '../db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFilePost, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../definitions/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFilePost, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../definitions/ApiTypes';
-import { DBType_Connection, DBType_File, DBType_Workspace } from '../db/DBTypes';
-import { createConnection } from '../util/connection';
-import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../util/file';
-import { MulterFile } from '../app';
-import { GuardError } from '../ManInTheMiddleware';
+import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../../db/DBHelpers';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../../definitions/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../../definitions/ApiTypes';
+import { DBType_Connection, DBType_File, DBType_Workspace } from '../../db/DBTypes';
+import { createConnection } from '../../util/connection';
+import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../../util/file';
+import { MulterFile } from '../../app';
+import { GuardError } from '../../ManInTheMiddleware';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -24,6 +24,7 @@ router.use((req, res, next) => {
     })
 
 })
+
 
 router.get('/my-workspaces', asyncHandler(async (req, res) => {
 
@@ -229,5 +230,29 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
 
     res.status(200).send()
 }))
+
+
+router.use('/:workspace_id/map-elements', (req, res, next) => {//TODO if this check actually happens first before any other processing
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    req.GM.guardDBGone(()=>{
+        return selectWorkspace(workspaceId)
+    }).then(()=>{
+        req.GM.guardUserHasPermissionForWorkspace(workspaceId).then(()=>{
+            //@ts-ignore
+            req._workspaceId = workspaceId
+            next()
+        }).catch(err => {
+            next(err)
+        })
+    }).catch(err => {
+        next(err)
+    })
+
+})
+
+import mapElementsRoute from './map-elements'
+router.use('/:workspace_id/map-elements', mapElementsRoute)
 
 export default router

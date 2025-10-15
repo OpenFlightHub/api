@@ -47,7 +47,10 @@ export type ApiType_AuthLoginWithTokenPost = {
 }
 
 
-export type ApiType_AuthRegisterPost = {
+/**
+ * @deprecated
+ */
+export interface ApiType_AuthRegisterPost {
     email: string;
     /**
      * Maximum length is 72 Bytes (utf-8).
@@ -218,12 +221,579 @@ export type ApiType_WorkspaceConnectionsPostResponse = {
 }
 
 
-export type ApiType_Connection = {
+/**
+ * property `drone_id`: the currently connected drone (does not mean that the drone is currently online)
+ */
+export interface ApiType_Connection {
     id: number;
     name: string;
     remote_controller_id?: number;
     drone_id?: number;
 }
+
+
+export type ApiType_WorkspaceMapElementsGet = (
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          latitude: number;
+          longitude: number;
+          elevation?: number;
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          coordinates: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          coordinates: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[][];
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          latitude: number;
+          longitude: number;
+          radius: number;
+          [k: string]: unknown;
+      })
+)[];
+
+
+export type ApiType_MapElementCreateBase = {
+    uuid?: string;
+    name: string;
+    color: string;
+}
+
+
+export type ApiType_WorkspaceMapElementsCreatePoint = {
+    uuid?: string;
+    name: string;
+    color: string;
+} & {
+    longitude: number;
+    latitude: number;
+    elevation?: number;
+    [k: string]: unknown;
+};
+
+
+export type ApiType_WorkspaceMapElementsCreateLine = {
+    uuid?: string;
+    name: string;
+    color: string;
+} & {
+    coordinates: {
+        longitude: number;
+        latitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_WorkspaceMapElementsCreatePolygon = {
+    uuid?: string;
+    name: string;
+    color: string;
+} & {
+    coordinates: {
+        longitude: number;
+        latitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[][];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_WorkspaceMapElementsCreateCircle = {
+    uuid?: string;
+    name: string;
+    color: string;
+} & {
+    longitude: number;
+    latitude: number;
+    radius: number;
+    [k: string]: unknown;
+};
+
+
+export type ApiType_WorkspaceMapElementPatch =
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          latitude?: number;
+          longitude?: number;
+          elevation?: number;
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          coordinates?: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          coordinates?: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[][];
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          latitude?: number;
+          longitude?: number;
+          radius?: number;
+          [k: string]: unknown;
+      });
+
+
+export type ApiType_MapElement =
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          latitude: number;
+          longitude: number;
+          elevation?: number;
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          coordinates: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          coordinates: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[][];
+          [k: string]: unknown;
+      })
+    | ({
+          id: number;
+          uuid: string;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          /**
+           * 0 = point, 1 = line, 2 = polygon
+           */
+          type: number;
+          color: string;
+          [k: string]: unknown;
+      } & {
+          type?: number;
+          latitude: number;
+          longitude: number;
+          radius: number;
+          [k: string]: unknown;
+      });
+
+
+export type ApiType_MapElementBase = {
+    id: number;
+    uuid: string;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = point, 1 = line, 2 = polygon
+     */
+    type: number;
+    color: string;
+}
+
+
+export type ApiType_MapElementPoint = {
+    id: number;
+    uuid: string;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = point, 1 = line, 2 = polygon
+     */
+    type: number;
+    color: string;
+} & {
+    type?: number;
+    latitude: number;
+    longitude: number;
+    elevation?: number;
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementLine = {
+    id: number;
+    uuid: string;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = point, 1 = line, 2 = polygon
+     */
+    type: number;
+    color: string;
+} & {
+    type?: number;
+    coordinates: {
+        latitude: number;
+        longitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementPolygon = {
+    id: number;
+    uuid: string;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = point, 1 = line, 2 = polygon
+     */
+    type: number;
+    color: string;
+} & {
+    type?: number;
+    coordinates: {
+        latitude: number;
+        longitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[][];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementCircle = {
+    id: number;
+    uuid: string;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = point, 1 = line, 2 = polygon
+     */
+    type: number;
+    color: string;
+} & {
+    type?: number;
+    latitude: number;
+    longitude: number;
+    radius: number;
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementPatch =
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          latitude?: number;
+          longitude?: number;
+          elevation?: number;
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          coordinates?: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          coordinates?: {
+              latitude: number;
+              longitude: number;
+              elevation?: number;
+              [k: string]: unknown;
+          }[][];
+          [k: string]: unknown;
+      })
+    | ({
+          name?: string;
+          color?: string;
+          [k: string]: unknown;
+      } & {
+          latitude?: number;
+          longitude?: number;
+          radius?: number;
+          [k: string]: unknown;
+      });
+
+
+export type ApiType_MapElementPatchBase = {
+    name?: string;
+    color?: string;
+}
+
+
+export type ApiType_MapElementPointPatch = {
+    name?: string;
+    color?: string;
+} & {
+    latitude?: number;
+    longitude?: number;
+    elevation?: number;
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementLinePatch = {
+    name?: string;
+    color?: string;
+} & {
+    coordinates?: {
+        latitude: number;
+        longitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementPolygonPatch = {
+    name?: string;
+    color?: string;
+} & {
+    coordinates?: {
+        latitude: number;
+        longitude: number;
+        elevation?: number;
+        [k: string]: unknown;
+    }[][];
+    [k: string]: unknown;
+};
+
+
+export type ApiType_MapElementCirclePatch = {
+    name?: string;
+    color?: string;
+} & {
+    latitude?: number;
+    longitude?: number;
+    radius?: number;
+    [k: string]: unknown;
+};
 
 
 export type ApiType_RemoteController = {
@@ -648,7 +1218,10 @@ export type ApiType_DjiPilot2ApiMediaFastUploadPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost = {}
+/**
+ * TODO what is the format? documentation does not say
+ */
+export interface ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost {}
 
 
 export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse = {
@@ -768,7 +1341,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsElementsPost = {
      */
     resource: {
         /**
-         * 0 = point, 1 = line, 2 = polygon
+         * 0 = point, 1 = line, 2 = polygon, 7 = circle
          */
         type: number;
         content: {
