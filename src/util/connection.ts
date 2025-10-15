@@ -14,7 +14,7 @@ export async function createConnection(workspaceId: number, name: string){
         name,
         workspace_uuid: getRandomUUIDFromWorkspaceId(workspaceId)
     })
-//TODO: delete connection if create bucket wsa unsuccessfull
+    //TODO: delete connection if create bucket was unsuccessfull
     await createBucketForConnection(connection.id)
 
     return connection
