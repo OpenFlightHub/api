@@ -60,7 +60,7 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
     }
 
     start(){
-        console.log('strating glidernet receiver ...')
+        console.log('starting glidernet receiver ...')
 
         const radiusInKilometers = this.radius / 1000
 
@@ -77,7 +77,7 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
         })
 
         this.isSocket.addListener('connect', ()=>{
-            console.info('glidernet ISSocket connected')
+            console.info('glidernet ISSocket connected: lat ', this.latitude, 'lon', this.longitude, 'radius in km', radiusInKilometers)
 
             this.isSocket.sendLogin()
 
