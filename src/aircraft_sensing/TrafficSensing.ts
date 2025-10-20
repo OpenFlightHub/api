@@ -3,6 +3,7 @@ import { EventManager } from '../util/event_manager'
 import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './Source'
 import FakeSensingArea from './sources/Fake'
 import GliderNetSensingArea from './sources/GliderNet'
+import AdsbLol from './sources/AdsbLol'
 
 export type TrafficData = {
     id: string //uuid v4
@@ -23,6 +24,7 @@ export default class TrafficSensing {
     constructor(){
         this.addSource(FakeSensingArea.getFactory())
         this.addSource(GliderNetSensingArea.getFactory())
+        this.addSource(AdsbLol.getFactory())
     }
 
     private addSource(factory: SensingSourceAreaFactory){
