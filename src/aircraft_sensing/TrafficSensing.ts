@@ -87,7 +87,7 @@ export class SensingHandle extends EventManager<SensingHandleEvents> {
         this.dispatch('stopped', undefined)
     }
 
-    private getUuidForId(id: string){
+    private getUuidForId(id: string){ //TODO deduplication (e.g. adsb.lol "3e203c" and Glidernet ICA3E203C)
         const existing = this.idToUuidMap.get(id)
 
         if(typeof existing !== 'undefined'){
