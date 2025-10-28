@@ -70,9 +70,42 @@ export async function getConnectionForRemoteController(remoteControllerId: numbe
     })
 }
 
+export async function getDroneConnectionOnlineStatus(connectionId: number): Promise<{
+    remoteController: boolean
+    drone: boolean
+}> {
+
+    const connection = await selectConnection(connectionId)
+
+    const mqttIsConnected = isConnectionOnline(connectionId)
+
+    if(typeof connection.last_drone_id !== 'number'){
+        return {
+            remoteController: mqttIsConnected,
+            drone: false
+        }
+    }
+
+    let lastPos: Awaited<ReturnType<typeof getLastTelemetryOfDrone>> | false
+
+    try {
+        lastPos = await getLastTelemetryOfDrone(connection.last_drone_id)
+    } catch (err){
+        lastPos = false
+    }
+
+    return {
+        remoteController: mqttIsConnected,
+        drone: lastPos && dayjs(lastPos.reported_at).isAfter( dayjs().subtract(120, 'second') )// last telemetry is not older then 120 seconds
+    }
+}
+
 
 import { randomUUID } from "crypto"
 import { GuardError } from '../ManInTheMiddleware'
+import { isConnectionOnline } from '../connector/dji-pilot-2'
+import { getLastTelemetryOfDrone } from './drone'
+import dayjs from 'dayjs'
 
 /**
  * @see getRandomUUIDFromWorkspaceId()
@@ -101,6 +134,11 @@ export function getRandomUUIDFromWorkspaceId(workspaceId: number){
     }
 
     let workspaceIdString = '' + workspaceId
+
+    if(workspaceIdString.length > 8){
+        throw new Error('workspaceid exceeds length of 8')
+    }
+
     while(workspaceIdString.length < 8){
         workspaceIdString = '0' + workspaceIdString
     }

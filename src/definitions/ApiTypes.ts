@@ -1455,3 +1455,75 @@ export type ApiType_DjiPilot2ApiMapElementsDeleteResponse = {
 }
 
 
+export type ApiType_DjiPilot2ApiManageDevicesTopologyResponse = {
+    code: number;
+    message: string;
+    data: {
+        list: {
+            hosts: {
+                device_callsign: string;
+                device_model?: {
+                    key: string;
+                    domain: string;
+                    type: string;
+                    sub_type: string;
+                };
+                /**
+                 * custom icon
+                 */
+                icon_urls?: {
+                    normal_icon_url: string;
+                    selected_icon_url: string;
+                };
+                online_status: boolean;
+                sn: string;
+                user_callsign: string;
+                user_id: string;
+            }[];
+            parents: {
+                device_callsign: string;
+                device_model?: {
+                    key: string;
+                    domain: string;
+                    type: string;
+                    sub_type: string;
+                };
+                /**
+                 * custom icon
+                 */
+                icon_urls?: {
+                    normal_icon_url: string;
+                    selected_icon_url: string;
+                };
+                online_status: boolean;
+                sn: string;
+                user_callsign: string;
+                user_id: string;
+            }[];
+        }[];
+    };
+}
+
+
+export type ApiType_DjiPilot2ApiManageDevicesTopologyDevice = {
+    device_callsign: string;
+    device_model?: {
+        key: string;
+        domain: string;
+        type: string;
+        sub_type: string;
+    };
+    /**
+     * custom icon
+     */
+    icon_urls?: {
+        normal_icon_url: string;
+        selected_icon_url: string;
+    };
+    online_status: boolean;
+    sn: string;
+    user_callsign: string;
+    user_id: string;
+}
+
+

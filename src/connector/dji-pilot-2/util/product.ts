@@ -1,5 +1,7 @@
 // see https://developer.dji.com/doc/cloud-api-tutorial/en/overview/product-support.html
 
+import { DBType_Drone_TYPES, DBType_Drone_TypeType, DBType_RemoteController_TYPES, DBType_RemoteController_TypeType } from "../../../db/DBTypes"
+
 /**
  * if domain is camera, then use getCameraType() to identify the camera
  */
@@ -768,4 +770,98 @@ export function getCameraInfo(type_subtype_gimbalindex: string): CameraInfo {
 
         default: throw new Error('invalid type: ' + typeInt)
     }
+}
+
+export type DeviceModelEnum = {
+    domain: string
+    type: string
+    sub_type: string
+    key: ProductKey
+}
+
+export type ProductKey = string // see https://developer.dji.com/doc/cloud-api-tutorial/en/overview/product-support.html
+
+
+const DEVICE_MODEL_ENUMS_DRONES = new Map<DBType_Drone_TypeType, DeviceModelEnum>()
+
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_Drone_TYPES.dji_mavic_3, {
+    domain: '0',
+    key: '00-77-0',//TODO correctly support M3E/M3T/M3TA
+    type: '77',
+    sub_type: '0'
+})
+
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_Drone_TYPES.dji_matrice_30, {
+    domain: '0',
+    key: '00-67-0',//TODO correctly support M30T
+    type: '67',
+    sub_type: '0'
+})
+
+
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_Drone_TYPES.dji_matrice_300, {
+    domain: '0',
+    key: '00-60-0',
+    type: '60',
+    sub_type: '0'
+})
+
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_Drone_TYPES.dji_matrice_350, {
+    domain: '0',
+    key: '00-89-0',
+    type: '89',
+    sub_type: '0'
+})
+
+export function getModelEnumForDroneType(droneType: DBType_Drone_TypeType): DeviceModelEnum {
+    const modelEnum = DEVICE_MODEL_ENUMS_DRONES.get(droneType)
+
+    if(!modelEnum){
+        return undefined
+    }
+
+    return modelEnum
+}
+
+
+
+const DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS = new Map<DBType_RemoteController_TypeType, DeviceModelEnum>()
+
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_RemoteController_TYPES.dji_smart_controller, {
+    domain: '2',
+    key: '00-56-0',
+    type: '56',
+    sub_type: '0'
+})
+
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_plus, {
+    domain: '2',
+    key: '00-119-0',
+    type: '119',
+    sub_type: '0'
+})
+
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_plus_2, {
+    domain: '2',
+    key: '00-174-0',
+    type: '174',
+    sub_type: '0'
+})
+
+
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_pro_enterprise, {
+    domain: '2',
+    key: '00-144-0',
+    type: '144',
+    sub_type: '0'
+})
+
+export function getModelEnumForRemoteControllerType(remoteControllerType: DBType_RemoteController_TypeType): DeviceModelEnum {
+    const modelEnum = DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.get(remoteControllerType)
+
+    if(!modelEnum){
+        return undefined
+    }
+
+    return modelEnum
 }

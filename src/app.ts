@@ -10,6 +10,9 @@ const secrets = secretsLoader.getSecrets([
 
 global.emailHashPepper = secrets.emailHashPepper
 
+import {setupTrafficSensing} from './aircraft_sensing'
+global.trafficSense = setupTrafficSensing()
+
 import {setupMail} from './mail'
 setupMail(secrets.mail_hostname, secrets.mail_port, secrets.mail_secure, secrets.mail_username, secrets.mail_password, secrets.mail_from)
 
@@ -50,11 +53,6 @@ db.connect({
     console.error(error)
     process.exit(1)
 })
-
-
-import {setupTrafficSensing} from './aircraft_sensing'
-global.trafficSense = setupTrafficSensing()
-
 
 
 

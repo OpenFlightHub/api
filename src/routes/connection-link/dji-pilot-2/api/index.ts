@@ -27,6 +27,9 @@ const djiPilot2ApiAuthMiddleware = (req: Request, res: Response, next: NextFunct
 import mapRoute from './map'
 router.use('/map/api/v1/workspaces/:workspace_uuid', djiPilot2ApiAuthMiddleware, mapRoute)
 
+import manageRoute from './manage'
+router.use('/manage/api/v1/workspaces/:workspace_uuid', djiPilot2ApiAuthMiddleware, manageRoute)
+
 
 import mediaRoute from './media'
 router.use('/media/api/v1/workspaces/:workspace_uuid', djiPilot2ApiAuthMiddleware, mediaRoute)

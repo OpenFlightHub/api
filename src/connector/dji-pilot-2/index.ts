@@ -10,9 +10,13 @@ import { DBType_Connection, DBType_Drone_TYPES, DBType_FlightData_TYPES, DBType_
 import { deleteFlight, insertDrone, insertFlight, insertFlightData, insertRemoteController, selectConnection, updateConnection, updateDrone, updateFlight } from "../../db/DBHelpers";
 import {getProductType} from './util/product'
 import { getConnectionForRemoteController } from "../../util/connection";
+import type { sendToConnection } from "../../routes/connection-link/dji-pilot-2/ws";
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
+
+
+const onlineConnections = new Map<number, {client: Client}>()
 
 connector.onMessage_State((connectionId, message)=>{
     //TODO save live_capacity information of rc (and use that to determine if rc can do livestreaming)
@@ -229,6 +233,27 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
                     }).catch(err => console.error('failed to setDroneInFlightState', err))
 
+
+
+                    //TODO fix this ugly hack (because we can not import ws before setting up global traffic sense)
+
+                    ;(global.sendToConnection as typeof sendToConnection)(connection.id, {
+                        "biz_code": "device_osd",
+                        "version": "1.0",
+                        "timestamp": Date.now(),
+                        "data": {
+                            "host": {
+                                "latitude": messageData.latitude,
+                                "longitude": messageData.longitude,
+                                "height": messageData.height,
+                                "attitude_head": messageData.attitude_head,
+                                "elevation": messageData.elevation,
+                                "horizontal_speed": messageData.horizontal_speed,
+                                "vertical_speed": messageData.vertical_speed
+                            },
+                            "sn": drone.serial_number
+                        }
+                    })
                 }
 
                 if(typeof messageData.battery?.capacity_percent === 'number'){
@@ -310,3 +335,21 @@ export async function handleMqttAuth(client: Client, username: string, password:
 
     return true
 }
+
+
+export function handleMqttConnect(client: Client){
+    onlineConnections.set(authedClientIdToConnectionIdMap.get(client.id).connection_id, {client})
+
+    //TODO notify dji pilot 2 ws Situatun awareness deviceOnline
+}
+
+export function handleMqttDisconnect(client: Client){
+    onlineConnections.delete(authedClientIdToConnectionIdMap.get(client.id).connection_id)
+
+    //TODO notify dji pilot 2 ws Situatun awareness deviceOffline
+}
+
+export function isConnectionOnline(connectionId: number){
+    return onlineConnections.has(connectionId)
+}
+

@@ -20,11 +20,14 @@ const connectedDjiPilot2Clients = new Map<number /* connectionId */, {
     existingMapElementIds: string[]
 }>()
 
+//TODO fix this dirty hack (used in connector/dji-pilot-2/index.ts)
+global.sendToConnection = sendToConnection
+
 router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when user is not authenticated (right now we open the connection, then check, then close) https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketserveroptions-callback https://github.com/websockets/ws/issues/377 https://github.com/expressjs/express/issues/2556
 
     req.GM.guardDjiPilot2ApiWebsocketIsAuthenticated().then(connection=>{
 
-        console.log('/dji-pilot-2 ws has connected to workspace', connection.workspace_id)
+        console.log('/dji-pilot-2 ws connectionId' + connection.id, 'has connected to workspace', connection.workspace_id)
 
         connectedDjiPilot2Clients.set(connection.id, {
             ws,
@@ -145,6 +148,63 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
         } else {
             console.warn('did not start traffic sensing, connection has no last_drone_id', connection)
         }
+
+        console.log('send update topo')
+        //force update of topology
+        ws.send(JSON.stringify({
+            biz_code: 'device_update_topo',
+            version: '1.0',
+            timestamp: Date.now(),
+            data: {}
+        }))
+
+
+        //TODO remove this testing code
+
+        setInterval(()=>{
+
+            if(ws.readyState === ws.OPEN){
+                console.log('send device_osd')
+
+                ws.send(JSON.stringify({
+                    biz_code: 'device_osd',
+                    version: '1.0',
+                    timestamp: Date.now(),
+                    data: {
+                        sn: 'SN#TEST-SIT-AWARE-HOST',
+                        host: {
+                            latitude: 47.591146,
+                            longitude: 9.76875,
+                            height: 700,
+                            elevation: 200,
+                            attitude_head: 45,
+                            horizontal_speed: 5,
+                            vertical_speed: 1
+                        }
+                    }
+                }))
+
+                ws.send(JSON.stringify({
+                    biz_code: 'device_osd',
+                    version: '1.0',
+                    timestamp: Date.now(),
+                    data: {
+                        sn: 'SN#TEST-SIT-AWARE-PARENT',
+                        host: {
+                            latitude: 47.595146,
+                            longitude: 9.76275,
+                            height: 500,
+                            elevation: 0,
+                            attitude_head: 45,
+                            horizontal_speed: 0,
+                            vertical_speed: 0
+                        }
+                    }
+                }))
+
+            }
+
+        }, 1000 * 1)
 
     }).catch(()=>{
         ws.close(4001, 'Unauthorized')

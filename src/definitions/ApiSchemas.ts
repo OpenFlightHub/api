@@ -3496,3 +3496,247 @@ export const ApiSchema_DjiPilot2ApiMapElementsDeleteResponse : JSONSchema  = {
     }
 }
 
+export const ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "code",
+        "data",
+        "message"
+    ],
+    "properties": {
+        "code": {
+            "type": "number",
+            "example": 0
+        },
+        "message": {
+            "type": "string",
+            "example": "success"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "list"
+            ],
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "hosts",
+                            "parents"
+                        ],
+                        "properties": {
+                            "hosts": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "device_callsign",
+                                        "online_status",
+                                        "sn",
+                                        "user_callsign",
+                                        "user_id"
+                                    ],
+                                    "properties": {
+                                        "device_callsign": {
+                                            "type": "string"
+                                        },
+                                        "device_model": {
+                                            "type": "object",
+                                            "required": [
+                                                "key",
+                                                "domain",
+                                                "type",
+                                                "sub_type"
+                                            ],
+                                            "properties": {
+                                                "key": {
+                                                    "type": "string"
+                                                },
+                                                "domain": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "sub_type": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "icon_urls": {
+                                            "type": "object",
+                                            "description": "custom icon",
+                                            "required": [
+                                                "normal_icon_url",
+                                                "selected_icon_url"
+                                            ],
+                                            "properties": {
+                                                "normal_icon_url": {
+                                                    "type": "string"
+                                                },
+                                                "selected_icon_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "online_status": {
+                                            "type": "boolean"
+                                        },
+                                        "sn": {
+                                            "type": "string"
+                                        },
+                                        "user_callsign": {
+                                            "type": "string"
+                                        },
+                                        "user_id": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "parents": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "device_callsign",
+                                        "online_status",
+                                        "sn",
+                                        "user_callsign",
+                                        "user_id"
+                                    ],
+                                    "properties": {
+                                        "device_callsign": {
+                                            "type": "string"
+                                        },
+                                        "device_model": {
+                                            "type": "object",
+                                            "required": [
+                                                "key",
+                                                "domain",
+                                                "type",
+                                                "sub_type"
+                                            ],
+                                            "properties": {
+                                                "key": {
+                                                    "type": "string"
+                                                },
+                                                "domain": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "sub_type": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "icon_urls": {
+                                            "type": "object",
+                                            "description": "custom icon",
+                                            "required": [
+                                                "normal_icon_url",
+                                                "selected_icon_url"
+                                            ],
+                                            "properties": {
+                                                "normal_icon_url": {
+                                                    "type": "string"
+                                                },
+                                                "selected_icon_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "online_status": {
+                                            "type": "boolean"
+                                        },
+                                        "sn": {
+                                            "type": "string"
+                                        },
+                                        "user_callsign": {
+                                            "type": "string"
+                                        },
+                                        "user_id": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice : JSONSchema  = {
+    "type": "object",
+    "required": [
+        "device_callsign",
+        "online_status",
+        "sn",
+        "user_callsign",
+        "user_id"
+    ],
+    "properties": {
+        "device_callsign": {
+            "type": "string"
+        },
+        "device_model": {
+            "type": "object",
+            "required": [
+                "key",
+                "domain",
+                "type",
+                "sub_type"
+            ],
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "sub_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "icon_urls": {
+            "type": "object",
+            "description": "custom icon",
+            "required": [
+                "normal_icon_url",
+                "selected_icon_url"
+            ],
+            "properties": {
+                "normal_icon_url": {
+                    "type": "string"
+                },
+                "selected_icon_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "online_status": {
+            "type": "boolean"
+        },
+        "sn": {
+            "type": "string"
+        },
+        "user_callsign": {
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        }
+    }
+}
+

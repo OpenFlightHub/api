@@ -5,13 +5,17 @@ export type AuthenticateHandler = (client: Client, username?: string, password?:
 
 export type MessageHandler = (client: Client, packet: PublishPacket) => void
 
+export type ConnectHandler = (client: Client) => void
+
+export type DisconnectHandler = (client: Client) => void
+
 export default class MqttServer {
 
     private aedes: Aedes
 
     private clients = new Map<string, Client>()
 
-    constructor(port: number, authenticateHandler: AuthenticateHandler, messageHandler: MessageHandler){
+    constructor(port: number, authenticateHandler: AuthenticateHandler, messageHandler: MessageHandler, connectHandler: ConnectHandler, disconnectHandler: DisconnectHandler){
 
         this.aedes = new Aedes({
             authenticate: (client, username, password, done)=>{
@@ -29,6 +33,12 @@ export default class MqttServer {
                     }
 
                     done(null, isAllowed)
+
+                    try {
+                        connectHandler(client)
+                    } catch (err){
+                        console.error('unhandled error in connectHandler', err)
+                    }
                 }).catch(err =>{
                     console.error('error when calling authenticateHandler', err)
                     done(null, false)
@@ -59,6 +69,12 @@ export default class MqttServer {
         this.aedes.on('clientDisconnect', (client)=>{
             if(this.clients.has(client.id)){
                 this.clients.delete(client.id)
+            }
+
+            try {
+                disconnectHandler(client)
+            } catch (err){
+                console.error('unhandled error in disconnectHandler', err)
             }
         })
     }
