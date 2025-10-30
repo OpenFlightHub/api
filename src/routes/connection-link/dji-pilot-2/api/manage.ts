@@ -1,12 +1,12 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_DjiPilot2ApiManageDevicesTopologyResponse, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../definitions/ApiTypes';
-import { ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice, ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../definitions/ApiSchemas';
+import { ApiType_DjiPilot2ApiManageDevicesTopologyResponse, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice, ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import { DBType_Connection, DBType_Drone_TYPES, DBType_RemoteController_TYPES } from '../../../../db/DBTypes';
-import { selectDrone, selectRemoteController } from '../../../../db/DBHelpers';
+import { DBType_Connection, DBType_Drone_TYPES, DBType_RemoteController_TYPES } from '../../../../generated-definitions/db/DBTypes';
+import { selectDrone, selectRemoteController } from '../../../../generated-definitions/db/DBHelpers';
 import { getDroneConnectionOnlineStatus } from '../../../../util/connection';
 import { getModelEnumForDroneType, getModelEnumForRemoteControllerType } from '../../../../connector/dji-pilot-2/util/product';
 import {makeUUIDFromId} from '../../../../util/uuid'

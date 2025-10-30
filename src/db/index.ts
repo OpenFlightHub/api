@@ -2,10 +2,10 @@ import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent, SubscribableEventHandler } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
-import { selectConnection, selectDrone, selectRemoteController, selectWorkspace, selectWorkspaceMapElement } from './DBHelpers';
+import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from '../generated-definitions/db/DBHelpers';
 import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
-import { DBType_DroneData } from './DBTypes';
+import { DBType_DroneData } from '../generated-definitions/db/DBTypes';
 import { convertDbMapElementToApiMapElement } from '../map/map_marks';
 
 export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSubscribableEventHandler: SubscribableEventHandler<'map_element'>){

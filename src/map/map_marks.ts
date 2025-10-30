@@ -1,5 +1,5 @@
-import { DBType_WorkspaceMapElement } from '../db/DBTypes';
-import { ApiType_MapElementCircle, ApiType_MapElementLine, ApiType_MapElementPoint, ApiType_MapElementPolygon, ApiType_WorkspaceMapElementsGet } from '../definitions/ApiTypes';
+import { DBType_WorkspaceMapElement } from '../generated-definitions/db/DBTypes';
+import { ApiType_MapElementCircle, ApiType_MapElementLine, ApiType_MapElementPoint, ApiType_MapElementPolygon, ApiType_WorkspaceMapElementsGet } from '../generated-definitions/api/ApiTypes';
 import { registerSubscribableEvent, SubscribableEventHandler } from '../live-websocket/websocket'
 
 export function setupMapMarks(subscribeableEventHandlermapElements: SubscribableEventHandler<'map_element'>){

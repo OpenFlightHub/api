@@ -1,10 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone, selectRemoteController, selectRemoteControllerData } from '../db/DBHelpers';
-import { ApiSchema_RemoteController, ApiSchema_RemoteControllerPosition } from '../definitions/ApiSchemas';
-import { DBType_Connection, DBType_RemoteControllerData } from '../db/DBTypes';
-import { ApiType_RemoteController, ApiType_RemoteControllerPosition } from '../definitions/ApiTypes';
+import { selectDrone, selectRemoteController, selectRemoteControllerData } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_RemoteController, ApiSchema_RemoteControllerPosition } from '../generated-definitions/api/ApiSchemas';
+import { DBType_Connection, DBType_RemoteControllerData } from '../generated-definitions/db/DBTypes';
+import { ApiType_RemoteController, ApiType_RemoteControllerPosition } from '../generated-definitions/api/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 

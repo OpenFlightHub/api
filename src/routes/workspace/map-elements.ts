@@ -1,10 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteWorkspaceMapElement, insertWorkspaceMapElement, selectWorkspaceMapElement, updateWorkspaceMapElement } from '../../db/DBHelpers';
-import { ApiSchema_MapElement, ApiSchema_MapElementCircle, ApiSchema_MapElementCirclePatch, ApiSchema_MapElementLine, ApiSchema_MapElementLinePatch, ApiSchema_MapElementPoint, ApiSchema_MapElementPointPatch, ApiSchema_MapElementPolygon, ApiSchema_MapElementPolygonPatch, ApiSchema_Reference, ApiSchema_WorkspaceMapElementsCreateCircle, ApiSchema_WorkspaceMapElementsCreateLine, ApiSchema_WorkspaceMapElementsCreatePoint, ApiSchema_WorkspaceMapElementsCreatePolygon, ApiSchema_WorkspaceMapElementsGet } from '../../definitions/ApiSchemas';
-import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES } from '../../db/DBTypes';
-import { ApiType_MapElementCircle, ApiType_MapElementCirclePatch, ApiType_MapElementLine, ApiType_MapElementLinePatch, ApiType_MapElementPoint, ApiType_MapElementPointPatch, ApiType_MapElementPolygon, ApiType_MapElementPolygonPatch, ApiType_Reference, ApiType_WorkspaceMapElementsCreateCircle, ApiType_WorkspaceMapElementsCreateLine, ApiType_WorkspaceMapElementsCreatePoint, ApiType_WorkspaceMapElementsCreatePolygon, ApiType_WorkspaceMapElementsGet } from '../../definitions/ApiTypes';
+import { deleteWorkspaceMapElement, insertWorkspaceMapElement, selectWorkspaceMapElement, updateWorkspaceMapElement } from '../../generated-definitions/db/DBHelpers';
+import { ApiSchema_MapElement, ApiSchema_MapElementCircle, ApiSchema_MapElementCirclePatch, ApiSchema_MapElementLine, ApiSchema_MapElementLinePatch, ApiSchema_MapElementPoint, ApiSchema_MapElementPointPatch, ApiSchema_MapElementPolygon, ApiSchema_MapElementPolygonPatch, ApiSchema_Reference, ApiSchema_WorkspaceMapElementsCreateCircle, ApiSchema_WorkspaceMapElementsCreateLine, ApiSchema_WorkspaceMapElementsCreatePoint, ApiSchema_WorkspaceMapElementsCreatePolygon, ApiSchema_WorkspaceMapElementsGet } from '../../generated-definitions/api/ApiSchemas';
+import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES } from '../../generated-definitions/db/DBTypes';
+import { ApiType_MapElementCircle, ApiType_MapElementCirclePatch, ApiType_MapElementLine, ApiType_MapElementLinePatch, ApiType_MapElementPoint, ApiType_MapElementPointPatch, ApiType_MapElementPolygon, ApiType_MapElementPolygonPatch, ApiType_Reference, ApiType_WorkspaceMapElementsCreateCircle, ApiType_WorkspaceMapElementsCreateLine, ApiType_WorkspaceMapElementsCreatePoint, ApiType_WorkspaceMapElementsCreatePolygon, ApiType_WorkspaceMapElementsGet } from '../../generated-definitions/api/ApiTypes';
 import { randomUUID } from 'crypto';
 import { convertDbMapElementToApiMapElement, parseColorOfContentOrDefault } from '../../map/map_marks';
 const db : pgp.IDatabase<any> = global.db

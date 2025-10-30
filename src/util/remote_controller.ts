@@ -1,7 +1,7 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { insertRemoteControllerData } from '../db/DBHelpers'
-import { DBType_RemoteController, DBType_RemoteControllerData, DBType_RemoteControllerData_TypeType } from '../db/DBTypes'
+import { insertRemoteControllerData } from '../generated-definitions/db/DBHelpers'
+import { DBType_RemoteController, DBType_RemoteControllerData, DBType_RemoteControllerData_TypeType } from '../generated-definitions/db/DBTypes'
 
 export const REMOTE_CONTROLLER_DATA_TYPES: Record<string,DBType_RemoteControllerData_TypeType> = {
     POSITION: 0

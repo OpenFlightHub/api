@@ -1,5 +1,5 @@
-import { deleteDroneMedia, insertDroneMedia } from '../db/DBHelpers'
-import { DBType_DroneMedia_TYPES } from '../db/DBTypes'
+import { deleteDroneMedia, insertDroneMedia } from '../generated-definitions/db/DBHelpers'
+import { DBType_DroneMedia_TYPES } from '../generated-definitions/db/DBTypes'
 import FakeDrone from './FakeDrone'
 
 export default class FakeMedia {

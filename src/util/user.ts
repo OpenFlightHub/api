@@ -1,10 +1,10 @@
 import { generateUniqueTokenUrlSafe, hashString } from './crypto'
-import {insertUser, selectUser, updateUser} from '../db/DBHelpers'
+import {insertUser, selectUser, updateUser} from '../generated-definitions/db/DBHelpers'
 import { sendMailFromTemplate } from '../mail'
 import $t from './i18n'
 import * as pgp from 'pg-promise'
-import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_WorkspacePermission } from '../db/DBTypes'
-import { ApiType_Id } from '../definitions/ApiTypes'
+import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_WorkspacePermission } from '../generated-definitions/db/DBTypes'
+import { ApiType_Id } from '../generated-definitions/api/ApiTypes'
 import { assignObject } from './typescript'
 const db : pgp.IDatabase<any> = global.db
 

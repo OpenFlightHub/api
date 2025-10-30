@@ -1,14 +1,14 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectFlight } from '../db/DBHelpers';
-import { ApiSchema_Flight, ApiSchema_FlightMedia } from '../definitions/ApiSchemas';
-import { ApiType_Flight, ApiType_FlightMedia } from '../definitions/ApiTypes';
+import { selectFlight } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Flight, ApiSchema_FlightMedia } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_Flight, ApiType_FlightMedia } from '../generated-definitions/api/ApiTypes';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import {getTrackForFlight} from '../util/flight'
-import { DBType_DroneMedia } from '../db/DBTypes';
+import { DBType_DroneMedia } from '../generated-definitions/db/DBTypes';
 import { parseCameraMetaOfMedia } from '../util/media';
 const db : pgp.IDatabase<any> = global.db
 

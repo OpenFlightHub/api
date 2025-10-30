@@ -1,7 +1,7 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { insertDroneData, insertFlight, selectDrone, selectFile, selectFlight, updateDrone, updateFlight } from '../db/DBHelpers'
-import { DBType_Drone, DBType_DroneData, DBType_DroneData_TypeType } from '../db/DBTypes'
+import { insertDroneData, insertFlight, selectDrone, selectFile, selectFlight, updateDrone, updateFlight } from '../generated-definitions/db/DBHelpers'
+import { DBType_Drone, DBType_DroneData, DBType_DroneData_TypeType } from '../generated-definitions/db/DBTypes'
 
 export const DRONE_DATA_TYPES = {
     POSITION: 0 as DBType_DroneData_TypeType,

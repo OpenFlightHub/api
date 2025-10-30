@@ -2,12 +2,12 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import {getMillisecondsSinceUnix} from '../../../../util/time'
-import { ApiType_DjiPilot2ApiMapElementGroupsElementsPost, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiType_DjiPilot2ApiMapElementGroupsGetResponse, ApiType_DjiPilot2ApiMapElementsDeleteResponse, ApiType_DjiPilot2ApiMapElementsPut, ApiType_DjiPilot2ApiMapElementsPutResponse } from '../../../../definitions/ApiTypes';
-import { ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse, ApiSchema_DjiPilot2ApiMapElementsPut, ApiSchema_DjiPilot2ApiMapElementsPutResponse } from '../../../../definitions/ApiSchemas';
+import { ApiType_DjiPilot2ApiMapElementGroupsElementsPost, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiType_DjiPilot2ApiMapElementGroupsGetResponse, ApiType_DjiPilot2ApiMapElementsDeleteResponse, ApiType_DjiPilot2ApiMapElementsPut, ApiType_DjiPilot2ApiMapElementsPutResponse } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse, ApiSchema_DjiPilot2ApiMapElementsPut, ApiSchema_DjiPilot2ApiMapElementsPutResponse } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES, DBType_WorkspaceMapElement_TypeType } from '../../../../db/DBTypes';
-import { deleteWorkspaceMapElement, insertWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../db/DBHelpers';
+import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES, DBType_WorkspaceMapElement_TypeType } from '../../../../generated-definitions/db/DBTypes';
+import { deleteWorkspaceMapElement, insertWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../generated-definitions/db/DBHelpers';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import dayjs from 'dayjs';
 

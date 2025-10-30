@@ -1,8 +1,8 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { insertConnection, selectConnection, selectDrone } from '../db/DBHelpers'
+import { insertConnection, selectConnection, selectDrone } from '../generated-definitions/db/DBHelpers'
 import { generateUniqueTokenUrlSafe } from '../util/crypto'
-import { DBType_Connection, DBType_Drone } from '../db/DBTypes'
+import { DBType_Connection, DBType_Drone } from '../generated-definitions/db/DBTypes'
 import { createBucketForConnection } from '../s3-store'
 
 

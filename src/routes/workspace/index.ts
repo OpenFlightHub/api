@@ -1,10 +1,10 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../../db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../../definitions/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../../definitions/ApiTypes';
-import { DBType_Connection, DBType_File, DBType_Workspace } from '../../db/DBTypes';
+import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../../generated-definitions/db/DBHelpers';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../../generated-definitions/api/ApiTypes';
+import { DBType_Connection, DBType_File, DBType_Workspace } from '../../generated-definitions/db/DBTypes';
 import { createConnection } from '../../util/connection';
 import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../../util/file';
 import { MulterFile } from '../../app';

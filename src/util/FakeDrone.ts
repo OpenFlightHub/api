@@ -2,8 +2,8 @@ import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
 import { addDroneData, DRONE_DATA_TYPES } from "./drone"
 import FakeTrack from './FakeTrack'
-import { insertFlightData, selectDrone } from '../db/DBHelpers'
-import { DBType_FlightData_TYPES } from '../db/DBTypes'
+import { insertFlightData, selectDrone } from '../generated-definitions/db/DBHelpers'
+import { DBType_FlightData_TYPES } from '../generated-definitions/db/DBTypes'
 
 export default class FakeDrone {
 

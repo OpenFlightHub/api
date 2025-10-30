@@ -1,10 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone } from '../db/DBHelpers';
-import { ApiSchema_Media, ApiSchema_MediaGroundCoverage } from '../definitions/ApiSchemas';
-import { DBType_DroneMedia } from '../db/DBTypes';
-import { ApiType_Media } from '../definitions/ApiTypes';
+import { selectDrone } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Media, ApiSchema_MediaGroundCoverage } from '../generated-definitions/api/ApiSchemas';
+import { DBType_DroneMedia } from '../generated-definitions/db/DBTypes';
+import { ApiType_Media } from '../generated-definitions/api/ApiTypes';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { getDroneMetaFromFile, getMediaCoverage, parseCameraMetaOfMedia } from '../util/media';

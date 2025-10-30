@@ -13,12 +13,12 @@ const db : pgp.IDatabase<any> = global.db
 
 
 import * as crypto from './../util/crypto'
-import { DBType_User, DBType_User_STATES } from '../db/DBTypes'
+import { DBType_User, DBType_User_STATES } from '../generated-definitions/db/DBTypes'
 
 import SecretsLoader from '../util/SecretsLoader'
 import { JSONSchema4 } from '../util/types/JSONSchema'
 import { getUserForSessionToken, getUserForStreamToken, GuardError } from '../ManInTheMiddleware';
-import { selectConnection } from '../db/DBHelpers';
+import { selectConnection } from '../generated-definitions/db/DBHelpers';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { createHmac } from 'crypto';
 

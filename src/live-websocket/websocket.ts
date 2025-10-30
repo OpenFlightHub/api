@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import * as ws from 'ws';
-import { DBType_User } from '../db/DBTypes';
+import { DBType_User } from '../generated-definitions/db/DBTypes';
 import * as server_to_client from './definitions/server_to_client'
 import * as client_to_server from './definitions/client_to_server'
 

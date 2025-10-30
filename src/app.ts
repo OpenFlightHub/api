@@ -210,7 +210,7 @@ const fakeDrone = new FakeDrone(1, new FakeTrack([
 import FakeMedia from './util/FakeMedia'
 new FakeMedia(fakeDrone)
 
-import { DBType_Drone, DBType_File, DBType_Flight } from './db/DBTypes'
+import { DBType_Drone, DBType_File, DBType_Flight } from './generated-definitions/db/DBTypes'
 
 
 import { marks } from './map'
@@ -235,7 +235,7 @@ marks.setupMapMarks(subscribableEventHandlerMapElements)
 
 
 import { generateThumbnailForFile } from './util/file'
-import { selectFile } from './db/DBHelpers'
+import { selectFile } from './generated-definitions/db/DBHelpers'
 generateThumbnailForFile(1).catch(err => {
     console.error('failed to generate thumbnail for file 1', err)
 })

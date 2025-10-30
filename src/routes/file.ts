@@ -3,12 +3,12 @@ import * as pgp from 'pg-promise'
 import asyncHandler from 'express-async-handler'
 const db : pgp.IDatabase<any> = global.db
 
-import { selectFile } from '../db/DBHelpers';
-import { ApiSchema_File, ApiSchema_FileGetMultiple, ApiSchema_FileGetMultiplePost } from '../definitions/ApiSchemas';
-import { ApiType_File, ApiType_FileGetMultiple, ApiType_FileGetMultiplePost } from '../definitions/ApiTypes';
+import { selectFile } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_File, ApiSchema_FileGetMultiple, ApiSchema_FileGetMultiplePost } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_File, ApiType_FileGetMultiple, ApiType_FileGetMultiplePost } from '../generated-definitions/api/ApiTypes';
 import { getAbsoluteFilePathForFile, getAbsoluteThumbnailPathForFile } from '../util/file';
 import { GuardError } from '../ManInTheMiddleware';
-import { DBType_File } from '../db/DBTypes';
+import { DBType_File } from '../generated-definitions/db/DBTypes';
 
 const router = express.Router()
 

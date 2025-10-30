@@ -1,8 +1,8 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_DjiPilot2ApiMediaStsPostResponse } from '../../../../definitions/ApiTypes';
-import { ApiSchema_DjiPilot2ApiMediaStsPostResponse } from '../../../../definitions/ApiSchemas';
+import { ApiType_DjiPilot2ApiMediaStsPostResponse } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_DjiPilot2ApiMediaStsPostResponse } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
 import {createTemporaryCredentialsForFileUpload, getBucketNameForConnectionId} from '../../../../s3-store'

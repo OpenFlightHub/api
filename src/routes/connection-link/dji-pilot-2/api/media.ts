@@ -1,14 +1,14 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_DjiPilot2ApiMediaFastUploadPost, ApiType_DjiPilot2ApiMediaFastUploadPostResponse, ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiType_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiType_DjiPilot2ApiMediaUploadCallbackPost, ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../definitions/ApiTypes';
-import { ApiSchema_DjiPilot2ApiMediaFastUploadPost, ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiSchema_DjiPilot2ApiMediaUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../definitions/ApiSchemas';
+import { ApiType_DjiPilot2ApiMediaFastUploadPost, ApiType_DjiPilot2ApiMediaFastUploadPostResponse, ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiType_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiType_DjiPilot2ApiMediaUploadCallbackPost, ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_DjiPilot2ApiMediaFastUploadPost, ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost, ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse, ApiSchema_DjiPilot2ApiMediaUploadCallbackPost, ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
 import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
-import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../db/DBTypes';
+import { DBType_Connection, DBType_DroneMedia, DBType_DroneMedia_TYPES, DBType_DroneMedia_TypeType } from '../../../../generated-definitions/db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
-import { deleteFile, insertDroneMedia, insertFile, selectDrone } from '../../../../db/DBHelpers';
+import { deleteFile, insertDroneMedia, insertFile, selectDrone } from '../../../../generated-definitions/db/DBHelpers';
 import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
 import { getDroneMetaFromFile } from '../../../../util/media';
 

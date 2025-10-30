@@ -1,8 +1,8 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiTypes';
-import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../definitions/ApiSchemas';
+import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../generated-definitions/api/ApiSchemas';
 import { connectionLinkAuthMiddleware } from '..';
 import path from 'path';
 const db : pgp.IDatabase<any> = global.db

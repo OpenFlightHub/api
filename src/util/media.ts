@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { updateDroneMedia } from "../db/DBHelpers";
-import { ApiType_MediaGroundCoverage } from "../definitions/ApiTypes";
+import { updateDroneMedia } from "../generated-definitions/db/DBHelpers";
+import { ApiType_MediaGroundCoverage } from "../generated-definitions/api/ApiTypes";
 import { getExifData } from "./exif";
 import { getExifDataForFile } from "./file";
-import { DBType_DroneMedia, DBType_DroneMedia_TYPES } from "../db/DBTypes";
+import { DBType_DroneMedia, DBType_DroneMedia_TYPES } from "../generated-definitions/db/DBTypes";
 import { parseExifTimestamp } from './exif'
 
 

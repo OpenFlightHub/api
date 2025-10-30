@@ -1,9 +1,9 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteConnection, selectConnection } from '../db/DBHelpers';
-import { ApiSchema_Connection } from '../definitions/ApiSchemas';
-import { ApiType_Connection } from '../definitions/ApiTypes';
+import { deleteConnection, selectConnection } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Connection } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_Connection } from '../generated-definitions/api/ApiTypes';
 const db : pgp.IDatabase<any> = global.db
 
 

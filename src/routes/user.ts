@@ -1,9 +1,9 @@
 import express from 'express';
-import { DBType_User } from '../db/DBTypes';
-import { ApiSchema_User, ApiSchema_UserPatch, ApiSchema_UserSelf } from '../definitions/ApiSchemas';
+import { DBType_User } from '../generated-definitions/db/DBTypes';
+import { ApiSchema_User, ApiSchema_UserPatch, ApiSchema_UserSelf } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { selectUser, updateUser } from '../db/DBHelpers';
-import { ApiType_User, ApiType_UserPatch, ApiType_UserSelf } from '../definitions/ApiTypes';
+import { selectUser, updateUser } from '../generated-definitions/db/DBHelpers';
+import { ApiType_User, ApiType_UserPatch, ApiType_UserSelf } from '../generated-definitions/api/ApiTypes';
 import pgp from 'pg-promise'
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript'

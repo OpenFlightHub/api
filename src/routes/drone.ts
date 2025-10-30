@@ -1,10 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone } from '../db/DBHelpers';
-import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneFlights, ApiSchema_DroneMedia, ApiSchema_DronePosition, ApiSchema_Flight } from '../definitions/ApiSchemas';
-import { DBType_DroneMedia, DBType_Flight } from '../db/DBTypes';
-import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneFlights, ApiType_DroneMedia, ApiType_DronePosition, ApiType_Flight } from '../definitions/ApiTypes';
+import { selectDrone } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneFlights, ApiSchema_DroneMedia, ApiSchema_DronePosition, ApiSchema_Flight } from '../generated-definitions/api/ApiSchemas';
+import { DBType_DroneMedia, DBType_Flight } from '../generated-definitions/db/DBTypes';
+import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneFlights, ApiType_DroneMedia, ApiType_DronePosition, ApiType_Flight } from '../generated-definitions/api/ApiTypes';
 import { getLastPositionOfDrone as getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';

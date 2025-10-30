@@ -5,10 +5,10 @@ const db : pgp.IDatabase<any> = global.db
 
 const router = express.Router()
 
-import { ApiSchema_ConnectionLinkAuthLoginPost } from '../../definitions/ApiSchemas';
-import { ApiType_ConnectionLinkAuthLoginPost } from '../../definitions/ApiTypes';
+import { ApiSchema_ConnectionLinkAuthLoginPost } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_ConnectionLinkAuthLoginPost } from '../../generated-definitions/api/ApiTypes';
 import { generateConnectionSessionCookieAndSet as generateConnectionSessionCookieAndSet } from '../../util/cookie'
-import { DBType_Connection } from '../../db/DBTypes';
+import { DBType_Connection } from '../../generated-definitions/db/DBTypes';
 
 
 function delay(callback: ()=>void){
