@@ -2,7 +2,7 @@ import { NextFunction, RequestHandler, Request, Response, Express } from 'expres
 import { validate, filterObject, FilterError } from './util/schema'
 import { DBType_User, DBType_Connection, DBType_WorkspacePermission } from './db/DBTypes'
 import * as pgp from 'pg-promise'
-import { JSONSchema } from 'json-schema-to-typescript'
+import { JSONSchema4 } from './util/types/JSONSchema'
 import { DBType_User_STATES } from './db/DBTypes'
 import { userHasPermissionForWorkspace } from './util/user'
 
@@ -280,7 +280,7 @@ export class GuardedMiddleware {
      * tries to convert e.g. "2" into 2, if the schema requires a number
      * applies changes inplace!
      */
-    private recursivelyTryToParseObjectAccordingToSchema(context: any, schema: JSONSchema, path: string){//TODO test this code
+    private recursivelyTryToParseObjectAccordingToSchema(context: any, schema: JSONSchema4, path: string){//TODO test this code
         if(schema.type === 'object'){
             if(typeof context !== 'object' || Array.isArray(context) || context == null){
                 throw GuardError._400_invalidBody(path)
@@ -335,7 +335,7 @@ export class GuardedMiddleware {
         return context
     }
 
-    guardBodySchema<T>(schema: JSONSchema, isMultiFormData?: boolean){
+    guardBodySchema<T>(schema: JSONSchema4, isMultiFormData?: boolean){
 
         let body = this.req.body
 
@@ -401,7 +401,7 @@ export class GuardedMiddleware {
         }
     }
 
-    guardSend<T extends Record<string, any>>(responseBody: T, schema: JSONSchema){
+    guardSend<T extends Record<string, any>>(responseBody: T, schema: JSONSchema4){
 
         if(responseBody instanceof Promise){
             throw new Error('responseBody is a Promise, did you forget await?')

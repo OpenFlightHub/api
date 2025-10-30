@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@dbml/core": "^3.9.4",
     "@readme/openapi-parser": "^2.5.0",
+    "@types/deasync": "^0.1.5",
     "jest-openapi": "^0.14.2",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
@@ -22,7 +22,6 @@
     "ajv": "^8.17.1",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.13",
-    "deasync": "^0.1.30",
     "exifreader": "^4.28.1",
     "express": "^4.21.2",
     "express-async-handler": "^1.2.0",
@@ -33,7 +32,6 @@
     "image-thumbnail": "^1.0.17",
     "js-aprs-fap": "^2.0.0",
     "js-aprs-is": "^2.0.1",
-    "json-schema-to-typescript": "^15.0.3",
     "minio": "^8.0.4",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",

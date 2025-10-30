@@ -233,7 +233,7 @@ export interface ApiType_Connection {
 
 
 export type ApiType_WorkspaceMapElementsGet = (
-    | ({
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -250,15 +250,12 @@ export type ApiType_WorkspaceMapElementsGet = (
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           latitude: number;
           longitude: number;
           elevation?: number;
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -275,9 +272,6 @@ export type ApiType_WorkspaceMapElementsGet = (
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           coordinates: {
               latitude: number;
               longitude: number;
@@ -285,8 +279,8 @@ export type ApiType_WorkspaceMapElementsGet = (
               [k: string]: unknown;
           }[];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -303,9 +297,6 @@ export type ApiType_WorkspaceMapElementsGet = (
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           coordinates: {
               latitude: number;
               longitude: number;
@@ -313,8 +304,8 @@ export type ApiType_WorkspaceMapElementsGet = (
               [k: string]: unknown;
           }[][];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -331,14 +322,11 @@ export type ApiType_WorkspaceMapElementsGet = (
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           latitude: number;
           longitude: number;
           radius: number;
           [k: string]: unknown;
-      })
+      }
 )[];
 
 
@@ -353,72 +341,58 @@ export type ApiType_WorkspaceMapElementsCreatePoint = {
     uuid?: string;
     name: string;
     color: string;
-} & {
     longitude: number;
     latitude: number;
     elevation?: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_WorkspaceMapElementsCreateLine = {
     uuid?: string;
     name: string;
     color: string;
-} & {
     coordinates: {
         longitude: number;
         latitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_WorkspaceMapElementsCreatePolygon = {
     uuid?: string;
     name: string;
     color: string;
-} & {
     coordinates: {
         longitude: number;
         latitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[][];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_WorkspaceMapElementsCreateCircle = {
     uuid?: string;
     name: string;
     color: string;
-} & {
     longitude: number;
     latitude: number;
     radius: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_WorkspaceMapElementPatch =
-    | ({
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           latitude?: number;
           longitude?: number;
           elevation?: number;
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           coordinates?: {
               latitude: number;
               longitude: number;
@@ -426,12 +400,10 @@ export type ApiType_WorkspaceMapElementPatch =
               [k: string]: unknown;
           }[];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           coordinates?: {
               latitude: number;
               longitude: number;
@@ -439,21 +411,19 @@ export type ApiType_WorkspaceMapElementPatch =
               [k: string]: unknown;
           }[][];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           latitude?: number;
           longitude?: number;
           radius?: number;
           [k: string]: unknown;
-      });
+      };
 
 
 export type ApiType_MapElement =
-    | ({
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -470,15 +440,12 @@ export type ApiType_MapElement =
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           latitude: number;
           longitude: number;
           elevation?: number;
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -495,9 +462,6 @@ export type ApiType_MapElement =
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           coordinates: {
               latitude: number;
               longitude: number;
@@ -505,8 +469,8 @@ export type ApiType_MapElement =
               [k: string]: unknown;
           }[];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -523,9 +487,6 @@ export type ApiType_MapElement =
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           coordinates: {
               latitude: number;
               longitude: number;
@@ -533,8 +494,8 @@ export type ApiType_MapElement =
               [k: string]: unknown;
           }[][];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           id: number;
           uuid: string;
           name: string;
@@ -551,14 +512,11 @@ export type ApiType_MapElement =
            */
           type: number;
           color: string;
-          [k: string]: unknown;
-      } & {
-          type?: number;
           latitude: number;
           longitude: number;
           radius: number;
           [k: string]: unknown;
-      });
+      };
 
 
 export type ApiType_MapElementBase = {
@@ -598,13 +556,10 @@ export type ApiType_MapElementPoint = {
      */
     type: number;
     color: string;
-} & {
-    type?: number;
     latitude: number;
     longitude: number;
     elevation?: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementLine = {
@@ -624,16 +579,12 @@ export type ApiType_MapElementLine = {
      */
     type: number;
     color: string;
-} & {
-    type?: number;
     coordinates: {
         latitude: number;
         longitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementPolygon = {
@@ -653,16 +604,12 @@ export type ApiType_MapElementPolygon = {
      */
     type: number;
     color: string;
-} & {
-    type?: number;
     coordinates: {
         latitude: number;
         longitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[][];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementCircle = {
@@ -682,31 +629,24 @@ export type ApiType_MapElementCircle = {
      */
     type: number;
     color: string;
-} & {
-    type?: number;
     latitude: number;
     longitude: number;
     radius: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementPatch =
-    | ({
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           latitude?: number;
           longitude?: number;
           elevation?: number;
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           coordinates?: {
               latitude: number;
               longitude: number;
@@ -714,12 +654,10 @@ export type ApiType_MapElementPatch =
               [k: string]: unknown;
           }[];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           coordinates?: {
               latitude: number;
               longitude: number;
@@ -727,17 +665,15 @@ export type ApiType_MapElementPatch =
               [k: string]: unknown;
           }[][];
           [k: string]: unknown;
-      })
-    | ({
+      }
+    | {
           name?: string;
           color?: string;
-          [k: string]: unknown;
-      } & {
           latitude?: number;
           longitude?: number;
           radius?: number;
           [k: string]: unknown;
-      });
+      };
 
 
 export type ApiType_MapElementPatchBase = {
@@ -749,51 +685,41 @@ export type ApiType_MapElementPatchBase = {
 export type ApiType_MapElementPointPatch = {
     name?: string;
     color?: string;
-} & {
     latitude?: number;
     longitude?: number;
     elevation?: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementLinePatch = {
     name?: string;
     color?: string;
-} & {
     coordinates?: {
         latitude: number;
         longitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementPolygonPatch = {
     name?: string;
     color?: string;
-} & {
     coordinates?: {
         latitude: number;
         longitude: number;
         elevation?: number;
-        [k: string]: unknown;
     }[][];
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_MapElementCirclePatch = {
     name?: string;
     color?: string;
-} & {
     latitude?: number;
     longitude?: number;
     radius?: number;
-    [k: string]: unknown;
-};
+}
 
 
 export type ApiType_RemoteController = {

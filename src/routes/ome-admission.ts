@@ -16,7 +16,7 @@ import * as crypto from './../util/crypto'
 import { DBType_User, DBType_User_STATES } from '../db/DBTypes'
 
 import SecretsLoader from '../util/SecretsLoader'
-import { JSONSchema } from 'json-schema-to-typescript';
+import { JSONSchema4 } from '../util/types/JSONSchema'
 import { getUserForSessionToken, getUserForStreamToken, GuardError } from '../ManInTheMiddleware';
 import { selectConnection } from '../db/DBHelpers';
 import { userHasPermissionForWorkspace } from '../util/user';
@@ -30,7 +30,7 @@ const router = express.Router()
 
 const OME_AUTH_HEADER = 'X-OME-Signature'
 
-const OME_ADMISSION_REQUEST_SCHEMA: JSONSchema = {
+const OME_ADMISSION_REQUEST_SCHEMA: JSONSchema4 = {
     type: 'object',
     required: ['client', 'request'],
     properties: {
@@ -104,7 +104,7 @@ type OmeAdmissionResponse_Opening = {
     reason?: string // If allowed is false, it will be output to the log.
 }
 
-const OME_ADMISSION_RESPONSE_OPENING_SCHEMA: JSONSchema = {
+const OME_ADMISSION_RESPONSE_OPENING_SCHEMA: JSONSchema4 = {
     type: 'object',
     required: ['allowed'],
     properties: {

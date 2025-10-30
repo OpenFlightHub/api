@@ -1,47 +1,47 @@
-import {JSONSchema} from 'json-schema-to-typescript'
+import {JSONSchema4} from '../util/types/JSONSchema'
 
-export const ApiSchema_Id : JSONSchema  = {
+export const ApiSchema_Id : JSONSchema4  = {
     "type": "number",
     "example": 42
 }
 
-export const ApiSchema_Uuid : JSONSchema  = {
+export const ApiSchema_Uuid : JSONSchema4  = {
     "type": "string",
     "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
 }
 
-export const ApiSchema_Unixms : JSONSchema  = {
+export const ApiSchema_Unixms : JSONSchema4  = {
     "type": "number",
     "example": "1239213862",
     "description": "Time in milliseconds since Unix Epoch time (January 1st, 1970 )"
 }
 
-export const ApiSchema_Timestamptz : JSONSchema  = {
+export const ApiSchema_Timestamptz : JSONSchema4  = {
     "type": "string",
     "format": "timestamptz",
     "description": "ISO 8601 format with a timezone",
     "example": "2023-12-11 23:06:52.7879+00"
 }
 
-export const ApiSchema_Timestamp : JSONSchema  = {
+export const ApiSchema_Timestamp : JSONSchema4  = {
     "type": "string",
     "format": "timestamptz",
     "description": "ISO 8601 format without a timezone",
     "example": "2023-12-11 23:06:52.7879"
 }
 
-export const ApiSchema_Email : JSONSchema  = {
+export const ApiSchema_Email : JSONSchema4  = {
     "type": "string",
     "example": "john.doe@example.com"
 }
 
-export const ApiSchema_Password : JSONSchema  = {
+export const ApiSchema_Password : JSONSchema4  = {
     "type": "string",
     "description": "Maximum length is 72 Bytes (utf-8).",
     "example": "j9876sa1kjhqsa6dtasd12="
 }
 
-export const ApiSchema_Reference : JSONSchema  = {
+export const ApiSchema_Reference : JSONSchema4  = {
     "type": "object",
     "required": [
         "id"
@@ -54,7 +54,7 @@ export const ApiSchema_Reference : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthLoginPost : JSONSchema  = {
+export const ApiSchema_AuthLoginPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "username",
@@ -71,7 +71,7 @@ export const ApiSchema_AuthLoginPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthLoginWithTokenPost : JSONSchema  = {
+export const ApiSchema_AuthLoginWithTokenPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "token"
@@ -83,7 +83,7 @@ export const ApiSchema_AuthLoginWithTokenPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthRegisterPost : JSONSchema  = {
+export const ApiSchema_AuthRegisterPost : JSONSchema4  = {
     "deprecated": true,
     "type": "object",
     "required": [
@@ -103,7 +103,7 @@ export const ApiSchema_AuthRegisterPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthPasswordChangePost : JSONSchema  = {
+export const ApiSchema_AuthPasswordChangePost : JSONSchema4  = {
     "type": "object",
     "required": [
         "current_password",
@@ -123,7 +123,7 @@ export const ApiSchema_AuthPasswordChangePost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthPasswordResetPost : JSONSchema  = {
+export const ApiSchema_AuthPasswordResetPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "username"
@@ -136,7 +136,7 @@ export const ApiSchema_AuthPasswordResetPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthPasswordSetInitialPost : JSONSchema  = {
+export const ApiSchema_AuthPasswordSetInitialPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "new_password"
@@ -150,7 +150,7 @@ export const ApiSchema_AuthPasswordSetInitialPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthPasswordSetNewPost : JSONSchema  = {
+export const ApiSchema_AuthPasswordSetNewPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "new_password",
@@ -168,7 +168,7 @@ export const ApiSchema_AuthPasswordSetNewPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_AuthStreamToken : JSONSchema  = {
+export const ApiSchema_AuthStreamToken : JSONSchema4  = {
     "type": "object",
     "required": [
         "token"
@@ -180,7 +180,7 @@ export const ApiSchema_AuthStreamToken : JSONSchema  = {
     }
 }
 
-export const ApiSchema_User : JSONSchema  = {
+export const ApiSchema_User : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -198,7 +198,7 @@ export const ApiSchema_User : JSONSchema  = {
     }
 }
 
-export const ApiSchema_UserSelf : JSONSchema  = {
+export const ApiSchema_UserSelf : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -237,7 +237,7 @@ export const ApiSchema_UserSelf : JSONSchema  = {
     }
 }
 
-export const ApiSchema_UserPatch : JSONSchema  = {
+export const ApiSchema_UserPatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -255,7 +255,7 @@ export const ApiSchema_UserPatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_File : JSONSchema  = {
+export const ApiSchema_File : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -284,7 +284,7 @@ export const ApiSchema_File : JSONSchema  = {
     }
 }
 
-export const ApiSchema_FileGetMultiple : JSONSchema  = {
+export const ApiSchema_FileGetMultiple : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -316,7 +316,7 @@ export const ApiSchema_FileGetMultiple : JSONSchema  = {
     }
 }
 
-export const ApiSchema_FileGetMultiplePost : JSONSchema  = {
+export const ApiSchema_FileGetMultiplePost : JSONSchema4  = {
     "type": "object",
     "required": [
         "ids"
@@ -332,7 +332,7 @@ export const ApiSchema_FileGetMultiplePost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_Workspace : JSONSchema  = {
+export const ApiSchema_Workspace : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -357,7 +357,7 @@ export const ApiSchema_Workspace : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspacePatch : JSONSchema  = {
+export const ApiSchema_WorkspacePatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -366,7 +366,7 @@ export const ApiSchema_WorkspacePatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspacesPost : JSONSchema  = {
+export const ApiSchema_WorkspacesPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -386,7 +386,7 @@ export const ApiSchema_WorkspacesPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceFiles : JSONSchema  = {
+export const ApiSchema_WorkspaceFiles : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -418,7 +418,7 @@ export const ApiSchema_WorkspaceFiles : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceFilePost : JSONSchema  = {
+export const ApiSchema_WorkspaceFilePost : JSONSchema4  = {
     "type": "object",
     "required": [
         "file",
@@ -435,7 +435,7 @@ export const ApiSchema_WorkspaceFilePost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceFilePatch : JSONSchema  = {
+export const ApiSchema_WorkspaceFilePatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "filename": {
@@ -444,7 +444,7 @@ export const ApiSchema_WorkspaceFilePatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceConnections : JSONSchema  = {
+export const ApiSchema_WorkspaceConnections : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -473,7 +473,7 @@ export const ApiSchema_WorkspaceConnections : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceConnectionsPost : JSONSchema  = {
+export const ApiSchema_WorkspaceConnectionsPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "name"
@@ -485,7 +485,7 @@ export const ApiSchema_WorkspaceConnectionsPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
+export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "connection_id",
@@ -501,7 +501,7 @@ export const ApiSchema_WorkspaceConnectionsPostResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_Connection : JSONSchema  = {
+export const ApiSchema_Connection : JSONSchema4  = {
     "type": "object",
     "description": "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)",
     "required": [
@@ -527,7 +527,7 @@ export const ApiSchema_Connection : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementsGet : JSONSchema4  = {
     "type": "array",
     "items": {
         "anyOf": [
@@ -569,7 +569,8 @@ export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "0 = point, 1 = line, 2 = polygon"
                     },
                     "color": {
                         "type": "string"
@@ -622,7 +623,8 @@ export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "0 = point, 1 = line, 2 = polygon"
                     },
                     "color": {
                         "type": "string"
@@ -687,7 +689,8 @@ export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "0 = point, 1 = line, 2 = polygon"
                     },
                     "color": {
                         "type": "string"
@@ -757,7 +760,8 @@ export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "0 = point, 1 = line, 2 = polygon"
                     },
                     "color": {
                         "type": "string"
@@ -777,7 +781,7 @@ export const ApiSchema_WorkspaceMapElementsGet : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementCreateBase : JSONSchema  = {
+export const ApiSchema_MapElementCreateBase : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -797,7 +801,7 @@ export const ApiSchema_MapElementCreateBase : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementsCreatePoint : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementsCreatePoint : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -828,7 +832,7 @@ export const ApiSchema_WorkspaceMapElementsCreatePoint : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementsCreateLine : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementsCreateLine : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -870,7 +874,7 @@ export const ApiSchema_WorkspaceMapElementsCreateLine : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementsCreatePolygon : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementsCreatePolygon : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -915,7 +919,7 @@ export const ApiSchema_WorkspaceMapElementsCreatePolygon : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementsCreateCircle : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementsCreateCircle : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -947,7 +951,7 @@ export const ApiSchema_WorkspaceMapElementsCreateCircle : JSONSchema  = {
     }
 }
 
-export const ApiSchema_WorkspaceMapElementPatch : JSONSchema  = {
+export const ApiSchema_WorkspaceMapElementPatch : JSONSchema4  = {
     "anyOf": [
         {
             "type": "object",
@@ -1059,7 +1063,7 @@ export const ApiSchema_WorkspaceMapElementPatch : JSONSchema  = {
     ]
 }
 
-export const ApiSchema_MapElement : JSONSchema  = {
+export const ApiSchema_MapElement : JSONSchema4  = {
     "anyOf": [
         {
             "type": "object",
@@ -1099,7 +1103,8 @@ export const ApiSchema_MapElement : JSONSchema  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "0 = point, 1 = line, 2 = polygon"
                 },
                 "color": {
                     "type": "string"
@@ -1152,7 +1157,8 @@ export const ApiSchema_MapElement : JSONSchema  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "0 = point, 1 = line, 2 = polygon"
                 },
                 "color": {
                     "type": "string"
@@ -1217,7 +1223,8 @@ export const ApiSchema_MapElement : JSONSchema  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "0 = point, 1 = line, 2 = polygon"
                 },
                 "color": {
                     "type": "string"
@@ -1287,7 +1294,8 @@ export const ApiSchema_MapElement : JSONSchema  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "0 = point, 1 = line, 2 = polygon"
                 },
                 "color": {
                     "type": "string"
@@ -1306,7 +1314,7 @@ export const ApiSchema_MapElement : JSONSchema  = {
     ]
 }
 
-export const ApiSchema_MapElementBase : JSONSchema  = {
+export const ApiSchema_MapElementBase : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1342,7 +1350,7 @@ export const ApiSchema_MapElementBase : JSONSchema  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "integer",
+            "type": "number",
             "description": "0 = point, 1 = line, 2 = polygon"
         },
         "color": {
@@ -1351,7 +1359,7 @@ export const ApiSchema_MapElementBase : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementPoint : JSONSchema  = {
+export const ApiSchema_MapElementPoint : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1389,7 +1397,8 @@ export const ApiSchema_MapElementPoint : JSONSchema  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "number",
+            "description": "0 = point, 1 = line, 2 = polygon"
         },
         "color": {
             "type": "string"
@@ -1406,7 +1415,7 @@ export const ApiSchema_MapElementPoint : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementLine : JSONSchema  = {
+export const ApiSchema_MapElementLine : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1443,7 +1452,8 @@ export const ApiSchema_MapElementLine : JSONSchema  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "number",
+            "description": "0 = point, 1 = line, 2 = polygon"
         },
         "color": {
             "type": "string"
@@ -1472,7 +1482,7 @@ export const ApiSchema_MapElementLine : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementPolygon : JSONSchema  = {
+export const ApiSchema_MapElementPolygon : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1509,7 +1519,8 @@ export const ApiSchema_MapElementPolygon : JSONSchema  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "number",
+            "description": "0 = point, 1 = line, 2 = polygon"
         },
         "color": {
             "type": "string"
@@ -1541,7 +1552,7 @@ export const ApiSchema_MapElementPolygon : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementCircle : JSONSchema  = {
+export const ApiSchema_MapElementCircle : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1580,7 +1591,8 @@ export const ApiSchema_MapElementCircle : JSONSchema  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "number",
+            "description": "0 = point, 1 = line, 2 = polygon"
         },
         "color": {
             "type": "string"
@@ -1597,7 +1609,7 @@ export const ApiSchema_MapElementCircle : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementPatch : JSONSchema  = {
+export const ApiSchema_MapElementPatch : JSONSchema4  = {
     "anyOf": [
         {
             "type": "object",
@@ -1709,7 +1721,7 @@ export const ApiSchema_MapElementPatch : JSONSchema  = {
     ]
 }
 
-export const ApiSchema_MapElementPatchBase : JSONSchema  = {
+export const ApiSchema_MapElementPatchBase : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -1721,7 +1733,7 @@ export const ApiSchema_MapElementPatchBase : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementPointPatch : JSONSchema  = {
+export const ApiSchema_MapElementPointPatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -1742,7 +1754,7 @@ export const ApiSchema_MapElementPointPatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementLinePatch : JSONSchema  = {
+export const ApiSchema_MapElementLinePatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -1775,7 +1787,7 @@ export const ApiSchema_MapElementLinePatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementPolygonPatch : JSONSchema  = {
+export const ApiSchema_MapElementPolygonPatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -1811,7 +1823,7 @@ export const ApiSchema_MapElementPolygonPatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MapElementCirclePatch : JSONSchema  = {
+export const ApiSchema_MapElementCirclePatch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
@@ -1832,7 +1844,7 @@ export const ApiSchema_MapElementCirclePatch : JSONSchema  = {
     }
 }
 
-export const ApiSchema_RemoteController : JSONSchema  = {
+export const ApiSchema_RemoteController : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1854,12 +1866,12 @@ export const ApiSchema_RemoteController : JSONSchema  = {
     }
 }
 
-export const ApiSchema_RemoteControllerType : JSONSchema  = {
+export const ApiSchema_RemoteControllerType : JSONSchema4  = {
     "type": "integer",
     "description": "0 = dji rc pro enterprise, 1 = dji rc plus"
 }
 
-export const ApiSchema_RemoteControllerPosition : JSONSchema  = {
+export const ApiSchema_RemoteControllerPosition : JSONSchema4  = {
     "type": "object",
     "required": [
         "longitude",
@@ -1886,7 +1898,7 @@ export const ApiSchema_RemoteControllerPosition : JSONSchema  = {
     }
 }
 
-export const ApiSchema_Drone : JSONSchema  = {
+export const ApiSchema_Drone : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -1916,12 +1928,12 @@ export const ApiSchema_Drone : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DroneType : JSONSchema  = {
+export const ApiSchema_DroneType : JSONSchema4  = {
     "type": "integer",
     "description": "0 = dji mavic 3"
 }
 
-export const ApiSchema_DronePosition : JSONSchema  = {
+export const ApiSchema_DronePosition : JSONSchema4  = {
     "type": "object",
     "required": [
         "longitude",
@@ -1948,7 +1960,7 @@ export const ApiSchema_DronePosition : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DroneBattery : JSONSchema  = {
+export const ApiSchema_DroneBattery : JSONSchema4  = {
     "type": "object",
     "required": [
         "capacity_percent_left",
@@ -1967,7 +1979,7 @@ export const ApiSchema_DroneBattery : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DroneMedia : JSONSchema  = {
+export const ApiSchema_DroneMedia : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -2061,7 +2073,7 @@ export const ApiSchema_DroneMedia : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DroneFlights : JSONSchema  = {
+export const ApiSchema_DroneFlights : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -2130,7 +2142,7 @@ export const ApiSchema_DroneFlights : JSONSchema  = {
     }
 }
 
-export const ApiSchema_Flight : JSONSchema  = {
+export const ApiSchema_Flight : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -2196,7 +2208,7 @@ export const ApiSchema_Flight : JSONSchema  = {
     }
 }
 
-export const ApiSchema_FlightMedia : JSONSchema  = {
+export const ApiSchema_FlightMedia : JSONSchema4  = {
     "type": "array",
     "items": {
         "type": "object",
@@ -2290,7 +2302,7 @@ export const ApiSchema_FlightMedia : JSONSchema  = {
     }
 }
 
-export const ApiSchema_Media : JSONSchema  = {
+export const ApiSchema_Media : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -2381,7 +2393,7 @@ export const ApiSchema_Media : JSONSchema  = {
     }
 }
 
-export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
+export const ApiSchema_MediaGroundCoverage : JSONSchema4  = {
     "type": "object",
     "required": [
         "coverage"
@@ -2661,7 +2673,7 @@ export const ApiSchema_MediaGroundCoverage : JSONSchema  = {
     }
 }
 
-export const ApiSchema_GroundCoverageLocation : JSONSchema  = {
+export const ApiSchema_GroundCoverageLocation : JSONSchema4  = {
     "type": "object",
     "required": [
         "position",
@@ -2745,7 +2757,7 @@ export const ApiSchema_GroundCoverageLocation : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
+export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "connection_id",
@@ -2761,7 +2773,7 @@ export const ApiSchema_ConnectionLinkAuthLoginPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
+export const ApiSchema_ConnectionLinkConfig : JSONSchema4  = {
     "type": "object",
     "required": [
         "connection_id",
@@ -2798,7 +2810,7 @@ export const ApiSchema_ConnectionLinkConfig : JSONSchema  = {
     }
 }
 
-export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
+export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema4  = {
     "type": "object",
     "required": [
         "app_id",
@@ -2834,7 +2846,7 @@ export const ApiSchema_ConnectionLinkDjiPilot2SdkConfig : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaFastUploadPost : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaFastUploadPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "fingerprint"
@@ -2879,7 +2891,7 @@ export const ApiSchema_DjiPilot2ApiMediaFastUploadPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -2901,12 +2913,12 @@ export const ApiSchema_DjiPilot2ApiMediaFastUploadPostResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPost : JSONSchema4  = {
     "type": "object",
     "description": "TODO what is the format? documentation does not say"
 }
 
-export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -2940,7 +2952,7 @@ export const ApiSchema_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse : JSON
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3009,7 +3021,7 @@ export const ApiSchema_DjiPilot2ApiMediaStsPostResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -3092,7 +3104,7 @@ export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPost : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3122,7 +3134,7 @@ export const ApiSchema_DjiPilot2ApiMediaUploadCallbackPostResponse : JSONSchema 
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "file_count",
@@ -3141,7 +3153,7 @@ export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPost : JSONSchema  = 
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3164,7 +3176,7 @@ export const ApiSchema_DjiPilot2ApiMediaGroupUploadCallbackPostResponse : JSONSc
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
@@ -3214,7 +3226,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost : JSONSchema  = 
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3245,7 +3257,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse : JSONSc
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3402,7 +3414,7 @@ export const ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementsPut : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementsPut : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
@@ -3434,7 +3446,7 @@ export const ApiSchema_DjiPilot2ApiMapElementsPut : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementsPutResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementsPutResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3465,7 +3477,7 @@ export const ApiSchema_DjiPilot2ApiMapElementsPutResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiMapElementsDeleteResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiMapElementsDeleteResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3496,7 +3508,7 @@ export const ApiSchema_DjiPilot2ApiMapElementsDeleteResponse : JSONSchema  = {
     }
 }
 
-export const ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse : JSONSchema4  = {
     "type": "object",
     "required": [
         "code",
@@ -3673,7 +3685,7 @@ export const ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse : JSONSchema  =
     }
 }
 
-export const ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice : JSONSchema  = {
+export const ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice : JSONSchema4  = {
     "type": "object",
     "required": [
         "device_callsign",

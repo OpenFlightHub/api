@@ -1,5 +1,5 @@
 import Ajv from 'ajv'
-import {JSONSchema} from 'json-schema-to-typescript'
+import {JSONSchema4} from './types/JSONSchema'
 
 const ajv = new Ajv({removeAdditional: 'all', strictTypes: false})
 ajv.addKeyword('example')// this comes from openapi spec
@@ -13,7 +13,7 @@ ajv.addFormat('binary', /.*/)
  * @param obj
  * @param schema if additionalProperties or additionalItems is not set, it will be set to true
  */
-export function filterObject(obj: object, schema: JSONSchema){
+export function filterObject<T>(obj: object, schema: JSONSchema4): T{
     const data = JSON.parse(JSON.stringify(obj, function (this, key, value){
         return value === null ? undefined : value
     }))
@@ -36,7 +36,7 @@ export class FilterError extends Error {
  * @param schema if additionalProperties or additionalItems is not set, it will be set to true
  * @returns true or a string describing the error
  */
-export function validate(obj: object, schema: JSONSchema, skipSerialization = false){
+export function validate(obj: object, schema: JSONSchema4, skipSerialization = false){
 
     if(schema.oneOf){
         let lastError : string
