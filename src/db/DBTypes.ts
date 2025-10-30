@@ -260,26 +260,48 @@ export type DBType_DroneMedia = {
 }
 
 
-export type DBType_WorkspaceMapElement_TypeType = 0|1|2|7
-export const DBType_WorkspaceMapElement_TYPES = {
-  point: 0 as DBType_WorkspaceMapElement_TypeType,
-  line: 1 as DBType_WorkspaceMapElement_TypeType,
-  polygon: 2 as DBType_WorkspaceMapElement_TypeType,
-  circle: 7 as DBType_WorkspaceMapElement_TypeType
+export type DBType_GeoObject_TypeType = 0|1|2
+export const DBType_GeoObject_TYPES = {
+  marking: 0 as DBType_GeoObject_TypeType,
+  traffic: 1 as DBType_GeoObject_TypeType,
+  unit: 2 as DBType_GeoObject_TypeType
 }
-export type DBType_WorkspaceMapElement = {
+export type DBType_GeoObject_SubTypeType = 0|1|2|3|1|2|3|4|5|1|2|3|4|5|6|7
+export const DBType_GeoObject_SUB_TYPES = {
+  marking_point: 0 as DBType_GeoObject_SubTypeType,
+  marking_line: 1 as DBType_GeoObject_SubTypeType,
+  marking_polygon: 2 as DBType_GeoObject_SubTypeType,
+  marking_circle: 3 as DBType_GeoObject_SubTypeType,
+  traffic_airplane: 1 as DBType_GeoObject_SubTypeType,
+  traffic_helicopter: 2 as DBType_GeoObject_SubTypeType,
+  traffic_uav: 3 as DBType_GeoObject_SubTypeType,
+  traffic_gliding: 4 as DBType_GeoObject_SubTypeType,
+  traffic_other: 5 as DBType_GeoObject_SubTypeType,
+  unit_aircraft: 1 as DBType_GeoObject_SubTypeType,
+  unit_helicopter: 2 as DBType_GeoObject_SubTypeType,
+  unit_uav: 3 as DBType_GeoObject_SubTypeType,
+  unit_pilot: 4 as DBType_GeoObject_SubTypeType,
+  unit_ground_vehicle: 5 as DBType_GeoObject_SubTypeType,
+  unit_ground_staff: 6 as DBType_GeoObject_SubTypeType,
+  unit_other: 7 as DBType_GeoObject_SubTypeType
+}
+export type DBType_GeoObject = {
   id: number;
   uuid: string;
   workspace_id: number;
   name: string;
   /**
-   * 0 = point, 1 = line, 2 = polygon, 7 = circle
+   * 0 = marking, 1 = traffic, 2 = unit
    */
-  type: DBType_WorkspaceMapElement_TypeType;
+  type: DBType_GeoObject_TypeType;
+  /**
+   * marking: 0 = point, 1 = line, 2 = polygon, 3 = circle; traffic: 1 = airplane, 2 = helicopter, 3 = uav, 4 = gliding, 5 = other; unit: 1 = aircraft, 2 = helicopter, 3 = uav, 4 = pilot, 5 = ground_vehicle, 6 = ground_staff, 7 = other
+   */
+  sub_type: DBType_GeoObject_SubTypeType;
   /**
    * json
    */
-  content: string;
+  config: string;
   created_at: string;
   updated_at: string;
 }

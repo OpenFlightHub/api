@@ -1386,30 +1386,32 @@ export function selectDroneMedia(id: number){
 }
 
 
-//workspace_map_elements
+//geo_objects
 
-import {DBType_WorkspaceMapElement_TypeType} from "./DBTypes";
+import {DBType_GeoObject_TypeType} from "./DBTypes";
 
-export type DBInsert_WorkspaceMapElement = {
+export type DBInsert_GeoObject = {
     uuid: string
     workspace_id: number
     name: string
-    type: DBType_WorkspaceMapElement_TypeType
-    content: string
+    type: DBType_GeoObject_TypeType
+    sub_type: number
+    config: string
     created_at?: string
     updated_at?: string
 }
 
-export type DBUpdate_WorkspaceMapElement = {
+export type DBUpdate_GeoObject = {
     uuid?: string
     workspace_id?: number
     name?: string
-    type?: DBType_WorkspaceMapElement_TypeType
-    content?: string
+    type?: DBType_GeoObject_TypeType
+    sub_type?: number
+    config?: string
     created_at?: string
     updated_at?: string
 }
-const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
+const COLUMN_SET_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "id",
         "cnd": true
@@ -1427,7 +1429,10 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
         "name": "type"
     },
     {
-        "name": "content"
+        "name": "sub_type"
+    },
+    {
+        "name": "config"
     },
     {
         "name": "created_at",
@@ -1437,9 +1442,9 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS = new db.$config.pgp.helpers.ColumnSet([
         "name": "updated_at",
         "skip": col => !col.exists
     }
-], {table: "workspace_map_elements"})
+], {table: "geo_objects"})
 
-const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+const COLUMN_SET_GEO_OBJECTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "id",
         "skip": col => !col.exists
@@ -1461,7 +1466,11 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.Colu
         "skip": col => !col.exists
     },
     {
-        "name": "content",
+        "name": "sub_type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "config",
         "skip": col => !col.exists
     },
     {
@@ -1472,22 +1481,22 @@ const COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE = new db.$config.pgp.helpers.Colu
         "name": "updated_at",
         "skip": col => !col.exists
     }
-], {table: "workspace_map_elements"})
-import {DBType_WorkspaceMapElement} from './DBTypes'
+], {table: "geo_objects"})
+import {DBType_GeoObject} from './DBTypes'
 
 
-export function insertWorkspaceMapElement(values: DBInsert_WorkspaceMapElement){
-    return db.one<DBType_WorkspaceMapElement>(db.$config.pgp.helpers.insert(values, undefined, 'workspace_map_elements') + ' RETURNING *')
+export function insertGeoObject(values: DBInsert_GeoObject){
+    return db.one<DBType_GeoObject>(db.$config.pgp.helpers.insert(values, undefined, 'geo_objects') + ' RETURNING *')
 }
 
 /**
  @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
 */
-export function updateWorkspaceMapElement<T extends number | string>(values: DBUpdate_WorkspaceMapElement, idOrWhereCondition: T): T extends number ? Promise<DBType_WorkspaceMapElement> : Promise<DBType_WorkspaceMapElement[]>{
+export function updateGeoObject<T extends number | string>(values: DBUpdate_GeoObject, idOrWhereCondition: T): T extends number ? Promise<DBType_GeoObject> : Promise<DBType_GeoObject[]>{
     if(typeof idOrWhereCondition === 'number'){
         const id = idOrWhereCondition as number
         //@ts-ignore
-        return db.one<DBTypeWorkspaceMapElement>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+        return db.one<DBTypeGeoObject>(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
     } else {
         let whereCondition = idOrWhereCondition as string
         whereCondition = whereCondition.trim()
@@ -1495,17 +1504,17 @@ export function updateWorkspaceMapElement<T extends number | string>(values: DBU
             whereCondition = whereCondition.substring(0, whereCondition.length - 1)
         }
 
-        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_MAP_ELEMENTS_UPDATE) + ' ' + whereCondition)
+        return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' ' + whereCondition)
     }
 }
 
-export function deleteWorkspaceMapElement(id: number){
-    return db.none('DELETE FROM workspace_map_elements WHERE id = ${id}', {id})
+export function deleteGeoObject(id: number){
+    return db.none('DELETE FROM geo_objects WHERE id = ${id}', {id})
 }
 
 
 
 
-export function selectWorkspaceMapElement(id: number){
-    return db.one<DBType_WorkspaceMapElement>('SELECT * FROM workspace_map_elements ' + pgp.as.format('WHERE id = ${id}', {id}))
+export function selectGeoObject(id: number){
+    return db.one<DBType_GeoObject>('SELECT * FROM geo_objects ' + pgp.as.format('WHERE id = ${id}', {id}))
 }
