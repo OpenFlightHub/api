@@ -7,10 +7,7 @@ Following custom rules apply (because of depending build scripts):
 - every request body should be a `$ref` to `components/schemas` because we can then automatically generate the JSON Schema and use that in our `api` code
 
 ## Types and Schemas
-Types and schemas are automatically generated from the `database/schema.dbml` and `api/openapi_spec`
-To generate them in VS Code press `F1` select `Run Tasks` and run `Generate Types and Schemas`
-internal typescript types can be found in `src/definitions/DBTypes.ts`
-public typescript types and JSON Schemas can be found in `src/definitions/ApiTypes.ts` and `src/definitions/ApiSchemas.ts`
+Types and schemas are automatically generated with this repo: https://github.com/OpenFlightHub/api-typegenerator
 
 ## Guarding system
 
