@@ -84,9 +84,33 @@ function parseNoteStateDefinition(note){
         return false
     }
 
-    const validSyntax = note.match(/^(\s*(\d+)\s*\=\s*([^,]+),){0,}(\s*(\d+)\s*\=\s*([^,]+))$/)
+    const validSyntaxSubType = note.match(/^((\s*\w+:\s*)(\s*(\d+)\s*\=\s*([^,]+),){0,}(\s*(\d+)\s*\=\s*([^,]+)))(\s*;(\s*\w+:\s*)(\s*(\d+)\s*\=\s*([^,]+),){0,}(\s*(\d+)\s*\=\s*([^,]+))){1,}$/)
 
-    if(!validSyntax){
+    if(validSyntaxSubType){
+        const types = note.split(';')
+
+        const allStates = []
+
+        for(const type of types){
+            const spl = type.split(':')
+            const typeName = spl[0].trim()
+
+            const subTypeStates = parseNoteStateDefinition(spl[1].trim())
+            for(const subType of subTypeStates){
+                allStates.push({
+                    name: typeName + '_' + subType.name,
+                    state: subType.state
+                })
+            }
+        }
+
+        return allStates
+    }
+
+
+    const validSyntaxType = note.match(/^(\s*(\d+)\s*\=\s*([^,]+),){0,}(\s*(\d+)\s*\=\s*([^,]+))$/)
+
+    if(!validSyntaxType){
         return false
     }
 
