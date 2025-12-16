@@ -252,7 +252,7 @@ router.use('/:workspace_id/map-elements', (req, res, next) => {//TODO if this ch
 
 })
 
-import mapElementsRoute from './map-elements'
-router.use('/:workspace_id/map-elements', mapElementsRoute)
+import geoObjectsRoute from './geo-objects'
+router.use('/:workspace_id/geo-objects', geoObjectsRoute)
 
 export default router

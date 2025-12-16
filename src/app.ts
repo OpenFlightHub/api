@@ -39,7 +39,7 @@ global.db = db
 import {setupDB} from './db'
 
 import { registerSubscribableEvent } from './live-websocket/websocket'
-const subscribableEventHandlerMapElements = registerSubscribableEvent('map_element')
+const subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object')
 
 db.connect({
     direct: true,
@@ -48,7 +48,7 @@ db.connect({
         process.exit(1)
     }
 }).then(sco=>{
-    setupDB(sco, subscribableEventHandlerMapElements)
+    setupDB(sco, subscribableEventHandlerGeoObjects)
 }).catch(error => {
     console.error(error)
     process.exit(1)
@@ -214,7 +214,7 @@ import { DBType_Drone, DBType_File, DBType_Flight } from './generated-definition
 
 
 import { marks } from './map'
-marks.setupMapMarks(subscribableEventHandlerMapElements)
+marks.setupMapMarks(subscribableEventHandlerGeoObjects)
 
 
 // import {getMetaFromImage} from './util/media'

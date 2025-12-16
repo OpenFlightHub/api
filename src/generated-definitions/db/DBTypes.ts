@@ -313,10 +313,10 @@ export const DBType_Geo_Object_SubType_TYPES = {
 } as const
 
 export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType, sub_type extends DBType_Geo_Object_SubTypeType<type>> = type extends 0 ? (
-    sub_type extends 0 ? {point: [number, number], color: string} :
-    sub_type extends 1 ? {line: [number, number][], color: string} :
-    sub_type extends 2 ? {polygon: [number, number][], color: string} :
-    sub_type extends 3 ? {center: [number, number], radius: number, color: string} : unknown
+    sub_type extends 0 ? {point: [number, number, number], color: string} :
+    sub_type extends 1 ? {line: [number, number, number][], color: string} :
+    sub_type extends 2 ? {polygon: [number, number, number][], color: string} :
+    sub_type extends 3 ? {center: [number, number, number], radius: number, color: string} : unknown
 ) : type extends 1 ? (
     {longitude: number, latitude: number, height: number, heading?: number, speed?: number}
 ) : type extends 2 ? (

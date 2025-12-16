@@ -232,10 +232,126 @@ export interface ApiType_Connection {
 }
 
 
-export type ApiType_Workspace_Map_Elements_Get = (
+export type ApiType_Workspace_Geo_Objects_Get = (
+    | (
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      )
     | {
           id: number;
           uuid: string;
+          workspace_id: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -245,69 +361,25 @@ export type ApiType_Workspace_Map_Elements_Get = (
            * ISO 8601 format with a timezone
            */
           updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
           type: number;
-          color: string;
-          latitude: number;
-          longitude: number;
-          elevation?: number;
-          [k: string]: unknown;
-      }
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          coordinates: {
-              latitude: number;
+          sub_type: number;
+          config: {
               longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-      }
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          coordinates: {
               latitude: number;
-              longitude: number;
-              elevation?: number;
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
               [k: string]: unknown;
-          }[][];
+          };
           [k: string]: unknown;
       }
     | {
           id: number;
           uuid: string;
+          workspace_id: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -317,211 +389,746 @@ export type ApiType_Workspace_Map_Elements_Get = (
            * ISO 8601 format with a timezone
            */
           updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
           type: number;
-          color: string;
-          latitude: number;
-          longitude: number;
-          radius: number;
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
           [k: string]: unknown;
       }
 )[];
 
 
-export type ApiType_Map_Element_Create_Base = {
-    uuid?: string;
+export type ApiType_Workspace_Geo_Objects_Create =
+    | (
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      )
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Workspace_Geo_Object_Patch =
+    | (
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      )
+    | {
+          name?: string;
+          config?: {
+              longitude: number;
+              latitude: number;
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          name?: string;
+          config?: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object =
+    | (
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      )
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object_Base = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
     name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+}
+
+
+export type ApiType_Geo_Object_Type0 =
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              /**
+               * [lng, lat, elevation]
+               */
+              point: number[];
+              /**
+               * hex
+               */
+              color: string;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              line: number[][];
+              /**
+               * hex
+               */
+              color: string;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              polygon: number[][];
+              /**
+               * hex
+               */
+              color: string;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          sub_type: number;
+          config: {
+              /**
+               * [lng, lat, elevation]
+               */
+              center: number[];
+              radius: number;
+              /**
+               * hex
+               */
+              color: string;
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object_Type0_Subtype0 = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    sub_type: number;
+    config: {
+        /**
+         * [lng, lat, elevation]
+         */
+        point: number[];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype0_Config = {
+    /**
+     * [lng, lat, elevation]
+     */
+    point: number[];
+    /**
+     * hex
+     */
     color: string;
 }
 
 
-export type ApiType_Workspace_Map_Elements_Create_Point = {
-    uuid?: string;
+export type ApiType_Geo_Object_Type0_Subtype1 = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
     name: string;
-    color: string;
-    longitude: number;
-    latitude: number;
-    elevation?: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    sub_type: number;
+    config: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
 }
 
 
-export type ApiType_Workspace_Map_Elements_Create_Line = {
-    uuid?: string;
-    name: string;
+export type ApiType_Geo_Object_Type0_Subtype1_Config = {
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    line: number[][];
+    /**
+     * hex
+     */
     color: string;
-    coordinates: {
-        longitude: number;
-        latitude: number;
-        elevation?: number;
-    }[];
 }
 
 
-export type ApiType_Workspace_Map_Elements_Create_Polygon = {
-    uuid?: string;
+export type ApiType_Geo_Object_Type0_Subtype2 = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
     name: string;
-    color: string;
-    coordinates: {
-        longitude: number;
-        latitude: number;
-        elevation?: number;
-    }[][];
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    sub_type: number;
+    config: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        polygon: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
 }
 
 
-export type ApiType_Workspace_Map_Elements_Create_Circle = {
-    uuid?: string;
-    name: string;
+export type ApiType_Geo_Object_Type0_Subtype2_Config = {
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    polygon: number[][];
+    /**
+     * hex
+     */
     color: string;
-    longitude: number;
-    latitude: number;
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype3 = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    sub_type: number;
+    config: {
+        /**
+         * [lng, lat, elevation]
+         */
+        center: number[];
+        radius: number;
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype3_Config = {
+    /**
+     * [lng, lat, elevation]
+     */
+    center: number[];
     radius: number;
+    /**
+     * hex
+     */
+    color: string;
 }
 
 
-export type ApiType_Workspace_Map_Element_Patch =
-    | {
-          name?: string;
-          color?: string;
-          latitude?: number;
-          longitude?: number;
-          elevation?: number;
-          [k: string]: unknown;
-      }
-    | {
-          name?: string;
-          color?: string;
-          coordinates?: {
-              latitude: number;
-              longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-      }
-    | {
-          name?: string;
-          color?: string;
-          coordinates?: {
-              latitude: number;
-              longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[][];
-          [k: string]: unknown;
-      }
-    | {
-          name?: string;
-          color?: string;
-          latitude?: number;
-          longitude?: number;
-          radius?: number;
-          [k: string]: unknown;
-      };
-
-
-export type ApiType_Map_Element =
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          latitude: number;
-          longitude: number;
-          elevation?: number;
-          [k: string]: unknown;
-      }
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          coordinates: {
-              latitude: number;
-              longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-      }
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          coordinates: {
-              latitude: number;
-              longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[][];
-          [k: string]: unknown;
-      }
-    | {
-          id: number;
-          uuid: string;
-          name: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          created_at: string;
-          /**
-           * ISO 8601 format with a timezone
-           */
-          updated_at: string;
-          /**
-           * 0 = point, 1 = line, 2 = polygon
-           */
-          type: number;
-          color: string;
-          latitude: number;
-          longitude: number;
-          radius: number;
-          [k: string]: unknown;
-      };
-
-
-export type ApiType_Map_Element_Base = {
+export type ApiType_Geo_Object_Type1 = {
     id: number;
     uuid: string;
+    workspace_id: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -531,194 +1138,721 @@ export type ApiType_Map_Element_Base = {
      * ISO 8601 format with a timezone
      */
     updated_at: string;
-    /**
-     * 0 = point, 1 = line, 2 = polygon
-     */
     type: number;
-    color: string;
+    sub_type: number;
+    config: {
+        longitude: number;
+        latitude: number;
+        height: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
 }
 
 
-export type ApiType_Map_Element_Point = {
-    id: number;
-    uuid: string;
-    name: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    created_at: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    updated_at: string;
-    /**
-     * 0 = point, 1 = line, 2 = polygon
-     */
-    type: number;
-    color: string;
-    latitude: number;
+export type ApiType_Geo_Object_Type1_Config = {
     longitude: number;
-    elevation?: number;
-}
-
-
-export type ApiType_Map_Element_Line = {
-    id: number;
-    uuid: string;
-    name: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    created_at: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    updated_at: string;
-    /**
-     * 0 = point, 1 = line, 2 = polygon
-     */
-    type: number;
-    color: string;
-    coordinates: {
-        latitude: number;
-        longitude: number;
-        elevation?: number;
-    }[];
-}
-
-
-export type ApiType_Map_Element_Polygon = {
-    id: number;
-    uuid: string;
-    name: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    created_at: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    updated_at: string;
-    /**
-     * 0 = point, 1 = line, 2 = polygon
-     */
-    type: number;
-    color: string;
-    coordinates: {
-        latitude: number;
-        longitude: number;
-        elevation?: number;
-    }[][];
-}
-
-
-export type ApiType_Map_Element_Circle = {
-    id: number;
-    uuid: string;
-    name: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    created_at: string;
-    /**
-     * ISO 8601 format with a timezone
-     */
-    updated_at: string;
-    /**
-     * 0 = point, 1 = line, 2 = polygon
-     */
-    type: number;
-    color: string;
     latitude: number;
-    longitude: number;
-    radius: number;
+    height: number;
+    heading?: number;
+    /**
+     * TODO unit
+     */
+    speed?: number;
 }
 
 
-export type ApiType_Map_Element_Patch =
+export type ApiType_Geo_Object_Type2 = {
+    id: number;
+    uuid: string;
+    workspace_id: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    sub_type: number;
+    config: {
+        longitude: number;
+        latitude: number;
+        symbol: string;
+        height?: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type2_Config = {
+    longitude: number;
+    latitude: number;
+    symbol: string;
+    height?: number;
+    heading?: number;
+    /**
+     * TODO unit
+     */
+    speed?: number;
+}
+
+
+export type ApiType_Geo_Object_Create =
+    | (
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                uuid?: string;
+                name: string;
+                /**
+                 * 2
+                 */
+                type: number;
+                /**
+                 * 0 - 6
+                 */
+                sub_type: number;
+                config: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+      )
     | {
-          name?: string;
-          color?: string;
-          latitude?: number;
-          longitude?: number;
-          elevation?: number;
-          [k: string]: unknown;
-      }
-    | {
-          name?: string;
-          color?: string;
-          coordinates?: {
-              latitude: number;
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
               longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[];
-          [k: string]: unknown;
-      }
-    | {
-          name?: string;
-          color?: string;
-          coordinates?: {
               latitude: number;
-              longitude: number;
-              elevation?: number;
-              [k: string]: unknown;
-          }[][];
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+          };
           [k: string]: unknown;
       }
     | {
-          name?: string;
-          color?: string;
-          latitude?: number;
-          longitude?: number;
-          radius?: number;
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+          };
           [k: string]: unknown;
       };
 
 
-export type ApiType_Map_Element_Patch_Base = {
-    name?: string;
-    color?: string;
+export type ApiType_Geo_Object_Create_Base = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
 }
 
 
-export type ApiType_Map_Element_Point_Patch = {
-    name?: string;
-    color?: string;
-    latitude?: number;
-    longitude?: number;
-    elevation?: number;
+export type ApiType_Geo_Object_Type0_Create =
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              /**
+               * [lng, lat, elevation]
+               */
+              point: number[];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              line: number[][];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              polygon: number[][];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          uuid?: string;
+          name: string;
+          /**
+           * 2
+           */
+          type: number;
+          /**
+           * 0 - 6
+           */
+          sub_type: number;
+          config: {
+              /**
+               * [lng, lat, elevation]
+               */
+              center: number[];
+              radius: number;
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object_Type0_Subtype0_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
+        /**
+         * [lng, lat, elevation]
+         */
+        point: number[];
+        /**
+         * hex
+         */
+        color: string;
+    };
 }
 
 
-export type ApiType_Map_Element_Line_Patch = {
-    name?: string;
-    color?: string;
-    coordinates?: {
-        latitude: number;
+export type ApiType_Geo_Object_Type0_Subtype1_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype2_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        polygon: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype3_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
+        /**
+         * [lng, lat, elevation]
+         */
+        center: number[];
+        radius: number;
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type1_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
         longitude: number;
-        elevation?: number;
-    }[];
-}
-
-
-export type ApiType_Map_Element_Polygon_Patch = {
-    name?: string;
-    color?: string;
-    coordinates?: {
         latitude: number;
-        longitude: number;
-        elevation?: number;
-    }[][];
+        height: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
 }
 
 
-export type ApiType_Map_Element_Circle_Patch = {
+export type ApiType_Geo_Object_Type2_Create = {
+    uuid?: string;
+    name: string;
+    /**
+     * 2
+     */
+    type: number;
+    /**
+     * 0 - 6
+     */
+    sub_type: number;
+    config: {
+        longitude: number;
+        latitude: number;
+        symbol: string;
+        height?: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
+}
+
+
+export type ApiType_Geo_Object_Patch =
+    | (
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    point: number[];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: number[][];
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                name?: string;
+                config?: {
+                    /**
+                     * [lng, lat, elevation]
+                     */
+                    center: number[];
+                    radius: number;
+                    /**
+                     * hex
+                     */
+                    color: string;
+                };
+                [k: string]: unknown;
+            }
+      )
+    | {
+          name?: string;
+          config?: {
+              longitude: number;
+              latitude: number;
+              height: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          name?: string;
+          config?: {
+              longitude: number;
+              latitude: number;
+              symbol: string;
+              height?: number;
+              heading?: number;
+              /**
+               * TODO unit
+               */
+              speed?: number;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object_Patch_Base = {
     name?: string;
-    color?: string;
-    latitude?: number;
-    longitude?: number;
-    radius?: number;
+}
+
+
+export type ApiType_Geo_Object_Type0_Patch =
+    | {
+          name?: string;
+          config?: {
+              /**
+               * [lng, lat, elevation]
+               */
+              point: number[];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          name?: string;
+          config?: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              line: number[][];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          name?: string;
+          config?: {
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              polygon: number[][];
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          name?: string;
+          config?: {
+              /**
+               * [lng, lat, elevation]
+               */
+              center: number[];
+              radius: number;
+              /**
+               * hex
+               */
+              color: string;
+          };
+          [k: string]: unknown;
+      };
+
+
+export type ApiType_Geo_Object_Type0_Subtype0_Patch = {
+    name?: string;
+    config?: {
+        /**
+         * [lng, lat, elevation]
+         */
+        point: number[];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype1_Patch = {
+    name?: string;
+    config?: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype2_Patch = {
+    name?: string;
+    config?: {
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        polygon: number[][];
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type0_Subtype3_Patch = {
+    name?: string;
+    config?: {
+        /**
+         * [lng, lat, elevation]
+         */
+        center: number[];
+        radius: number;
+        /**
+         * hex
+         */
+        color: string;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type1_Patch = {
+    name?: string;
+    config?: {
+        longitude: number;
+        latitude: number;
+        height: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
+}
+
+
+export type ApiType_Geo_Object_Type2_Patch = {
+    name?: string;
+    config?: {
+        longitude: number;
+        latitude: number;
+        symbol: string;
+        height?: number;
+        heading?: number;
+        /**
+         * TODO unit
+         */
+        speed?: number;
+    };
 }
 
 
@@ -1343,7 +2477,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response = {
                         /**
                          * geojson format
                          */
-                        coordinates: number[];
+                        coordinates: (number | number[])[];
                         radius?: number;
                     };
                 };

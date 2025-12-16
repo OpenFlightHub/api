@@ -527,213 +527,312 @@ export const ApiSchema_Connection : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Workspace_Map_Elements_Get : JSONSchema4  = {
+export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
     "type": "array",
     "items": {
         "anyOf": [
             {
-                "type": "object",
-                "required": [
-                    "id",
-                    "uuid",
-                    "name",
-                    "type",
-                    "color",
-                    "created_at",
-                    "updated_at",
-                    "latitude",
-                    "longitude"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "number",
-                        "example": 42
-                    },
-                    "uuid": {
-                        "type": "string",
-                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "type": {
-                        "type": "number",
-                        "description": "0 = point, 1 = line, 2 = polygon"
-                    },
-                    "color": {
-                        "type": "string"
-                    },
-                    "latitude": {
-                        "type": "number"
-                    },
-                    "longitude": {
-                        "type": "number"
-                    },
-                    "elevation": {
-                        "type": "number"
-                    }
-                }
-            },
-            {
-                "type": "object",
-                "required": [
-                    "id",
-                    "uuid",
-                    "name",
-                    "type",
-                    "color",
-                    "created_at",
-                    "updated_at",
-                    "coordinates"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "number",
-                        "example": 42
-                    },
-                    "uuid": {
-                        "type": "string",
-                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "type": {
-                        "type": "number",
-                        "description": "0 = point, 1 = line, 2 = polygon"
-                    },
-                    "color": {
-                        "type": "string"
-                    },
-                    "coordinates": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "latitude",
-                                "longitude"
-                            ],
-                            "properties": {
-                                "latitude": {
-                                    "type": "number"
-                                },
-                                "longitude": {
-                                    "type": "number"
-                                },
-                                "elevation": {
-                                    "type": "number"
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "number"
+                            },
+                            "sub_type": {
+                                "type": "number"
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "point",
+                                    "color"
+                                ],
+                                "properties": {
+                                    "point": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "description": "[lng, lat, elevation]"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "description": "hex"
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-            },
-            {
-                "type": "object",
-                "required": [
-                    "id",
-                    "uuid",
-                    "name",
-                    "type",
-                    "color",
-                    "created_at",
-                    "updated_at",
-                    "coordinates"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "number",
-                        "example": 42
                     },
-                    "uuid": {
-                        "type": "string",
-                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "timestamptz",
-                        "description": "ISO 8601 format with a timezone",
-                        "example": "2023-12-11 23:06:52.7879+00"
-                    },
-                    "type": {
-                        "type": "number",
-                        "description": "0 = point, 1 = line, 2 = polygon"
-                    },
-                    "color": {
-                        "type": "string"
-                    },
-                    "coordinates": {
-                        "type": "array",
-                        "items": {
-                            "type": "array",
-                            "items": {
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "number"
+                            },
+                            "sub_type": {
+                                "type": "number"
+                            },
+                            "config": {
                                 "type": "object",
                                 "required": [
-                                    "latitude",
-                                    "longitude"
+                                    "line",
+                                    "color"
                                 ],
                                 "properties": {
-                                    "latitude": {
+                                    "line": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "description": "hex"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "number"
+                            },
+                            "sub_type": {
+                                "type": "number"
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "polygon",
+                                    "color"
+                                ],
+                                "properties": {
+                                    "polygon": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "description": "hex"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "number"
+                            },
+                            "sub_type": {
+                                "type": "number"
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "center",
+                                    "radius",
+                                    "color"
+                                ],
+                                "properties": {
+                                    "center": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "description": "[lng, lat, elevation]"
+                                    },
+                                    "radius": {
                                         "type": "number"
                                     },
-                                    "longitude": {
-                                        "type": "number"
-                                    },
-                                    "elevation": {
-                                        "type": "number"
+                                    "color": {
+                                        "type": "string",
+                                        "description": "hex"
                                     }
                                 }
                             }
                         }
                     }
-                }
+                ]
             },
             {
                 "type": "object",
                 "required": [
                     "id",
                     "uuid",
+                    "workspace_id",
                     "name",
-                    "type",
-                    "color",
                     "created_at",
                     "updated_at",
-                    "latitude",
-                    "longitude",
-                    "radius"
+                    "type",
+                    "sub_type",
+                    "config"
                 ],
                 "properties": {
                     "id": {
@@ -743,6 +842,10 @@ export const ApiSchema_Workspace_Map_Elements_Get : JSONSchema4  = {
                     "uuid": {
                         "type": "string",
                         "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "workspace_id": {
+                        "type": "number",
+                        "example": 42
                     },
                     "name": {
                         "type": "string"
@@ -760,20 +863,114 @@ export const ApiSchema_Workspace_Map_Elements_Get : JSONSchema4  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number",
-                        "description": "0 = point, 1 = line, 2 = polygon"
+                        "type": "number"
                     },
-                    "color": {
+                    "sub_type": {
+                        "type": "number"
+                    },
+                    "config": {
+                        "type": "object",
+                        "required": [
+                            "longitude",
+                            "latitude",
+                            "height"
+                        ],
+                        "properties": {
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "height": {
+                                "type": "number"
+                            },
+                            "heading": {
+                                "type": "number"
+                            },
+                            "speed": {
+                                "type": "number",
+                                "description": "TODO unit"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uuid",
+                    "workspace_id",
+                    "name",
+                    "created_at",
+                    "updated_at",
+                    "type",
+                    "sub_type",
+                    "config"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                    },
+                    "workspace_id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "name": {
                         "type": "string"
                     },
-                    "latitude": {
+                    "created_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    },
+                    "type": {
                         "type": "number"
                     },
-                    "longitude": {
+                    "sub_type": {
                         "type": "number"
                     },
-                    "radius": {
-                        "type": "number"
+                    "config": {
+                        "type": "object",
+                        "required": [
+                            "longitude",
+                            "latitude",
+                            "symbol"
+                        ],
+                        "properties": {
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "symbol": {
+                                "type": "string"
+                            },
+                            "height": {
+                                "type": "number"
+                            },
+                            "heading": {
+                                "type": "number"
+                            },
+                            "speed": {
+                                "type": "number",
+                                "description": "TODO unit"
+                            }
+                        }
                     }
                 }
             }
@@ -781,126 +978,241 @@ export const ApiSchema_Workspace_Map_Elements_Get : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Map_Element_Create_Base : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "color"
-    ],
-    "properties": {
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        }
-    }
-}
-
-export const ApiSchema_Workspace_Map_Elements_Create_Point : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "color",
-        "longitude",
-        "latitude"
-    ],
-    "properties": {
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "longitude": {
-            "type": "number"
-        },
-        "latitude": {
-            "type": "number"
-        },
-        "elevation": {
-            "type": "number"
-        }
-    }
-}
-
-export const ApiSchema_Workspace_Map_Elements_Create_Line : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "color",
-        "coordinates"
-    ],
-    "properties": {
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": [
-                    "longitude",
-                    "latitude"
-                ],
-                "properties": {
-                    "longitude": {
-                        "type": "number"
-                    },
-                    "latitude": {
-                        "type": "number"
-                    },
-                    "elevation": {
-                        "type": "number"
+export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
+    "anyOf": [
+        {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "point",
+                                "color"
+                            ],
+                            "properties": {
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "line",
+                                "color"
+                            ],
+                            "properties": {
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "polygon",
+                                "color"
+                            ],
+                            "properties": {
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "center",
+                                "radius",
+                                "color"
+                            ],
+                            "properties": {
+                                "center": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "radius": {
+                                    "type": "number"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
-    }
-}
-
-export const ApiSchema_Workspace_Map_Elements_Create_Polygon : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "color",
-        "coordinates"
-    ],
-    "properties": {
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+            ]
         },
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "array",
-                "items": {
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude"
+                        "latitude",
+                        "height"
                     ],
                     "properties": {
                         "longitude": {
@@ -909,97 +1221,15 @@ export const ApiSchema_Workspace_Map_Elements_Create_Polygon : JSONSchema4  = {
                         "latitude": {
                             "type": "number"
                         },
-                        "elevation": {
+                        "height": {
                             "type": "number"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-export const ApiSchema_Workspace_Map_Elements_Create_Circle : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "color",
-        "longitude",
-        "latitude",
-        "radius"
-    ],
-    "properties": {
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "longitude": {
-            "type": "number"
-        },
-        "latitude": {
-            "type": "number"
-        },
-        "radius": {
-            "type": "number"
-        }
-    }
-}
-
-export const ApiSchema_Workspace_Map_Element_Patch : JSONSchema4  = {
-    "anyOf": [
-        {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "elevation": {
-                    "type": "number"
-                }
-            }
-        },
-        {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "latitude",
-                            "longitude"
-                        ],
-                        "properties": {
-                            "latitude": {
-                                "type": "number"
-                            },
-                            "longitude": {
-                                "type": "number"
-                            },
-                            "elevation": {
-                                "type": "number"
-                            }
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
                         }
                     }
                 }
@@ -1007,321 +1237,720 @@ export const ApiSchema_Workspace_Map_Element_Patch : JSONSchema4  = {
         },
         {
             "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
             "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
                 "name": {
                     "type": "string"
                 },
-                "color": {
-                    "type": "string"
+                "type": {
+                    "type": "number",
+                    "description": "2"
                 },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "latitude",
-                                "longitude"
-                            ],
-                            "properties": {
-                                "latitude": {
-                                    "type": "number"
-                                },
-                                "longitude": {
-                                    "type": "number"
-                                },
-                                "elevation": {
-                                    "type": "number"
-                                }
-                            }
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "symbol"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
                         }
                     }
-                }
-            }
-        },
-        {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "radius": {
-                    "type": "number"
                 }
             }
         }
     ]
 }
 
-export const ApiSchema_Map_Element : JSONSchema4  = {
+export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
     "anyOf": [
         {
-            "type": "object",
-            "required": [
-                "id",
-                "uuid",
-                "name",
-                "type",
-                "color",
-                "created_at",
-                "updated_at",
-                "latitude",
-                "longitude"
-            ],
-            "properties": {
-                "id": {
-                    "type": "number",
-                    "example": 42
-                },
-                "uuid": {
-                    "type": "string",
-                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "type": {
-                    "type": "number",
-                    "description": "0 = point, 1 = line, 2 = polygon"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "elevation": {
-                    "type": "number"
-                }
-            }
-        },
-        {
-            "type": "object",
-            "required": [
-                "id",
-                "uuid",
-                "name",
-                "type",
-                "color",
-                "created_at",
-                "updated_at",
-                "coordinates"
-            ],
-            "properties": {
-                "id": {
-                    "type": "number",
-                    "example": 42
-                },
-                "uuid": {
-                    "type": "string",
-                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "type": {
-                    "type": "number",
-                    "description": "0 = point, 1 = line, 2 = polygon"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "latitude",
-                            "longitude"
-                        ],
-                        "properties": {
-                            "latitude": {
-                                "type": "number"
-                            },
-                            "longitude": {
-                                "type": "number"
-                            },
-                            "elevation": {
-                                "type": "number"
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "point",
+                                "color"
+                            ],
+                            "properties": {
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
                             }
                         }
                     }
-                }
-            }
-        },
-        {
-            "type": "object",
-            "required": [
-                "id",
-                "uuid",
-                "name",
-                "type",
-                "color",
-                "created_at",
-                "updated_at",
-                "coordinates"
-            ],
-            "properties": {
-                "id": {
-                    "type": "number",
-                    "example": 42
                 },
-                "uuid": {
-                    "type": "string",
-                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "type": {
-                    "type": "number",
-                    "description": "0 = point, 1 = line, 2 = polygon"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
                             "type": "object",
                             "required": [
-                                "latitude",
-                                "longitude"
+                                "line",
+                                "color"
                             ],
                             "properties": {
-                                "latitude": {
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "polygon",
+                                "color"
+                            ],
+                            "properties": {
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "center",
+                                "radius",
+                                "color"
+                            ],
+                            "properties": {
+                                "center": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "radius": {
                                     "type": "number"
                                 },
-                                "longitude": {
-                                    "type": "number"
-                                },
-                                "elevation": {
-                                    "type": "number"
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
                                 }
                             }
                         }
                     }
                 }
+            ]
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "height"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
             }
         },
         {
             "type": "object",
-            "required": [
-                "id",
-                "uuid",
-                "name",
-                "type",
-                "color",
-                "created_at",
-                "updated_at",
-                "latitude",
-                "longitude",
-                "radius"
-            ],
             "properties": {
-                "id": {
-                    "type": "number",
-                    "example": 42
-                },
-                "uuid": {
-                    "type": "string",
-                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-                },
                 "name": {
                     "type": "string"
                 },
-                "created_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "format": "timestamptz",
-                    "description": "ISO 8601 format with a timezone",
-                    "example": "2023-12-11 23:06:52.7879+00"
-                },
-                "type": {
-                    "type": "number",
-                    "description": "0 = point, 1 = line, 2 = polygon"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "radius": {
-                    "type": "number"
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "symbol"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
                 }
             }
         }
     ]
 }
 
-export const ApiSchema_Map_Element_Base : JSONSchema4  = {
+export const ApiSchema_Geo_Object : JSONSchema4  = {
+    "anyOf": [
+        {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "workspace_id",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "number"
+                        },
+                        "sub_type": {
+                            "type": "number"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "point",
+                                "color"
+                            ],
+                            "properties": {
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "workspace_id",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "number"
+                        },
+                        "sub_type": {
+                            "type": "number"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "line",
+                                "color"
+                            ],
+                            "properties": {
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "workspace_id",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "number"
+                        },
+                        "sub_type": {
+                            "type": "number"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "polygon",
+                                "color"
+                            ],
+                            "properties": {
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "workspace_id",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "number"
+                        },
+                        "sub_type": {
+                            "type": "number"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "center",
+                                "radius",
+                                "color"
+                            ],
+                            "properties": {
+                                "center": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "radius": {
+                                    "type": "number"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "height"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "symbol"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
         "uuid",
+        "workspace_id",
         "name",
-        "type",
-        "color",
         "created_at",
         "updated_at"
     ],
@@ -1334,6 +1963,10 @@ export const ApiSchema_Map_Element_Base : JSONSchema4  = {
             "type": "string",
             "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
         },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
         "name": {
             "type": "string"
         },
@@ -1348,223 +1981,313 @@ export const ApiSchema_Map_Element_Base : JSONSchema4  = {
             "format": "timestamptz",
             "description": "ISO 8601 format with a timezone",
             "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "type": {
-            "type": "number",
-            "description": "0 = point, 1 = line, 2 = polygon"
-        },
-        "color": {
-            "type": "string"
         }
     }
 }
 
-export const ApiSchema_Map_Element_Point : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "id",
-        "uuid",
-        "name",
-        "type",
-        "color",
-        "created_at",
-        "updated_at",
-        "latitude",
-        "longitude"
-    ],
-    "properties": {
-        "id": {
-            "type": "number",
-            "example": 42
-        },
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "created_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "updated_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "type": {
-            "type": "number",
-            "description": "0 = point, 1 = line, 2 = polygon"
-        },
-        "color": {
-            "type": "string"
-        },
-        "latitude": {
-            "type": "number"
-        },
-        "longitude": {
-            "type": "number"
-        },
-        "elevation": {
-            "type": "number"
-        }
-    }
-}
-
-export const ApiSchema_Map_Element_Line : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "id",
-        "uuid",
-        "name",
-        "type",
-        "color",
-        "created_at",
-        "updated_at",
-        "coordinates"
-    ],
-    "properties": {
-        "id": {
-            "type": "number",
-            "example": 42
-        },
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "created_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "updated_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "type": {
-            "type": "number",
-            "description": "0 = point, 1 = line, 2 = polygon"
-        },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": [
-                    "latitude",
-                    "longitude"
-                ],
-                "properties": {
-                    "latitude": {
-                        "type": "number"
-                    },
-                    "longitude": {
-                        "type": "number"
-                    },
-                    "elevation": {
-                        "type": "number"
+export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "point",
+                        "color"
+                    ],
+                    "properties": {
+                        "point": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
                     }
                 }
             }
-        }
-    }
-}
-
-export const ApiSchema_Map_Element_Polygon : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "id",
-        "uuid",
-        "name",
-        "type",
-        "color",
-        "created_at",
-        "updated_at",
-        "coordinates"
-    ],
-    "properties": {
-        "id": {
-            "type": "number",
-            "example": 42
         },
-        "uuid": {
-            "type": "string",
-            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
-        },
-        "name": {
-            "type": "string"
-        },
-        "created_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "updated_at": {
-            "type": "string",
-            "format": "timestamptz",
-            "description": "ISO 8601 format with a timezone",
-            "example": "2023-12-11 23:06:52.7879+00"
-        },
-        "type": {
-            "type": "number",
-            "description": "0 = point, 1 = line, 2 = polygon"
-        },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "array",
-                "items": {
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
                     "type": "object",
                     "required": [
-                        "latitude",
-                        "longitude"
+                        "line",
+                        "color"
                     ],
                     "properties": {
-                        "latitude": {
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "polygon",
+                        "color"
+                    ],
+                    "properties": {
+                        "polygon": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "workspace_id",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "number"
+                },
+                "sub_type": {
+                    "type": "number"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "center",
+                        "radius",
+                        "color"
+                    ],
+                    "properties": {
+                        "center": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "radius": {
                             "type": "number"
                         },
-                        "longitude": {
-                            "type": "number"
-                        },
-                        "elevation": {
-                            "type": "number"
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
                         }
                     }
                 }
             }
         }
-    }
+    ]
 }
 
-export const ApiSchema_Map_Element_Circle : JSONSchema4  = {
+export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
         "uuid",
+        "workspace_id",
         "name",
-        "type",
-        "color",
         "created_at",
         "updated_at",
-        "latitude",
-        "longitude",
-        "radius"
+        "type",
+        "sub_type",
+        "config"
     ],
     "properties": {
         "id": {
@@ -1574,6 +2297,10 @@ export const ApiSchema_Map_Element_Circle : JSONSchema4  = {
         "uuid": {
             "type": "string",
             "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
         },
         "name": {
             "type": "string"
@@ -1591,25 +2318,1630 @@ export const ApiSchema_Map_Element_Circle : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number",
-            "description": "0 = point, 1 = line, 2 = polygon"
-        },
-        "color": {
-            "type": "string"
-        },
-        "latitude": {
             "type": "number"
         },
-        "longitude": {
+        "sub_type": {
             "type": "number"
         },
-        "radius": {
-            "type": "number"
+        "config": {
+            "type": "object",
+            "required": [
+                "point",
+                "color"
+            ],
+            "properties": {
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "description": "[lng, lat, elevation]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
         }
     }
 }
 
-export const ApiSchema_Map_Element_Patch : JSONSchema4  = {
+export const ApiSchema_Geo_Object_Type0_Subtype0_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "point",
+        "color"
+    ],
+    "properties": {
+        "point": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "description": "[lng, lat, elevation]"
+        },
+        "color": {
+            "type": "string",
+            "description": "hex"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "workspace_id",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "sub_type": {
+            "type": "number"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "line",
+                "color"
+            ],
+            "properties": {
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype1_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "line",
+        "color"
+    ],
+    "properties": {
+        "line": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+        },
+        "color": {
+            "type": "string",
+            "description": "hex"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "workspace_id",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "sub_type": {
+            "type": "number"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "polygon",
+                "color"
+            ],
+            "properties": {
+                "polygon": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype2_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "polygon",
+        "color"
+    ],
+    "properties": {
+        "polygon": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+        },
+        "color": {
+            "type": "string",
+            "description": "hex"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "workspace_id",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "sub_type": {
+            "type": "number"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "center",
+                "radius",
+                "color"
+            ],
+            "properties": {
+                "center": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "description": "[lng, lat, elevation]"
+                },
+                "radius": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype3_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "center",
+        "radius",
+        "color"
+    ],
+    "properties": {
+        "center": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "description": "[lng, lat, elevation]"
+        },
+        "radius": {
+            "type": "number"
+        },
+        "color": {
+            "type": "string",
+            "description": "hex"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "workspace_id",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "sub_type": {
+            "type": "number"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "height"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type1_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "longitude",
+        "latitude",
+        "height"
+    ],
+    "properties": {
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "height": {
+            "type": "number"
+        },
+        "heading": {
+            "type": "number"
+        },
+        "speed": {
+            "type": "number",
+            "description": "TODO unit"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "workspace_id",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "number"
+        },
+        "sub_type": {
+            "type": "number"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "symbol"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type2_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "longitude",
+        "latitude",
+        "symbol"
+    ],
+    "properties": {
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "symbol": {
+            "type": "string"
+        },
+        "height": {
+            "type": "number"
+        },
+        "heading": {
+            "type": "number"
+        },
+        "speed": {
+            "type": "number",
+            "description": "TODO unit"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
+    "anyOf": [
+        {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "point",
+                                "color"
+                            ],
+                            "properties": {
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "line",
+                                "color"
+                            ],
+                            "properties": {
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "polygon",
+                                "color"
+                            ],
+                            "properties": {
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "type",
+                        "sub_type",
+                        "config",
+                        "subtype"
+                    ],
+                    "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "number",
+                            "description": "2"
+                        },
+                        "sub_type": {
+                            "type": "number",
+                            "description": "0 - 6"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "center",
+                                "radius",
+                                "color"
+                            ],
+                            "properties": {
+                                "center": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "radius": {
+                                    "type": "number"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "height"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "symbol"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Geo_Object_Create_Base : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "point",
+                        "color"
+                    ],
+                    "properties": {
+                        "point": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "line",
+                        "color"
+                    ],
+                    "properties": {
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "polygon",
+                        "color"
+                    ],
+                    "properties": {
+                        "polygon": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "sub_type",
+                "config",
+                "subtype"
+            ],
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "number",
+                    "description": "2"
+                },
+                "sub_type": {
+                    "type": "number",
+                    "description": "0 - 6"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "center",
+                        "radius",
+                        "color"
+                    ],
+                    "properties": {
+                        "center": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "radius": {
+                            "type": "number"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype0_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "point",
+                "color"
+            ],
+            "properties": {
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "description": "[lng, lat, elevation]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype1_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "line",
+                "color"
+            ],
+            "properties": {
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype2_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "polygon",
+                "color"
+            ],
+            "properties": {
+                "polygon": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype3_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "center",
+                "radius",
+                "color"
+            ],
+            "properties": {
+                "center": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "description": "[lng, lat, elevation]"
+                },
+                "radius": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type1_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "height"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type2_Create : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "sub_type",
+        "config",
+        "subtype"
+    ],
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "number",
+            "description": "2"
+        },
+        "sub_type": {
+            "type": "number",
+            "description": "0 - 6"
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "symbol"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
+    "anyOf": [
+        {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "point",
+                                "color"
+                            ],
+                            "properties": {
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "line",
+                                "color"
+                            ],
+                            "properties": {
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "polygon",
+                                "color"
+                            ],
+                            "properties": {
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "center",
+                                "radius",
+                                "color"
+                            ],
+                            "properties": {
+                                "center": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "description": "[lng, lat, elevation]"
+                                },
+                                "radius": {
+                                    "type": "number"
+                                },
+                                "color": {
+                                    "type": "string",
+                                    "description": "hex"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "height"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "longitude",
+                        "latitude",
+                        "symbol"
+                    ],
+                    "properties": {
+                        "longitude": {
+                            "type": "number"
+                        },
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "height": {
+                            "type": "number"
+                        },
+                        "heading": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number",
+                            "description": "TODO unit"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Geo_Object_Patch_Base : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
     "anyOf": [
         {
             "type": "object",
@@ -1617,47 +3949,23 @@ export const ApiSchema_Map_Element_Patch : JSONSchema4  = {
                 "name": {
                     "type": "string"
                 },
-                "color": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "elevation": {
-                    "type": "number"
-                }
-            }
-        },
-        {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "latitude",
-                            "longitude"
-                        ],
-                        "properties": {
-                            "latitude": {
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "point",
+                        "color"
+                    ],
+                    "properties": {
+                        "point": {
+                            "type": "array",
+                            "items": {
                                 "type": "number"
                             },
-                            "longitude": {
-                                "type": "number"
-                            },
-                            "elevation": {
-                                "type": "number"
-                            }
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
                         }
                     }
                 }
@@ -1669,30 +3977,26 @@ export const ApiSchema_Map_Element_Patch : JSONSchema4  = {
                 "name": {
                     "type": "string"
                 },
-                "color": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "latitude",
-                                "longitude"
-                            ],
-                            "properties": {
-                                "latitude": {
-                                    "type": "number"
-                                },
-                                "longitude": {
-                                    "type": "number"
-                                },
-                                "elevation": {
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "line",
+                        "color"
+                    ],
+                    "properties": {
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
                                     "type": "number"
                                 }
-                            }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
                         }
                     }
                 }
@@ -1704,142 +4008,261 @@ export const ApiSchema_Map_Element_Patch : JSONSchema4  = {
                 "name": {
                     "type": "string"
                 },
-                "color": {
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "polygon",
+                        "color"
+                    ],
+                    "properties": {
+                        "polygon": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "radius": {
-                    "type": "number"
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "center",
+                        "radius",
+                        "color"
+                    ],
+                    "properties": {
+                        "center": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "[lng, lat, elevation]"
+                        },
+                        "radius": {
+                            "type": "number"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "hex"
+                        }
+                    }
                 }
             }
         }
     ]
 }
 
-export const ApiSchema_Map_Element_Patch_Base : JSONSchema4  = {
+export const ApiSchema_Geo_Object_Type0_Subtype0_Patch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
             "type": "string"
         },
-        "color": {
-            "type": "string"
-        }
-    }
-}
-
-export const ApiSchema_Map_Element_Point_Patch : JSONSchema4  = {
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "latitude": {
-            "type": "number"
-        },
-        "longitude": {
-            "type": "number"
-        },
-        "elevation": {
-            "type": "number"
-        }
-    }
-}
-
-export const ApiSchema_Map_Element_Line_Patch : JSONSchema4  = {
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": [
-                    "latitude",
-                    "longitude"
-                ],
-                "properties": {
-                    "latitude": {
+        "config": {
+            "type": "object",
+            "required": [
+                "point",
+                "color"
+            ],
+            "properties": {
+                "point": {
+                    "type": "array",
+                    "items": {
                         "type": "number"
                     },
-                    "longitude": {
-                        "type": "number"
-                    },
-                    "elevation": {
-                        "type": "number"
-                    }
+                    "description": "[lng, lat, elevation]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
                 }
             }
         }
     }
 }
 
-export const ApiSchema_Map_Element_Polygon_Patch : JSONSchema4  = {
+export const ApiSchema_Geo_Object_Type0_Subtype1_Patch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
             "type": "string"
         },
-        "color": {
-            "type": "string"
-        },
-        "coordinates": {
-            "type": "array",
-            "items": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "required": [
-                        "latitude",
-                        "longitude"
-                    ],
-                    "properties": {
-                        "latitude": {
-                            "type": "number"
-                        },
-                        "longitude": {
-                            "type": "number"
-                        },
-                        "elevation": {
+        "config": {
+            "type": "object",
+            "required": [
+                "line",
+                "color"
+            ],
+            "properties": {
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
                             "type": "number"
                         }
-                    }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
                 }
             }
         }
     }
 }
 
-export const ApiSchema_Map_Element_Circle_Patch : JSONSchema4  = {
+export const ApiSchema_Geo_Object_Type0_Subtype2_Patch : JSONSchema4  = {
     "type": "object",
     "properties": {
         "name": {
             "type": "string"
         },
-        "color": {
+        "config": {
+            "type": "object",
+            "required": [
+                "polygon",
+                "color"
+            ],
+            "properties": {
+                "polygon": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type0_Subtype3_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
             "type": "string"
         },
-        "latitude": {
-            "type": "number"
+        "config": {
+            "type": "object",
+            "required": [
+                "center",
+                "radius",
+                "color"
+            ],
+            "properties": {
+                "center": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "description": "[lng, lat, elevation]"
+                },
+                "radius": {
+                    "type": "number"
+                },
+                "color": {
+                    "type": "string",
+                    "description": "hex"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type1_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
         },
-        "longitude": {
-            "type": "number"
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "height"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type2_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
         },
-        "radius": {
-            "type": "number"
+        "config": {
+            "type": "object",
+            "required": [
+                "longitude",
+                "latitude",
+                "symbol"
+            ],
+            "properties": {
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "heading": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "TODO unit"
+                }
+            }
         }
     }
 }
@@ -3392,7 +5815,17 @@ export const ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response : JSONSch
                                                         "coordinates": {
                                                             "type": "array",
                                                             "items": {
-                                                                "type": "number"
+                                                                "anyOf": [
+                                                                    {
+                                                                        "type": "number"
+                                                                    },
+                                                                    {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "number"
+                                                                        }
+                                                                    }
+                                                                ]
                                                             },
                                                             "description": "geojson format"
                                                         },

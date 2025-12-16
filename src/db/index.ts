@@ -2,13 +2,12 @@ import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent, SubscribableEventHandler } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
-import { select_Connection, select_Drone, select_Remote_Controller, select_Workspace } from '../generated-definitions/db/DBHelpers';
+import { select_Connection, select_Drone, select_Geo_Object, select_Remote_Controller, select_Workspace } from '../generated-definitions/db/DBHelpers';
 import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
 import { DBType_Drone_Data } from '../generated-definitions/db/DBTypes';
-import { convertDbMapElementToApiMapElement } from '../map/map_marks';
 
-export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSubscribableEventHandler: SubscribableEventHandler<'map_element'>){
+export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, geoObjectSubscribableEventHandler: SubscribableEventHandler<'geo_object'>){
     const subscribableEventHandlerDbRowUpdate = registerSubscribableEvent('db_row_update', (event, filters, client)=>{
 
         const table = filters[0]
@@ -161,18 +160,17 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
                 })
 
 
-                if(changedTable === 'workspace_map_elements'){
-                    const mapElementId = parseInt(changedId)
+                if(changedTable === 'geo_objects'){
+                    const geoObjectId = parseInt(changedId)
 
-                    const mapElement = await selectWorkspaceMapElement(mapElementId)
+                    const geoObject = await select_Geo_Object(geoObjectId)
 
-                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + mapElement.workspace_id, ()=>{
-                        const apiMapElement = convertDbMapElementToApiMapElement(mapElement)
+                    geoObjectSubscribableEventHandler.triggerListenerIfExists('' + geoObject.workspace_id, ()=>{
 
                         return {
                             event_type: 'update',
-                            uuid: apiMapElement.uuid,//TODO why do we need this? only for delete?
-                            data: apiMapElement
+                            uuid: geoObject.uuid,//TODO why do we need this? only for delete?
+                            data: geoObject
                         }
                     })
                 }
@@ -277,19 +275,17 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
                         file_id: parsed.data.file_id,
                         flight_id: parsed.data.flight_id
                     })
-                } else if(changedTable === 'workspace_map_elements'){
+                } else if(changedTable === 'geo_objects'){
 
-                    const mapElementId = parseInt(parsed.data.id)
+                    const geoObjectId = parseInt(parsed.data.id)
 
-                    const mapElement = await selectWorkspaceMapElement(mapElementId)
+                    const geoObject = await select_Geo_Object(geoObjectId)
 
-                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + mapElement.workspace_id, ()=>{
-                        const apiMapElement = convertDbMapElementToApiMapElement(mapElement)
-
+                    geoObjectSubscribableEventHandler.triggerListenerIfExists('' + geoObject.workspace_id, ()=>{
                         return {
                             event_type: 'create',
-                            uuid: apiMapElement.uuid,//TODO why do we need this? only for delete?
-                            data: apiMapElement
+                            uuid: geoObject.uuid,//TODO why do we need this? only for delete?
+                            data: geoObject
                         }
                     })
                 }
@@ -303,14 +299,12 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
                 const deletedId: number = parseInt(parsed.id)
                 const deletedData = parsed.data
 
-                 if(changedTable === 'workspace_map_elements'){
+                 if(changedTable === 'geo_objects'){
 
-                    mapElementSubscribableEventHandler.triggerListenerIfExists('' + deletedData.workspace_id, ()=>{
-                        const apiMapElement = convertDbMapElementToApiMapElement(deletedData)
-
+                    geoObjectSubscribableEventHandler.triggerListenerIfExists('' + deletedData.workspace_id, ()=>{
                         return {
                             event_type: 'delete',
-                            uuid: apiMapElement.uuid
+                            uuid: deletedData.uuid
                         }
                     })
                 }
