@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.15.0
+  version: 0.16.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
