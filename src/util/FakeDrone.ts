@@ -2,8 +2,8 @@ import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
 import { addDroneData, DRONE_DATA_TYPES } from "./drone"
 import FakeTrack from './FakeTrack'
-import { insertFlightData, selectDrone } from '../generated-definitions/db/DBHelpers'
-import { DBType_FlightData_TYPES } from '../generated-definitions/db/DBTypes'
+import { insert_Flight_Data, select_Drone } from '../generated-definitions/db/DBHelpers'
+import { DBType_Flight_Data_TYPES } from '../generated-definitions/db/DBTypes'
 
 export default class FakeDrone {
 
@@ -27,7 +27,7 @@ export default class FakeDrone {
             })
 
             this.getFlightId().then(flightId=>{
-                insertFlightData({
+                insert_Flight_Data({
                     created_at: new Date().toISOString(),
                     data: JSON.stringify({
                         longitude: currentPosition.longitude,
@@ -35,7 +35,7 @@ export default class FakeDrone {
                         height: this.fakeTrack.getCurrentHeight()
                     }),
                     flight_id: flightId,
-                    type: DBType_FlightData_TYPES.position
+                    type: DBType_Flight_Data_TYPES.position
                 })
             })
 
@@ -51,7 +51,7 @@ export default class FakeDrone {
     }
 
     public async getFlightId(){
-        return (await selectDrone(this.droneId)).current_flight_id
+        return (await select_Drone(this.droneId)).current_flight_id
     }
 
 }

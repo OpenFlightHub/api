@@ -1,10 +1,10 @@
 export type DBType_User_StateType = 0|1|2|3
 export const DBType_User_STATES = {
-  invited: 0 as DBType_User_StateType,
-  live: 1 as DBType_User_StateType,
-  locked: 2 as DBType_User_StateType,
-  deleted: 3 as DBType_User_StateType
-}
+  invited: 0,
+  live: 1,
+  locked: 2,
+  deleted: 3
+} as const
 export type DBType_User = {
     id: number;
     name: string;
@@ -73,7 +73,7 @@ export type DBType_Workspace = {
 }
 
 
-export type DBType_WorkspacePermission = {
+export type DBType_Workspace_Permission = {
     user_id: number;
     workspace_id: number;
 }
@@ -100,32 +100,32 @@ export type DBType_Connection = {
 }
 
 
-export type DBType_RemoteController_TypeType = 0|1|2|3|4
-export const DBType_RemoteController_TYPES = {
-  unknown: 0 as DBType_RemoteController_TypeType,
-  dji_rc_plus: 1 as DBType_RemoteController_TypeType,
-  dji_rc_pro_enterprise: 2 as DBType_RemoteController_TypeType,
-  dji_rc_plus_2: 3 as DBType_RemoteController_TypeType,
-  dji_smart_controller: 4 as DBType_RemoteController_TypeType
-}
-export type DBType_RemoteController = {
+export type DBType_Remote_Controller_TypeType = 0|1|2|3|4
+export const DBType_Remote_Controller_TYPES = {
+  unknown: 0,
+  dji_rc_plus: 1,
+  dji_rc_pro_enterprise: 2,
+  dji_rc_plus_2: 3,
+  dji_smart_controller: 4
+} as const
+export type DBType_Remote_Controller = {
     id: number;
     serial_number: string;
     /**
      * 0 = unknown, 1 = dji rc plus, 2 = dji rc pro enterprise, 3 = dji rc plus 2, 4 = dji smart controller
      */
-    type: DBType_RemoteController_TypeType;
+    type: DBType_Remote_Controller_TypeType;
 }
 
 
 export type DBType_Drone_TypeType = 0|1|2|3|4
 export const DBType_Drone_TYPES = {
-  unknown: 0 as DBType_Drone_TypeType,
-  dji_matrice_300: 1 as DBType_Drone_TypeType,
-  dji_matrice_30: 2 as DBType_Drone_TypeType,
-  dji_matrice_350: 3 as DBType_Drone_TypeType,
-  dji_mavic_3: 4 as DBType_Drone_TypeType
-}
+  unknown: 0,
+  dji_matrice_300: 1,
+  dji_matrice_30: 2,
+  dji_matrice_350: 3,
+  dji_mavic_3: 4
+} as const
 export type DBType_Drone = {
     id: number;
     serial_number: string;
@@ -155,11 +155,11 @@ export type DBType_Flight = {
 }
 
 
-export type DBType_FlightData_TypeType = 0
-export const DBType_FlightData_TYPES = {
-  position: 0 as DBType_FlightData_TypeType
-}
-export type DBType_FlightData = {
+export type DBType_Flight_Data_TypeType = 0
+export const DBType_Flight_Data_TYPES = {
+  position: 0
+} as const
+export type DBType_Flight_Data = {
     id: number;
     flight_id: number;
     /**
@@ -173,65 +173,59 @@ export type DBType_FlightData = {
     /**
      * 0 = position
      */
-    type: DBType_FlightData_TypeType;
-    data: {
-        [k: string]: unknown;
-    };
+    type: DBType_Flight_Data_TypeType;
+    data: any;
 }
 
 
-export type DBType_RemoteControllerData_TypeType = 0
-export const DBType_RemoteControllerData_TYPES = {
-  position: 0 as DBType_RemoteControllerData_TypeType
-}
-export type DBType_RemoteControllerData = {
+export type DBType_Remote_Controller_Data_TypeType = 0
+export const DBType_Remote_Controller_Data_TYPES = {
+  position: 0
+} as const
+export type DBType_Remote_Controller_Data = {
     id: number;
     remote_controller_id: number;
     /**
      * 0 = position
      */
-    type: DBType_RemoteControllerData_TypeType;
-    data: {
-        [k: string]: unknown;
-    };
+    type: DBType_Remote_Controller_Data_TypeType;
+    data: any;
     created_at: string;
 }
 
 
-export type DBType_DroneData_TypeType = 0|1
-export const DBType_DroneData_TYPES = {
-  position: 0 as DBType_DroneData_TypeType,
-  telemetry: 1 as DBType_DroneData_TypeType
-}
-export type DBType_DroneData = {
+export type DBType_Drone_Data_TypeType = 0|1
+export const DBType_Drone_Data_TYPES = {
+  position: 0,
+  telemetry: 1
+} as const
+export type DBType_Drone_Data = {
     id: number;
     drone_id: number;
     flight_id: number;
     /**
      * 0 = position, 1 = telemetry
      */
-    type: DBType_DroneData_TypeType;
-    data: {
-        [k: string]: unknown;
-    };
+    type: DBType_Drone_Data_TypeType;
+    data: any;
     created_at: string;
 }
 
 
-export type DBType_DroneMedia_TypeType = 0|1|2
-export const DBType_DroneMedia_TYPES = {
-  video: 0 as DBType_DroneMedia_TypeType,
-  picture: 1 as DBType_DroneMedia_TypeType,
-  panorama: 2 as DBType_DroneMedia_TypeType
-}
-export type DBType_DroneMedia = {
+export type DBType_Drone_Media_TypeType = 0|1|2
+export const DBType_Drone_Media_TYPES = {
+  video: 0,
+  picture: 1,
+  panorama: 2
+} as const
+export type DBType_Drone_Media = {
     id: number;
     drone_id: number;
     flight_id: number;
     /**
      * 0 = video, 1 = picture, 2 = panorama
      */
-    type: DBType_DroneMedia_TypeType;
+    type: DBType_Drone_Media_TypeType;
     file_id: number;
     fingerprint: string;
     tiny_fingerprint: string;
@@ -260,50 +254,71 @@ export type DBType_DroneMedia = {
 }
 
 
-export type DBType_GeoObject_TypeType = 0|1|2
-export const DBType_GeoObject_TYPES = {
-  marking: 0 as DBType_GeoObject_TypeType,
-  traffic: 1 as DBType_GeoObject_TypeType,
-  unit: 2 as DBType_GeoObject_TypeType
-}
-export type DBType_GeoObject_SubTypeType = 0|1|2|3|1|2|3|4|5|1|2|3|4|5|6|7
-export const DBType_GeoObject_SUB_TYPES = {
-  marking_point: 0 as DBType_GeoObject_SubTypeType,
-  marking_line: 1 as DBType_GeoObject_SubTypeType,
-  marking_polygon: 2 as DBType_GeoObject_SubTypeType,
-  marking_circle: 3 as DBType_GeoObject_SubTypeType,
-  traffic_airplane: 1 as DBType_GeoObject_SubTypeType,
-  traffic_helicopter: 2 as DBType_GeoObject_SubTypeType,
-  traffic_uav: 3 as DBType_GeoObject_SubTypeType,
-  traffic_gliding: 4 as DBType_GeoObject_SubTypeType,
-  traffic_other: 5 as DBType_GeoObject_SubTypeType,
-  unit_aircraft: 1 as DBType_GeoObject_SubTypeType,
-  unit_helicopter: 2 as DBType_GeoObject_SubTypeType,
-  unit_uav: 3 as DBType_GeoObject_SubTypeType,
-  unit_pilot: 4 as DBType_GeoObject_SubTypeType,
-  unit_ground_vehicle: 5 as DBType_GeoObject_SubTypeType,
-  unit_ground_staff: 6 as DBType_GeoObject_SubTypeType,
-  unit_other: 7 as DBType_GeoObject_SubTypeType
-}
-export type DBType_GeoObject = {
+
+
+export type DBType_Geo_Object = DBType_Geo_Object_Base<0, 0> | DBType_Geo_Object_Base<0, 1> | DBType_Geo_Object_Base<0, 2> | DBType_Geo_Object_Base<0, 3> |
+DBType_Geo_Object_Base<1, 0> | DBType_Geo_Object_Base<1, 1> | DBType_Geo_Object_Base<1, 2> | DBType_Geo_Object_Base<1, 3> | DBType_Geo_Object_Base<1, 4> |
+DBType_Geo_Object_Base<2, 0> | DBType_Geo_Object_Base<2, 1> | DBType_Geo_Object_Base<2, 2> | DBType_Geo_Object_Base<2, 3> | DBType_Geo_Object_Base<2, 4> | DBType_Geo_Object_Base<2, 5> | DBType_Geo_Object_Base<2, 6>
+
+export type DBType_Geo_Object_Base<type extends DBType_Geo_Object_TypeType, sub_type extends DBType_Geo_Object_SubTypeType<type>> = {
     id: number;
     uuid: string;
     workspace_id: number;
     name: string;
-    /**
-     * 0 = marking, 1 = traffic, 2 = unit
-     */
-    type: DBType_GeoObject_TypeType;
-    /**
-     * marking: 0 = point, 1 = line, 2 = polygon, 3 = circle; traffic: 1 = airplane, 2 = helicopter, 3 = uav, 4 = gliding, 5 = other; unit: 1 = aircraft, 2 = helicopter, 3 = uav, 4 = pilot, 5 = ground_vehicle, 6 = ground_staff, 7 = other
-     */
-    sub_type: DBType_GeoObject_SubTypeType;
-    /**
-     * json
-     */
-    config: string;
+    type: type;
+    sub_type: sub_type;
+    config: DBType_Geo_Object_ConfigType<type, sub_type>;
     created_at: string;
     updated_at: string;
 }
 
 
+export type DBType_Geo_Object_TypeType = 0|1|2
+
+export const DBType_Geo_Object_Type_TYPES = {
+  marking: 0,
+  traffic: 1,
+  unit: 2
+} as const
+
+export type DBType_Geo_Object_SubTypeType<type extends DBType_Geo_Object_TypeType> =
+    type extends 0 ? (0|1|2|3) :
+    type extends 1 ? (0|1|2|3|4|5) :
+    type extends 2 ? (0|1|2|3|4|5|6) : unknown
+
+
+export const DBType_Geo_Object_SubType_TYPES = {
+  marking: {
+    point: 0,
+    line: 1,
+    polygon: 2,
+    circle: 3
+  },
+  traffic: {
+    airplane: 0,
+    helicopter: 1,
+    uav: 2,
+    gliding: 3,
+    other: 4
+  },
+  unit: {
+    airplane: 0,
+    helicopter: 1,
+    uav: 2,
+    pilot: 3,
+    ground_vehicle: 4,
+    ground_staff: 5,
+    other: 6
+  }
+} as const
+
+export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType, sub_type extends DBType_Geo_Object_SubTypeType<type>> = type extends 0 ? (
+    sub_type extends 0 ? {point: [number, number], color: string} :
+    sub_type extends 1 ? {line: [number, number][], color: string} :
+    sub_type extends 2 ? {polygon: [number, number][], color: string} :
+    sub_type extends 3 ? {center: [number, number], radius: number, color: string} : unknown
+) : type extends 1 ? (
+    {longitude: number, latitude: number, height: number, heading?: number, speed?: number}
+) : type extends 2 ? (
+    {longitude: number, latitude: number, symbol: string, height?: number, heading?: number, speed?: number}
+) : unknown

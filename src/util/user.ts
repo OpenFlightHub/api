@@ -1,9 +1,9 @@
 import { generateUniqueTokenUrlSafe, hashString } from './crypto'
-import {insertUser, selectUser, updateUser} from '../generated-definitions/db/DBHelpers'
+import {insert_User, select_User, update_User} from '../generated-definitions/db/DBHelpers'
 import { sendMailFromTemplate } from '../mail'
 import $t from './i18n'
 import * as pgp from 'pg-promise'
-import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_WorkspacePermission } from '../generated-definitions/db/DBTypes'
+import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_Workspace_Permission } from '../generated-definitions/db/DBTypes'
 import { ApiType_Id } from '../generated-definitions/api/ApiTypes'
 import { assignObject } from './typescript'
 const db : pgp.IDatabase<any> = global.db
@@ -24,7 +24,7 @@ export async function createUser(values: {
         email_hash: await hashString(values.email, global.emailHashPepper)
     })
 
-    const user = await insertUser(allValues)
+    const user = await insert_User(allValues)
 
     if(dontSendEmail !== true){
         await sendUserCreateEmail(user)
@@ -64,7 +64,7 @@ async function sendUserCreateEmail(user: DBType_User){
  */
 export async function resendUserCreateEmail(userId: number){
 
-    const user = await selectUser(userId)
+    const user = await select_User(userId)
 
     if(user.state === DBType_User_STATES.invited){
         await sendUserCreateEmail(user)
@@ -148,12 +148,12 @@ export async function getDecryptedUserEmail(user: DBType_User){
  */
 export async function getLoginToken(userId: ApiType_Id){
 
-    const user = await selectUser(userId)
+    const user = await select_User(userId)
 
     if(user.login_token){
         return user.login_token
     } else {
-        const updatedUser = await updateUser({
+        const updatedUser = await update_User({
             login_token: generateUrlSafeToken()
         }, userId)
 
@@ -168,7 +168,7 @@ export async function getLoginToken(userId: ApiType_Id){
  */
 export async function makePasswordResetCode(userId: ApiType_Id){
 
-    const updatedUser = await updateUser({
+    const updatedUser = await update_User({
         reset_code: generateUrlSafeToken()
     }, userId)
 
@@ -180,7 +180,7 @@ function generateUrlSafeToken(){
 }
 
 export async function userHasPermissionForWorkspace(userId: number, workspaceId: number){
-    const res = await db.oneOrNone<DBType_WorkspacePermission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
+    const res = await db.oneOrNone<DBType_Workspace_Permission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
         userId,
         workspaceId
     })

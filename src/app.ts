@@ -235,7 +235,7 @@ marks.setupMapMarks(subscribableEventHandlerMapElements)
 
 
 import { generateThumbnailForFile } from './util/file'
-import { selectFile } from './generated-definitions/db/DBHelpers'
+import { select_File } from './generated-definitions/db/DBHelpers'
 generateThumbnailForFile(1).catch(err => {
     console.error('failed to generate thumbnail for file 1', err)
 })
@@ -246,7 +246,7 @@ setInterval(async ()=>{
     const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
 
     for(const file of filesThatRequireThumbnails){
-        const upToDateFile = await selectFile(file.id)
+        const upToDateFile = await select_File(file.id)
         if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
             continue
         }

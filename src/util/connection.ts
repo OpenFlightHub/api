@@ -1,6 +1,6 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { insertConnection, selectConnection, selectDrone } from '../generated-definitions/db/DBHelpers'
+import { insert_Connection, select_Connection, select_Drone } from '../generated-definitions/db/DBHelpers'
 import { generateUniqueTokenUrlSafe } from '../util/crypto'
 import { DBType_Connection, DBType_Drone } from '../generated-definitions/db/DBTypes'
 import { createBucketForConnection } from '../s3-store'
@@ -8,7 +8,7 @@ import { createBucketForConnection } from '../s3-store'
 
 export async function createConnection(workspaceId: number, name: string){
 
-    const connection = await insertConnection({
+    const connection = await insert_Connection({
         secret: generateUniqueTokenUrlSafe(25),
         workspace_id: workspaceId,
         name,
@@ -22,12 +22,12 @@ export async function createConnection(workspaceId: number, name: string){
 
 
 export async function getActiveConnectionForDrone(droneId: number){
-    const drone = await selectDrone(droneId)
+    const drone = await select_Drone(droneId)
     if(typeof drone.last_connection_id !== 'number'){
         return false
     }
 
-    const connection = await selectConnection(drone.last_connection_id)
+    const connection = await select_Connection(drone.last_connection_id)
 
     if(!connection){
         return false
@@ -42,7 +42,7 @@ export async function getActiveConnectionForDrone(droneId: number){
 
 export async function getLastConnectionForDrone(droneOrDroneId: DBType_Drone | number){
     if(typeof droneOrDroneId === 'number'){
-        droneOrDroneId = await selectDrone(droneOrDroneId)
+        droneOrDroneId = await select_Drone(droneOrDroneId)
     }
 
     if(!droneOrDroneId){
@@ -75,7 +75,7 @@ export async function getDroneConnectionOnlineStatus(connectionId: number): Prom
     drone: boolean
 }> {
 
-    const connection = await selectConnection(connectionId)
+    const connection = await select_Connection(connectionId)
 
     const mqttIsConnected = isConnectionOnline(connectionId)
 

@@ -3,9 +3,9 @@ import * as pgp from 'pg-promise'
 import asyncHandler from 'express-async-handler'
 const db : pgp.IDatabase<any> = global.db
 
-import { selectFile } from '../generated-definitions/db/DBHelpers';
-import { ApiSchema_File, ApiSchema_FileGetMultiple, ApiSchema_FileGetMultiplePost } from '../generated-definitions/api/ApiSchemas';
-import { ApiType_File, ApiType_FileGetMultiple, ApiType_FileGetMultiplePost } from '../generated-definitions/api/ApiTypes';
+import { select_File } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_File, ApiSchema_File_Get_Multiple, ApiSchema_File_Get_Multiple_Post } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_File, ApiType_File_Get_Multiple, ApiType_File_Get_Multiple_Post } from '../generated-definitions/api/ApiTypes';
 import { getAbsoluteFilePathForFile, getAbsoluteThumbnailPathForFile } from '../util/file';
 import { GuardError } from '../ManInTheMiddleware';
 import { DBType_File } from '../generated-definitions/db/DBTypes';
@@ -19,7 +19,7 @@ router.get('/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return selectFile(fileId)
+        return select_File(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
@@ -31,7 +31,7 @@ router.post('/get-multiple', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserIsAuthenticated()
 
-    const fileIds = req.GM.guardBodySchema<ApiType_FileGetMultiplePost>(ApiSchema_FileGetMultiplePost)
+    const fileIds = req.GM.guardBodySchema<ApiType_File_Get_Multiple_Post>(ApiSchema_File_Get_Multiple_Post)
 
     const files = await req.GM.guardDBGone(()=>{
         return db.manyOrNone<DBType_File>('SELECT * FROM files WHERE ID in ${fileIds}', {fileIds})
@@ -41,7 +41,7 @@ router.post('/get-multiple', asyncHandler(async (req, res) => {
         await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
     }
 
-    res.GM.guardSend<ApiType_FileGetMultiple>(files, ApiSchema_FileGetMultiple)
+    res.GM.guardSend<ApiType_File_Get_Multiple>(files, ApiSchema_File_Get_Multiple)
 }))
 
 router.get('/data/:file_id', asyncHandler(async (req, res) => {
@@ -51,7 +51,7 @@ router.get('/data/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return selectFile(fileId)
+        return select_File(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
@@ -74,7 +74,7 @@ router.get('/thumbnail/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return selectFile(fileId)
+        return select_File(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)

@@ -1,9 +1,9 @@
 import { NextFunction, RequestHandler, Request, Response, Express } from 'express'
 import { validate, filterObject, FilterError } from './util/schema'
-import { DBType_User, DBType_Connection, DBType_WorkspacePermission } from './db/DBTypes'
+import { DBType_User, DBType_Connection, DBType_Workspace_Permission } from './generated-definitions/db/DBTypes'
 import * as pgp from 'pg-promise'
 import { JSONSchema4 } from './util/types/JSONSchema'
-import { DBType_User_STATES } from './db/DBTypes'
+import { DBType_User_STATES } from './generated-definitions/db/DBTypes'
 import { userHasPermissionForWorkspace } from './util/user'
 
 const db : pgp.IDatabase<any> = global.db

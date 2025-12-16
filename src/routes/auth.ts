@@ -6,12 +6,12 @@ const db : pgp.IDatabase<any> = global.db
 
 import * as crypto from './../util/crypto'
 import { DBType_User, DBType_User_STATES } from '../generated-definitions/db/DBTypes'
-import { ApiType_AuthLoginPost, ApiType_AuthLoginWithTokenPost, ApiType_AuthPasswordChangePost, ApiType_AuthPasswordResetPost, ApiType_AuthPasswordSetNewPost, ApiType_AuthPasswordSetInitialPost, ApiType_Reference } from './../generated-definitions/api/ApiTypes'
-import { ApiSchema_AuthLoginPost, ApiSchema_AuthLoginWithTokenPost, ApiSchema_AuthPasswordChangePost, ApiSchema_AuthPasswordResetPost, ApiSchema_AuthPasswordSetInitialPost, ApiSchema_AuthPasswordSetNewPost, ApiSchema_AuthStreamToken, ApiSchema_Reference } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_Auth_Login_Post, ApiType_Auth_Login_With_Token_Post, ApiType_Auth_Password_Change_Post, ApiType_Auth_Password_Reset_Post, ApiType_Auth_Password_Set_New_Post, ApiType_Auth_Password_Set_Initial_Post, ApiType_Reference } from './../generated-definitions/api/ApiTypes'
+import { ApiSchema_Auth_Login_Post, ApiSchema_Auth_Login_With_Token_Post, ApiSchema_Auth_Password_Change_Post, ApiSchema_Auth_Password_Reset_Post, ApiSchema_Auth_Password_Set_Initial_Post, ApiSchema_Auth_Password_Set_New_Post, ApiSchema_Auth_Stream_Token, ApiSchema_Reference } from '../generated-definitions/api/ApiSchemas';
 import { GuardError } from '../ManInTheMiddleware';
 import liveUpdate from './live'
 import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
-import { selectUser, updateUser } from '../generated-definitions/db/DBHelpers';
+import { select_User, update_User } from '../generated-definitions/db/DBHelpers';
 import { resetPasswordForEmail } from '../util/user';
 import { generateUserSessionCookieAndSet } from '../util/cookie'
 import { forceLogoutUser } from '../live-websocket/websocket';
@@ -40,7 +40,7 @@ function delay(callback: ()=>void){
 
 router.post('/login', asyncHandler(async (req, res) => {
 
-    const requestBody = req.GM.guardBodySchema<ApiType_AuthLoginPost>(ApiSchema_AuthLoginPost)
+    const requestBody = req.GM.guardBodySchema<ApiType_Auth_Login_Post>(ApiSchema_Auth_Login_Post)
 
     let user : DBType_User
 
@@ -98,7 +98,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
 router.post('/login-with-token', asyncHandler(async (req, res) => {
 
-    const requestBody = req.GM.guardBodySchema<ApiType_AuthLoginWithTokenPost>(ApiSchema_AuthLoginWithTokenPost)
+    const requestBody = req.GM.guardBodySchema<ApiType_Auth_Login_With_Token_Post>(ApiSchema_Auth_Login_With_Token_Post)
 
     try {
         const user = await db.one('SELECT * FROM users WHERE login_token = ${token};', {
@@ -166,7 +166,7 @@ router.post('/password-change', asyncHandler(async (req, res) => {
 
     const user = await req.GM.guardUserIsAuthenticated()
 
-    const body = req.GM.guardBodySchema<ApiType_AuthPasswordChangePost>(ApiSchema_AuthPasswordChangePost)
+    const body = req.GM.guardBodySchema<ApiType_Auth_Password_Change_Post>(ApiSchema_Auth_Password_Change_Post)
 
     if(!isSafePassword(body.current_password)){
         throw GuardError._400_invalidBody('current_password')
@@ -185,7 +185,7 @@ router.post('/password-change', asyncHandler(async (req, res) => {
         throw GuardError._400_BadRequest('Not allowed for this user')
     }
 
-    await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+    await update_User({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
 
     res.status(200)
     res.send()
@@ -193,7 +193,7 @@ router.post('/password-change', asyncHandler(async (req, res) => {
 
 router.post('/password-reset', asyncHandler(async (req, res) => {
 
-    const body = req.GM.guardBodySchema<ApiType_AuthPasswordResetPost>(ApiSchema_AuthPasswordResetPost)
+    const body = req.GM.guardBodySchema<ApiType_Auth_Password_Reset_Post>(ApiSchema_Auth_Password_Reset_Post)
 
     await resetPasswordForEmail(body.username)
 
@@ -205,13 +205,13 @@ router.post('/password-set-initial', asyncHandler(async (req, res) => {
 
     const user = await req.GM.guardUserIsAuthenticated()
 
-    const body = req.GM.guardBodySchema<ApiType_AuthPasswordSetInitialPost>(ApiSchema_AuthPasswordSetInitialPost)
+    const body = req.GM.guardBodySchema<ApiType_Auth_Password_Set_Initial_Post>(ApiSchema_Auth_Password_Set_Initial_Post)
 
     if(typeof user.password === 'string'){
         throw GuardError._403_Forbidden('initial password already set')
     }
 
-    await updateUser({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+    await update_User({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
 
     res.status(200)
     res.send()
@@ -220,7 +220,7 @@ router.post('/password-set-initial', asyncHandler(async (req, res) => {
 
 router.post('/password-set-new', asyncHandler(async (req, res) => {
 
-    const body = req.GM.guardBodySchema<ApiType_AuthPasswordSetNewPost>(ApiSchema_AuthPasswordSetNewPost)
+    const body = req.GM.guardBodySchema<ApiType_Auth_Password_Set_New_Post>(ApiSchema_Auth_Password_Set_New_Post)
 
     try {
         const user = await db.one('SELECT * FROM users WHERE reset_code = ${resetCode};', {
@@ -231,7 +231,7 @@ router.post('/password-set-new', asyncHandler(async (req, res) => {
             throw GuardError._400_invalidBody('new_password')
         }
 
-        await updateUser({password: await hashString(body.new_password), reset_code: null}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+        await update_User({password: await hashString(body.new_password), reset_code: null}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
 
         res.status(200)
         res.send()
@@ -301,14 +301,14 @@ router.get('/stream-token', asyncHandler(async (req, res) => {
 
         const urlSafeToken = crypto.generateUniqueTokenUrlSafe(STREAM_TOKEN_BYTE_LENGTH)
 
-        user = await updateUser({
+        user = await update_User({
             stream_token: urlSafeToken
         }, user.id)
     }
 
     res.status(200).GM.guardSend({
         token: user.stream_token
-    }, ApiSchema_AuthStreamToken)
+    }, ApiSchema_Auth_Stream_Token)
 
 }))
 
@@ -319,10 +319,10 @@ export default router
 
 async function confirmUser(userId: number){
     try {
-        const user = await selectUser(userId)
+        const user = await select_User(userId)
 
         if(user.state === DBType_User_STATES.invited){
-            await updateUser({state: DBType_User_STATES.live}, pgp.as.format('WHERE id = ${id} AND (state = ${stateInvited} OR state = ${stateLive})', {
+            await update_User({state: DBType_User_STATES.live}, pgp.as.format('WHERE id = ${id} AND (state = ${stateInvited} OR state = ${stateLive})', {
                 id: userId,
                 stateInvited: DBType_User_STATES.invited,
                 stateLive: DBType_User_STATES.live

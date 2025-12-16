@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { updateDroneMedia } from "../generated-definitions/db/DBHelpers";
-import { ApiType_MediaGroundCoverage } from "../generated-definitions/api/ApiTypes";
+import { update_Drone_Media } from "../generated-definitions/db/DBHelpers";
+import { ApiType_Media_Ground_Coverage } from "../generated-definitions/api/ApiTypes";
 import { getExifData } from "./exif";
 import { getExifDataForFile } from "./file";
-import { DBType_DroneMedia, DBType_DroneMedia_TYPES } from "../generated-definitions/db/DBTypes";
+import { DBType_Drone_Media, DBType_Drone_Media_TYPES } from "../generated-definitions/db/DBTypes";
 import { parseExifTimestamp } from './exif'
 
 
@@ -41,19 +41,19 @@ export type ImageMeta = {
 const LAST_UPDATE_OF_TERRAIN_MODEL = dayjs('2025-04-01T00:00:00Z')
 const LAST_UPDATE_OF_COVERAGE_ALGORITHM = dayjs('2025-10-15T10:12:00Z')
 
-export async function getMediaCoverage(media: DBType_DroneMedia){
+export async function getMediaCoverage(media: DBType_Drone_Media){
 
     const generatedAt = dayjs(media.coverage_generated_at)
 
     if(!media.coverage || media.coverage && (generatedAt.isBefore(LAST_UPDATE_OF_TERRAIN_MODEL) || generatedAt.isBefore(LAST_UPDATE_OF_COVERAGE_ALGORITHM))){
         return await fetchMediaCoverage(media)
     } else {
-        return JSON.parse(media.coverage) as ApiType_MediaGroundCoverage
+        return JSON.parse(media.coverage) as ApiType_Media_Ground_Coverage
     }
 }
 
 
-export async function fetchMediaCoverage(media: DBType_DroneMedia){
+export async function fetchMediaCoverage(media: DBType_Drone_Media){
 
     const meta = await getDroneMetaFromFile(media.file_id)
 
@@ -92,7 +92,7 @@ export async function fetchMediaCoverage(media: DBType_DroneMedia){
     const obj = JSON.parse(responseJson)
 
     try {
-        await updateDroneMedia({
+        await update_Drone_Media({
             coverage: responseJson,
             coverage_generated_at: new Date().toISOString()
         }, media.id)
@@ -100,7 +100,7 @@ export async function fetchMediaCoverage(media: DBType_DroneMedia){
         console.error('failed to update coverage of drone_media', err)
     }
 
-    return obj as ApiType_MediaGroundCoverage
+    return obj as ApiType_Media_Ground_Coverage
 }
 
 
@@ -209,7 +209,7 @@ function toDegrees(rad: number){
     return rad / (Math.PI/180)
 }
 
-export function parseCameraMetaOfMedia<M extends DBType_DroneMedia>(media: M){
+export function parseCameraMetaOfMedia<M extends DBType_Drone_Media>(media: M){
     return assignObject(media, {
         camera_angles: typeof media.camera_angles === 'string' ? JSON.parse(media.camera_angles) : undefined,
         camera_location: typeof media.camera_location === 'string' ? JSON.parse(media.camera_location) : undefined

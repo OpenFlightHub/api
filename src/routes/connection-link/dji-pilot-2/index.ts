@@ -1,8 +1,8 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_ConnectionLinkDjiPilot2SdkConfig } from '../../../generated-definitions/api/ApiTypes';
-import { ApiSchema_ConnectionLinkDjiPilot2SdkConfig } from '../../../generated-definitions/api/ApiSchemas';
+import { ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config } from '../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Connection_Link_Dji_Pilot_2_Sdk_Config } from '../../../generated-definitions/api/ApiSchemas';
 import { connectionLinkAuthMiddleware } from '..';
 import path from 'path';
 const db : pgp.IDatabase<any> = global.db
@@ -22,7 +22,7 @@ router.get('/sdk-config', connectionLinkAuthMiddleware, asyncHandler(async (req,
 
     const currentConnection = await req.GM.getCurrentConnection()
 
-    req.GM.guardSend<ApiType_ConnectionLinkDjiPilot2SdkConfig>({
+    req.GM.guardSend<ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config>({
         api_url: 'https://' + secrets.platform_url + '/api/connection-link/dji-pilot-2/api/',
         app_id: secrets.dji_cloud_app_id as string,
         app_key: secrets.dji_cloud_app_key as string,
@@ -30,7 +30,7 @@ router.get('/sdk-config', connectionLinkAuthMiddleware, asyncHandler(async (req,
         mqtt_url: 'tcp://' + secrets.platform_url + ':' + secrets.mqtt_port,
         rtmp_url: 'rtmp://' + secrets.rtmp_url + '/' + currentConnection.id + '?auth=' + currentConnection.secret,
         ws_url: 'wss://' + secrets.platform_url + '/api/connection-link/dji-pilot-2/ws'
-    }, ApiSchema_ConnectionLinkDjiPilot2SdkConfig)
+    }, ApiSchema_Connection_Link_Dji_Pilot_2_Sdk_Config)
 
 }))
 

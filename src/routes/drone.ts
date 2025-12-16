@@ -1,10 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectDrone } from '../generated-definitions/db/DBHelpers';
-import { ApiSchema_Drone, ApiSchema_DroneBattery, ApiSchema_DroneFlights, ApiSchema_DroneMedia, ApiSchema_DronePosition, ApiSchema_Flight } from '../generated-definitions/api/ApiSchemas';
-import { DBType_DroneMedia, DBType_Flight } from '../generated-definitions/db/DBTypes';
-import { ApiType_Drone, ApiType_DroneBattery, ApiType_DroneFlights, ApiType_DroneMedia, ApiType_DronePosition, ApiType_Flight } from '../generated-definitions/api/ApiTypes';
+import { select_Drone } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Drone, ApiSchema_Drone_Battery, ApiSchema_Drone_Flights, ApiSchema_Drone_Media, ApiSchema_Drone_Position, ApiSchema_Flight } from '../generated-definitions/api/ApiSchemas';
+import { DBType_Drone_Media, DBType_Flight } from '../generated-definitions/db/DBTypes';
+import { ApiType_Drone, ApiType_Drone_Battery, ApiType_Drone_Flights, ApiType_Drone_Media, ApiType_Drone_Position, ApiType_Flight } from '../generated-definitions/api/ApiTypes';
 import { getLastPositionOfDrone as getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
@@ -33,7 +33,7 @@ router.use('/:drone_id', asyncHandler(async(req, res, next) => {
     const droneId = req.GM.guardParam('drone_id', 'id')
 
     const drone = await req.GM.guardDBGone(()=>{
-        return selectDrone(droneId)
+        return select_Drone(droneId)
     })
 
     const connection = await getLastConnectionForDrone(drone)
@@ -74,7 +74,7 @@ router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
         return
     }
 
-    res.GM.guardSend<ApiType_DronePosition>(droneLastPosition, ApiSchema_DronePosition)
+    res.GM.guardSend<ApiType_Drone_Position>(droneLastPosition, ApiSchema_Drone_Position)
 }))
 
 
@@ -91,7 +91,7 @@ router.get('/:drone_id/last-battery', asyncHandler(async (req, res) => {
         return
     }
 
-    res.GM.guardSend<ApiType_DroneBattery>(droneLastBattery, ApiSchema_DroneBattery)
+    res.GM.guardSend<ApiType_Drone_Battery>(droneLastBattery, ApiSchema_Drone_Battery)
 }))
 
 
@@ -99,11 +99,11 @@ router.get('/:drone_id/media', asyncHandler(async (req, res) => {
 
     const droneId = req.GM.guardParam('drone_id', 'id')
 
-    const droneMedia = await db.manyOrNone<DBType_DroneMedia & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId}', {
+    const droneMedia = await db.manyOrNone<DBType_Drone_Media & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE drone_id = ${droneId}', {
         droneId
     })
 
-    res.GM.guardSend<ApiType_DroneMedia>(droneMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_DroneMedia)
+    res.GM.guardSend<ApiType_Drone_Media>(droneMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_Drone_Media)
 }))
 
 
@@ -123,7 +123,7 @@ router.get('/:drone_id/flights', asyncHandler(async (req, res) => {
         )
     }
 
-    res.GM.guardSend<ApiType_DroneFlights>(ret, ApiSchema_DroneFlights)
+    res.GM.guardSend<ApiType_Drone_Flights>(ret, ApiSchema_Drone_Flights)
 }))
 
 router.get('/:drone_id/current-flight', asyncHandler(async (req, res) => {

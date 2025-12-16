@@ -1,12 +1,12 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_DjiPilot2ApiManageDevicesTopologyResponse, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../generated-definitions/api/ApiTypes';
-import { ApiSchema_DjiPilot2ApiManageDevicesTopologyDevice, ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse } from '../../../../generated-definitions/api/ApiSchemas';
+import { ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Device, ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Response, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
-import { DBType_Connection, DBType_Drone_TYPES, DBType_RemoteController_TYPES } from '../../../../generated-definitions/db/DBTypes';
-import { selectDrone, selectRemoteController } from '../../../../generated-definitions/db/DBHelpers';
+import { DBType_Connection, DBType_Drone_TYPES, DBType_Remote_Controller_TYPES } from '../../../../generated-definitions/db/DBTypes';
+import { select_Drone, select_Remote_Controller } from '../../../../generated-definitions/db/DBHelpers';
 import { getDroneConnectionOnlineStatus } from '../../../../util/connection';
 import { getModelEnumForDroneType, getModelEnumForRemoteControllerType } from '../../../../connector/dji-pilot-2/util/product';
 import {makeUUIDFromId} from '../../../../util/uuid'
@@ -23,7 +23,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         workspaceId: connection.workspace_id
     })
 
-    const topology: ApiType_DjiPilot2ApiManageDevicesTopologyResponse['data']['list'] = []
+    const topology: ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response['data']['list'] = []
 
     for(const connection of connections){
 
@@ -35,7 +35,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         const connectionOnlineStatus = await getDroneConnectionOnlineStatus(connection.id)
 
         if(typeof connection.last_drone_id === 'number'){
-            const drone = await selectDrone(connection.last_drone_id)
+            const drone = await select_Drone(connection.last_drone_id)
 
             topologyEntry.hosts.push({
                 device_callsign: drone.name,//TODO where is this displayed? should we use connection.name?
@@ -48,7 +48,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         }
 
         if(typeof connection.remote_controller_id === 'number'){
-            const remoteController = await selectRemoteController(connection.remote_controller_id)
+            const remoteController = await select_Remote_Controller(connection.remote_controller_id)
 
             topologyEntry.parents.push({
                 device_callsign: '' + remoteController.id,
@@ -79,7 +79,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         }],
         parents: [{
             device_callsign: 'Parent Device Callsign',
-            device_model: getModelEnumForRemoteControllerType(DBType_RemoteController_TYPES.dji_rc_plus_2),
+            device_model: getModelEnumForRemoteControllerType(DBType_Remote_Controller_TYPES.dji_rc_plus_2),
             online_status: true,
             sn: 'SN#TEST-SIT-AWARE-PARENT',
             user_callsign: 'Parent User Callsign',
@@ -88,13 +88,13 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
     })
 
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiManageDevicesTopologyResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response>({
         code: 0,
         data: {
             list: topology
         },
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiManageDevicesTopologyResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Response)
 
 }))
 

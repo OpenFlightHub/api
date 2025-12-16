@@ -1,7 +1,7 @@
 import * as express from 'express'
 import {generateUniqueToken} from './crypto'
 import pgp from 'pg-promise'
-import { selectUser } from '../generated-definitions/db/DBHelpers'
+import { select_User } from '../generated-definitions/db/DBHelpers'
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -25,7 +25,7 @@ export async function generateUserSessionCookieAndSet(userId: number, res: expre
 
     let sessionToken: string
     if(allowReuseExistingSessionToken){
-        const currentToken = (await selectUser(userId)).session_token
+        const currentToken = (await select_User(userId)).session_token
 
         if(currentToken){
             sessionToken = currentToken

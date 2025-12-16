@@ -5,8 +5,8 @@ const db : pgp.IDatabase<any> = global.db
 
 const router = express.Router()
 
-import { ApiSchema_ConnectionLinkAuthLoginPost } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_ConnectionLinkAuthLoginPost } from '../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Connection_Link_Auth_Login_Post } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Connection_Link_Auth_Login_Post } from '../../generated-definitions/api/ApiTypes';
 import { generateConnectionSessionCookieAndSet as generateConnectionSessionCookieAndSet } from '../../util/cookie'
 import { DBType_Connection } from '../../generated-definitions/db/DBTypes';
 
@@ -25,7 +25,7 @@ router.get('/check', asyncHandler(async(req, res)=>{
 
 router.post('/login', asyncHandler(async(req, res)=>{
 
-    const body = req.GM.guardBodySchema<ApiType_ConnectionLinkAuthLoginPost>(ApiSchema_ConnectionLinkAuthLoginPost)
+    const body = req.GM.guardBodySchema<ApiType_Connection_Link_Auth_Login_Post>(ApiSchema_Connection_Link_Auth_Login_Post)
 
 
     try {

@@ -21,17 +21,17 @@ export function connectionLinkAuthMiddleware(req: Request, res: Response, next: 
 }
 
 import authRoute from './auth'
-import { selectWorkspace, updateConnection, updateWorkspace } from '../../db/DBHelpers';
-import { ApiSchema_ConnectionLinkConfig } from '../../definitions/ApiSchemas';
-import { ApiType_ConnectionLinkConfig } from '../../definitions/ApiTypes';
+import { select_Workspace, update_Connection, update_Workspace } from '../../generated-definitions/db/DBHelpers';
+import { ApiSchema_Connection_Link_Config } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Connection_Link_Config } from '../../generated-definitions/api//ApiTypes';
 
 router.use('/auth', authRoute)
 
 router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)=>{
 
-    const workspace = await selectWorkspace(req.GM.currentConnection.workspace_id)
+    const workspace = await select_Workspace(req.GM.currentConnection.workspace_id)
 
-    res.GM.guardSend<ApiType_ConnectionLinkConfig>({
+    res.GM.guardSend<ApiType_Connection_Link_Config>({
         connection_id: '' + req.GM.currentConnection.id,
         platform_name: secrets.platform_name,
         platform_url: secrets.platform_url,
@@ -39,7 +39,7 @@ router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)
         workspace_uuid: req.GM.currentConnection.workspace_uuid,
         workspace_name: workspace.name,
         secret: req.GM.currentConnection.secret
-    }, ApiSchema_ConnectionLinkConfig)
+    }, ApiSchema_Connection_Link_Config)
 
 }))
 
@@ -48,7 +48,7 @@ router.post('/reset-workspace-uuid', connectionLinkAuthMiddleware, asyncHandler(
 
     // fixes dji remote controller caching some data for workspace uuids (e.g. uploaded images). If e.g. the image was deleted in the db, this can brick the upload process
 
-    await updateConnection({
+    await update_Connection({
         workspace_uuid: getRandomUUIDFromWorkspaceId(req.GM.currentConnection.workspace_id)
     }, req.GM.currentConnection.id)
 

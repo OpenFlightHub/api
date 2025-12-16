@@ -1,8 +1,8 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_DjiPilot2ApiMediaStsPostResponse } from '../../../../generated-definitions/api/ApiTypes';
-import { ApiSchema_DjiPilot2ApiMediaStsPostResponse } from '../../../../generated-definitions/api/ApiSchemas';
+import { ApiType_Dji_Pilot_2_Api_Media_Sts_Post_Response } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Dji_Pilot_2_Api_Media_Sts_Post_Response } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
 import {createTemporaryCredentialsForFileUpload, getBucketNameForConnectionId} from '../../../../s3-store'
@@ -20,7 +20,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
 
     const credentials = await createTemporaryCredentialsForFileUpload(connection.id)
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiMediaStsPostResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Media_Sts_Post_Response>({
         code: 0,
         data: {
             bucket: getBucketNameForConnectionId(connection.id),
@@ -36,7 +36,7 @@ router.post('/sts', asyncHandler(async (req, res) => {
             }
         },
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiMediaStsPostResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Media_Sts_Post_Response)
 
 }))
 

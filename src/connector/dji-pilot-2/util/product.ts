@@ -1,6 +1,6 @@
 // see https://developer.dji.com/doc/cloud-api-tutorial/en/overview/product-support.html
 
-import { DBType_Drone_TYPES, DBType_Drone_TypeType, DBType_RemoteController_TYPES, DBType_RemoteController_TypeType } from "../../../db/DBTypes"
+import { DBType_Drone_TYPES, DBType_Drone_TypeType, DBType_Remote_Controller_TYPES, DBType_Remote_Controller_TypeType } from "../../../generated-definitions/db/DBTypes"
 
 /**
  * if domain is camera, then use getCameraType() to identify the camera
@@ -825,23 +825,23 @@ export function getModelEnumForDroneType(droneType: DBType_Drone_TypeType): Devi
 
 
 
-const DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS = new Map<DBType_RemoteController_TypeType, DeviceModelEnum>()
+const DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS = new Map<DBType_Remote_Controller_TypeType, DeviceModelEnum>()
 
-DEVICE_MODEL_ENUMS_DRONES.set(DBType_RemoteController_TYPES.dji_smart_controller, {
+DEVICE_MODEL_ENUMS_DRONES.set(DBType_Remote_Controller_TYPES.dji_smart_controller, {
     domain: '2',
     key: '00-56-0',
     type: '56',
     sub_type: '0'
 })
 
-DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_plus, {
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_Remote_Controller_TYPES.dji_rc_plus, {
     domain: '2',
     key: '00-119-0',
     type: '119',
     sub_type: '0'
 })
 
-DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_plus_2, {
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_Remote_Controller_TYPES.dji_rc_plus_2, {
     domain: '2',
     key: '00-174-0',
     type: '174',
@@ -849,14 +849,14 @@ DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_p
 })
 
 
-DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_RemoteController_TYPES.dji_rc_pro_enterprise, {
+DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.set(DBType_Remote_Controller_TYPES.dji_rc_pro_enterprise, {
     domain: '2',
     key: '00-144-0',
     type: '144',
     sub_type: '0'
 })
 
-export function getModelEnumForRemoteControllerType(remoteControllerType: DBType_RemoteController_TypeType): DeviceModelEnum {
+export function getModelEnumForRemoteControllerType(remoteControllerType: DBType_Remote_Controller_TypeType): DeviceModelEnum {
     const modelEnum = DEVICE_MODEL_ENUMS_REMOTE_CONTROLLERS.get(remoteControllerType)
 
     if(!modelEnum){

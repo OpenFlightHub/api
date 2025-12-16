@@ -6,8 +6,8 @@ import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber, setDroneInFligh
 import {addRemoteControllerData, getRemoteControllerForSerialNumber, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
-import { DBType_Connection, DBType_Drone_TYPES, DBType_FlightData_TYPES, DBType_RemoteController_TYPES } from "../../db/DBTypes";
-import { deleteFlight, insertDrone, insertFlight, insertFlightData, insertRemoteController, selectConnection, updateConnection, updateDrone, updateFlight } from "../../db/DBHelpers";
+import { DBType_Connection, DBType_Drone_TYPES, DBType_Flight_Data_TYPES, DBType_Remote_Controller_TYPES } from "../../generated-definitions/db/DBTypes";
+import { delete_Flight, insert_Drone, insert_Flight, insert_Flight_Data, insert_Remote_Controller, select_Connection, select_Remote_Controller, update_Connection, update_Drone, update_Flight } from "../../generated-definitions/db/DBHelpers";
 import {getProductType} from './util/product'
 import { getConnectionForRemoteController } from "../../util/connection";
 import type { sendToConnection } from "../../routes/connection-link/dji-pilot-2/ws";
@@ -34,7 +34,7 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
                 console.warn('thing_version of mqtt message update_topo was not 1.2.0 or 1: ', message)
             }
 
-            const connection = await selectConnection(connectionId)
+            const connection = await select_Connection(connectionId)
 
             await updateProductForConnection(connection, productSerialNumber, message.data.domain, message.data.type, message.data.sub_type)
 
@@ -75,7 +75,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
 
                     console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
 
-                    await updateConnection({
+                    await update_Connection({
                         remote_controller_id: null
                     }, oldConnection.id)
 
@@ -85,17 +85,17 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                 }
 
             } else {
-                remoteController = await insertRemoteController({
-                    type: productType.type === 'rc_plus' ? DBType_RemoteController_TYPES.dji_rc_plus
-                        : productType.type === 'rc_plus_2' ? DBType_RemoteController_TYPES.dji_rc_plus_2
-                        : productType.type === 'rc_pro_enterprise' ? DBType_RemoteController_TYPES.dji_rc_pro_enterprise
-                        : productType.type === 'smart_controller_enterprise' ? DBType_RemoteController_TYPES.dji_smart_controller
-                        : DBType_RemoteController_TYPES.unknown,
+                remoteController = await insert_Remote_Controller({
+                    type: productType.type === 'rc_plus' ? DBType_Remote_Controller_TYPES.dji_rc_plus
+                        : productType.type === 'rc_plus_2' ? DBType_Remote_Controller_TYPES.dji_rc_plus_2
+                        : productType.type === 'rc_pro_enterprise' ? DBType_Remote_Controller_TYPES.dji_rc_pro_enterprise
+                        : productType.type === 'smart_controller_enterprise' ? DBType_Remote_Controller_TYPES.dji_smart_controller
+                        : DBType_Remote_Controller_TYPES.unknown,
                     serial_number: serialNumber
                 })
             }
 
-            await updateConnection({
+            await update_Connection({
                 remote_controller_id: remoteController.id
             }, connection.id)
 
@@ -111,14 +111,14 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                 console.warn('transferring drone connection from', drone.last_connection_id, 'to', connection.id)
                 drone.last_connection_id = connection.id
 
-                await updateDrone({
+                await update_Drone({
                     last_connection_id: connection.id
                 }, drone.id)
             }
         } else {
 
             try {
-                drone = await insertDrone({
+                drone = await insert_Drone({
                     type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
                         : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
                         : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
@@ -129,11 +129,11 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                     last_connection_id: connection.id
                 })
 
-                const flight = await insertFlight({
+                const flight = await insert_Flight({
                     drone_id: drone.id
                 })
 
-                drone = await updateDrone({
+                drone = await update_Drone({
                     current_flight_id: flight.id
                 }, drone.id)
 
@@ -147,7 +147,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
         if(connection.last_drone_id !== drone.id){
             console.warn('replacing connection drone', connection.last_drone_id, 'with', drone.id)
 
-            await updateConnection({
+            await update_Connection({
                 last_drone_id: drone.id
             }, connection.id)
 
@@ -165,7 +165,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
     const _m = message as {data: {longitude?: number, latitude?: number, height?: number, elevation?: number}}
 
-    const connection = await selectConnection(connectionId)
+    const connection = await select_Connection(connectionId)
 
 
     if(typeof message.gateway !== 'string'){
@@ -218,7 +218,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
                     setDroneInFlightState(drone, _m.data.elevation !== 0).then(drone=>{
 
-                        insertFlightData({
+                        insert_Flight_Data({
                             created_at: new Date(message.timestamp).toISOString(),
                             data: JSON.stringify({
                                 longitude: messageData.longitude,
@@ -226,7 +226,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
                                 height: messageData.height
                             }),
                             flight_id: drone.current_flight_id,
-                            type: DBType_FlightData_TYPES.position
+                            type: DBType_Flight_Data_TYPES.position
                         }).catch(err => {
                             console.error('failed to insert flight data', err)
                         })

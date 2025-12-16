@@ -2,12 +2,12 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import {getMillisecondsSinceUnix} from '../../../../util/time'
-import { ApiType_DjiPilot2ApiMapElementGroupsElementsPost, ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiType_DjiPilot2ApiMapElementGroupsGetResponse, ApiType_DjiPilot2ApiMapElementsDeleteResponse, ApiType_DjiPilot2ApiMapElementsPut, ApiType_DjiPilot2ApiMapElementsPutResponse } from '../../../../generated-definitions/api/ApiTypes';
-import { ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse, ApiSchema_DjiPilot2ApiMapElementsPut, ApiSchema_DjiPilot2ApiMapElementsPutResponse } from '../../../../generated-definitions/api/ApiSchemas';
+import { ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response, ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response, ApiType_Dji_Pilot_2_Api_Map_Elements_Put, ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Delete_Response, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put_Response } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
 import { DBType_WorkspaceMapElement, DBType_WorkspaceMapElement_TYPES, DBType_WorkspaceMapElement_TypeType } from '../../../../generated-definitions/db/DBTypes';
-import { deleteWorkspaceMapElement, insertWorkspaceMapElement, updateWorkspaceMapElement } from '../../../../generated-definitions/db/DBHelpers';
+import { deleteWorkspaceMapElement, insertWorkspaceMapElement, update_WorkspaceMapElement } from '../../../../generated-definitions/db/DBHelpers';
 import { GuardError } from '../../../../ManInTheMiddleware';
 import dayjs from 'dayjs';
 
@@ -18,7 +18,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
 
     const connection = await req.GM.getCurrentConnection()
 
-    const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMapElementGroupsElementsPost>(ApiSchema_DjiPilot2ApiMapElementGroupsElementsPost)
+    const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post>(ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post)
 
     const mapElement = await insertWorkspaceMapElement({
         uuid: body.id,
@@ -28,13 +28,13 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
         content: JSON.stringify(body.resource.content)
     })
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response>({
         code: 0,
         data: {
             id: mapElement.uuid
         },
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiMapElementGroupsElementsPostResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response)
 
 }))
 
@@ -47,7 +47,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
         workspace_id: connection.workspace_id
     })
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementGroupsGetResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response>({
         code: 0,
         data: [
             {
@@ -68,7 +68,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
                         return false
                     }
 
-                    const ret: ApiType_DjiPilot2ApiMapElementGroupsGetResponse['data'][0]['elements'][0] = {
+                    const ret: ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response['data'][0]['elements'][0] = {
                         id: element.uuid,
                         name: element.name,
                         create_time: getMillisecondsSinceUnix(element.created_at),
@@ -86,7 +86,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
             }
         ],
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiMapElementGroupsGetResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response)
 
 }))
 
@@ -102,23 +102,23 @@ router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     await req.GM.guardConnectionHasPermissionForWorkspace(existingElement.workspace_id)
 
-    const body = req.GM.guardBodySchema<ApiType_DjiPilot2ApiMapElementsPut>(ApiSchema_DjiPilot2ApiMapElementsPut)
+    const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Elements_Put>(ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put)
 
     await req.GM.guardDBGone(()=>{
-        return updateWorkspaceMapElement({
+        return update_WorkspaceMapElement({
             updated_at: dayjs().toISOString(),
             name: body.name,
             content: JSON.stringify(body.content)
         }, pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
     })
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementsPutResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response>({
         code: 0,
         data: {
             id: elementUUID
         },
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiMapElementsPutResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put_Response)
 
 }))
 
@@ -137,13 +137,13 @@ router.delete('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     await deleteWorkspaceMapElement(existingElement.id)
 
-    res.GM.guardSend<ApiType_DjiPilot2ApiMapElementsDeleteResponse>({
+    res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response>({
         code: 0,
         data: {
             id: existingElement.uuid
         },
         message: 'success'
-    }, ApiSchema_DjiPilot2ApiMapElementsDeleteResponse)
+    }, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Delete_Response)
 
 }))
 

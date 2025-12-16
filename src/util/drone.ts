@@ -1,19 +1,19 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { insertDroneData, insertFlight, selectDrone, selectFile, selectFlight, updateDrone, updateFlight } from '../generated-definitions/db/DBHelpers'
-import { DBType_Drone, DBType_DroneData, DBType_DroneData_TypeType } from '../generated-definitions/db/DBTypes'
+import { insert_Drone_Data, insert_Flight, select_Drone, select_File, select_Flight, update_Drone, update_Flight } from '../generated-definitions/db/DBHelpers'
+import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TypeType } from '../generated-definitions/db/DBTypes'
 
 export const DRONE_DATA_TYPES = {
-    POSITION: 0 as DBType_DroneData_TypeType,
-    TELEMETRY: 1 as DBType_DroneData_TypeType
+    POSITION: 0 as DBType_Drone_Data_TypeType,
+    TELEMETRY: 1 as DBType_Drone_Data_TypeType
 }
 
 
-export async function addDroneData(droneId: number, type: DBType_DroneData_TypeType, data: any){
+export async function addDroneData(droneId: number, type: DBType_Drone_Data_TypeType, data: any){
 
-    const drone = await selectDrone(droneId)
+    const drone = await select_Drone(droneId)
 
-    await insertDroneData({
+    await insert_Drone_Data({
         drone_id: droneId,
         flight_id: drone.current_flight_id,
         type,
@@ -22,7 +22,7 @@ export async function addDroneData(droneId: number, type: DBType_DroneData_TypeT
 }
 
 export async function getLastPositionOfDrone(droneId: number){
-    const droneLastPosition = await db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {
+    const droneLastPosition = await db.one<DBType_Drone_Data>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {
         type: DRONE_DATA_TYPES.POSITION,
         droneId
     })
@@ -31,7 +31,7 @@ export async function getLastPositionOfDrone(droneId: number){
 }
 
 
-export function extractPositionFromDroneData(droneData: DBType_DroneData){
+export function extractPositionFromDroneData(droneData: DBType_Drone_Data){
 
     if(typeof droneData.data.latitude !== 'number' || typeof droneData.data.longitude !== 'number' || typeof droneData.data.height !== 'number'){
         return false
@@ -47,7 +47,7 @@ export function extractPositionFromDroneData(droneData: DBType_DroneData){
 
 
 export async function getLastTelemetryOfDrone(droneId: number){
-    const droneLastTelemetry = await db.one<DBType_DroneData>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains the required telemetry
+    const droneLastTelemetry = await db.one<DBType_Drone_Data>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains the required telemetry
         type: DRONE_DATA_TYPES.TELEMETRY,
         droneId
     })
@@ -56,7 +56,7 @@ export async function getLastTelemetryOfDrone(droneId: number){
 }
 
 
-export function extractTelemetryFromDroneData(droneData: DBType_DroneData){
+export function extractTelemetryFromDroneData(droneData: DBType_Drone_Data){
 
     if(typeof droneData.data.capacity_percent_left !== 'number'){
         return false
@@ -83,18 +83,18 @@ export async function setDroneInFlightState(drone: DBType_Drone, isInFlight: boo
     if(isInFlight && !drone.in_flight){
         // start new flight and end old one
 
-        const currentFlight = await selectFlight(drone.current_flight_id)
+        const currentFlight = await select_Flight(drone.current_flight_id)
 
-        await updateFlight({
+        await update_Flight({
             ended_at: new Date().toISOString(),
             landed_at: currentFlight.landed_at || new Date().toISOString()
         }, drone.current_flight_id)
 
-        const newFlight = await insertFlight({
+        const newFlight = await insert_Flight({
             drone_id: drone.id
         })
 
-        drone = await updateDrone({
+        drone = await update_Drone({
             current_flight_id: newFlight.id,
             in_flight: true
         }, drone.id)
@@ -103,11 +103,11 @@ export async function setDroneInFlightState(drone: DBType_Drone, isInFlight: boo
     if(!isInFlight && drone.in_flight){
         // mark flight as landed
 
-        await updateFlight({
+        await update_Flight({
             landed_at: new Date().toISOString()
         }, drone.current_flight_id)
 
-        drone = await updateDrone({
+        drone = await update_Drone({
             in_flight: false
         }, drone.id)
 

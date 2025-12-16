@@ -1,5 +1,5 @@
-import { deleteDroneMedia, insertDroneMedia } from '../generated-definitions/db/DBHelpers'
-import { DBType_DroneMedia_TYPES } from '../generated-definitions/db/DBTypes'
+import { delete_Drone_Media, insert_Drone_Media } from '../generated-definitions/db/DBHelpers'
+import { DBType_Drone_Media_TYPES } from '../generated-definitions/db/DBTypes'
 import FakeDrone from './FakeDrone'
 
 export default class FakeMedia {
@@ -15,13 +15,13 @@ export default class FakeMedia {
             const currentHeight = this.drone.getTrack().getCurrentHeight()
             const currentHeading = this.drone.getTrack().getCurrentHeading()
 
-            const media = await insertDroneMedia({
+            const media = await insert_Drone_Media({
                 drone_id: this.drone.getId(),
                 flight_id: await this.drone.getFlightId(),
                 file_id: 1,
                 fingerprint: 'fake',
                 tiny_fingerprint: 'fake',
-                type: DBType_DroneMedia_TYPES.picture,
+                type: DBType_Drone_Media_TYPES.picture,
                 camera_location: JSON.stringify({
                     position: {
                         longitude: currentPosition.longitude,
@@ -40,7 +40,7 @@ export default class FakeMedia {
             setTimeout(()=>{
                 //delete after 10 minutes
 
-                deleteDroneMedia(media.id)
+                delete_Drone_Media(media.id)
 
             }, 1000 * 60 * 10)
 

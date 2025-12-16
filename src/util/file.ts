@@ -1,7 +1,7 @@
 import safeJsonStringify from 'safe-json-stringify'
 import fs from 'fs'
 import path from 'path'
-import {deleteFile, insertFile, selectFile, updateFile} from '../db/DBHelpers'
+import {delete_File, insert_File, select_File, update_File} from '../generated-definitions/db/DBHelpers'
 
 import SecretsLoader from './SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
@@ -17,7 +17,7 @@ if(fs.existsSync(thumbnailsFolderPath) === false){
 }
 
 export async function getAbsoluteFilePathForFileId(fileId: number){
-    const file = await selectFile(fileId)
+    const file = await select_File(fileId)
 
     return getAbsoluteFilePathForFile(file)
 }
@@ -36,7 +36,7 @@ export function getAbsoluteThumbnailPathForFile(file: DBType_File){
 
 import multer from 'multer'
 import { MulterFile } from '../app'
-import { DBType_File } from '../db/DBTypes'
+import { DBType_File } from '../generated-definitions/db/DBTypes'
 const multerMiddleware = multer({
     dest: path.resolve('tmp_files_multer')
 })
@@ -54,7 +54,7 @@ export function getFileExtension(fileName: string){
 
 export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, workspaceId: number, createdBy: number){
 
-    const file = await insertFile({
+    const file = await insert_File({
         name: multerFile.originalname,
         ext: getFileExtension(multerFile.originalname),
         created_by: createdBy,
@@ -76,13 +76,13 @@ export async function storeTmpMulterFileInDatabase(multerFile: MulterFile, works
 
 export async function deleteFileFromDatabaseAndFilesystem(file: DBType_File){
     await fs.promises.rm(getAbsoluteFilePathForFile(file))
-    await deleteFile(file.id)
+    await delete_File(file.id)
     await deleteThumbnailIfExists(file.id)
 }
 
 export async function deleteFileIdFromDatabaseAndFilesystem(fileId: number){
     await fs.promises.rm(await getAbsoluteFilePathForFileId(fileId))
-    await deleteFile(fileId)
+    await delete_File(fileId)
     await deleteThumbnailIfExists(fileId)
 }
 
@@ -114,7 +114,7 @@ export async function generateThumbnailForFile(fileId: number){
         })
     } catch (err){
         try {
-            await updateFile({
+            await update_File({
                 thumbnail_generation_has_failed: true
             }, fileId)
         } catch (err){
@@ -130,7 +130,7 @@ export async function generateThumbnailForFile(fileId: number){
     writeStream.write(thumbnailBuffer)
     writeStream.close()
 
-    await updateFile({
+    await update_File({
         has_thumbnail: true
     }, fileId)
 
@@ -145,6 +145,7 @@ export async function generateExifDataForFile(fileId: number){
 
     const buf = await readFile(filePath)
 
+    //@ts-ignore
     const exifData = await getExifData(buf)
 
     try {
@@ -169,13 +170,13 @@ export async function generateExifDataForFile(fileId: number){
 
         const len = cleanJson.length
 
-        await updateFile({
+        await update_File({
             exif_data: cleanJson
         }, fileId)
     } catch (err){
 
         try {
-            await updateFile({
+            await update_File({
                 exif_data_generation_has_failed: true
             }, fileId)
         } catch (err){
@@ -189,7 +190,7 @@ export async function generateExifDataForFile(fileId: number){
 }
 
 export async function getExifDataForFile(fileId: number){
-    const file = await selectFile(fileId)
+    const file = await select_File(fileId)
 
     if(file.exif_data){
         return JSON.parse(file.exif_data) as Tags

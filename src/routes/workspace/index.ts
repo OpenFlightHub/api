@@ -1,9 +1,9 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { deleteWorkspace, insertWorkspace, selectWorkspace, updateWorkspace } from '../../generated-definitions/db/DBHelpers';
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_WorkspaceConnections, ApiSchema_WorkspaceConnectionsPost, ApiSchema_WorkspaceConnectionsPostResponse, ApiSchema_WorkspaceFiles, ApiSchema_WorkspacePatch, ApiSchema_WorkspacesPost } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_WorkspaceConnections, ApiType_WorkspaceConnectionsPost, ApiType_WorkspaceConnectionsPostResponse, ApiType_WorkspaceFiles, ApiType_WorkspacePatch, ApiType_WorkspacesPost } from '../../generated-definitions/api/ApiTypes';
+import { delete_Workspace, insert_Workspace, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Connections_Post, ApiSchema_Workspace_Connections_Post_Response, ApiSchema_Workspace_Files, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Connections_Post, ApiType_Workspace_Connections_Post_Response, ApiType_Workspace_Files, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace } from '../../generated-definitions/db/DBTypes';
 import { createConnection } from '../../util/connection';
 import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../../util/file';
@@ -41,9 +41,9 @@ router.get('/my-workspaces', asyncHandler(async (req, res) => {
 
 router.post('/', asyncHandler(async (req, res) => {
 
-    const requestBody = req.GM.guardBodySchema<ApiType_WorkspacesPost>(ApiSchema_WorkspacesPost)
+    const requestBody = req.GM.guardBodySchema<ApiType_Workspaces_Post>(ApiSchema_Workspaces_Post)
 
-    const workspace = await insertWorkspace(requestBody)
+    const workspace = await insert_Workspace(requestBody)
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
@@ -56,7 +56,7 @@ router.get('/:workspace_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
     const workspace = await req.GM.guardDBGone<DBType_Workspace>(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Workspace)
@@ -69,10 +69,10 @@ router.patch('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    const requestBody = req.GM.guardBodySchema<ApiType_WorkspacePatch>(ApiSchema_WorkspacePatch)
+    const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Patch>(ApiSchema_Workspace_Patch)
 
     const updatedWorkspace = await req.GM.guardDBGone(()=>{
-        return updateWorkspace(requestBody, workspaceId)
+        return updatedWorkspace(requestBody, workspaceId)
     })
 
     res.GM.guardSend<ApiType_Workspace>(updatedWorkspace, ApiSchema_Workspace)
@@ -84,7 +84,7 @@ router.delete('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    await deleteWorkspace(workspaceId)
+    await delete_Workspace(workspaceId)
 
     res.status(200).send()
 }))
@@ -97,7 +97,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -109,7 +109,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
     //@ts-ignore
     connections.forEach(c => c.drone_id = c.last_drone_id)// fix for api description
 
-    req.GM.guardSend<ApiType_WorkspaceConnections>(connections, ApiSchema_WorkspaceConnections)
+    req.GM.guardSend<ApiType_Workspace_Connections>(connections, ApiSchema_Workspace_Connections)
 
 }))
 
@@ -118,19 +118,19 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    const requestBody = req.GM.guardBodySchema<ApiType_WorkspaceConnectionsPost>(ApiSchema_WorkspaceConnectionsPost)
+    const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Connections_Post>(ApiSchema_Workspace_Connections_Post)
 
     const connection = await createConnection(workspaceId, requestBody.name)
 
-    res.GM.guardSend<ApiType_WorkspaceConnectionsPostResponse>({
+    res.GM.guardSend<ApiType_Workspace_Connections_Post_Response>({
         connection_id: '' + connection.id,
         secret: connection.secret
-    }, ApiSchema_WorkspaceConnectionsPostResponse)
+    }, ApiSchema_Workspace_Connections_Post_Response)
 
 }))
 
@@ -141,7 +141,7 @@ router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -150,7 +150,7 @@ router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
         workspaceId
     })
 
-    res.GM.guardSend<ApiType_WorkspaceFiles>(files, ApiSchema_WorkspaceFiles)
+    res.GM.guardSend<ApiType_Workspace_Files>(files, ApiSchema_Workspace_Files)
 
 }))
 
@@ -159,7 +159,7 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -184,7 +184,7 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -212,7 +212,7 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -237,7 +237,7 @@ router.use('/:workspace_id/map-elements', (req, res, next) => {//TODO if this ch
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     req.GM.guardDBGone(()=>{
-        return selectWorkspace(workspaceId)
+        return select_Workspace(workspaceId)
     }).then(()=>{
         req.GM.guardUserHasPermissionForWorkspace(workspaceId).then(()=>{
             //@ts-ignore

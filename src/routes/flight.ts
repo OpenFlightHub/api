@@ -1,14 +1,14 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { selectFlight } from '../generated-definitions/db/DBHelpers';
-import { ApiSchema_Flight, ApiSchema_FlightMedia } from '../generated-definitions/api/ApiSchemas';
-import { ApiType_Flight, ApiType_FlightMedia } from '../generated-definitions/api/ApiTypes';
+import { select_Flight } from '../generated-definitions/db/DBHelpers';
+import { ApiSchema_Flight, ApiSchema_Flight_Media } from '../generated-definitions/api/ApiSchemas';
+import { ApiType_Flight, ApiType_Flight_Media } from '../generated-definitions/api/ApiTypes';
 import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import {getTrackForFlight} from '../util/flight'
-import { DBType_DroneMedia } from '../generated-definitions/db/DBTypes';
+import { DBType_Drone_Media } from '../generated-definitions/db/DBTypes';
 import { parseCameraMetaOfMedia } from '../util/media';
 const db : pgp.IDatabase<any> = global.db
 
@@ -32,7 +32,7 @@ router.use('/:flight_id', asyncHandler(async(req, res, next) => {
     const flightId = req.GM.guardParam('flight_id', 'id')
 
     const flight = await req.GM.guardDBGone(()=>{
-        return selectFlight(flightId)
+        return select_Flight(flightId)
     })
 
     const connection = await getLastConnectionForDrone(flight.drone_id)
@@ -64,11 +64,11 @@ router.get('/:flight_id/media', asyncHandler(async (req, res) => {
 
     const flightId = req.GM.guardParam('flight_id', 'id')
 
-    const flightMedia = await db.manyOrNone<DBType_DroneMedia & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE flight_id = ${flightId}', {
+    const flightMedia = await db.manyOrNone<DBType_Drone_Media & {file_name: string}>('SELECT drone_media.*, files.name as file_name FROM drone_media INNER JOIN files ON drone_media.file_id = files.id WHERE flight_id = ${flightId}', {
         flightId
     })
 
-    res.GM.guardSend<ApiType_FlightMedia>(flightMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_FlightMedia)
+    res.GM.guardSend<ApiType_Flight_Media>(flightMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_Flight_Media)
 }))
 
 

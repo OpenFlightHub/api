@@ -36,13 +36,13 @@ export type ApiType_Reference = {
 }
 
 
-export type ApiType_AuthLoginPost = {
+export type ApiType_Auth_Login_Post = {
     username: string;
     password: string;
 }
 
 
-export type ApiType_AuthLoginWithTokenPost = {
+export type ApiType_Auth_Login_With_Token_Post = {
     token: string;
 }
 
@@ -50,7 +50,7 @@ export type ApiType_AuthLoginWithTokenPost = {
 /**
  * @deprecated
  */
-export interface ApiType_AuthRegisterPost {
+export interface ApiType_Auth_Register_Post {
     email: string;
     /**
      * Maximum length is 72 Bytes (utf-8).
@@ -59,7 +59,7 @@ export interface ApiType_AuthRegisterPost {
 }
 
 
-export type ApiType_AuthPasswordChangePost = {
+export type ApiType_Auth_Password_Change_Post = {
     /**
      * Maximum length is 72 Bytes (utf-8).
      */
@@ -71,12 +71,12 @@ export type ApiType_AuthPasswordChangePost = {
 }
 
 
-export type ApiType_AuthPasswordResetPost = {
+export type ApiType_Auth_Password_Reset_Post = {
     username: string;
 }
 
 
-export type ApiType_AuthPasswordSetInitialPost = {
+export type ApiType_Auth_Password_Set_Initial_Post = {
     /**
      * Maximum length is 72 Bytes (utf-8).
      */
@@ -84,7 +84,7 @@ export type ApiType_AuthPasswordSetInitialPost = {
 }
 
 
-export type ApiType_AuthPasswordSetNewPost = {
+export type ApiType_Auth_Password_Set_New_Post = {
     /**
      * Maximum length is 72 Bytes (utf-8).
      */
@@ -93,7 +93,7 @@ export type ApiType_AuthPasswordSetNewPost = {
 }
 
 
-export type ApiType_AuthStreamToken = {
+export type ApiType_Auth_Stream_Token = {
     token: string;
 }
 
@@ -104,7 +104,7 @@ export type ApiType_User = {
 }
 
 
-export type ApiType_UserSelf = {
+export type ApiType_User_Self = {
     id: number;
     name: string;
     email: string;
@@ -117,7 +117,7 @@ export type ApiType_UserSelf = {
 }
 
 
-export type ApiType_UserPatch = {
+export type ApiType_User_Patch = {
     name?: string;
     email?: string;
     locale?: string;
@@ -138,7 +138,7 @@ export type ApiType_File = {
 }
 
 
-export type ApiType_FileGetMultiple = {
+export type ApiType_File_Get_Multiple = {
     id: number;
     name: string;
     /**
@@ -152,7 +152,7 @@ export type ApiType_FileGetMultiple = {
 }[];
 
 
-export type ApiType_FileGetMultiplePost = {
+export type ApiType_File_Get_Multiple_Post = {
     ids: number[];
 }
 
@@ -165,19 +165,19 @@ export type ApiType_Workspace = {
 }
 
 
-export type ApiType_WorkspacePatch = {
+export type ApiType_Workspace_Patch = {
     name?: string;
 }
 
 
-export type ApiType_WorkspacesPost = {
+export type ApiType_Workspaces_Post = {
     name: string;
     longitude: number;
     latitude: number;
 }
 
 
-export type ApiType_WorkspaceFiles = {
+export type ApiType_Workspace_Files = {
     id: number;
     name: string;
     /**
@@ -191,18 +191,18 @@ export type ApiType_WorkspaceFiles = {
 }[];
 
 
-export type ApiType_WorkspaceFilePost = {
+export type ApiType_Workspace_File_Post = {
     file: string;
     filename: string;
 }
 
 
-export type ApiType_WorkspaceFilePatch = {
+export type ApiType_Workspace_File_Patch = {
     filename?: string;
 }
 
 
-export type ApiType_WorkspaceConnections = {
+export type ApiType_Workspace_Connections = {
     id: number;
     name: string;
     remote_controller_id?: number;
@@ -210,12 +210,12 @@ export type ApiType_WorkspaceConnections = {
 }[];
 
 
-export type ApiType_WorkspaceConnectionsPost = {
+export type ApiType_Workspace_Connections_Post = {
     name: string;
 }
 
 
-export type ApiType_WorkspaceConnectionsPostResponse = {
+export type ApiType_Workspace_Connections_Post_Response = {
     connection_id: string;
     secret: string;
 }
@@ -232,7 +232,7 @@ export interface ApiType_Connection {
 }
 
 
-export type ApiType_WorkspaceMapElementsGet = (
+export type ApiType_Workspace_Map_Elements_Get = (
     | {
           id: number;
           uuid: string;
@@ -330,14 +330,14 @@ export type ApiType_WorkspaceMapElementsGet = (
 )[];
 
 
-export type ApiType_MapElementCreateBase = {
+export type ApiType_Map_Element_Create_Base = {
     uuid?: string;
     name: string;
     color: string;
 }
 
 
-export type ApiType_WorkspaceMapElementsCreatePoint = {
+export type ApiType_Workspace_Map_Elements_Create_Point = {
     uuid?: string;
     name: string;
     color: string;
@@ -347,7 +347,7 @@ export type ApiType_WorkspaceMapElementsCreatePoint = {
 }
 
 
-export type ApiType_WorkspaceMapElementsCreateLine = {
+export type ApiType_Workspace_Map_Elements_Create_Line = {
     uuid?: string;
     name: string;
     color: string;
@@ -359,7 +359,7 @@ export type ApiType_WorkspaceMapElementsCreateLine = {
 }
 
 
-export type ApiType_WorkspaceMapElementsCreatePolygon = {
+export type ApiType_Workspace_Map_Elements_Create_Polygon = {
     uuid?: string;
     name: string;
     color: string;
@@ -371,7 +371,7 @@ export type ApiType_WorkspaceMapElementsCreatePolygon = {
 }
 
 
-export type ApiType_WorkspaceMapElementsCreateCircle = {
+export type ApiType_Workspace_Map_Elements_Create_Circle = {
     uuid?: string;
     name: string;
     color: string;
@@ -381,7 +381,7 @@ export type ApiType_WorkspaceMapElementsCreateCircle = {
 }
 
 
-export type ApiType_WorkspaceMapElementPatch =
+export type ApiType_Workspace_Map_Element_Patch =
     | {
           name?: string;
           color?: string;
@@ -422,7 +422,7 @@ export type ApiType_WorkspaceMapElementPatch =
       };
 
 
-export type ApiType_MapElement =
+export type ApiType_Map_Element =
     | {
           id: number;
           uuid: string;
@@ -519,7 +519,7 @@ export type ApiType_MapElement =
       };
 
 
-export type ApiType_MapElementBase = {
+export type ApiType_Map_Element_Base = {
     id: number;
     uuid: string;
     name: string;
@@ -539,7 +539,7 @@ export type ApiType_MapElementBase = {
 }
 
 
-export type ApiType_MapElementPoint = {
+export type ApiType_Map_Element_Point = {
     id: number;
     uuid: string;
     name: string;
@@ -562,7 +562,7 @@ export type ApiType_MapElementPoint = {
 }
 
 
-export type ApiType_MapElementLine = {
+export type ApiType_Map_Element_Line = {
     id: number;
     uuid: string;
     name: string;
@@ -587,7 +587,7 @@ export type ApiType_MapElementLine = {
 }
 
 
-export type ApiType_MapElementPolygon = {
+export type ApiType_Map_Element_Polygon = {
     id: number;
     uuid: string;
     name: string;
@@ -612,7 +612,7 @@ export type ApiType_MapElementPolygon = {
 }
 
 
-export type ApiType_MapElementCircle = {
+export type ApiType_Map_Element_Circle = {
     id: number;
     uuid: string;
     name: string;
@@ -635,7 +635,7 @@ export type ApiType_MapElementCircle = {
 }
 
 
-export type ApiType_MapElementPatch =
+export type ApiType_Map_Element_Patch =
     | {
           name?: string;
           color?: string;
@@ -676,13 +676,13 @@ export type ApiType_MapElementPatch =
       };
 
 
-export type ApiType_MapElementPatchBase = {
+export type ApiType_Map_Element_Patch_Base = {
     name?: string;
     color?: string;
 }
 
 
-export type ApiType_MapElementPointPatch = {
+export type ApiType_Map_Element_Point_Patch = {
     name?: string;
     color?: string;
     latitude?: number;
@@ -691,7 +691,7 @@ export type ApiType_MapElementPointPatch = {
 }
 
 
-export type ApiType_MapElementLinePatch = {
+export type ApiType_Map_Element_Line_Patch = {
     name?: string;
     color?: string;
     coordinates?: {
@@ -702,7 +702,7 @@ export type ApiType_MapElementLinePatch = {
 }
 
 
-export type ApiType_MapElementPolygonPatch = {
+export type ApiType_Map_Element_Polygon_Patch = {
     name?: string;
     color?: string;
     coordinates?: {
@@ -713,7 +713,7 @@ export type ApiType_MapElementPolygonPatch = {
 }
 
 
-export type ApiType_MapElementCirclePatch = {
+export type ApiType_Map_Element_Circle_Patch = {
     name?: string;
     color?: string;
     latitude?: number;
@@ -722,7 +722,7 @@ export type ApiType_MapElementCirclePatch = {
 }
 
 
-export type ApiType_RemoteController = {
+export type ApiType_Remote_Controller = {
     id: number;
     serial_number: string;
     /**
@@ -735,10 +735,10 @@ export type ApiType_RemoteController = {
 /**
  * 0 = dji rc pro enterprise, 1 = dji rc plus
  */
-export type ApiType_RemoteControllerType = number;
+export type ApiType_Remote_Controller_Type = number;
 
 
-export type ApiType_RemoteControllerPosition = {
+export type ApiType_Remote_Controller_Position = {
     longitude: number;
     latitude: number;
     height: number;
@@ -764,10 +764,10 @@ export type ApiType_Drone = {
 /**
  * 0 = dji mavic 3
  */
-export type ApiType_DroneType = number;
+export type ApiType_Drone_Type = number;
 
 
-export type ApiType_DronePosition = {
+export type ApiType_Drone_Position = {
     longitude: number;
     latitude: number;
     height: number;
@@ -778,7 +778,7 @@ export type ApiType_DronePosition = {
 }
 
 
-export type ApiType_DroneBattery = {
+export type ApiType_Drone_Battery = {
     capacity_percent_left: number;
     /**
      * ISO 8601 format with a timezone
@@ -787,7 +787,7 @@ export type ApiType_DroneBattery = {
 }
 
 
-export type ApiType_DroneMedia = {
+export type ApiType_Drone_Media = {
     id: number;
     drone_id: number;
     flight_id: number;
@@ -824,7 +824,7 @@ export type ApiType_DroneMedia = {
 }[];
 
 
-export type ApiType_DroneFlights = {
+export type ApiType_Drone_Flights = {
     id: number;
     drone_id: number;
     /**
@@ -878,7 +878,7 @@ export type ApiType_Flight = {
 }
 
 
-export type ApiType_FlightMedia = {
+export type ApiType_Flight_Media = {
     id: number;
     drone_id: number;
     flight_id: number;
@@ -952,7 +952,7 @@ export type ApiType_Media = {
 }
 
 
-export type ApiType_MediaGroundCoverage = {
+export type ApiType_Media_Ground_Coverage = {
     coverage: {
         all: {
             position: {
@@ -1057,7 +1057,7 @@ export type ApiType_MediaGroundCoverage = {
 }
 
 
-export type ApiType_GroundCoverageLocation = {
+export type ApiType_Ground_Coverage_Location = {
     position: {
         /**
          * in degree
@@ -1092,13 +1092,13 @@ export type ApiType_GroundCoverageLocation = {
 }
 
 
-export type ApiType_ConnectionLinkAuthLoginPost = {
+export type ApiType_Connection_Link_Auth_Login_Post = {
     connection_id: string;
     secret: string;
 }
 
 
-export type ApiType_ConnectionLinkConfig = {
+export type ApiType_Connection_Link_Config = {
     connection_id: string;
     platform_name: string;
     platform_url: string;
@@ -1109,7 +1109,7 @@ export type ApiType_ConnectionLinkConfig = {
 }
 
 
-export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
+export type ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config = {
     app_id: string;
     app_key: string;
     app_license: string;
@@ -1120,7 +1120,7 @@ export type ApiType_ConnectionLinkDjiPilot2SdkConfig = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaFastUploadPost = {
+export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post = {
     ext?: {
         drone_model_key: string;
         is_original: boolean;
@@ -1134,7 +1134,7 @@ export type ApiType_DjiPilot2ApiMediaFastUploadPost = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaFastUploadPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post_Response = {
     /**
      * 0 = success
      */
@@ -1147,10 +1147,10 @@ export type ApiType_DjiPilot2ApiMediaFastUploadPostResponse = {
 /**
  * TODO what is the format? documentation does not say
  */
-export interface ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPost {}
+export interface ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post {}
 
 
-export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post_Response = {
     /**
      * 0 = success
      */
@@ -1162,7 +1162,7 @@ export type ApiType_DjiPilot2ApiMediaFilesTinyFingerprintsPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaStsPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Media_Sts_Post_Response = {
     /**
      * 0 = success
      */
@@ -1187,7 +1187,7 @@ export type ApiType_DjiPilot2ApiMediaStsPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaUploadCallbackPost = {
+export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post = {
     /**
      * non-zero means failure
      */
@@ -1227,7 +1227,7 @@ export type ApiType_DjiPilot2ApiMediaUploadCallbackPost = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response = {
     /**
      * 0 = success
      */
@@ -1239,14 +1239,14 @@ export type ApiType_DjiPilot2ApiMediaUploadCallbackPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPost = {
+export type ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post = {
     file_group_id?: string;
     file_count: number;
     file_uploaded_count: number;
 }
 
 
-export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post_Response = {
     /**
      * 0 = success
      */
@@ -1259,7 +1259,7 @@ export type ApiType_DjiPilot2ApiMediaGroupUploadCallbackPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementGroupsElementsPost = {
+export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post = {
     id: string;
     name: string;
     /**
@@ -1279,7 +1279,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsElementsPost = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse = {
+export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response = {
     code: number;
     message: string;
     data: {
@@ -1288,7 +1288,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsElementsPostResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
+export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response = {
     code: number;
     message: string;
     data: {
@@ -1353,7 +1353,7 @@ export type ApiType_DjiPilot2ApiMapElementGroupsGetResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementsPut = {
+export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put = {
     name: string;
     content: {
         type: string;
@@ -1363,7 +1363,7 @@ export type ApiType_DjiPilot2ApiMapElementsPut = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementsPutResponse = {
+export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response = {
     code: number;
     message: string;
     data: {
@@ -1372,7 +1372,7 @@ export type ApiType_DjiPilot2ApiMapElementsPutResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiMapElementsDeleteResponse = {
+export type ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response = {
     code: number;
     message: string;
     data: {
@@ -1381,7 +1381,7 @@ export type ApiType_DjiPilot2ApiMapElementsDeleteResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiManageDevicesTopologyResponse = {
+export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response = {
     code: number;
     message: string;
     data: {
@@ -1431,7 +1431,7 @@ export type ApiType_DjiPilot2ApiManageDevicesTopologyResponse = {
 }
 
 
-export type ApiType_DjiPilot2ApiManageDevicesTopologyDevice = {
+export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Device = {
     device_callsign: string;
     device_model?: {
         key: string;

@@ -2,10 +2,10 @@ import * as pgp from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import { registerSubscribableEvent, SubscribableEventHandler } from '../live-websocket/websocket'
 import { DRONE_DATA_TYPES, extractPositionFromDroneData, extractTelemetryFromDroneData } from '../util/drone';
-import { selectConnection, selectDrone, selectRemoteController, selectWorkspace } from '../generated-definitions/db/DBHelpers';
+import { select_Connection, select_Drone, select_Remote_Controller, select_Workspace } from '../generated-definitions/db/DBHelpers';
 import { getActiveConnectionForDrone, getConnectionForRemoteController } from '../util/connection';
 import { userHasPermissionForWorkspace } from '../util/user';
-import { DBType_DroneData } from '../generated-definitions/db/DBTypes';
+import { DBType_Drone_Data } from '../generated-definitions/db/DBTypes';
 import { convertDbMapElementToApiMapElement } from '../map/map_marks';
 
 export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSubscribableEventHandler: SubscribableEventHandler<'map_element'>){
@@ -31,9 +31,9 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
+        const drone = await select_Drone(id)//TODO if drone does not exist, api crashes
 
-        const connection = await selectConnection(drone.last_connection_id!)
+        const connection = await select_Connection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -52,9 +52,9 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
+        const drone = await select_Drone(id)//TODO if drone does not exist, api crashes
 
-        const connection = await selectConnection(drone.last_connection_id!)
+        const connection = await select_Connection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -73,7 +73,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const remoteController = await selectRemoteController(id)
+        const remoteController = await select_Remote_Controller(id)
 
         const connection = await getConnectionForRemoteController(remoteController.id)
 
@@ -93,7 +93,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const workspace = await selectWorkspace(id)
+        const workspace = await select_Workspace(id)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
 
@@ -112,9 +112,9 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const drone = await selectDrone(id)//TODO if drone does not exist, api crashes
+        const drone = await select_Drone(id)//TODO if drone does not exist, api crashes
 
-        const connection = await selectConnection(drone.last_connection_id!)
+        const connection = await select_Connection(drone.last_connection_id!)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, connection.workspace_id)
 
@@ -133,7 +133,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
             return 'invalid filter: ' + id
         }
 
-        const workspace = await selectWorkspace(id)
+        const workspace = await select_Workspace(id)
 
         const hasPermission = await userHasPermissionForWorkspace(client.userId, workspace.id)
 
@@ -190,11 +190,11 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
 
                     const changedDroneId = parseInt(parsed.data.drone_id)
 
-                    const data = parsed.data as DBType_DroneData
+                    const data = parsed.data as DBType_Drone_Data
 
                     if(data.type === DRONE_DATA_TYPES.POSITION){
 
-                        const drone = await selectDrone(changedDroneId)
+                        const drone = await select_Drone(changedDroneId)
 
                         subscribableEventHandlerDronePosition.triggerListenerIfExists('' + changedDroneId, async()=>{
 
@@ -252,7 +252,7 @@ export async function setupDB(sco: pgp.IConnected<{}, pg.IClient>, mapElementSub
                     const mediaId = parseInt(parsed.data.id)
                     const droneId = parseInt(parsed.data.drone_id)
 
-                    const drone = await selectDrone(droneId)
+                    const drone = await select_Drone(droneId)
 
                     const connection = await getActiveConnectionForDrone(drone.id)
 
