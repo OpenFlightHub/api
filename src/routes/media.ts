@@ -1,13 +1,11 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { select_Drone } from '../generated-definitions/db/DBHelpers';
 import { ApiSchema_Media, ApiSchema_Media_Ground_Coverage } from '../generated-definitions/api/ApiSchemas';
 import { DBType_Drone_Media } from '../generated-definitions/db/DBTypes';
 import { ApiType_Media } from '../generated-definitions/api/ApiTypes';
-import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
-import { getDroneMetaFromFile, getMediaCoverage, parseCameraMetaOfMedia } from '../util/media';
+import { getCore } from '../core';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -34,8 +32,8 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
         })
     })
 
-    const drone = await select_Drone(media.drone_id)
-    const connection = await getLastConnectionForDrone(drone)
+    const drone = await getCore().modules.drone.get(media.drone_id)
+    const connection = await getCore().modules.drone.getLastConnectionForDrone(drone)
 
     if(!connection){
         // connection deleted or last_connection_id was never set
@@ -44,7 +42,7 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    res.GM.guardSend<ApiType_Media>(parseCameraMetaOfMedia(media), ApiSchema_Media)
+    res.GM.guardSend<ApiType_Media>(getCore().modules.droneMedia.parseCameraMetaOfMedia(media), ApiSchema_Media)
 }))
 
 
@@ -59,8 +57,8 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
         })
     })
 
-    const drone = await select_Drone(media.drone_id)
-    const connection = await getLastConnectionForDrone(drone)
+    const drone = await getCore().modules.drone.get(media.drone_id)
+    const connection = await getCore().modules.drone.getLastConnectionForDrone(drone)
 
     if(!connection){
         // connection deleted or last_connection_id was never set
@@ -70,7 +68,7 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
 
-    const meta = await getDroneMetaFromFile(media.file_id)
+    const meta = await getCore().modules.droneMedia.getDroneMetaFromFile(media.file_id)
 
     if(meta === false){
         throw GuardError._410_Gone()
@@ -80,7 +78,7 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
         throw GuardError._410_Gone()
     }
 
-    const coverage = await getMediaCoverage(media)
+    const coverage = await getCore().modules.droneMedia.getMediaCoverage(media)
 
     if(coverage === false){
         throw GuardError._410_Gone()

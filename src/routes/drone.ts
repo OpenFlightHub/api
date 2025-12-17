@@ -1,16 +1,13 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { select_Drone } from '../generated-definitions/db/DBHelpers';
 import { ApiSchema_Drone, ApiSchema_Drone_Battery, ApiSchema_Drone_Flights, ApiSchema_Drone_Media, ApiSchema_Drone_Position, ApiSchema_Flight } from '../generated-definitions/api/ApiSchemas';
 import { DBType_Drone_Media, DBType_Flight } from '../generated-definitions/db/DBTypes';
 import { ApiType_Drone, ApiType_Drone_Battery, ApiType_Drone_Flights, ApiType_Drone_Media, ApiType_Drone_Position, ApiType_Flight } from '../generated-definitions/api/ApiTypes';
-import { getLastPositionOfDrone as getLastPositionOfDrone, getLastTelemetryOfDrone } from '../util/drone';
-import { getLastConnectionForDrone } from '../util/connection';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
-import { getTrackForFlight } from '../util/flight';
-import { parseCameraMetaOfMedia } from '../util/media';
+import { getCore } from '../core';
+import FlightModule from '../core/modules/FlightModule';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -33,10 +30,10 @@ router.use('/:drone_id', asyncHandler(async(req, res, next) => {
     const droneId = req.GM.guardParam('drone_id', 'id')
 
     const drone = await req.GM.guardDBGone(()=>{
-        return select_Drone(droneId)
+        return getCore().modules.drone.get(droneId)
     })
 
-    const connection = await getLastConnectionForDrone(drone)
+    const connection = await getCore().modules.drone.getLastConnectionForDrone(drone)
 
     if(!connection){
         // connection deleted or last_connection_id was never set
@@ -66,7 +63,7 @@ router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
     const droneId = req.GM.guardParam('drone_id', 'id')
 
     const droneLastPosition = await req.GM.guardDBGone(()=>{
-        return getLastPositionOfDrone(droneId)
+        return getCore().modules.drone.getLastPositionOfDrone(droneId)
     })
 
     if(droneLastPosition === false){
@@ -83,7 +80,7 @@ router.get('/:drone_id/last-battery', asyncHandler(async (req, res) => {
     const droneId = req.GM.guardParam('drone_id', 'id')
 
     const droneLastBattery = await req.GM.guardDBGone(()=>{
-        return getLastTelemetryOfDrone(droneId)
+        return getCore().modules.drone.getLastTelemetryOfDrone(droneId)
     })
 
     if(droneLastBattery === false){
@@ -103,7 +100,7 @@ router.get('/:drone_id/media', asyncHandler(async (req, res) => {
         droneId
     })
 
-    res.GM.guardSend<ApiType_Drone_Media>(droneMedia.map(m => parseCameraMetaOfMedia(m)), ApiSchema_Drone_Media)
+    res.GM.guardSend<ApiType_Drone_Media>(droneMedia.map(m => getCore().modules.droneMedia.parseCameraMetaOfMedia(m)), ApiSchema_Drone_Media)
 }))
 
 
@@ -115,11 +112,11 @@ router.get('/:drone_id/flights', asyncHandler(async (req, res) => {
         droneId
     })
 
-    const ret = new Array<{track: Awaited<ReturnType<typeof getTrackForFlight>>} & DBType_Flight>()
+    const ret = new Array<{track: Awaited<ReturnType<FlightModule['getTrackForFlight']>>} & DBType_Flight>()
 
     for(const flight of droneFlights){
         ret.push(
-            assignObject({track: await getTrackForFlight(flight.id)}, flight)
+            assignObject({track: await getCore().modules.flight.getTrackForFlight(flight.id)}, flight)
         )
     }
 
@@ -134,7 +131,7 @@ router.get('/:drone_id/current-flight', asyncHandler(async (req, res) => {
         droneId
     })
 
-    res.GM.guardSend<ApiType_Flight>(assignObject({track: await getTrackForFlight(currentFlight.id)}, currentFlight), ApiSchema_Flight)
+    res.GM.guardSend<ApiType_Flight>(assignObject({track: await getCore().modules.flight.getTrackForFlight(currentFlight.id)}, currentFlight), ApiSchema_Flight)
 }))
 
 

@@ -1,9 +1,9 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { addDroneData, DRONE_DATA_TYPES } from "./drone"
+import { DRONE_DATA_TYPES } from "../core/modules/DroneModule"
 import FakeTrack from './FakeTrack'
-import { insert_Flight_Data, select_Drone } from '../generated-definitions/db/DBHelpers'
 import { DBType_Flight_Data_TYPES } from '../generated-definitions/db/DBTypes'
+import { getCore } from '../core'
 
 export default class FakeDrone {
 
@@ -20,14 +20,14 @@ export default class FakeDrone {
 
             const currentPosition = this.fakeTrack.getCurrentPosition()
 
-            addDroneData(this.droneId, DRONE_DATA_TYPES.POSITION, {//TODO latitude and longitude seems to be reversed
+            getCore().modules.drone.addDroneData(this.droneId, DRONE_DATA_TYPES.POSITION, {//TODO latitude and longitude seems to be reversed
                 longitude: currentPosition.longitude,
                 latitude: currentPosition.latitude,
                 height: this.fakeTrack.getCurrentHeight()
             })
 
             this.getFlightId().then(flightId=>{
-                insert_Flight_Data({
+                getCore().modules.flight.insertFlightData({
                     created_at: new Date().toISOString(),
                     data: JSON.stringify({
                         longitude: currentPosition.longitude,
@@ -51,7 +51,7 @@ export default class FakeDrone {
     }
 
     public async getFlightId(){
-        return (await select_Drone(this.droneId)).current_flight_id
+        return (await getCore().modules.drone.get(this.droneId)).current_flight_id
     }
 
 }

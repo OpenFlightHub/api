@@ -8,17 +8,12 @@ See https://airensoft.gitbook.io/ovenmediaengine/access-control/admission-webhoo
 
 import express from 'express';
 import asyncHandler from 'express-async-handler'
-import pgp from 'pg-promise'
-const db : pgp.IDatabase<any> = global.db
-
-
 
 import SecretsLoader from '../util/SecretsLoader'
 import { JSONSchema4 } from '../util/types/JSONSchema'
 import { getUserForStreamToken, GuardError } from '../ManInTheMiddleware';
-import { select_Connection } from '../generated-definitions/db/DBHelpers';
-import { userHasPermissionForWorkspace } from '../util/user';
 import { createHmac } from 'crypto';
+import { getCore } from '../core';
 
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['ome_admission_secret'])
@@ -173,7 +168,7 @@ router.post('/', asyncHandler(async(req, res)=>{
             throw GuardError._401_Unauthorized()
         }
 
-        const connection = await select_Connection(connectionId)
+        const connection = await getCore().modules.connection.get(connectionId)
 
         if(body.request.direction === 'incoming'){// publisher
 
@@ -189,7 +184,7 @@ router.post('/', asyncHandler(async(req, res)=>{
                 throw GuardError._403_Forbidden()
             }
 
-            if(await userHasPermissionForWorkspace(user.id, connection.workspace_id) === false){
+            if(await getCore().modules.user.userHasPermissionForWorkspace(user.id, connection.workspace_id) === false){
                 throw GuardError._403_Forbidden()
             }
         }

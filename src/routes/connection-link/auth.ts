@@ -7,13 +7,9 @@ const router = express.Router()
 
 import { ApiSchema_Connection_Link_Auth_Login_Post } from '../../generated-definitions/api/ApiSchemas';
 import { ApiType_Connection_Link_Auth_Login_Post } from '../../generated-definitions/api/ApiTypes';
-import { generateConnectionSessionCookieAndSet as generateConnectionSessionCookieAndSet } from '../../util/cookie'
 import { DBType_Connection } from '../../generated-definitions/db/DBTypes';
+import { getCore } from '../../core';
 
-
-function delay(callback: ()=>void){
-    setTimeout(callback, 1000 * 0.5)
-}
 
 router.get('/check', asyncHandler(async(req, res)=>{
 
@@ -34,7 +30,7 @@ router.post('/login', asyncHandler(async(req, res)=>{
             secret: body.secret
         })
 
-        await generateConnectionSessionCookieAndSet(connection.id, res)
+        await getCore().modules.connection.generateConnectionSessionCookieAndSet(connection.id, res)
 
         res.status(200).send()
 

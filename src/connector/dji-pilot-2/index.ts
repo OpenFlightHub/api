@@ -2,15 +2,12 @@ import { Client, PublishPacket } from "aedes";
 import Connector from "./Connector";
 import Logger from "./ConnectorLogger";
 import path from "path";
-import {addDroneData, DRONE_DATA_TYPES, getDroneForSerialNumber, setDroneInFlightState} from '../../util/drone'
-import {addRemoteControllerData, getRemoteControllerForSerialNumber, REMOTE_CONTROLLER_DATA_TYPES} from '../../util/remote_controller'
 import {MqttRcProEnterpriseProperties_STABLE_FREQUENCY_TYPE, MqttMavic3EnterpriseProperties_STABLE_FREQUENCY_TYPE} from './mqtt-types/documented'
 import * as pgp from 'pg-promise'
-import { DBType_Connection, DBType_Drone_TYPES, DBType_Flight_Data_TYPES, DBType_Remote_Controller_TYPES } from "../../generated-definitions/db/DBTypes";
-import { delete_Flight, insert_Drone, insert_Flight, insert_Flight_Data, insert_Remote_Controller, select_Connection, select_Remote_Controller, update_Connection, update_Drone, update_Flight } from "../../generated-definitions/db/DBHelpers";
+import { DBType_Connection, DBType_Drone_Data_TYPES, DBType_Drone_TYPES, DBType_Flight_Data_TYPES, DBType_Remote_Controller_Data_TYPES, DBType_Remote_Controller_TYPES } from "../../generated-definitions/db/DBTypes";
 import {getProductType} from './util/product'
-import { getConnectionForRemoteController } from "../../util/connection";
 import type { sendToConnection } from "../../routes/connection-link/dji-pilot-2/ws";
+import { getCore } from "../../core";
 const db : pgp.IDatabase<any> = global.db
 
 const connector = new Connector()
@@ -34,7 +31,7 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
                 console.warn('thing_version of mqtt message update_topo was not 1.2.0 or 1: ', message)
             }
 
-            const connection = await select_Connection(connectionId)
+            const connection = await getCore().modules.connection.get(connectionId)
 
             await updateProductForConnection(connection, productSerialNumber, message.data.domain, message.data.type, message.data.sub_type)
 
@@ -58,7 +55,7 @@ connector.onMessage_Status(async (connectionId, message, productSerialNumber, re
 /**
  * makes sure, the drones and remote controllers for this connection link are properly registered and referenced to each other
  */
-async function updateProductForConnection(connection: DBType_Connection, serialNumber: string, domain: string, type: number, sub_type: number){
+async function updateProductForConnection(connection: DBType_Connection, serialNumber: string, domain: string, type: number, sub_type: number){//TODO move this logic into DroneModule.ts
 
     const productType = getProductType(domain, type, sub_type)
 
@@ -66,18 +63,18 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
 
         if(typeof connection.remote_controller_id !== 'number'){
 
-            let remoteController = await getRemoteControllerForSerialNumber(serialNumber)
+            let remoteController = await getCore().modules.remoteController.getRemoteControllerForSerialNumber(serialNumber)
 
             if(remoteController){
 
                 try {
-                    const oldConnection = await getConnectionForRemoteController(remoteController.id)
+                    const oldConnection = await getCore().modules.remoteController.getConnectionForRemoteController(remoteController.id)
 
                     console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
 
-                    await update_Connection({
+                    await getCore().modules.connection.update(oldConnection.id, {
                         remote_controller_id: null
-                    }, oldConnection.id)
+                    })
 
                 } catch (err){
                     //ignore
@@ -85,7 +82,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                 }
 
             } else {
-                remoteController = await insert_Remote_Controller({
+                remoteController = await getCore().modules.remoteController.create({
                     type: productType.type === 'rc_plus' ? DBType_Remote_Controller_TYPES.dji_rc_plus
                         : productType.type === 'rc_plus_2' ? DBType_Remote_Controller_TYPES.dji_rc_plus_2
                         : productType.type === 'rc_pro_enterprise' ? DBType_Remote_Controller_TYPES.dji_rc_pro_enterprise
@@ -95,30 +92,30 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                 })
             }
 
-            await update_Connection({
+            await getCore().modules.connection.update(connection.id, {
                 remote_controller_id: remoteController.id
-            }, connection.id)
+            })
 
             connection.remote_controller_id = remoteController.id
         }
 
     } else if(productType.domain === 'drone'){
 
-        let drone = await getDroneForSerialNumber(serialNumber)
+        let drone = await  getCore().modules.drone.getDroneForSerialNumber(serialNumber)
 
         if(drone){
             if(drone.last_connection_id !== connection.id){
                 console.warn('transferring drone connection from', drone.last_connection_id, 'to', connection.id)
                 drone.last_connection_id = connection.id
 
-                await update_Drone({
+                await  getCore().modules.drone.update(drone.id, {
                     last_connection_id: connection.id
-                }, drone.id)
+                })
             }
         } else {
 
             try {
-                drone = await insert_Drone({
+                drone = await  getCore().modules.drone.create({
                     type: productType.type === 'mavic_3_enterprise' ? DBType_Drone_TYPES.dji_mavic_3
                         : productType.type === 'matrice_300_rtk' ? DBType_Drone_TYPES.dji_matrice_300
                         : productType.type === 'matrice_30' ? DBType_Drone_TYPES.dji_matrice_30
@@ -129,13 +126,14 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                     last_connection_id: connection.id
                 })
 
-                const flight = await insert_Flight({
-                    drone_id: drone.id
+                const flight = await getCore().modules.flight.create({
+                    drone_id: drone.id,
+                    workspace_id: connection.workspace_id
                 })
 
-                drone = await update_Drone({
+                drone = await getCore().modules.drone.update(drone.id, {
                     current_flight_id: flight.id
-                }, drone.id)
+                })
 
             } catch (err){
 
@@ -147,9 +145,9 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
         if(connection.last_drone_id !== drone.id){
             console.warn('replacing connection drone', connection.last_drone_id, 'with', drone.id)
 
-            await update_Connection({
+            await  getCore().modules.connection.update(connection.id, {
                 last_drone_id: drone.id
-            }, connection.id)
+            })
 
             connection.last_drone_id = drone.id
         }
@@ -165,7 +163,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
     const _m = message as {data: {longitude?: number, latitude?: number, height?: number, elevation?: number}}
 
-    const connection = await select_Connection(connectionId)
+    const connection = await getCore().modules.connection.get(connectionId)
 
 
     if(typeof message.gateway !== 'string'){
@@ -190,7 +188,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
                     console.warn('got remote controller data, but remote controller was not yet created', connection.id)
                 } else {
 
-                    addRemoteControllerData(connection.remote_controller_id, REMOTE_CONTROLLER_DATA_TYPES.POSITION, {
+                    getCore().modules.remoteController.addRemoteControllerData(connection.remote_controller_id, DBType_Remote_Controller_Data_TYPES.position, {
                         longitude: messageData.longitude,
                         latitude: messageData.latitude,
                         height: messageData.height
@@ -200,7 +198,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
         }
 
     } else {
-        const drone = await getDroneForSerialNumber(productSerialNumber)
+        const drone = await getCore().modules.drone.getDroneForSerialNumber(productSerialNumber)
 
         if(drone){
 
@@ -210,15 +208,15 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
                 if((_m.data.longitude === 0 && _m.data.latitude === 0) === false){// check if gps has lock
 
-                    addDroneData(drone.id, DRONE_DATA_TYPES.POSITION, {
+                    getCore().modules.drone.addDroneData(drone.id, DBType_Drone_Data_TYPES.position, {
                         longitude: messageData.longitude,
                         latitude: messageData.latitude,
                         height: messageData.height
                     })
 
-                    setDroneInFlightState(drone, _m.data.elevation !== 0).then(drone=>{
+                    getCore().modules.drone.setDroneInFlightState(drone, _m.data.elevation !== 0).then(drone=>{
 
-                        insert_Flight_Data({
+                        getCore().modules.flight.insertFlightData({
                             created_at: new Date(message.timestamp).toISOString(),
                             data: JSON.stringify({
                                 longitude: messageData.longitude,
@@ -257,7 +255,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
                 }
 
                 if(typeof messageData.battery?.capacity_percent === 'number'){
-                    addDroneData(drone.id, DRONE_DATA_TYPES.TELEMETRY, {
+                    getCore().modules.drone.addDroneData(drone.id, DBType_Drone_Data_TYPES.telemetry, {
                         capacity_percent_left: messageData.battery.capacity_percent
                     })
                 }

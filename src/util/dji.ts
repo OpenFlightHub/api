@@ -1,5 +1,5 @@
 import { ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiType_Dji_Pilot_2_Api_Map_Elements_Put } from '../generated-definitions/api/ApiTypes'
-import {DBType_Geo_Object, DBType_Geo_Object_Base, DBType_Geo_Object_ConfigType, DBType_Geo_Object_SubTypeType} from '../generated-definitions/db/DBTypes'
+import {DBType_Geo_Object, DBType_Geo_Object_ConfigType, DBType_Geo_Object_SubTypeType} from '../generated-definitions/db/DBTypes'
 
 
 export function getDJIGeoJsonForGeoObject(geoObject: DBType_Geo_Object){

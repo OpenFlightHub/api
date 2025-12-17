@@ -1,11 +1,11 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object } from '../../generated-definitions/db/DBHelpers';
-import { ApiSchema_Geo_Object, ApiSchema_Geo_Object_Patch, ApiSchema_Reference, ApiSchema_Workspace_Geo_Object_Patch, ApiSchema_Workspace_Geo_Objects_Create, ApiSchema_Workspace_Geo_Objects_Get } from '../../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Geo_Object, ApiSchema_Geo_Object_Patch, ApiSchema_Reference, ApiSchema_Workspace_Geo_Objects_Create, ApiSchema_Workspace_Geo_Objects_Get } from '../../generated-definitions/api/ApiSchemas';
 import { DBType_Geo_Object } from '../../generated-definitions/db/DBTypes';
 import { ApiType_Geo_Object_Patch, ApiType_Reference, ApiType_Workspace_Geo_Objects_Create, ApiType_Workspace_Geo_Objects_Get } from '../../generated-definitions/api/ApiTypes';
 import { randomUUID } from 'crypto';
+import { getCore } from '../../core';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -32,7 +32,7 @@ router.post('/create', asyncHandler(async(req, res) => {
     //@ts-ignore
     const workspaceId = req._workspaceId as number
 
-    const createdGeoObject = await insert_Geo_Object({
+    const createdGeoObject = await getCore().modules.geoObject.create({
         uuid: typeof body.uuid === 'string' ? body.uuid : randomUUID(),
         name: body.name,
         type: body.type,
@@ -49,15 +49,15 @@ router.patch('/:geo_object_id', asyncHandler(async(req, res) => {
     const geoObjectId = req.GM.guardParam('geo_object_id', 'id')
 
     const geoObject = await req.GM.guardDBGone(()=>{
-        return select_Geo_Object(geoObjectId)
+        return getCore().modules.geoObject.get(geoObjectId)
     })
 
     const body = req.GM.guardBodySchema<ApiType_Geo_Object_Patch>(ApiSchema_Geo_Object_Patch)
 
-    res.GM.guardSend(await update_Geo_Object({
+    res.GM.guardSend(await getCore().modules.geoObject.update(geoObject.id, {
         name: typeof body.name === 'string' ? body.name : geoObject.name,
         config: body.config ? body.config : geoObject.config
-    }, geoObject.id), ApiSchema_Geo_Object)
+    }), ApiSchema_Geo_Object)
 
 }))
 
@@ -67,10 +67,10 @@ router.delete('/:geo_object_id', asyncHandler(async(req, res) => {
     const geoObjectId = req.GM.guardParam('geo_object_id', 'id')
 
     const geoObject = await req.GM.guardDBGone(()=>{
-        return select_Geo_Object(geoObjectId)
+        return getCore().modules.geoObject.get(geoObjectId)
     })
 
-    await delete_Geo_Object(geoObject.id)
+    await getCore().modules.geoObject.delete(geoObject.id)
 
     res.status(200)
     res.send()

@@ -21,7 +21,6 @@ export function connectionLinkAuthMiddleware(req: Request, res: Response, next: 
 }
 
 import authRoute from './auth'
-import { select_Workspace, update_Connection, update_Workspace } from '../../generated-definitions/db/DBHelpers';
 import { ApiSchema_Connection_Link_Config } from '../../generated-definitions/api/ApiSchemas';
 import { ApiType_Connection_Link_Config } from '../../generated-definitions/api//ApiTypes';
 
@@ -29,7 +28,7 @@ router.use('/auth', authRoute)
 
 router.get('/config', connectionLinkAuthMiddleware, asyncHandler(async(req, res)=>{
 
-    const workspace = await select_Workspace(req.GM.currentConnection.workspace_id)
+    const workspace = await getCore().modules.workspace.get(req.GM.currentConnection.workspace_id)
 
     res.GM.guardSend<ApiType_Connection_Link_Config>({
         connection_id: '' + req.GM.currentConnection.id,
@@ -48,9 +47,9 @@ router.post('/reset-workspace-uuid', connectionLinkAuthMiddleware, asyncHandler(
 
     // fixes dji remote controller caching some data for workspace uuids (e.g. uploaded images). If e.g. the image was deleted in the db, this can brick the upload process
 
-    await update_Connection({
-        workspace_uuid: getRandomUUIDFromWorkspaceId(req.GM.currentConnection.workspace_id)
-    }, req.GM.currentConnection.id)
+    await getCore().modules.connection.update(req.GM.currentConnection.id, {
+        workspace_uuid: getRandomUUIDFromId(req.GM.currentConnection.workspace_id)
+    })
 
     res.status(200).send()
 
@@ -58,7 +57,8 @@ router.post('/reset-workspace-uuid', connectionLinkAuthMiddleware, asyncHandler(
 
 
 import djiPilot2Route from './dji-pilot-2'
-import { getRandomUUIDFromWorkspaceId } from '../../util/connection';
+import { getRandomUUIDFromId } from '../../util/uuid';
+import { getCore } from '../../core';
 
 router.use('/dji-pilot-2', djiPilot2Route)
 

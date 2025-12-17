@@ -1,7 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { select_Drone, select_Remote_Controller, select_Remote_Controller_Data } from '../generated-definitions/db/DBHelpers';
 import { ApiSchema_Remote_Controller, ApiSchema_Remote_Controller_Position } from '../generated-definitions/api/ApiSchemas';
 import { DBType_Connection, DBType_Remote_Controller_Data } from '../generated-definitions/db/DBTypes';
 import { ApiType_Remote_Controller, ApiType_Remote_Controller_Position } from '../generated-definitions/api/ApiTypes';

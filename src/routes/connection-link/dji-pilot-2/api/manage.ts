@@ -1,15 +1,14 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response } from '../../../../generated-definitions/api/ApiTypes';
-import { ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Device, ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Response, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response } from '../../../../generated-definitions/api/ApiSchemas';
+import { ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response } from '../../../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Response } from '../../../../generated-definitions/api/ApiSchemas';
 const db : pgp.IDatabase<any> = global.db
 
 import { DBType_Connection, DBType_Drone_TYPES, DBType_Remote_Controller_TYPES } from '../../../../generated-definitions/db/DBTypes';
-import { select_Drone, select_Remote_Controller } from '../../../../generated-definitions/db/DBHelpers';
-import { getDroneConnectionOnlineStatus } from '../../../../util/connection';
 import { getModelEnumForDroneType, getModelEnumForRemoteControllerType } from '../../../../connector/dji-pilot-2/util/product';
 import {makeUUIDFromId} from '../../../../util/uuid'
+import { getCore } from '../../../../core';
 
 const router = express.Router()
 
@@ -32,10 +31,10 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
             parents: []
         }
 
-        const connectionOnlineStatus = await getDroneConnectionOnlineStatus(connection.id)
+        const connectionOnlineStatus = await getCore().modules.connection.getDroneConnectionOnlineStatus(connection.id)
 
         if(typeof connection.last_drone_id === 'number'){
-            const drone = await select_Drone(connection.last_drone_id)
+            const drone = await getCore().modules.drone.get(connection.last_drone_id)
 
             topologyEntry.hosts.push({
                 device_callsign: drone.name,//TODO where is this displayed? should we use connection.name?
@@ -48,7 +47,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         }
 
         if(typeof connection.remote_controller_id === 'number'){
-            const remoteController = await select_Remote_Controller(connection.remote_controller_id)
+            const remoteController = await getCore().modules.remoteController.get(connection.remote_controller_id)
 
             topologyEntry.parents.push({
                 device_callsign: '' + remoteController.id,

@@ -1,10 +1,10 @@
 import { NextFunction, RequestHandler, Request, Response, Express } from 'express'
 import { validate, filterObject, FilterError } from './util/schema'
-import { DBType_User, DBType_Connection, DBType_Workspace_Permission } from './generated-definitions/db/DBTypes'
+import { DBType_User, DBType_Connection } from './generated-definitions/db/DBTypes'
 import * as pgp from 'pg-promise'
 import { JSONSchema4 } from './util/types/JSONSchema'
 import { DBType_User_STATES } from './generated-definitions/db/DBTypes'
-import { userHasPermissionForWorkspace } from './util/user'
+import { getCore } from './core'
 
 const db : pgp.IDatabase<any> = global.db
 
@@ -165,7 +165,7 @@ export class GuardedMiddleware {
     async guardUserHasPermissionForWorkspace(workspaceId: number){
         const user = await this.getCurrentUser()
 
-        return userHasPermissionForWorkspace(user.id, workspaceId)
+        return getCore().modules.user.userHasPermissionForWorkspace(user.id, workspaceId)
     }
 
     async guardConnectionHasPermissionForWorkspace(workspaceId: number) : Promise<boolean> {

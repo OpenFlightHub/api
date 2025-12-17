@@ -9,12 +9,9 @@ import { DBType_User, DBType_User_STATES } from '../generated-definitions/db/DBT
 import { ApiType_Auth_Login_Post, ApiType_Auth_Login_With_Token_Post, ApiType_Auth_Password_Change_Post, ApiType_Auth_Password_Reset_Post, ApiType_Auth_Password_Set_New_Post, ApiType_Auth_Password_Set_Initial_Post, ApiType_Reference } from './../generated-definitions/api/ApiTypes'
 import { ApiSchema_Auth_Login_Post, ApiSchema_Auth_Login_With_Token_Post, ApiSchema_Auth_Password_Change_Post, ApiSchema_Auth_Password_Reset_Post, ApiSchema_Auth_Password_Set_Initial_Post, ApiSchema_Auth_Password_Set_New_Post, ApiSchema_Auth_Stream_Token, ApiSchema_Reference } from '../generated-definitions/api/ApiSchemas';
 import { GuardError } from '../ManInTheMiddleware';
-import liveUpdate from './live'
 import { hashString, isSafePassword, stringMatchesHash } from './../util/crypto';
-import { select_User, update_User } from '../generated-definitions/db/DBHelpers';
-import { resetPasswordForEmail } from '../util/user';
-import { generateUserSessionCookieAndSet } from '../util/cookie'
 import { forceLogoutUser } from '../live-websocket/websocket';
+import { getCore } from '../core';
 
 
 const STREAM_TOKEN_BYTE_LENGTH = 21
@@ -81,7 +78,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
         confirmUser(user.id)
 
-        await generateUserSessionCookieAndSet(user.id, res, true)
+        await getCore().modules.user.generateUserSessionCookieAndSet(user.id, res, true)
 
         try {
             forceLogoutUser(user.id)
@@ -109,7 +106,7 @@ router.post('/login-with-token', asyncHandler(async (req, res) => {
 
             confirmUser(user.id)
 
-            await generateUserSessionCookieAndSet(user.id, res, true)
+            await getCore().modules.user.generateUserSessionCookieAndSet(user.id, res, true)
 
             try {
                 forceLogoutUser(user.id)
@@ -185,7 +182,7 @@ router.post('/password-change', asyncHandler(async (req, res) => {
         throw GuardError._400_BadRequest('Not allowed for this user')
     }
 
-    await update_User({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+    await getCore().modules.user.update(user.id, {password: await hashString(body.new_password)})
 
     res.status(200)
     res.send()
@@ -195,7 +192,7 @@ router.post('/password-reset', asyncHandler(async (req, res) => {
 
     const body = req.GM.guardBodySchema<ApiType_Auth_Password_Reset_Post>(ApiSchema_Auth_Password_Reset_Post)
 
-    await resetPasswordForEmail(body.username)
+    await getCore().modules.user.resetPasswordForEmail(body.username)
 
     res.status(200)
     res.send()
@@ -211,7 +208,7 @@ router.post('/password-set-initial', asyncHandler(async (req, res) => {
         throw GuardError._403_Forbidden('initial password already set')
     }
 
-    await update_User({password: await hashString(body.new_password)}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+    await getCore().modules.user.update(user.id, {password: await hashString(body.new_password)})
 
     res.status(200)
     res.send()
@@ -231,7 +228,7 @@ router.post('/password-set-new', asyncHandler(async (req, res) => {
             throw GuardError._400_invalidBody('new_password')
         }
 
-        await update_User({password: await hashString(body.new_password), reset_code: null}, pgp.as.format('WHERE id = ${id}', {id: user.id}))
+        await getCore().modules.user.update(user.id, {password: await hashString(body.new_password), reset_code: null})
 
         res.status(200)
         res.send()
@@ -301,9 +298,9 @@ router.get('/stream-token', asyncHandler(async (req, res) => {
 
         const urlSafeToken = crypto.generateUniqueTokenUrlSafe(STREAM_TOKEN_BYTE_LENGTH)
 
-        user = await update_User({
+        user = await getCore().modules.user.update(user.id, {
             stream_token: urlSafeToken
-        }, user.id)
+        })
     }
 
     res.status(200).GM.guardSend({
@@ -319,15 +316,16 @@ export default router
 
 async function confirmUser(userId: number){
     try {
-        const user = await select_User(userId)
+        const user = await getCore().modules.user.get(userId)
 
-        if(user.state === DBType_User_STATES.invited){
-            await update_User({state: DBType_User_STATES.live}, pgp.as.format('WHERE id = ${id} AND (state = ${stateInvited} OR state = ${stateLive})', {
-                id: userId,
-                stateInvited: DBType_User_STATES.invited,
-                stateLive: DBType_User_STATES.live
-            }))
+        if(user.state === DBType_User_STATES.live){
+            return
+        } else if(user.state === DBType_User_STATES.invited){
+            await getCore().modules.user.update(userId, {state: DBType_User_STATES.live})
+        } else {
+            throw new Error('user state is neither invited or confirmed')
         }
+
     } catch (err){
         console.error('error while confirming user', err)
     }

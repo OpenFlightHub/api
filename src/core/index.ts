@@ -1,20 +1,60 @@
 import GeoObjectModule from './modules/GeoObjectModule'
+import ConnectionModule from './modules/ConnectionModule'
+import FileModule from './modules/FileModule'
+import UserModule from './modules/UserModule'
+import DroneModule from './modules/DroneModule'
+import FlightModule from './modules/FlightModule'
+import RemoteControllerModule from './modules/RemoteControllerModule'
+import DroneMediaModule from './modules/DroneMediaModule'
+import WorkspaceModule from './modules/WorkspaceModule'
+
+let coreInstance: Core
 
 export default class Core {
 
-    geoObject: GeoObjectModule
+    readonly modules: {
+        readonly geoObject: GeoObjectModule
+        readonly connection: ConnectionModule
+        readonly file: FileModule
+        readonly user: UserModule
+        readonly drone: DroneModule
+        readonly flight: FlightModule
+        readonly remoteController: RemoteControllerModule
+        readonly droneMedia: DroneMediaModule
+        readonly workspace: WorkspaceModule
+    }
 
     constructor(){
-        this.geoObject = new GeoObjectModule()
+
+        if(coreInstance){
+            throw new Error('core instance already existing')
+        }
+
+        coreInstance = this
+
+        this.modules = {
+            geoObject: new GeoObjectModule(),
+            connection: new ConnectionModule(),
+            file: new FileModule(),
+            user: new UserModule(),
+            drone: new DroneModule(),
+            flight: new FlightModule(),
+            remoteController: new RemoteControllerModule(),
+            droneMedia: new DroneMediaModule(),
+            workspace: new WorkspaceModule()
+        } as const
     }
+
 }
 
-const core = new Core()
+export function getCore(){
+    return coreInstance
+}
 
-core.geoObject.create_marking_point({
-    name: 'name',
-    workspaceId: 1
-}, {
-    longitude: 42,
-    latitude: 10
-})
+// core.geoObject.create_marking_point({
+//     name: 'name',
+//     workspaceId: 1
+// }, {
+//     longitude: 42,
+//     latitude: 10
+// })

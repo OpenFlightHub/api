@@ -1,14 +1,10 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
-import pgp from 'pg-promise'
-import { delete_Connection, select_Connection } from '../generated-definitions/db/DBHelpers';
 import { ApiSchema_Connection } from '../generated-definitions/api/ApiSchemas';
 import { ApiType_Connection } from '../generated-definitions/api/ApiTypes';
-const db : pgp.IDatabase<any> = global.db
-
+import { getCore } from '../core';
 
 const router = express.Router()
-
 
 router.use((req, res, next) => {
 
@@ -28,7 +24,7 @@ router.get('/:connection_id', asyncHandler(async (req, res) => {
     const connectionId = req.GM.guardParam('connection_id', 'id')
 
     const connection = await req.GM.guardDBGone(()=>{
-        return select_Connection(connectionId)
+        return getCore().modules.connection.get(connectionId)
     })
 
     //@ts-ignore
@@ -44,12 +40,12 @@ router.delete('/:connection_id', asyncHandler(async (req, res) => {
     const connectionId = req.GM.guardParam('connection_id', 'id')
 
     const connection = await req.GM.guardDBGone(()=>{
-        return select_Connection(connectionId)
+        return getCore().modules.connection.get(connectionId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    await delete_Connection(connectionId)
+    await getCore().modules.connection.delete(connectionId)
 
     res.status(200).send()
 }))

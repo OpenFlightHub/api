@@ -798,6 +798,7 @@ import {} from "./DBTypes";
 
 export type DBInsert_Flight = {
     drone_id: number
+    workspace_id: number
     started_at?: string
     landed_at?: string
     ended_at?: string
@@ -805,6 +806,7 @@ export type DBInsert_Flight = {
 
 export type DBUpdate_Flight = {
     drone_id?: number
+    workspace_id?: number
     started_at?: string
     landed_at?: string
     ended_at?: string
@@ -816,6 +818,9 @@ const COLUMN_SET_FLIGHTS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id"
+    },
+    {
+        "name": "workspace_id"
     },
     {
         "name": "started_at",
@@ -838,6 +843,10 @@ const COLUMN_SET_FLIGHTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "drone_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "workspace_id",
         "skip": col => !col.exists
     },
     {
@@ -1396,7 +1405,7 @@ export type DBInsert_Geo_Object = {
     name: string
     type: number
     sub_type: number
-    config?: any
+    config: any
     created_at?: string
     updated_at?: string
 }
@@ -1433,8 +1442,7 @@ const COLUMN_SET_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
         "name": "sub_type"
     },
     {
-        "name": "config",
-        "skip": col => !col.exists
+        "name": "config"
     },
     {
         "name": "created_at",

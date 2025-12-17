@@ -7,10 +7,10 @@ import { ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiSchema_D
 const db : pgp.IDatabase<any> = global.db
 
 import { DBType_Geo_Object, DBType_Geo_Object_Type_TYPES } from '../../../../generated-definitions/db/DBTypes';
-import { delete_Geo_Object, insert_Geo_Object, update_Geo_Object } from '../../../../generated-definitions/db/DBHelpers';
 import dayjs from 'dayjs';
 
 import {getDJIGeoJsonForGeoObject, getGeoObjectConfigForDJIMapElementContent, getGeoObjectSubTypeForDJIMapElementType} from '../../../../util/dji'
+import { getCore } from '../../../../core';
 
 const router = express.Router()
 
@@ -21,7 +21,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
 
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post>(ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post)
 
-    const geoObject = await insert_Geo_Object({
+    const geoObject = await getCore().modules.geoObject.create({
         uuid: body.id,
         name: body.name,
         workspace_id: connection.workspace_id,
@@ -99,13 +99,13 @@ router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Elements_Put>(ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put)
 
     await req.GM.guardDBGone(()=>{
-        return update_Geo_Object({
+        return getCore().modules.geoObject.update(elementUUID, {
             updated_at: dayjs().toISOString(),
             name: body.name,
             config: getGeoObjectConfigForDJIMapElementContent(body.content,
                 //@ts-ignore
                 existingGeoObject.sub_type)
-        }, pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
+        })
     })
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response>({
@@ -131,7 +131,7 @@ router.delete('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     await req.GM.guardConnectionHasPermissionForWorkspace(existingElement.workspace_id)
 
-    await delete_Geo_Object(existingElement.id)
+    await getCore().modules.geoObject.delete(existingElement.id)
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response>({
         code: 0,

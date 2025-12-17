@@ -10,9 +10,6 @@ const secrets = secretsLoader.getSecrets([
 
 global.emailHashPepper = secrets.emailHashPepper
 
-import {setupTrafficSensing} from './aircraft_sensing'
-global.trafficSense = setupTrafficSensing()
-
 import {setupMail} from './mail'
 setupMail(secrets.mail_hostname, secrets.mail_port, secrets.mail_secure, secrets.mail_username, secrets.mail_password, secrets.mail_from)
 
@@ -38,8 +35,8 @@ global.db = db
 
 import {setupDB} from './db'
 
-import { registerSubscribableEvent } from './live-websocket/websocket'
-const subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object')
+import Core from './core/index'
+new Core()
 
 db.connect({
     direct: true,
@@ -48,7 +45,7 @@ db.connect({
         process.exit(1)
     }
 }).then(sco=>{
-    setupDB(sco, subscribableEventHandlerGeoObjects)
+    setupDB(sco)
 }).catch(error => {
     console.error(error)
     process.exit(1)
@@ -210,52 +207,7 @@ const fakeDrone = new FakeDrone(1, new FakeTrack([
 import FakeMedia from './util/FakeMedia'
 new FakeMedia(fakeDrone)
 
-import { DBType_Drone, DBType_File, DBType_Flight } from './generated-definitions/db/DBTypes'
-
-
-import { marks } from './map'
-marks.setupMapMarks(subscribableEventHandlerGeoObjects)
-
-
-// import {getMetaFromImage} from './util/media'
-// import { readFile } from 'fs/promises'
-// readFile('./dev/example_media/xw.JPG').then(buffer => {
-//     getMetaFromImage(buffer).then(meta => console.log('image meta xt', meta))
-// })
-// readFile('./dev/example_media/xt.JPG').then(buffer => {
-//     getMetaFromImage(buffer).then(meta => console.log('image meta xw', meta))
-// })
-// readFile('./dev/example_media/M300_T.JPG').then(buffer => {
-//     getMetaFromImage(buffer)
-// })
-
-// readFile('./dev/example_media/M300_Z.JPG').then(buffer => {
-//     getMetaFromImage(buffer)
-//})
-
-
-import { generateThumbnailForFile } from './util/file'
-import { select_File } from './generated-definitions/db/DBHelpers'
-generateThumbnailForFile(1).catch(err => {
-    console.error('failed to generate thumbnail for file 1', err)
-})
-
-setInterval(async ()=>{
-    // every 60 seconds try to generate thumbnails for supported files that are missing thumbnails for some reason
-
-    const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
-
-    for(const file of filesThatRequireThumbnails){
-        const upToDateFile = await select_File(file.id)
-        if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
-            continue
-        }
-
-        console.log('generate missing thumbnail for file', file.id)
-        await generateThumbnailForFile(file.id)
-    }
-
-}, 1000 * 60)
+import { DBType_Drone, DBType_Flight } from './generated-definitions/db/DBTypes'
 
 declare global {
 

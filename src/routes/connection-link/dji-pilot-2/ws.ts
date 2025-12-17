@@ -1,13 +1,11 @@
 import express from 'express';
 import ws from 'ws'
-import pgp from 'pg-promise'
 import TrafficSensing, { SensingHandle } from '../../../aircraft_sensing/TrafficSensing';
-import { getLastPositionOfDrone } from '../../../util/drone';
-const db : pgp.IDatabase<any> = global.db
+import { getCore } from '../../../core';
 const trafficSense : TrafficSensing = global.trafficSense
 
 if(!trafficSense){
-    throw new Error('missing global trafficSense')
+    //TODO move trafficSenso to geoobjects module throw new Error('missing global trafficSense')
 }
 
 const router = express.Router()
@@ -87,7 +85,7 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
 
         //TODO also implement sensing for position of remote controller
         if(typeof connection.last_drone_id === 'number'){
-            getLastPositionOfDrone(connection.last_drone_id).then(lastDronePosition => {
+            getCore().modules.drone.getLastPositionOfDrone(connection.last_drone_id).then(lastDronePosition => {
                 if(lastDronePosition === false){
                     console.warn('did not start traffic sensing, drone has no last position', connection)//TODO we should update the traffic sensing area when we receive a new position from the drone
                 } else {

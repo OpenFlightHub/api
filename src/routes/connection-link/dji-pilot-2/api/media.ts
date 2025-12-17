@@ -8,9 +8,8 @@ const db : pgp.IDatabase<any> = global.db
 import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_Drone_Media, DBType_Drone_Media_TYPES, DBType_Drone_Media_TypeType } from '../../../../generated-definitions/db/DBTypes';
 import { GuardError } from '../../../../ManInTheMiddleware';
-import { delete_File, insert_Drone_Media, insert_File, select_Drone } from '../../../../generated-definitions/db/DBHelpers';
-import {generateExifDataForFile, generateThumbnailForFile, getAbsoluteFilePathForFile, getFileExtension} from '../../../../util/file'
-import { getDroneMetaFromFile } from '../../../../util/media';
+import { getCore } from '../../../../core';
+import { getFileExtension } from '../../../../util/file';
 
 const router = express.Router()
 
@@ -76,12 +75,13 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post>(ApiSchema_Dji_Pilot_2_Api_Media_Upload_Callback_Post)
 
-
     const mediaType: DBType_Drone_Media_TypeType = typeof body.sub_file_type === 'number' ? (body.sub_file_type === 1 ? DBType_Drone_Media_TYPES.panorama : DBType_Drone_Media_TYPES.picture) : DBType_Drone_Media_TYPES.video
 
     //TODO support differentiation between picture and panorama
 
-    await addDroneMediaFromBucket(connection, getBucketNameForConnectionId(connection.id), body.object_key, mediaType, body.fingerprint, body.ext.tinny_fingerprint, JSON.stringify({ext: body.ext, metadata: body.metadata}))
+    const drone = await getCore().modules.drone.get(connection.last_drone_id)
+
+    await getCore().modules.droneMedia.createDroneMediaFromBucketObject(getBucketNameForConnectionId(connection.id), body.object_key, drone, body.fingerprint, body.ext.tinny_fingerprint, mediaType, JSON.stringify({ext: body.ext, metadata: body.metadata}))
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response>({
         code: 0,
@@ -110,71 +110,3 @@ router.post('/group-upload-callback', asyncHandler(async (req, res) => {
 }))
 
 export default router
-
-
-async function addDroneMediaFromBucket(connection: DBType_Connection, bucketName: string, objectKey: string, type: DBType_Drone_Media_TypeType, fingerprint: string, tinyFingerprint: string, meta: string){
-
-    const file = await insert_File({
-        created_by: 0,
-        workspace_id: connection.workspace_id,
-        name: objectKey,
-        ext: getFileExtension(objectKey)
-    })
-
-    try {
-        await downloadObject(bucketName, objectKey, getAbsoluteFilePathForFile(file))
-    } catch (err){
-
-        try {
-            await delete_File(file.id)
-        } catch (err){
-            console.error('failed to cleanup file after downloading did not work', err)
-        }
-
-        throw err
-    }
-
-    try {
-        await generateThumbnailForFile(file.id)
-    } catch (err){
-        console.warn('failed to generate thumbnail for file', file.id, err)
-    }
-
-    try {
-        await generateExifDataForFile(file.id)
-    } catch (err){
-        console.warn('failed to generateExifDataForFile', file.id, err)
-    }
-
-
-    const droneMeta = await getDroneMetaFromFile(file.id)
-
-    let droneMedia: DBType_Drone_Media
-    try {
-        droneMedia = await insert_Drone_Media({
-            drone_id: connection.last_drone_id!,
-            type,
-            fingerprint,
-            tiny_fingerprint: tinyFingerprint,
-            meta,
-            file_id: file.id,
-            captured_at: droneMeta === false ? undefined : droneMeta.createdAt,
-            camera_location: droneMeta === false ? undefined : JSON.stringify({position: droneMeta.position, height: droneMeta.altitude}),
-            camera_angles: droneMeta === false ? undefined : JSON.stringify({heading: droneMeta.gimbal.yaw, pitch: droneMeta.gimbal.pitch, roll: droneMeta.gimbal.roll}),
-            flight_id: (await select_Drone(connection.last_drone_id!)).current_flight_id
-        })
-
-    } catch (err){
-        //TODO delete file
-
-        throw err
-    }
-
-    try {
-        await deleteObject(bucketName, objectKey)
-    } catch (err){
-        console.error('failed to delete object after it was downloaded', err)
-    }
-
-    return droneMedia
-}

@@ -146,6 +146,7 @@ export type DBType_Drone = {
 export type DBType_Flight = {
     id: number;
     drone_id: number;
+    workspace_id: number;
     started_at: string;
     /**
      * when drone lands

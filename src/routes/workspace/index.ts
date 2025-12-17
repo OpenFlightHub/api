@@ -1,14 +1,13 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { delete_Workspace, insert_Workspace, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers';
 import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Connections_Post, ApiSchema_Workspace_Connections_Post_Response, ApiSchema_Workspace_Files, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
 import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Connections_Post, ApiType_Workspace_Connections_Post_Response, ApiType_Workspace_Files, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace } from '../../generated-definitions/db/DBTypes';
-import { createConnection } from '../../util/connection';
-import { deleteFileFromDatabaseAndFilesystem, generateThumbnailForFile, multerMiddleware, storeTmpMulterFileInDatabase } from '../../util/file';
 import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
+import { getCore } from '../../core';
+import { multerMiddleware } from '../../util/multer';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -43,7 +42,7 @@ router.post('/', asyncHandler(async (req, res) => {
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspaces_Post>(ApiSchema_Workspaces_Post)
 
-    const workspace = await insert_Workspace(requestBody)
+    const workspace = await getCore().modules.workspace.create(requestBody)
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
@@ -56,7 +55,7 @@ router.get('/:workspace_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
     const workspace = await req.GM.guardDBGone<DBType_Workspace>(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Workspace)
@@ -84,7 +83,7 @@ router.delete('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    await delete_Workspace(workspaceId)
+    await getCore().modules.workspace.delete(workspaceId)
 
     res.status(200).send()
 }))
@@ -97,7 +96,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -118,14 +117,14 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Connections_Post>(ApiSchema_Workspace_Connections_Post)
 
-    const connection = await createConnection(workspaceId, requestBody.name)
+    const connection = await getCore().modules.connection.createConnection(workspaceId, requestBody.name)
 
     res.GM.guardSend<ApiType_Workspace_Connections_Post_Response>({
         connection_id: '' + connection.id,
@@ -141,7 +140,7 @@ router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -159,7 +158,7 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -168,13 +167,7 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
         throw GuardError._400_invalidBody('file')
     }
 
-    const file = await storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
-
-    try {
-        await generateThumbnailForFile(file.id)
-    } catch (err){
-        console.warn('failed to generate thumbnail for workspace file', file.id, file.ext, err)
-    }
+    const file = await getCore().modules.file.storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
 
     res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
 }))
@@ -184,7 +177,7 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -202,7 +195,11 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
         throw GuardError._400_invalidBody('file')
     }
 
-    const file = await storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
+    throw new Error('not implementet')
+    //TODO fix this broken code
+    // we currently create a new file, instead of changing the old file
+
+    const file = await getCore().modules.file.storeTmpMulterFileInDatabase((req as Request & {file: MulterFile}).file, workspaceId, (await req.GM.getCurrentUser()).id)
 
     res.GM.guardSend<ApiType_Reference>(file, ApiSchema_Reference)
 }))
@@ -212,7 +209,7 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -226,7 +223,7 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
         })
     })
 
-    await deleteFileFromDatabaseAndFilesystem(file)
+    await getCore().modules.file.delete(file.id)
 
     res.status(200).send()
 }))
@@ -237,7 +234,7 @@ router.use('/:workspace_id/map-elements', (req, res, next) => {//TODO if this ch
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     req.GM.guardDBGone(()=>{
-        return select_Workspace(workspaceId)
+        return getCore().modules.workspace.get(workspaceId)
     }).then(()=>{
         req.GM.guardUserHasPermissionForWorkspace(workspaceId).then(()=>{
             //@ts-ignore

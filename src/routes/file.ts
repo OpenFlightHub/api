@@ -3,12 +3,11 @@ import * as pgp from 'pg-promise'
 import asyncHandler from 'express-async-handler'
 const db : pgp.IDatabase<any> = global.db
 
-import { select_File } from '../generated-definitions/db/DBHelpers';
 import { ApiSchema_File, ApiSchema_File_Get_Multiple, ApiSchema_File_Get_Multiple_Post } from '../generated-definitions/api/ApiSchemas';
 import { ApiType_File, ApiType_File_Get_Multiple, ApiType_File_Get_Multiple_Post } from '../generated-definitions/api/ApiTypes';
-import { getAbsoluteFilePathForFile, getAbsoluteThumbnailPathForFile } from '../util/file';
 import { GuardError } from '../ManInTheMiddleware';
 import { DBType_File } from '../generated-definitions/db/DBTypes';
+import { getCore } from '../core';
 
 const router = express.Router()
 
@@ -19,7 +18,7 @@ router.get('/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return select_File(fileId)
+        return getCore().modules.file.get(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
@@ -51,7 +50,7 @@ router.get('/data/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return select_File(fileId)
+        return getCore().modules.file.get(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
@@ -59,7 +58,7 @@ router.get('/data/:file_id', asyncHandler(async (req, res) => {
     res.appendHeader('Content-Disposition', `attachment; filename="${file.name}"`)
 
     try {
-        res.sendFile(getAbsoluteFilePathForFile(file))
+        res.sendFile(getCore().modules.file.getAbsoluteFilePathForFile(file))
     } catch (err){
         console.error('error while sending file', err)
         res.status(500).send()
@@ -74,7 +73,7 @@ router.get('/thumbnail/:file_id', asyncHandler(async (req, res) => {
     const fileId = req.GM.guardParam('file_id', 'id')
 
     const file = await req.GM.guardDBGone(()=>{
-        return select_File(fileId)
+        return getCore().modules.file.get(fileId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
@@ -86,7 +85,7 @@ router.get('/thumbnail/:file_id', asyncHandler(async (req, res) => {
     res.appendHeader('Content-Disposition', `attachment; filename="${file.name}"`)
 
     try {
-        res.sendFile(getAbsoluteThumbnailPathForFile(file))
+        res.sendFile(getCore().modules.file.getAbsoluteThumbnailPathForFileId(file.id))
     } catch (err){
         console.error('error while sending thumbnail', err)
         res.status(500).send()

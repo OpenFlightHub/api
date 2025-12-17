@@ -1,13 +1,16 @@
 
-import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType, DBType_Geo_Object_Type_TYPES, DBType_Geo_Object_TypeType} from '../../generated-definitions/db/DBTypes'
-import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
+import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
+import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base from './Module_Base'
-import { joinObjects } from '../../util/object'
-import {filterObject, validate} from '../../util/schema'
-import { JSONSchema4 } from '../../util/types/JSONSchema'
+
+import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
+import { ClientId } from '../../live-websocket/websocket'
+import TrafficSensing, { SensingHandle } from '../../aircraft_sensing/TrafficSensing'
 
 
-type Deserialized_DBType_GeoObject = Omit<DBType_Geo_Object, 'config'> & {config: GeoObjectConfig}
+import pgp from 'pg-promise'
+import { getCore } from '..'
+const db : pgp.IDatabase<any> = global.db
 
 export default class GeoObjectModule extends Module_Base<
     {
@@ -17,39 +20,122 @@ export default class GeoObjectModule extends Module_Base<
 
     {
         create: {
-            eventDataType: Deserialized_DBType_GeoObject,
+            eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         },
         update: {
-            eventDataType: Deserialized_DBType_GeoObject,
+            eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         },
         delete: {
-            eventDataType: Deserialized_DBType_GeoObject,
+            eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         }
     }
 > {
 
+    readonly subscribableEventHandlerGeoObjects: SubscribableEventHandler<'geo_object'>
+
+    private readonly aircraftSensing = new TrafficSensing()
+
+    private readonly activeHandles = new Map<ClientId, SensingHandle>()
+
     constructor(){
         super()
+
+        this.subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object', async(event, filter, client)=>{
+
+            if(this.activeHandles.has(client.id)){
+                console.warn('prevented a client from subscribing to multiple traffic sensing filters', client.id)
+                return 'can not have multiple traffic filters'
+            }
+
+            const filterOptions = this.parseFilter(filter)
+
+            const workspaceId = parseInt(filterOptions.default)
+
+            if(!(await getCore().modules.user.userHasPermissionForWorkspace(client.userId, workspaceId))){
+                return 'no permission to access this workspace'
+            }
+
+            const sensingArea = filterOptions.area
+
+            if(sensingArea){
+                const handle = this.aircraftSensing.startSensing(parseFloat(sensingArea.latitude), sensingArea.longitude, sensingArea.radius)
+
+                handle.addListener('traffic', async (data)=>{
+
+                    let existingGeoObject = await db.oneOrNone<DBType_Geo_Object>('SELECT * FROM geo_objects WHERE type = ${type} AND name = ${name};', {
+                        type: DBType_Geo_Object_Type_TYPES.traffic,
+                        name: data.id
+                    })
+
+                    if(existingGeoObject){
+                        existingGeoObject = await update_Geo_Object({
+                            config: {
+                                longitude: data.position.longitude,
+                                latitude: data.position.latitude,
+                                height: data.position.height
+                            }
+                        }, existingGeoObject.id)
+
+                        this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
+                            event_type: 'update',
+                            uuid: existingGeoObject.uuid,
+                            data: existingGeoObject
+                        })
+
+                    } else {
+                        existingGeoObject = await insert_Geo_Object({
+                            type: DBType_Geo_Object_Type_TYPES.traffic,
+                            name: data.id,
+                            workspace_id: workspaceId,
+                            sub_type: DBType_Geo_Object_SubType_TYPES.traffic.other, //TODO implement type from sensing area
+                            config: {
+                                longitude: data.position.longitude,
+                                latitude: data.position.latitude,
+                                height: data.position.height
+                            }
+                        })
+
+                        this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
+                            event_type: 'create',
+                            uuid: existingGeoObject.uuid,
+                            data: existingGeoObject
+                        })
+                    }
+
+                    //TODO add something that checks if traffic has not been seen for 60 seconds and then trigger 'delete' event and kill it from database
+                })
+
+                this.activeHandles.set(client.id, handle)
+            }
+
+        }, (event, filter, client)=>{
+            const handle = this.activeHandles.get(client.id)
+            if(handle){
+                handle.stop()
+            }
+        })
     }
 
-    private async create(data: DBInsert_Geo_Object){
+    async create(data: DBInsert_Geo_Object){
         const geoObject = await insert_Geo_Object(data)
 
         this.dispatch('create', {
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
-        }, joinObjects(geoObject, {
-            config: GeoObjectSerializer.deserializeConfigFor(geoObject.config)
-        }))
+        }, geoObject)
 
         return geoObject
     }
 
-    private async update(id: number, data: DBUpdate_Geo_Object){
-        const geoObject = await update_Geo_Object(data, id)
+    /**
+     *
+     * @param idOrUUID id = number, uuid = string
+     */
+    async update(idOrUUID: number | string, data: DBUpdate_Geo_Object){
+        const geoObject = (await update_Geo_Object(data, typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID)) as DBType_Geo_Object
 
         this.dispatch('update', {
             id: geoObject.id,
@@ -68,64 +154,39 @@ export default class GeoObjectModule extends Module_Base<
         }, geoObject)
     }
 
-
-
-    // Marking
-
-    create_marking_point(baseData: Insert_GeoObject_BaseData, point: GeoObjectConfig_Marking_Point){
-        this.create(joinObjects(baseData, {
-            type: DBType_GeoObject_TYPES.marking,
-            sub_type: DBType_GeoObject_SUB_TYPES.marking_point,
-            config: GeoObjectSerializer.serializeConfig(point, GeoObjectConfig_Schema_Marking_Point)
-        }))
+    async get(id: number){
+        return await select_Geo_Object(id)
     }
 
-}
-
-
-type Insert_GeoObject_BaseData = Omit<DBInsert_Geo_Object, 'type' | 'sub_type' | 'config' | 'created_at' | 'updated_at'>
-
-
-
-type GeoObjectConfig = GeoObjectConfig_Marking_Point // TODO |
-
-type GeoObjectConfig_Marking_Point = {
-    longitude: number
-    latitude: number
-}
-
-//const GeoObjectConfig_Schemas: {[key: DBType_GeoObject_TypeType]: {[key: DBType_GeoObject_SubTypeType]: JSONSchema}}
-
-type GeoObjectConfig_Schema = JSONSchema4
-
-const GeoObjectConfig_Schema_Marking_Point: GeoObjectConfig_Schema = {
-    type: 'object',
-    required: ['longitude', 'latitude'],
-    properties: {
-        longitude: {
-            type: 'number'
-        },
-        latitude: {
-            type: 'number'
+    private parseFilter(filter: string){
+        const filterOptions: Record<string, any> & {default: string} = {
+            default: ''
         }
+
+        const filterParts = filter.split('&')
+        filterParts.map(fp => {
+            const keyValueSplit = fp.split('=')
+            if(keyValueSplit.length === 1){
+                filterOptions['default'] === keyValueSplit[1]
+            } else if(keyValueSplit.length === 2) {
+                const key = keyValueSplit[0]
+                let value = keyValueSplit[1]
+
+                try {
+                    const parsed = JSON.parse(value)
+                    value = parsed
+                } catch (err){
+                    //ignored
+                }
+
+                filterOptions[key] = value
+            } else {
+                throw new Error('invalid syntax for filter options "' + filter + '"')
+            }
+        })
+
+        return filterOptions
     }
+
 }
 
-class GeoObjectSerializer {
-
-    static serializeConfig(configObject: {[key: string]: any}, schema: GeoObjectConfig_Schema){
-        return JSON.stringify(filterObject(configObject, schema))
-    }
-
-    static deserializeConfig<T extends GeoObjectConfig>(json: string, schema: GeoObjectConfig_Schema){
-        const parsed = JSON.parse(json)
-
-        return filterObject<T>(parsed, schema)
-    }
-
-    static deserializeConfigFor<T extends GeoObjectConfig>(json: string, type: DBType_Geo_Object_TypeType, subType: DBType_Geo_Object_SubTypeType){
-        const parsed = JSON.parse(json)
-
-        return filterObject<T>(parsed, schema)
-    }
-}

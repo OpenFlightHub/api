@@ -75,7 +75,7 @@ export function handleNewClient(ws: ws.WebSocket, req: Request, user: DBType_Use
                 const message = messageWithoutType as client_to_server.Message<'subscribe'>
 
                 if(typeof message.data !== 'object' || typeof message.data.event !== 'string' || typeof message.data.filter !== 'string'){
-                    rejectClientMessage(myClient, message, 'invalid listen data')
+                    rejectClientMessage(myClient, message, 'invalid subscribe data')
                     return
                 }
 
@@ -186,7 +186,7 @@ const registeredSubscribableEventHandlers = new Map<server_to_client.Message_Typ
 
 /**
  *
- * @param onNewSubscriber if you return a string the subscription will not be allowed (the string is an publicly visible error message!)
+ * @param onNewSubscriber if you return a string the subscription will not be allowed (the string is a publicly visible error message!)
  */
 export function registerSubscribableEvent<T extends server_to_client.Message_Type_Event_Type>(event: T, onNewSubscriber?: OnNewSubscriberCallback<T>, onSubscriberLeft?: OnSubscriberLeftCallback<T>){
     if(registeredSubscribableEventHandlers.has(event)){

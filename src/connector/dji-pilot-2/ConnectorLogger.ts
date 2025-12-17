@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import Connector from './Connector'
 import path from 'path';
-import { log } from 'util';
 
 export default class Logger {
 
