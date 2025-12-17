@@ -309,7 +309,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -336,8 +336,11 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -418,7 +421,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
@@ -442,7 +445,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
@@ -466,14 +469,14 @@ export type ApiType_Workspace_Geo_Objects_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -490,14 +493,17 @@ export type ApiType_Workspace_Geo_Objects_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -516,7 +522,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -540,7 +546,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -597,7 +603,7 @@ export type ApiType_Workspace_Geo_Object_Patch =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -611,8 +617,11 @@ export type ApiType_Workspace_Geo_Object_Patch =
                 config?: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -733,7 +742,7 @@ export type ApiType_Geo_Object =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -760,8 +769,11 @@ export type ApiType_Geo_Object =
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -844,6 +856,8 @@ export type ApiType_Geo_Object_Base = {
      * ISO 8601 format with a timezone
      */
     updated_at: string;
+    type: number;
+    sub_type: number;
 }
 
 
@@ -923,7 +937,7 @@ export type ApiType_Geo_Object_Type0 =
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              polygon: number[][];
+              polygon: [number, number, number][];
               /**
                * hex
                */
@@ -950,8 +964,11 @@ export type ApiType_Geo_Object_Type0 =
           config: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              center: number[];
+              center: [number, number, number];
               radius: number;
               /**
                * hex
@@ -982,7 +999,7 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
         /**
          * [lng, lat, elevation]
          */
-        point: number[];
+        point:  [number, number, number];
         /**
          * hex
          */
@@ -995,7 +1012,7 @@ export type ApiType_Geo_Object_Type0_Subtype0_Config = {
     /**
      * [lng, lat, elevation]
      */
-    point: number[];
+    point:  [number, number, number];
     /**
      * hex
      */
@@ -1062,7 +1079,7 @@ export type ApiType_Geo_Object_Type0_Subtype2 = {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        polygon: number[][];
+        polygon: [number, number, number][];
         /**
          * hex
          */
@@ -1075,7 +1092,7 @@ export type ApiType_Geo_Object_Type0_Subtype2_Config = {
     /**
      * [[lng, lat, elevation], [lng, lat, elevation]]
      */
-    polygon: number[][];
+    polygon: [number, number, number][];
     /**
      * hex
      */
@@ -1101,8 +1118,11 @@ export type ApiType_Geo_Object_Type0_Subtype3 = {
     config: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        center: number[];
+        center: [number, number, number];
         radius: number;
         /**
          * hex
@@ -1115,8 +1135,11 @@ export type ApiType_Geo_Object_Type0_Subtype3 = {
 export type ApiType_Geo_Object_Type0_Subtype3_Config = {
     /**
      * [lng, lat, elevation]
+     *
+     * @minItems 3
+     * @maxItems 3
      */
-    center: number[];
+    center: [number, number, number];
     radius: number;
     /**
      * hex
@@ -1217,7 +1240,7 @@ export type ApiType_Geo_Object_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
@@ -1240,7 +1263,7 @@ export type ApiType_Geo_Object_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
@@ -1263,14 +1286,14 @@ export type ApiType_Geo_Object_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -1286,14 +1309,17 @@ export type ApiType_Geo_Object_Create =
                  */
                 type: number;
                 /**
-                 * 0 - 6
+                 * 3
                  */
                 sub_type: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -1311,7 +1337,7 @@ export type ApiType_Geo_Object_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -1334,7 +1360,7 @@ export type ApiType_Geo_Object_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -1360,7 +1386,7 @@ export type ApiType_Geo_Object_Create_Base = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
 }
@@ -1375,7 +1401,7 @@ export type ApiType_Geo_Object_Type0_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -1398,7 +1424,7 @@ export type ApiType_Geo_Object_Type0_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
@@ -1421,14 +1447,14 @@ export type ApiType_Geo_Object_Type0_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              polygon: number[][];
+              polygon: [number, number, number][];
               /**
                * hex
                */
@@ -1444,14 +1470,17 @@ export type ApiType_Geo_Object_Type0_Create =
            */
           type: number;
           /**
-           * 0 - 6
+           * 3
            */
           sub_type: number;
           config: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              center: number[];
+              center: [number, number, number];
               radius: number;
               /**
                * hex
@@ -1470,14 +1499,14 @@ export type ApiType_Geo_Object_Type0_Subtype0_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
         /**
          * [lng, lat, elevation]
          */
-        point: number[];
+        point:  [number, number, number];
         /**
          * hex
          */
@@ -1494,7 +1523,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
@@ -1518,14 +1547,14 @@ export type ApiType_Geo_Object_Type0_Subtype2_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        polygon: number[][];
+        polygon: [number, number, number][];
         /**
          * hex
          */
@@ -1542,14 +1571,17 @@ export type ApiType_Geo_Object_Type0_Subtype3_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        center: number[];
+        center: [number, number, number];
         radius: number;
         /**
          * hex
@@ -1567,7 +1599,7 @@ export type ApiType_Geo_Object_Type1_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
@@ -1591,7 +1623,7 @@ export type ApiType_Geo_Object_Type2_Create = {
      */
     type: number;
     /**
-     * 0 - 6
+     * 3
      */
     sub_type: number;
     config: {
@@ -1644,7 +1676,7 @@ export type ApiType_Geo_Object_Patch =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    polygon: number[][];
+                    polygon: [number, number, number][];
                     /**
                      * hex
                      */
@@ -1657,8 +1689,11 @@ export type ApiType_Geo_Object_Patch =
                 config?: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    center: number[];
+                    center: [number, number, number];
                     radius: number;
                     /**
                      * hex
@@ -1739,7 +1774,7 @@ export type ApiType_Geo_Object_Type0_Patch =
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              polygon: number[][];
+              polygon: [number, number, number][];
               /**
                * hex
                */
@@ -1752,8 +1787,11 @@ export type ApiType_Geo_Object_Type0_Patch =
           config?: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              center: number[];
+              center: [number, number, number];
               radius: number;
               /**
                * hex
@@ -1770,7 +1808,7 @@ export type ApiType_Geo_Object_Type0_Subtype0_Patch = {
         /**
          * [lng, lat, elevation]
          */
-        point: number[];
+        point:  [number, number, number];
         /**
          * hex
          */
@@ -1800,7 +1838,7 @@ export type ApiType_Geo_Object_Type0_Subtype2_Patch = {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        polygon: number[][];
+        polygon: [number, number, number][];
         /**
          * hex
          */
@@ -1814,8 +1852,11 @@ export type ApiType_Geo_Object_Type0_Subtype3_Patch = {
     config?: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        center: number[];
+        center: [number, number, number];
         radius: number;
         /**
          * hex

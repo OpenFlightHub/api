@@ -2167,6 +2167,8 @@ components:
         - name
         - created_at
         - updated_at
+        - type
+        - sub_type
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -2180,6 +2182,10 @@ components:
           $ref: "#/components/schemas/timestamptz"
         updated_at:
           $ref: "#/components/schemas/timestamptz"
+        type:
+          type: number
+        sub_type:
+          type: number
 
     geo_object_type0:
       anyOf:
@@ -2198,10 +2204,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
             sub_type:
-              type: number
+              type: integer
               x-const: 0
             config:
               $ref: "#/components/schemas/geo_object_type0_subtype0_config"
@@ -2216,6 +2222,8 @@ components:
           type: array
           items:
             type: number
+          minLength: 3
+          maxLength: 3
           description: "[lng, lat, elevation]"
 
         color:
@@ -2232,10 +2240,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
             sub_type:
-              type: number
+              type: integer
               x-const: 1
             config:
               $ref: "#/components/schemas/geo_object_type0_subtype1_config"
@@ -2252,6 +2260,8 @@ components:
             type: array
             items:
               type: number
+            minLength: 3
+            maxLength: 3
           description: "[[lng, lat, elevation], [lng, lat, elevation]]"
         color:
           type: string
@@ -2267,10 +2277,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
             sub_type:
-              type: number
+              type: integer
               x-const: 2
             config:
               $ref: "#/components/schemas/geo_object_type0_subtype2_config"
@@ -2287,6 +2297,8 @@ components:
             type: array
             items:
               type: number
+            minItems: 3
+            maxItems: 3
           description: "[[lng, lat, elevation], [lng, lat, elevation]]"
         color:
           type: string
@@ -2302,10 +2314,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
             sub_type:
-              type: number
+              type: integer
               x-const: 3
             config:
               $ref: "#/components/schemas/geo_object_type0_subtype3_config"
@@ -2321,6 +2333,8 @@ components:
           type: array
           items:
             type: number
+          minItems: 3
+          maxItems: 3
           description: "[lng, lat, elevation]"
         radius:
           type: number
@@ -2338,10 +2352,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 1
             sub_type:
-              type: number
+              type: integer
             config:
               $ref: "#/components/schemas/geo_object_type1_config"
 
@@ -2374,10 +2388,10 @@ components:
             - config
           properties:
             type:
-              type: number
+              type: integer
               x-const: 2
             sub_type:
-              type: number
+              type: integer
             config:
               $ref: "#/components/schemas/geo_object_type2_config"
 
@@ -2441,11 +2455,11 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
               description: "0"
             sub_type:
-              type: number
+              type: integer
               x-const: 0
               description: "0"
             config:
@@ -2461,11 +2475,11 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
               description: "0"
             sub_type:
-              type: number
+              type: integer
               x-const: 1
               description: "1"
             config:
@@ -2481,11 +2495,11 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
               description: "0"
             sub_type:
-              type: number
+              type: integer
               x-const: 2
               description: "2"
             config:
@@ -2501,11 +2515,11 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 0
               description: "0"
             sub_type:
-              type: number
+              type: integer
               x-const: 3
               description: "3"
             config:
@@ -2521,12 +2535,13 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 1
               description: "1"
             sub_type:
-              type: number
-              description: "0 - 4"
+              type: integer
+              minimum: 0
+              maximum: 4
             config:
               $ref: "#/components/schemas/geo_object_type1_config"
 
@@ -2540,12 +2555,13 @@ components:
             - subtype
           properties:
             type:
-              type: number
+              type: integer
               x-const: 2
               description: "2"
             sub_type:
-              type: number
-              description: "0 - 6"
+              type: integer
+              minimum: 0
+              maximum: 6
             config:
               $ref: "#/components/schemas/geo_object_type2_config"
 

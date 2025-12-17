@@ -575,10 +575,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "example": "2023-12-11 23:06:52.7879+00"
                             },
                             "type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "sub_type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "config": {
                                 "type": "object",
@@ -592,6 +592,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
+                                        "minLength": 3,
+                                        "maxLength": 3,
                                         "description": "[lng, lat, elevation]"
                                     },
                                     "color": {
@@ -644,10 +646,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "example": "2023-12-11 23:06:52.7879+00"
                             },
                             "type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "sub_type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "config": {
                                 "type": "object",
@@ -662,7 +664,9 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                             "type": "array",
                                             "items": {
                                                 "type": "number"
-                                            }
+                                            },
+                                            "minLength": 3,
+                                            "maxLength": 3
                                         },
                                         "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                     },
@@ -716,10 +720,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "example": "2023-12-11 23:06:52.7879+00"
                             },
                             "type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "sub_type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "config": {
                                 "type": "object",
@@ -734,7 +738,9 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                             "type": "array",
                                             "items": {
                                                 "type": "number"
-                                            }
+                                            },
+                                            "minItems": 3,
+                                            "maxItems": 3
                                         },
                                         "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                     },
@@ -788,10 +794,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "example": "2023-12-11 23:06:52.7879+00"
                             },
                             "type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "sub_type": {
-                                "type": "number"
+                                "type": "integer"
                             },
                             "config": {
                                 "type": "object",
@@ -806,6 +812,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
+                                        "minItems": 3,
+                                        "maxItems": 3,
                                         "description": "[lng, lat, elevation]"
                                     },
                                     "radius": {
@@ -863,10 +871,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "integer"
                     },
                     "sub_type": {
-                        "type": "number"
+                        "type": "integer"
                     },
                     "config": {
                         "type": "object",
@@ -938,10 +946,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "example": "2023-12-11 23:06:52.7879+00"
                     },
                     "type": {
-                        "type": "number"
+                        "type": "integer"
                     },
                     "sub_type": {
-                        "type": "number"
+                        "type": "integer"
                     },
                     "config": {
                         "type": "object",
@@ -1000,12 +1008,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -1019,6 +1029,8 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minLength": 3,
+                                    "maxLength": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1047,12 +1059,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -1067,7 +1081,9 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minLength": 3,
+                                        "maxLength": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1097,12 +1113,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -1117,7 +1135,9 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1147,12 +1167,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -1167,6 +1189,8 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "radius": {
@@ -1200,12 +1224,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -1253,12 +1279,14 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -1316,6 +1344,8 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minLength": 3,
+                                    "maxLength": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1345,7 +1375,9 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minLength": 3,
+                                        "maxLength": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1376,7 +1408,9 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1407,6 +1441,8 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "radius": {
@@ -1542,10 +1578,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "example": "2023-12-11 23:06:52.7879+00"
                         },
                         "type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "sub_type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "config": {
                             "type": "object",
@@ -1559,6 +1595,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minLength": 3,
+                                    "maxLength": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1611,10 +1649,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "example": "2023-12-11 23:06:52.7879+00"
                         },
                         "type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "sub_type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "config": {
                             "type": "object",
@@ -1629,7 +1667,9 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minLength": 3,
+                                        "maxLength": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1683,10 +1723,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "example": "2023-12-11 23:06:52.7879+00"
                         },
                         "type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "sub_type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "config": {
                             "type": "object",
@@ -1701,7 +1741,9 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1755,10 +1797,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "example": "2023-12-11 23:06:52.7879+00"
                         },
                         "type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "sub_type": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "config": {
                             "type": "object",
@@ -1773,6 +1815,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "radius": {
@@ -1830,10 +1874,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -1905,10 +1949,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -1952,7 +1996,9 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
         "workspace_id",
         "name",
         "created_at",
-        "updated_at"
+        "updated_at",
+        "type",
+        "sub_type"
     ],
     "properties": {
         "id": {
@@ -1981,6 +2027,12 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
             "format": "timestamptz",
             "description": "ISO 8601 format with a timezone",
             "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer"
         }
     }
 }
@@ -2029,10 +2081,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -2046,6 +2098,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minLength": 3,
+                            "maxLength": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -2098,10 +2152,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -2116,7 +2170,9 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minLength": 3,
+                                "maxLength": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -2170,10 +2226,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -2188,7 +2244,9 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -2242,10 +2300,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "example": "2023-12-11 23:06:52.7879+00"
                 },
                 "type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "sub_type": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "config": {
                     "type": "object",
@@ -2260,6 +2318,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "radius": {
@@ -2318,10 +2378,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2335,6 +2395,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minLength": 3,
+                    "maxLength": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -2358,6 +2420,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Config : JSONSchema4  = {
             "items": {
                 "type": "number"
             },
+            "minLength": 3,
+            "maxLength": 3,
             "description": "[lng, lat, elevation]"
         },
         "color": {
@@ -2409,10 +2473,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2427,7 +2491,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minLength": 3,
+                        "maxLength": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -2453,7 +2519,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Config : JSONSchema4  = {
                 "type": "array",
                 "items": {
                     "type": "number"
-                }
+                },
+                "minLength": 3,
+                "maxLength": 3
             },
             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
         },
@@ -2506,10 +2574,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2524,7 +2592,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -2550,7 +2620,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype2_Config : JSONSchema4  = {
                 "type": "array",
                 "items": {
                     "type": "number"
-                }
+                },
+                "minItems": 3,
+                "maxItems": 3
             },
             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
         },
@@ -2603,10 +2675,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2621,6 +2693,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "radius": {
@@ -2648,6 +2722,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3_Config : JSONSchema4  = {
             "items": {
                 "type": "number"
             },
+            "minItems": 3,
+            "maxItems": 3,
             "description": "[lng, lat, elevation]"
         },
         "radius": {
@@ -2702,10 +2778,10 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2805,10 +2881,10 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
             "example": "2023-12-11 23:06:52.7879+00"
         },
         "type": {
-            "type": "number"
+            "type": "integer"
         },
         "sub_type": {
-            "type": "number"
+            "type": "integer"
         },
         "config": {
             "type": "object",
@@ -2894,12 +2970,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -2913,6 +2991,8 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minLength": 3,
+                                    "maxLength": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -2941,12 +3021,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -2961,7 +3043,9 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minLength": 3,
+                                        "maxLength": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -2991,12 +3075,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -3011,7 +3097,9 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -3041,12 +3129,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                             "type": "string"
                         },
                         "type": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "2"
                         },
                         "sub_type": {
-                            "type": "number",
-                            "description": "0 - 6"
+                            "type": "integer",
+                            "description": "3",
+                            "minimum": 0,
+                            "maximum": 6
                         },
                         "config": {
                             "type": "object",
@@ -3061,6 +3151,8 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "radius": {
@@ -3094,12 +3186,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3147,12 +3241,14 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3204,12 +3300,14 @@ export const ApiSchema_Geo_Object_Create_Base : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         }
     }
 }
@@ -3234,12 +3332,14 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3253,6 +3353,8 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minLength": 3,
+                            "maxLength": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -3281,12 +3383,14 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3301,7 +3405,9 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minLength": 3,
+                                "maxLength": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -3331,12 +3437,14 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3351,7 +3459,9 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -3381,12 +3491,14 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                     "type": "string"
                 },
                 "type": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "2"
                 },
                 "sub_type": {
-                    "type": "number",
-                    "description": "0 - 6"
+                    "type": "integer",
+                    "description": "3",
+                    "minimum": 0,
+                    "maximum": 6
                 },
                 "config": {
                     "type": "object",
@@ -3401,6 +3513,8 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "radius": {
@@ -3435,12 +3549,14 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3454,6 +3570,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Create : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minLength": 3,
+                    "maxLength": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -3483,12 +3601,14 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3503,7 +3623,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Create : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minLength": 3,
+                        "maxLength": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -3534,12 +3656,14 @@ export const ApiSchema_Geo_Object_Type0_Subtype2_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3554,7 +3678,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype2_Create : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -3585,12 +3711,14 @@ export const ApiSchema_Geo_Object_Type0_Subtype3_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3605,6 +3733,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3_Create : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "radius": {
@@ -3637,12 +3767,14 @@ export const ApiSchema_Geo_Object_Type1_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3691,12 +3823,14 @@ export const ApiSchema_Geo_Object_Type2_Create : JSONSchema4  = {
             "type": "string"
         },
         "type": {
-            "type": "number",
+            "type": "integer",
             "description": "2"
         },
         "sub_type": {
-            "type": "number",
-            "description": "0 - 6"
+            "type": "integer",
+            "description": "3",
+            "minimum": 0,
+            "maximum": 6
         },
         "config": {
             "type": "object",
@@ -3752,6 +3886,8 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minLength": 3,
+                                    "maxLength": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -3781,7 +3917,9 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minLength": 3,
+                                        "maxLength": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -3812,7 +3950,9 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                         "type": "array",
                                         "items": {
                                             "type": "number"
-                                        }
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -3843,6 +3983,8 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "radius": {
@@ -3961,6 +4103,8 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minLength": 3,
+                            "maxLength": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -3990,7 +4134,9 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minLength": 3,
+                                "maxLength": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -4021,7 +4167,9 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                                 "type": "array",
                                 "items": {
                                     "type": "number"
-                                }
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -4052,6 +4200,8 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "radius": {
@@ -4086,6 +4236,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Patch : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minLength": 3,
+                    "maxLength": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -4116,7 +4268,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Patch : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minLength": 3,
+                        "maxLength": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -4148,7 +4302,9 @@ export const ApiSchema_Geo_Object_Type0_Subtype2_Patch : JSONSchema4  = {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -4180,6 +4336,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3_Patch : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "radius": {
