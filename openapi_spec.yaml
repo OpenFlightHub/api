@@ -2222,8 +2222,8 @@ components:
           type: array
           items:
             type: number
-          minLength: 3
-          maxLength: 3
+          minItems: 3
+          maxItems: 3
           description: "[lng, lat, elevation]"
 
         color:
@@ -2260,8 +2260,8 @@ components:
             type: array
             items:
               type: number
-            minLength: 3
-            maxLength: 3
+            minItems: 3
+            maxItems: 3
           description: "[[lng, lat, elevation], [lng, lat, elevation]]"
         color:
           type: string
@@ -2297,8 +2297,8 @@ components:
             type: array
             items:
               type: number
-            minLength: 3
-            maxLength: 3
+            minItems: 3
+            maxItems: 3
           description: "[[lng, lat, elevation], [lng, lat, elevation]]"
         color:
           type: string
@@ -2333,8 +2333,8 @@ components:
           type: array
           items:
             type: number
-          minLength: 3
-          maxLength: 3
+          minItems: 3
+          maxItems: 3
           description: "[lng, lat, elevation]"
         radius:
           type: number

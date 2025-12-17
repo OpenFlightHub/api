@@ -592,8 +592,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3,
+                                        "minItems": 3,
+                                        "maxItems": 3,
                                         "description": "[lng, lat, elevation]"
                                     },
                                     "color": {
@@ -665,8 +665,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                             "items": {
                                                 "type": "number"
                                             },
-                                            "minLength": 3,
-                                            "maxLength": 3
+                                            "minItems": 3,
+                                            "maxItems": 3
                                         },
                                         "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                     },
@@ -1029,8 +1029,8 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
-                                    "minLength": 3,
-                                    "maxLength": 3,
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1082,8 +1082,8 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1344,8 +1344,8 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
-                                    "minLength": 3,
-                                    "maxLength": 3,
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1376,8 +1376,8 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -1595,8 +1595,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
-                                    "minLength": 3,
-                                    "maxLength": 3,
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -1668,8 +1668,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -2098,8 +2098,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
-                            "minLength": 3,
-                            "maxLength": 3,
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -2171,8 +2171,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                                 "items": {
                                     "type": "number"
                                 },
-                                "minLength": 3,
-                                "maxLength": 3
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -2395,8 +2395,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
-                    "minLength": 3,
-                    "maxLength": 3,
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -2420,8 +2420,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Config : JSONSchema4  = {
             "items": {
                 "type": "number"
             },
-            "minLength": 3,
-            "maxLength": 3,
+            "minItems": 3,
+            "maxItems": 3,
             "description": "[lng, lat, elevation]"
         },
         "color": {
@@ -2492,8 +2492,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
                         "items": {
                             "type": "number"
                         },
-                        "minLength": 3,
-                        "maxLength": 3
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -2520,8 +2520,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Config : JSONSchema4  = {
                 "items": {
                     "type": "number"
                 },
-                "minLength": 3,
-                "maxLength": 3
+                "minItems": 3,
+                "maxItems": 3
             },
             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
         },
@@ -2991,8 +2991,8 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
-                                    "minLength": 3,
-                                    "maxLength": 3,
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -3044,8 +3044,8 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -3353,8 +3353,8 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
-                            "minLength": 3,
-                            "maxLength": 3,
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -3406,8 +3406,8 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                                 "items": {
                                     "type": "number"
                                 },
-                                "minLength": 3,
-                                "maxLength": 3
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -3570,8 +3570,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Create : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
-                    "minLength": 3,
-                    "maxLength": 3,
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -3624,8 +3624,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Create : JSONSchema4  = {
                         "items": {
                             "type": "number"
                         },
-                        "minLength": 3,
-                        "maxLength": 3
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },
@@ -3886,8 +3886,8 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                     "items": {
                                         "type": "number"
                                     },
-                                    "minLength": 3,
-                                    "maxLength": 3,
+                                    "minItems": 3,
+                                    "maxItems": 3,
                                     "description": "[lng, lat, elevation]"
                                 },
                                 "color": {
@@ -3918,8 +3918,8 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                                         "items": {
                                             "type": "number"
                                         },
-                                        "minLength": 3,
-                                        "maxLength": 3
+                                        "minItems": 3,
+                                        "maxItems": 3
                                     },
                                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                                 },
@@ -4103,8 +4103,8 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                             "items": {
                                 "type": "number"
                             },
-                            "minLength": 3,
-                            "maxLength": 3,
+                            "minItems": 3,
+                            "maxItems": 3,
                             "description": "[lng, lat, elevation]"
                         },
                         "color": {
@@ -4135,8 +4135,8 @@ export const ApiSchema_Geo_Object_Type0_Patch : JSONSchema4  = {
                                 "items": {
                                     "type": "number"
                                 },
-                                "minLength": 3,
-                                "maxLength": 3
+                                "minItems": 3,
+                                "maxItems": 3
                             },
                             "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                         },
@@ -4236,8 +4236,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Patch : JSONSchema4  = {
                     "items": {
                         "type": "number"
                     },
-                    "minLength": 3,
-                    "maxLength": 3,
+                    "minItems": 3,
+                    "maxItems": 3,
                     "description": "[lng, lat, elevation]"
                 },
                 "color": {
@@ -4269,8 +4269,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Patch : JSONSchema4  = {
                         "items": {
                             "type": "number"
                         },
-                        "minLength": 3,
-                        "maxLength": 3
+                        "minItems": 3,
+                        "maxItems": 3
                     },
                     "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
                 },

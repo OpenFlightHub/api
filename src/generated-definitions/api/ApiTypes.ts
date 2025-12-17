@@ -252,8 +252,11 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -281,7 +284,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -427,8 +430,11 @@ export type ApiType_Workspace_Geo_Objects_Create =
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -452,7 +458,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -572,8 +578,11 @@ export type ApiType_Workspace_Geo_Object_Patch =
                 config?: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -588,7 +597,7 @@ export type ApiType_Workspace_Geo_Object_Patch =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -685,8 +694,11 @@ export type ApiType_Geo_Object =
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -714,7 +726,7 @@ export type ApiType_Geo_Object =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -880,8 +892,11 @@ export type ApiType_Geo_Object_Type0 =
           config: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              point: number[];
+              point: [number, number, number];
               /**
                * hex
                */
@@ -909,7 +924,7 @@ export type ApiType_Geo_Object_Type0 =
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              line: number[][];
+              line: [number, number, number][];
               /**
                * hex
                */
@@ -998,8 +1013,11 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
     config: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        point:  [number, number, number];
+        point: [number, number, number];
         /**
          * hex
          */
@@ -1011,8 +1029,11 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
 export type ApiType_Geo_Object_Type0_Subtype0_Config = {
     /**
      * [lng, lat, elevation]
+     *
+     * @minItems 3
+     * @maxItems 3
      */
-    point:  [number, number, number];
+    point: [number, number, number];
     /**
      * hex
      */
@@ -1039,7 +1060,7 @@ export type ApiType_Geo_Object_Type0_Subtype1 = {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        line: number[][];
+        line: [number, number, number][];
         /**
          * hex
          */
@@ -1052,7 +1073,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Config = {
     /**
      * [[lng, lat, elevation], [lng, lat, elevation]]
      */
-    line: number[][];
+    line: [number, number, number][];
     /**
      * hex
      */
@@ -1246,8 +1267,11 @@ export type ApiType_Geo_Object_Create =
                 config: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -1270,7 +1294,7 @@ export type ApiType_Geo_Object_Create =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -1407,8 +1431,11 @@ export type ApiType_Geo_Object_Type0_Create =
           config: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              point: number[];
+              point: [number, number, number];
               /**
                * hex
                */
@@ -1431,7 +1458,7 @@ export type ApiType_Geo_Object_Type0_Create =
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              line: number[][];
+              line: [number, number, number][];
               /**
                * hex
                */
@@ -1505,8 +1532,11 @@ export type ApiType_Geo_Object_Type0_Subtype0_Create = {
     config: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        point:  [number, number, number];
+        point: [number, number, number];
         /**
          * hex
          */
@@ -1530,7 +1560,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Create = {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        line: number[][];
+        line: [number, number, number][];
         /**
          * hex
          */
@@ -1647,8 +1677,11 @@ export type ApiType_Geo_Object_Patch =
                 config?: {
                     /**
                      * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
                      */
-                    point: number[];
+                    point: [number, number, number];
                     /**
                      * hex
                      */
@@ -1662,7 +1695,7 @@ export type ApiType_Geo_Object_Patch =
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
                      */
-                    line: number[][];
+                    line: [number, number, number][];
                     /**
                      * hex
                      */
@@ -1745,8 +1778,11 @@ export type ApiType_Geo_Object_Type0_Patch =
           config?: {
               /**
                * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
                */
-              point: number[];
+              point: [number, number, number];
               /**
                * hex
                */
@@ -1760,7 +1796,7 @@ export type ApiType_Geo_Object_Type0_Patch =
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
                */
-              line: number[][];
+              line: [number, number, number][];
               /**
                * hex
                */
@@ -1807,8 +1843,11 @@ export type ApiType_Geo_Object_Type0_Subtype0_Patch = {
     config?: {
         /**
          * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
          */
-        point:  [number, number, number];
+        point: [number, number, number];
         /**
          * hex
          */
@@ -1823,7 +1862,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Patch = {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
          */
-        line: number[][];
+        line: [number, number, number][];
         /**
          * hex
          */
