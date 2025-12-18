@@ -1,5 +1,5 @@
 import {DBInsert_Drone, DBInsert_Drone_Data, DBUpdate_Drone, delete_Drone, insert_Drone, insert_Drone_Data, select_Drone, select_Workspace, update_Drone} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TypeType } from '../../generated-definitions/db/DBTypes'
 import { getCore } from '..'
@@ -20,19 +20,19 @@ export default class DroneModule extends Module_Base<
     },
 
     {
-        create: {
+        create_drone: {
             eventDataType: DBType_Drone,
             availableContexts: 'id'
         },
-        update: {
+        update_drone: {
             eventDataType: DBType_Drone,
             availableContexts: 'id'
         },
-        delete: {
+        delete_drone: {
             eventDataType: DBType_Drone,
             availableContexts: 'id'
         },
-        insert_drone_data: {
+        create_drone_data: {
             eventDataType: DBType_Drone_Data,
             availableContexts: 'id'
         }
@@ -100,6 +100,10 @@ export default class DroneModule extends Module_Base<
 
             const workspace = await select_Workspace(workspaceId)
 
+            if(workspace === false){
+                return 'workspace does not exist'
+            }
+
             const hasPermission = await getCore().modules.user.userHasPermissionForWorkspace(client.userId, workspace.id)
 
             if(!hasPermission){
@@ -110,55 +114,110 @@ export default class DroneModule extends Module_Base<
 
     }
 
-    async create(data: DBInsert_Drone){
+    async createDrone(data: DBInsert_Drone){
         const drone = await insert_Drone(data)
 
-        this.dispatch('create', {
+        this.dispatch('create_drone', {
             id: drone.id
         }, drone)
 
         return drone
     }
 
-    async update(id: number, data: DBUpdate_Drone){
-        const drone = await update_Drone(data, id)
+    /**
+     *
+     * @returns false if does not exist
+     * @see updateDroneSafe
+     */
+    async updateDrone(id: number, data: DBUpdate_Drone){
+        const drone = await update_Drone(id, data)
 
-        this.dispatch('update', {
+        if(drone === false){
+            return false
+        }
+
+        this.dispatch('update_drone', {
             id: drone.id
         }, drone)
 
         return drone
     }
 
-    async delete(id: number){
+    /**
+     *
+     * @see updateDrone
+     */
+    updateDroneSafe = makeFunctionIdSafe(this, this.updateDrone)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteDroneSafe
+     */
+    async deleteDrone(id: number){
         const drone = await delete_Drone(id)
 
-        this.dispatch('delete', {
+        if(drone === false){
+            return false
+        }
+
+        this.dispatch('delete_drone', {
             id: drone.id
         }, drone)
     }
 
-    async get(id: number){
+    /**
+     *
+     * @see deleteDrone
+     */
+    deleteDroneSafe = makeFunctionIdSafe(this, this.deleteDrone)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getDroneSafe
+     */
+    async getDrone(id: number){
         return await select_Drone(id)
     }
 
-    async insertDroneData(data: DBInsert_Drone_Data){
+    /**
+     *
+     * @see getDrone
+     */
+    getDroneSafe = makeFunctionIdSafe(this, this.getDrone)
+
+    private async insertDroneData(data: DBInsert_Drone_Data){
+
+        let drone = await this.getDroneSafe(data.drone_id)
+
+        if(typeof drone.current_flight_id !== 'number'){
+            const newFlight = await getCore().modules.flight.create({
+                drone_id: drone.id,
+                workspace_id: await this.getCurrentWorkspaceOfDroneOrDefault(drone.id, 0)
+            })
+
+            drone = await this.updateDroneSafe(drone.id, {
+                current_flight_id: newFlight.id
+            })
+        }
+
         const droneData = await insert_Drone_Data(data)
 
         if(droneData.type === DRONE_DATA_TYPES.POSITION){
-            const droneLastPosition = this.extractPositionFromDroneData(droneData.data)
+            const droneLastPosition = this.extractPositionFromDroneData(droneData)
 
             if(droneLastPosition === false){
                 console.warn('invalid drone position in data', droneData)
             } else {
                 this.subscribableEventHandlerDronePosition.triggerListener('' + droneData.drone_id, {
                     id: droneData.drone_id,
-                    serial_number: (await this.get(droneData.drone_id)).serial_number,
+                    serial_number: (await this.getDroneSafe(droneData.drone_id)).serial_number,
                     position: droneLastPosition
                 })
             }
         } else if (droneData.type === DRONE_DATA_TYPES.TELEMETRY){
-            const droneLastTelemetry = this.extractTelemetryFromDroneData(droneData.data)
+            const droneLastTelemetry = this.extractTelemetryFromDroneData(droneData)
 
             if(droneLastTelemetry === false){
                 console.warn('invalid drone telemetry in data', droneData)
@@ -170,7 +229,7 @@ export default class DroneModule extends Module_Base<
             }
         }
 
-        this.dispatch('insert_drone_data', {
+        this.dispatch('create_drone_data', {
             id: droneData.drone_id
         }, droneData)
 
@@ -178,13 +237,11 @@ export default class DroneModule extends Module_Base<
     }
 
 
-
-
     async addDroneData(droneId: number, type: DBType_Drone_Data_TypeType, data: any){
 
-        const drone = await this.get(droneId)
+        const drone = await this.getDroneSafe(droneId)
 
-        await insert_Drone_Data({
+        await this.insertDroneData({
             drone_id: droneId,
             flight_id: drone.current_flight_id,
             type,
@@ -254,9 +311,9 @@ export default class DroneModule extends Module_Base<
         if(isInFlight && !drone.in_flight){
             // start new flight and end old one
 
-            const currentFlight = await getCore().modules.flight.get(drone.current_flight_id)
+            const currentFlight = await getCore().modules.flight.getFlightSafe(drone.current_flight_id)
 
-            await getCore().modules.flight.update(drone.current_flight_id, {
+            await getCore().modules.flight.updateFlight(drone.current_flight_id, {
                 ended_at: new Date().toISOString(),
                 landed_at: currentFlight.landed_at || new Date().toISOString()
             })
@@ -272,7 +329,7 @@ export default class DroneModule extends Module_Base<
                 console.warn('creating new flight but drone has no current connection', newFlight, drone)
             }
 
-            drone = await this.update(drone.id, {
+            drone = await this.updateDroneSafe(drone.id, {
                 current_flight_id: newFlight.id,
                 in_flight: true
             })
@@ -281,11 +338,11 @@ export default class DroneModule extends Module_Base<
         if(!isInFlight && drone.in_flight){
             // mark flight as landed
 
-            await getCore().modules.flight.update(drone.current_flight_id, {
+            await getCore().modules.flight.updateFlight(drone.current_flight_id, {
                 landed_at: new Date().toISOString()
             })
 
-            drone = await this.update(drone.id, {
+            drone = await this.updateDroneSafe(drone.id, {
                 in_flight: false
             })
 
@@ -296,12 +353,12 @@ export default class DroneModule extends Module_Base<
 
 
     async getActiveConnectionForDrone(droneId: number){
-        const drone = await this.get(droneId)
+        const drone = await this.getDroneSafe(droneId)
         if(typeof drone.last_connection_id !== 'number'){
             return false
         }
 
-        const connection = await getCore().modules.connection.get(drone.last_connection_id)
+        const connection = await getCore().modules.connection.getConnection(drone.last_connection_id)
 
         if(!connection){
             return false
@@ -316,11 +373,7 @@ export default class DroneModule extends Module_Base<
 
     async getLastConnectionForDrone(droneOrDroneId: DBType_Drone | number){
         if(typeof droneOrDroneId === 'number'){
-            droneOrDroneId = await select_Drone(droneOrDroneId)
-        }
-
-        if(!droneOrDroneId){
-            throw GuardError._410_Gone('drone not found: ' + droneOrDroneId)
+            droneOrDroneId = await this.getDroneSafe(droneOrDroneId)
         }
 
         if(typeof droneOrDroneId.last_connection_id !== 'number'){
@@ -346,5 +399,15 @@ export default class DroneModule extends Module_Base<
         }
 
         return currentConnection.workspace_id
+    }
+
+    async getCurrentWorkspaceOfDroneOrDefault(droneId: number, def: number){
+        const workspaceId = await this.getCurrentWorkspaceOfDrone(droneId)
+
+        if(workspaceId === false){
+            return def
+        }
+
+        return workspaceId
     }
 }

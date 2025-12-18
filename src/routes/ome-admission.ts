@@ -168,7 +168,11 @@ router.post('/', asyncHandler(async(req, res)=>{
             throw GuardError._401_Unauthorized()
         }
 
-        const connection = await getCore().modules.connection.get(connectionId)
+        const connection = await getCore().modules.connection.getConnection(connectionId)
+
+        if(connection === false){
+            throw GuardError._410_Gone()
+        }
 
         if(body.request.direction === 'incoming'){// publisher
 

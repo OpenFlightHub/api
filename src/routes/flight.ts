@@ -28,9 +28,11 @@ router.use('/:flight_id', asyncHandler(async(req, res, next) => {
 
     const flightId = req.GM.guardParam('flight_id', 'id')
 
-    const flight = await req.GM.guardDBGone(()=>{
-        return getCore().modules.flight.get(flightId)
-    })
+    const flight = await getCore().modules.flight.getFlight(flightId)
+
+    if(flight === false){
+        throw GuardError._410_Gone()
+    }
 
     const connection = await getCore().modules.drone.getLastConnectionForDrone(flight.drone_id)
 

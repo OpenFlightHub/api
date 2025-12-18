@@ -6,6 +6,7 @@ import { DBType_Geo_Object } from '../../generated-definitions/db/DBTypes';
 import { ApiType_Geo_Object_Patch, ApiType_Reference, ApiType_Workspace_Geo_Objects_Create, ApiType_Workspace_Geo_Objects_Get } from '../../generated-definitions/api/ApiTypes';
 import { randomUUID } from 'crypto';
 import { getCore } from '../../core';
+import { GuardError } from '../../ManInTheMiddleware';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -32,7 +33,7 @@ router.post('/create', asyncHandler(async(req, res) => {
     //@ts-ignore
     const workspaceId = req._workspaceId as number
 
-    const createdGeoObject = await getCore().modules.geoObject.create({
+    const createdGeoObject = await getCore().modules.geoObject.createGeoObject({
         uuid: typeof body.uuid === 'string' ? body.uuid : randomUUID(),
         name: body.name,
         type: body.type,
@@ -48,13 +49,15 @@ router.patch('/:geo_object_id', asyncHandler(async(req, res) => {
 
     const geoObjectId = req.GM.guardParam('geo_object_id', 'id')
 
-    const geoObject = await req.GM.guardDBGone(()=>{
-        return getCore().modules.geoObject.get(geoObjectId)
-    })
+    const geoObject = await getCore().modules.geoObject.getGeoObject(geoObjectId)
+
+    if(geoObject === false){
+        throw GuardError._410_Gone()
+    }
 
     const body = req.GM.guardBodySchema<ApiType_Geo_Object_Patch>(ApiSchema_Geo_Object_Patch)
 
-    res.GM.guardSend(await getCore().modules.geoObject.update(geoObject.id, {
+    res.GM.guardSend(await getCore().modules.geoObject.updateGeoObjectSafe(geoObject.id, {
         name: typeof body.name === 'string' ? body.name : geoObject.name,
         config: body.config ? body.config : geoObject.config
     }), ApiSchema_Geo_Object)
@@ -66,11 +69,13 @@ router.delete('/:geo_object_id', asyncHandler(async(req, res) => {
 
     const geoObjectId = req.GM.guardParam('geo_object_id', 'id')
 
-    const geoObject = await req.GM.guardDBGone(()=>{
-        return getCore().modules.geoObject.get(geoObjectId)
-    })
+    const geoObject = await getCore().modules.geoObject.getGeoObject(geoObjectId)
 
-    await getCore().modules.geoObject.delete(geoObject.id)
+    if(geoObject === false){
+        throw GuardError._410_Gone()
+    }
+
+    await getCore().modules.geoObject.deleteGeoObject(geoObject.id)
 
     res.status(200)
     res.send()

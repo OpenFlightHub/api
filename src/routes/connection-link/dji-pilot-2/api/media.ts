@@ -79,7 +79,7 @@ router.post('/upload-callback', asyncHandler(async (req, res) => {
 
     //TODO support differentiation between picture and panorama
 
-    const drone = await getCore().modules.drone.get(connection.last_drone_id)
+    const drone = await getCore().modules.drone.getDroneSafe(connection.last_drone_id)
 
     await getCore().modules.droneMedia.createDroneMediaFromBucketObject(getBucketNameForConnectionId(connection.id), body.object_key, drone, body.fingerprint, body.ext.tinny_fingerprint, mediaType, JSON.stringify({ext: body.ext, metadata: body.metadata}))
 

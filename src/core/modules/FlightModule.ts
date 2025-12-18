@@ -1,5 +1,5 @@
 import {DBInsert_Flight, DBInsert_Flight_Data, DBUpdate_Flight, delete_Flight, insert_Flight, insert_Flight_Data, select_Flight, update_Flight} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Flight, DBType_Flight_Data } from '../../generated-definitions/db/DBTypes'
 const db : pgp.IDatabase<any> = global.db
@@ -11,15 +11,15 @@ export default class FlightModule extends Module_Base<
     },
 
     {
-        create: {
+        create_flight: {
             eventDataType: DBType_Flight,
             availableContexts: 'id' | 'workspaceId'
         },
-        update: {
+        update_flight: {
             eventDataType: DBType_Flight,
             availableContexts: 'id' | 'workspaceId'
         },
-        delete: {
+        delete_flight: {
             eventDataType: DBType_Flight,
             availableContexts: 'id' | 'workspaceId'
         },
@@ -37,7 +37,7 @@ export default class FlightModule extends Module_Base<
     async create(data: DBInsert_Flight){
         const flight = await insert_Flight(data)
 
-        this.dispatch('create', {
+        this.dispatch('create_flight', {
             id: flight.id,
             workspaceId: flight.workspace_id
         }, flight)
@@ -45,10 +45,19 @@ export default class FlightModule extends Module_Base<
         return flight
     }
 
-    async update(id: number, data: DBUpdate_Flight){
-        const flight = await update_Flight(data, id)
+    /**
+     *
+     * @returns false if does not exist
+     * @see updateFlightSafe
+     */
+    async updateFlight(id: number, data: DBUpdate_Flight){
+        const flight = await update_Flight(id, data)
 
-        this.dispatch('update', {
+        if(flight === false){
+            return false
+        }
+
+        this.dispatch('update_flight', {
             id: flight.id,
             workspaceId: flight.workspace_id
         }, flight)
@@ -56,21 +65,53 @@ export default class FlightModule extends Module_Base<
         return flight
     }
 
-    async delete(id: number){
+    /**
+     *
+     * @see updateFlight
+     */
+    updateFlightSafe = makeFunctionIdSafe(this, this.updateFlight)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteFlightSafe
+     */
+    async deleteFlight(id: number){
         const flight = await delete_Flight(id)
 
-        this.dispatch('delete', {
+        if(flight === false){
+            return false
+        }
+
+        this.dispatch('delete_flight', {
             id: flight.id,
             workspaceId: flight.workspace_id
         }, flight)
     }
 
-    async get(id: number){
+    /**
+     *
+     * @see deleteFlight
+     */
+    deleteFlightSafe = makeFunctionIdSafe(this, this.deleteFlight)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getFlightSafe
+     */
+    async getFlight(id: number){
         return await select_Flight(id)
     }
 
+    /**
+     *
+     * @see getFlight
+     */
+    getFlightSafe = makeFunctionIdSafe(this, this.getFlight)
 
-    async insertFlightData(data: DBInsert_Flight_Data){
+
+    async createFlightData(data: DBInsert_Flight_Data){
         const flightData = await insert_Flight_Data(data)
 
         const workspaceId = await this.getWorkspaceIdForFlight(flightData.flight_id)
@@ -91,7 +132,7 @@ export default class FlightModule extends Module_Base<
     }
 
     async getWorkspaceIdForFlight(flightId: number){
-        const flight = await this.get(flightId)
+        const flight = await this.getFlightSafe(flightId)
 
         return flight.workspace_id
     }

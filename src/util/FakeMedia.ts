@@ -40,7 +40,7 @@ export default class FakeMedia {
             setTimeout(()=>{
                 //delete after 10 minutes
 
-                getCore().modules.droneMedia.delete(media.id)
+                getCore().modules.droneMedia.deleteDroneMedia(media.id)
 
             }, 1000 * 60 * 10)
 

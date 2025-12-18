@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 
 import {getDJIGeoJsonForGeoObject, getGeoObjectConfigForDJIMapElementContent, getGeoObjectSubTypeForDJIMapElementType} from '../../../../util/dji'
 import { getCore } from '../../../../core';
+import { GuardError } from '../../../../ManInTheMiddleware';
 
 const router = express.Router()
 
@@ -21,7 +22,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
 
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post>(ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post)
 
-    const geoObject = await getCore().modules.geoObject.create({
+    const geoObject = await getCore().modules.geoObject.createGeoObject({
         uuid: body.id,
         name: body.name,
         workspace_id: connection.workspace_id,
@@ -90,16 +91,18 @@ router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     const elementUUID = req.GM.guardParam('element_uuid', 'uuid')
 
-    const existingGeoObject = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_Geo_Object>('SELECT * FROM geo_objects ' + pgp.as.format('WHERE uuid = ${uuid}', {uuid: elementUUID}))
-    })
+    const existingGeoObject = await getCore().modules.geoObject.getGeoObject(elementUUID)
+
+    if(existingGeoObject === false){
+        throw GuardError._410_Gone()
+    }
 
     await req.GM.guardConnectionHasPermissionForWorkspace(existingGeoObject.workspace_id)
 
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Elements_Put>(ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put)
 
     await req.GM.guardDBGone(()=>{
-        return getCore().modules.geoObject.update(elementUUID, {
+        return getCore().modules.geoObject.updateGeoObject(elementUUID, {
             updated_at: dayjs().toISOString(),
             name: body.name,
             config: getGeoObjectConfigForDJIMapElementContent(body.content,
@@ -131,7 +134,7 @@ router.delete('/elements/:element_uuid', asyncHandler(async (req, res) => {
 
     await req.GM.guardConnectionHasPermissionForWorkspace(existingElement.workspace_id)
 
-    await getCore().modules.geoObject.delete(existingElement.id)
+    await getCore().modules.geoObject.deleteGeoObject(existingElement.id)
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response>({
         code: 0,

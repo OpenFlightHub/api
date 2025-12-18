@@ -140,14 +140,22 @@ import {DBType_User} from './DBTypes'
         return db.one<DBType_User>(db.$config.pgp.helpers.insert(values, undefined, 'users') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_User<T extends number | string>(values: DBUpdate_User, idOrWhereCondition: T): T extends number ? Promise<DBType_User> : Promise<DBType_User[]>{
+    export async function update_User<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_User): Promise<T extends number ? false | DBType_User : DBType_User[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -155,19 +163,73 @@ import {DBType_User} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_User(id: number){
-        return db.one<DBType_User>('DELETE FROM users WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_User<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_User : DBType_User[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_User>('DELETE FROM users WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_User>('DELETE FROM users ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_User<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_User : DBType_User[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_User>('SELECT * FROM users ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_User(id: number){
-        return db.one<DBType_User>('SELECT * FROM users ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_User>('SELECT FROM users ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -286,14 +348,22 @@ import {DBType_File} from './DBTypes'
         return db.one<DBType_File>(db.$config.pgp.helpers.insert(values, undefined, 'files') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_File<T extends number | string>(values: DBUpdate_File, idOrWhereCondition: T): T extends number ? Promise<DBType_File> : Promise<DBType_File[]>{
+    export async function update_File<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_File): Promise<T extends number ? false | DBType_File : DBType_File[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_File>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_File>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -301,19 +371,73 @@ import {DBType_File} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_File>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_File(id: number){
-        return db.one<DBType_File>('DELETE FROM files WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_File<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_File : DBType_File[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_File>('DELETE FROM files WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_File>('DELETE FROM files ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_File<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_File : DBType_File[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_File>('SELECT * FROM files ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_File(id: number){
-        return db.one<DBType_File>('SELECT * FROM files ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_File>('SELECT FROM files ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -373,14 +497,22 @@ import {DBType_Workspace} from './DBTypes'
         return db.one<DBType_Workspace>(db.$config.pgp.helpers.insert(values, undefined, 'workspaces') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Workspace<T extends number | string>(values: DBUpdate_Workspace, idOrWhereCondition: T): T extends number ? Promise<DBType_Workspace> : Promise<DBType_Workspace[]>{
+    export async function update_Workspace<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Workspace): Promise<T extends number ? false | DBType_Workspace : DBType_Workspace[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Workspace>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Workspace>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -388,19 +520,73 @@ import {DBType_Workspace} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Workspace>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Workspace(id: number){
-        return db.one<DBType_Workspace>('DELETE FROM workspaces WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Workspace<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Workspace : DBType_Workspace[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Workspace>('DELETE FROM workspaces WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Workspace>('DELETE FROM workspaces ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Workspace<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Workspace : DBType_Workspace[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Workspace>('SELECT * FROM workspaces ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Workspace(id: number){
-        return db.one<DBType_Workspace>('SELECT * FROM workspaces ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Workspace>('SELECT FROM workspaces ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -443,14 +629,22 @@ import {DBType_Workspace_Permission} from './DBTypes'
         return db.one<DBType_Workspace_Permission>(db.$config.pgp.helpers.insert(values, undefined, 'workspace_permissions') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Workspace_Permission<T extends number | string>(values: DBUpdate_Workspace_Permission, idOrWhereCondition: T): T extends number ? Promise<DBType_Workspace_Permission> : Promise<DBType_Workspace_Permission[]>{
+    export async function update_Workspace_Permission<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Workspace_Permission): Promise<T extends number ? false | DBType_Workspace_Permission : DBType_Workspace_Permission[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Workspace_Permission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Workspace_Permission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -458,12 +652,41 @@ import {DBType_Workspace_Permission} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Workspace_Permission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Workspace_Permission(id: number){
-        return db.one<DBType_Workspace_Permission>('DELETE FROM workspace_permissions WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Workspace_Permission<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Workspace_Permission : DBType_Workspace_Permission[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Workspace_Permission>('DELETE FROM workspace_permissions WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Workspace_Permission>('DELETE FROM workspace_permissions ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
@@ -564,14 +787,22 @@ import {DBType_Connection} from './DBTypes'
         return db.one<DBType_Connection>(db.$config.pgp.helpers.insert(values, undefined, 'connections') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Connection<T extends number | string>(values: DBUpdate_Connection, idOrWhereCondition: T): T extends number ? Promise<DBType_Connection> : Promise<DBType_Connection[]>{
+    export async function update_Connection<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Connection): Promise<T extends number ? false | DBType_Connection : DBType_Connection[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Connection>(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Connection>(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -579,19 +810,73 @@ import {DBType_Connection} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Connection>(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Connection(id: number){
-        return db.one<DBType_Connection>('DELETE FROM connections WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Connection<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Connection : DBType_Connection[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Connection>('DELETE FROM connections WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Connection>('DELETE FROM connections ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Connection<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Connection : DBType_Connection[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Connection>('SELECT * FROM connections ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Connection(id: number){
-        return db.one<DBType_Connection>('SELECT * FROM connections ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Connection>('SELECT FROM connections ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -643,14 +928,22 @@ import {DBType_Remote_Controller} from './DBTypes'
         return db.one<DBType_Remote_Controller>(db.$config.pgp.helpers.insert(values, undefined, 'remote_controllers') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Remote_Controller<T extends number | string>(values: DBUpdate_Remote_Controller, idOrWhereCondition: T): T extends number ? Promise<DBType_Remote_Controller> : Promise<DBType_Remote_Controller[]>{
+    export async function update_Remote_Controller<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Remote_Controller): Promise<T extends number ? false | DBType_Remote_Controller : DBType_Remote_Controller[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Remote_Controller>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -658,19 +951,73 @@ import {DBType_Remote_Controller} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Remote_Controller>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Remote_Controller(id: number){
-        return db.one<DBType_Remote_Controller>('DELETE FROM remote_controllers WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Remote_Controller<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Remote_Controller : DBType_Remote_Controller[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller>('DELETE FROM remote_controllers WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Remote_Controller>('DELETE FROM remote_controllers ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Remote_Controller<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Remote_Controller : DBType_Remote_Controller[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller>('SELECT * FROM remote_controllers ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Remote_Controller(id: number){
-        return db.one<DBType_Remote_Controller>('SELECT * FROM remote_controllers ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Remote_Controller>('SELECT FROM remote_controllers ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -761,14 +1108,22 @@ import {DBType_Drone} from './DBTypes'
         return db.one<DBType_Drone>(db.$config.pgp.helpers.insert(values, undefined, 'drones') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Drone<T extends number | string>(values: DBUpdate_Drone, idOrWhereCondition: T): T extends number ? Promise<DBType_Drone> : Promise<DBType_Drone[]>{
+    export async function update_Drone<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone): Promise<T extends number ? false | DBType_Drone : DBType_Drone[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Drone>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -776,19 +1131,73 @@ import {DBType_Drone} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Drone(id: number){
-        return db.one<DBType_Drone>('DELETE FROM drones WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Drone<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone : DBType_Drone[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone>('DELETE FROM drones WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone>('DELETE FROM drones ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Drone<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone : DBType_Drone[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone>('SELECT * FROM drones ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Drone(id: number){
-        return db.one<DBType_Drone>('SELECT * FROM drones ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone>('SELECT FROM drones ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -869,14 +1278,22 @@ import {DBType_Flight} from './DBTypes'
         return db.one<DBType_Flight>(db.$config.pgp.helpers.insert(values, undefined, 'flights') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Flight<T extends number | string>(values: DBUpdate_Flight, idOrWhereCondition: T): T extends number ? Promise<DBType_Flight> : Promise<DBType_Flight[]>{
+    export async function update_Flight<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight): Promise<T extends number ? false | DBType_Flight : DBType_Flight[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Flight>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -884,19 +1301,73 @@ import {DBType_Flight} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Flight>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Flight(id: number){
-        return db.one<DBType_Flight>('DELETE FROM flights WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Flight<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Flight : DBType_Flight[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight>('DELETE FROM flights WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight>('DELETE FROM flights ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Flight<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Flight : DBType_Flight[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight>('SELECT * FROM flights ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Flight(id: number){
-        return db.one<DBType_Flight>('SELECT * FROM flights ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight>('SELECT FROM flights ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -975,14 +1446,22 @@ import {DBType_Flight_Data} from './DBTypes'
         return db.one<DBType_Flight_Data>(db.$config.pgp.helpers.insert(values, undefined, 'flight_data') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Flight_Data<T extends number | string>(values: DBUpdate_Flight_Data, idOrWhereCondition: T): T extends number ? Promise<DBType_Flight_Data> : Promise<DBType_Flight_Data[]>{
+    export async function update_Flight_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight_Data): Promise<T extends number ? false | DBType_Flight_Data : DBType_Flight_Data[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Flight_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -990,19 +1469,73 @@ import {DBType_Flight_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Flight_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Flight_Data(id: number){
-        return db.one<DBType_Flight_Data>('DELETE FROM flight_data WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Flight_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Flight_Data : DBType_Flight_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight_Data>('DELETE FROM flight_data WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight_Data>('DELETE FROM flight_data ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Flight_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Flight_Data : DBType_Flight_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight_Data>('SELECT * FROM flight_data ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Flight_Data(id: number){
-        return db.one<DBType_Flight_Data>('SELECT * FROM flight_data ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight_Data>('SELECT FROM flight_data ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -1073,14 +1606,22 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
         return db.one<DBType_Remote_Controller_Data>(db.$config.pgp.helpers.insert(values, undefined, 'remote_controller_data') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Remote_Controller_Data<T extends number | string>(values: DBUpdate_Remote_Controller_Data, idOrWhereCondition: T): T extends number ? Promise<DBType_Remote_Controller_Data> : Promise<DBType_Remote_Controller_Data[]>{
+    export async function update_Remote_Controller_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Remote_Controller_Data): Promise<T extends number ? false | DBType_Remote_Controller_Data : DBType_Remote_Controller_Data[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Remote_Controller_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -1088,19 +1629,73 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Remote_Controller_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Remote_Controller_Data(id: number){
-        return db.one<DBType_Remote_Controller_Data>('DELETE FROM remote_controller_data WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Remote_Controller_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Remote_Controller_Data : DBType_Remote_Controller_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller_Data>('DELETE FROM remote_controller_data WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Remote_Controller_Data>('DELETE FROM remote_controller_data ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Remote_Controller_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Remote_Controller_Data : DBType_Remote_Controller_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Remote_Controller_Data>('SELECT * FROM remote_controller_data ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Remote_Controller_Data(id: number){
-        return db.one<DBType_Remote_Controller_Data>('SELECT * FROM remote_controller_data ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Remote_Controller_Data>('SELECT FROM remote_controller_data ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -1180,14 +1775,22 @@ import {DBType_Drone_Data} from './DBTypes'
         return db.one<DBType_Drone_Data>(db.$config.pgp.helpers.insert(values, undefined, 'drone_data') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Drone_Data<T extends number | string>(values: DBUpdate_Drone_Data, idOrWhereCondition: T): T extends number ? Promise<DBType_Drone_Data> : Promise<DBType_Drone_Data[]>{
+    export async function update_Drone_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone_Data): Promise<T extends number ? false | DBType_Drone_Data : DBType_Drone_Data[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Drone_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -1195,19 +1798,73 @@ import {DBType_Drone_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Drone_Data(id: number){
-        return db.one<DBType_Drone_Data>('DELETE FROM drone_data WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Drone_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone_Data : DBType_Drone_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Data>('DELETE FROM drone_data WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone_Data>('DELETE FROM drone_data ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Drone_Data<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone_Data : DBType_Drone_Data[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Data>('SELECT * FROM drone_data ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Drone_Data(id: number){
-        return db.one<DBType_Drone_Data>('SELECT * FROM drone_data ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone_Data>('SELECT FROM drone_data ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -1364,14 +2021,22 @@ import {DBType_Drone_Media} from './DBTypes'
         return db.one<DBType_Drone_Media>(db.$config.pgp.helpers.insert(values, undefined, 'drone_media') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Drone_Media<T extends number | string>(values: DBUpdate_Drone_Media, idOrWhereCondition: T): T extends number ? Promise<DBType_Drone_Media> : Promise<DBType_Drone_Media[]>{
+    export async function update_Drone_Media<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone_Media): Promise<T extends number ? false | DBType_Drone_Media : DBType_Drone_Media[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Media>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Drone_Media>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -1379,19 +2044,73 @@ import {DBType_Drone_Media} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone_Media>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Drone_Media(id: number){
-        return db.one<DBType_Drone_Media>('DELETE FROM drone_media WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Drone_Media<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone_Media : DBType_Drone_Media[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Media>('DELETE FROM drone_media WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone_Media>('DELETE FROM drone_media ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Drone_Media<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Drone_Media : DBType_Drone_Media[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Drone_Media>('SELECT * FROM drone_media ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Drone_Media(id: number){
-        return db.one<DBType_Drone_Media>('SELECT * FROM drone_media ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Drone_Media>('SELECT FROM drone_media ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }
 
 
@@ -1499,14 +2218,22 @@ import {DBType_Geo_Object} from './DBTypes'
         return db.one<DBType_Geo_Object>(db.$config.pgp.helpers.insert(values, undefined, 'geo_objects') + ' RETURNING *')
     }
 
-/**
+    /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
-    export function update_Geo_Object<T extends number | string>(values: DBUpdate_Geo_Object, idOrWhereCondition: T): T extends number ? Promise<DBType_Geo_Object> : Promise<DBType_Geo_Object[]>{
+    export async function update_Geo_Object<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Geo_Object): Promise<T extends number ? false | DBType_Geo_Object : DBType_Geo_Object[]>{
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
             //@ts-ignore
-            return db.one<DBType_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+            return ret
+
         } else {
             let whereCondition = idOrWhereCondition as string
             whereCondition = whereCondition.trim()
@@ -1514,17 +2241,71 @@ import {DBType_Geo_Object} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            return db.none(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
         }
     }
 
-    export function delete_Geo_Object(id: number){
-        return db.one<DBType_Geo_Object>('DELETE FROM geo_objects WHERE id = ${id} RETURNING *', {id})
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Geo_Object<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Geo_Object : DBType_Geo_Object[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Geo_Object>('DELETE FROM geo_objects WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Geo_Object>('DELETE FROM geo_objects ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
     }
 
     
 
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Geo_Object<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Geo_Object : DBType_Geo_Object[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Geo_Object>('SELECT * FROM geo_objects ' + pgp.as.format('WHERE id = ${id}', {id}))
 
-    export function select_Geo_Object(id: number){
-        return db.one<DBType_Geo_Object>('SELECT * FROM geo_objects ' + pgp.as.format('WHERE id = ${id}', {id}))
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Geo_Object>('SELECT FROM geo_objects ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
     }

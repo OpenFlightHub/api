@@ -1,7 +1,7 @@
 
 import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
 import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { ClientId } from '../../live-websocket/websocket'
@@ -19,15 +19,15 @@ export default class GeoObjectModule extends Module_Base<
     },
 
     {
-        create: {
+        create_geo_object: {
             eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         },
-        update: {
+        update_geo_object: {
             eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         },
-        delete: {
+        delete_geo_object: {
             eventDataType: DBType_Geo_Object,
             availableContexts: 'workspaceId' | 'id'
         }
@@ -71,13 +71,13 @@ export default class GeoObjectModule extends Module_Base<
                     })
 
                     if(existingGeoObject){
-                        existingGeoObject = await update_Geo_Object({
+                        existingGeoObject = await this.updateGeoObjectSafe(existingGeoObject.id, {
                             config: {
                                 longitude: data.position.longitude,
                                 latitude: data.position.latitude,
                                 height: data.position.height
                             }
-                        }, existingGeoObject.id)
+                        })
 
                         this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
                             event_type: 'update',
@@ -119,10 +119,10 @@ export default class GeoObjectModule extends Module_Base<
         })
     }
 
-    async create(data: DBInsert_Geo_Object){
+    async createGeoObject(data: DBInsert_Geo_Object){
         const geoObject = await insert_Geo_Object(data)
 
-        this.dispatch('create', {
+        this.dispatch('create_geo_object', {
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
@@ -133,11 +133,21 @@ export default class GeoObjectModule extends Module_Base<
     /**
      *
      * @param idOrUUID id = number, uuid = string
+     * @returns false if does not exist
+     * @see updateGeoObjectSafe
      */
-    async update(idOrUUID: number | string, data: DBUpdate_Geo_Object){
-        const geoObject = (await update_Geo_Object(data, typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID)) as DBType_Geo_Object
+    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object){
+        let geoObject = (await update_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID, data))
 
-        this.dispatch('update', {
+        if(geoObject === false){
+            return false
+        }
+
+        if(geoObject instanceof Array){
+            geoObject = geoObject[0]
+        }
+
+        this.dispatch('update_geo_object', {
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
@@ -145,18 +155,60 @@ export default class GeoObjectModule extends Module_Base<
         return geoObject
     }
 
-    async delete(id: number){
-        const geoObject = await delete_Geo_Object(id)
+    /**
+     *
+     * @see updateGeoObject
+     */
+    updateGeoObjectSafe = makeFunctionIdSafe(this, this.updateGeoObject)
 
-        this.dispatch('delete', {
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteGeoObjectSafe
+     */
+    async deleteGeoObject(idOrUUID: number | string){
+        let geoObject = await delete_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID)
+
+        if(geoObject === false){
+            return false
+        }
+
+        if(geoObject instanceof Array){
+            geoObject = geoObject[0]
+        }
+
+        this.dispatch('delete_geo_object', {
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
     }
 
-    async get(id: number){
-        return await select_Geo_Object(id)
+    /**
+     *
+     * @see deleteGeoObject
+     */
+    deleteGeoObjectSafe = makeFunctionIdSafe(this, this.deleteGeoObject)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getGeoObjectSafe
+     */
+    async getGeoObject(idOrUUID: number | string){
+        let ret = await select_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID)
+
+        if(ret instanceof Array){
+            ret = ret[0]
+        }
+
+        return ret
     }
+
+    /**
+     *
+     * @see getGeoObject
+     */
+    getGeoObjectSafe = makeFunctionIdSafe(this, this.getGeoObject)
 
     private parseFilter(filter: string){
         const filterOptions: Record<string, any> & {default: string} = {

@@ -4,7 +4,7 @@ export function makeUUIDFromId(id: number){
     let idString = '' + id
 
     if(idString.length > 8){
-        throw new Error('id exceeds length of 8')
+        throw new Error('id exceeds length of 8: ' + id)
     }
 
     while(idString.length < 8){
@@ -46,7 +46,7 @@ export function getRandomUUIDFromId(id: number){
     let idString = '' + id
 
     if(idString.length > 8){
-        throw new Error('workspaceid exceeds length of 8')
+        throw new Error('id exceeds length of 8: ' + id)
     }
 
     while(idString.length < 8){

@@ -33,8 +33,12 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
 
         const connectionOnlineStatus = await getCore().modules.connection.getDroneConnectionOnlineStatus(connection.id)
 
+        if(connectionOnlineStatus === false){
+            throw new Error('should never happen: connection does not exist')
+        }
+
         if(typeof connection.last_drone_id === 'number'){
-            const drone = await getCore().modules.drone.get(connection.last_drone_id)
+            const drone = await getCore().modules.drone.getDroneSafe(connection.last_drone_id)
 
             topologyEntry.hosts.push({
                 device_callsign: drone.name,//TODO where is this displayed? should we use connection.name?
@@ -47,7 +51,7 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
         }
 
         if(typeof connection.remote_controller_id === 'number'){
-            const remoteController = await getCore().modules.remoteController.get(connection.remote_controller_id)
+            const remoteController = await getCore().modules.remoteController.getRemoteControllerSafe(connection.remote_controller_id)
 
             topologyEntry.parents.push({
                 device_callsign: '' + remoteController.id,

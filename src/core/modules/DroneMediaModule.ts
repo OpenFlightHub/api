@@ -1,5 +1,5 @@
 import {DBInsert_Drone_Media, DBUpdate_Drone_Media, delete_Drone_Media, insert_Drone_Media, select_Drone_Media, select_Workspace, update_Drone_Media} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import { DBType_Drone, DBType_Drone_Media, DBType_Drone_Media_TypeType } from '../../generated-definitions/db/DBTypes'
 import { assignObject } from '../../util/typescript'
 
@@ -27,15 +27,15 @@ export default class DroneMediaModule extends Module_Base<
     },
 
     {
-        create: {
+        create_drone_media: {
             eventDataType: DBType_Drone_Media,
             availableContexts: 'id' | 'workspaceId'
         },
-        update: {
+        update_drone_media: {
             eventDataType: DBType_Drone_Media,
             availableContexts: 'id' | 'workspaceId'
         },
-        delete: {
+        delete_drone_media: {
             eventDataType: DBType_Drone_Media,
             availableContexts: 'id' | 'workspaceId'
         }
@@ -86,6 +86,10 @@ export default class DroneMediaModule extends Module_Base<
 
             const workspace = await select_Workspace(id)
 
+            if(workspace === false){
+                return 'workspace does not exist'
+            }
+
             const hasPermission = await getCore().modules.user.userHasPermissionForWorkspace(client.userId, workspace.id)
 
             if(!hasPermission){
@@ -95,12 +99,12 @@ export default class DroneMediaModule extends Module_Base<
         })
     }
 
-    private async create(data: DBInsert_Drone_Media){
+    private async createDroneMedia(data: DBInsert_Drone_Media){
         const droneMedia = await insert_Drone_Media(data)
 
         const workspaceId = await getCore().modules.drone.getCurrentWorkspaceOfDrone(droneMedia.drone_id)
 
-        this.dispatch('create', {
+        this.dispatch('create_drone_media', {
             id: droneMedia.id,
             workspaceId: workspaceId || 0
         }, droneMedia)
@@ -112,12 +116,20 @@ export default class DroneMediaModule extends Module_Base<
         return droneMedia
     }
 
-    async update(id: number, data: DBUpdate_Drone_Media){
-        const droneMedia = await update_Drone_Media(data, id)
+    /**
+     * @returns false if does not exist
+     * @see updateDroneMediaSafe
+     */
+    async updateDroneMedia(id: number, data: DBUpdate_Drone_Media){
+        const droneMedia = await update_Drone_Media(id, data)
+
+        if(droneMedia === false){
+            return false
+        }
 
         const workspaceId = await getCore().modules.drone.getCurrentWorkspaceOfDrone(droneMedia.drone_id)
 
-        this.dispatch('update', {
+        this.dispatch('update_drone_media', {
             id: droneMedia.id,
             workspaceId: workspaceId || 0
         }, droneMedia)
@@ -129,12 +141,27 @@ export default class DroneMediaModule extends Module_Base<
         return droneMedia
     }
 
-    async delete(id: number){
+    /**
+     *
+     * @see updateDroneMedia
+     */
+    updateDroneMediaSafe = makeFunctionIdSafe(this, this.updateDroneMedia)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteDroneMediaSafe
+     */
+    async deleteDroneMedia(id: number){
         const droneMedia = await delete_Drone_Media(id)//TODO delete file too?
+
+        if(droneMedia === false){
+            return false
+        }
 
         const workspaceId = await getCore().modules.drone.getCurrentWorkspaceOfDrone(droneMedia.drone_id)
 
-        this.dispatch('delete', {
+        this.dispatch('delete_drone_media', {
             id: droneMedia.id,
             workspaceId: workspaceId || 0
         }, droneMedia)
@@ -144,13 +171,30 @@ export default class DroneMediaModule extends Module_Base<
         }
     }
 
-    async get(id: number){
+    /**
+     *
+     * @see deleteDroneMedia
+     */
+    deleteDroneMediaSafe = makeFunctionIdSafe(this, this.deleteDroneMedia)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getDroneMediaSafe
+     */
+    async getDroneMedia(id: number){
         return await select_Drone_Media(id)
     }
 
+    /**
+     *
+     * @see getDroneMedia
+     */
+    getDroneMediaSafe = makeFunctionIdSafe(this, this.getDroneMedia)
+
 
     _createRaw(data: DBInsert_Drone_Media){
-        return this.create(data)
+        return this.createDroneMedia(data)
     }
 
     async createDroneMediaFromBucketObject(bucketName: string, objectKey: string, drone: DBType_Drone, fingerprint: string, tiny_fingerprint: string, mediaType: DBType_Drone_Media_TypeType, meta: string){
@@ -163,13 +207,13 @@ export default class DroneMediaModule extends Module_Base<
             ext: getFileExtension(objectKey)
         }, bucketName, objectKey)
 
-        const droneMeta = await getCore().modules.droneMedia.getDroneMetaFromFile(theFile.id)
+        const droneMeta = await this.getDroneMetaFromFile(theFile.id)
 
         let droneMedia: DBType_Drone_Media
 
         try {
 
-            droneMedia = await getCore().modules.droneMedia.create({
+            droneMedia = await this.createDroneMedia({
                 drone_id: drone.id,
                 fingerprint,
                 tiny_fingerprint,
@@ -186,7 +230,7 @@ export default class DroneMediaModule extends Module_Base<
 
             console.error('failed to create drone media. Cleaning up file', theFile.id, err)
 
-            await getCore().modules.file.delete(theFile.id)
+            await getCore().modules.file.deleteFile(theFile.id)
 
             throw err
         }
@@ -251,7 +295,7 @@ export default class DroneMediaModule extends Module_Base<
         const obj = JSON.parse(responseJson)
 
         try {
-            await this.update(media.id, {
+            await this.updateDroneMedia(media.id, {
                 coverage: responseJson,
                 coverage_generated_at: new Date().toISOString()
             })

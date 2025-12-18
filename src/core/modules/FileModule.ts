@@ -1,7 +1,7 @@
 
 import { DBInsert_File, DBUpdate_File, delete_File, insert_File, select_File, update_File } from '../../generated-definitions/db/DBHelpers'
 import {DBType_File} from '../../generated-definitions/db/DBTypes'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import safeJsonStringify from 'safe-json-stringify'
 import fs from 'fs'
 import path from 'path'
@@ -35,15 +35,15 @@ export default class FileModule extends Module_Base<
     },
 
     {
-        create: {
+        create_file: {
             eventDataType: DBType_File,
             availableContexts: 'workspaceId' | 'id'
         },
-        update: {
+        update_file: {
             eventDataType: DBType_File,
             availableContexts: 'workspaceId' | 'id'
         },
-        delete: {
+        delete_file: {
             eventDataType: DBType_File,
             availableContexts: 'workspaceId' | 'id'
         }
@@ -65,20 +65,12 @@ export default class FileModule extends Module_Base<
      *
      * @param waitUntil see util/waitable.ts
      */
-    private async create(data: DBInsert_File, waitUntil?: Waitable){
+    private async createFile(data: DBInsert_File, waitUntil?: Waitable){
         const file = await insert_File(data)
 
-        if(waitUntil){
-            setTimeout(async()=>{
-                await waitUntil.getPromise()//TODO check if this code works
 
-                await after()
-            }, 1)
-        } else {
-            await after()
-        }
 
-        async function after(){
+        const after = async ()=>{
             try {
                 await this.generateExifDataForFile(file.id)
             } catch (err){
@@ -91,19 +83,38 @@ export default class FileModule extends Module_Base<
                 console.warn('failed to generate thumbnail for file', file.id, err)
             }
 
-            this.dispatch('create', {
+            this.dispatch('create_file', {
                 id: file.id,
                 workspaceId: file.workspace_id
             }, file)
         }
 
+        if(waitUntil){
+            setTimeout(async()=>{
+                await waitUntil.getPromise()//TODO check if this code works
+
+                await after()
+            }, 1)
+        } else {
+            await after()
+        }
+
         return file
     }
 
-    async update(id: number, data: DBUpdate_File){
-        const file = await update_File(data, id)
+    /**
+     *
+     * @returns false if does not exist
+     * @see updateFileSafe
+     */
+    async updateFile(id: number, data: DBUpdate_File){
+        const file = await update_File(id, data)
 
-        this.dispatch('update', {
+        if(file === false){
+            return false
+        }
+
+        this.dispatch('update_file', {
             id: file.id,
             workspaceId: file.workspace_id
         }, file)
@@ -111,10 +122,25 @@ export default class FileModule extends Module_Base<
         return file
     }
 
-    async delete(id: number){
+    /**
+     *
+     * @see updateFile
+     */
+    updateFileSafe = makeFunctionIdSafe(this, this.updateFile)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteFileSafe
+     */
+    async deleteFile(id: number){
         const file = await delete_File(id)
 
-        this.dispatch('delete', {
+        if(file === false){
+            return false
+        }
+
+        this.dispatch('delete_file', {
             id: file.id,
             workspaceId: file.workspace_id
         }, file)
@@ -124,15 +150,32 @@ export default class FileModule extends Module_Base<
         await this.deleteThumbnailIfExists(file.id)
     }
 
-    async get(id: number){
+    /**
+     *
+     * @see deleteFile
+     */
+    deleteFileSafe = makeFunctionIdSafe(this, this.deleteFile)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getFileSafe
+     */
+    async getFile(id: number){
         return await select_File(id)
     }
+
+    /**
+     *
+     * @see getFile
+     */
+    getFileSafe = makeFunctionIdSafe(this, this.getFile)
 
     async createFileFromBucketObject(file: Omit<DBInsert_File, 'name'>, bucketName: string, objectKey: string){
 
         const waitable = await Waitable.make()
 
-        const theFile = await this.create(assignObject(file, {
+        const theFile = await this.createFile(assignObject(file, {
             name: objectKey
         }), waitable)
 
@@ -141,7 +184,7 @@ export default class FileModule extends Module_Base<
         } catch (err){
 
             try {
-                await this.delete(theFile.id)
+                await this.deleteFile(theFile.id)
             } catch (err){
                 console.error('failed to cleanup file after downloading did not work', err)
             }
@@ -155,7 +198,7 @@ export default class FileModule extends Module_Base<
     }
 
     async getAbsoluteFilePathForFileId(fileId: number){
-        const file = await this.get(fileId)
+        const file = await this.getFileSafe(fileId)
         return this.getAbsoluteFilePathForFile(file)
     }
 
@@ -172,7 +215,7 @@ export default class FileModule extends Module_Base<
             const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
 
             for(const file of filesThatRequireThumbnails){
-                const upToDateFile = await this.get(file.id)
+                const upToDateFile = await this.getFileSafe(file.id)
                 if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
                     continue
                 }
@@ -210,7 +253,7 @@ export default class FileModule extends Module_Base<
             })
         } catch (err){
             try {
-                await this.update(fileId, {
+                await this.updateFile(fileId, {
                     thumbnail_generation_has_failed: true
                 })
             } catch (err){
@@ -226,7 +269,7 @@ export default class FileModule extends Module_Base<
         writeStream.write(thumbnailBuffer)
         writeStream.close()
 
-        await this.update(fileId, {
+        await this.updateFile(fileId, {
             has_thumbnail: true
         })
 
@@ -240,7 +283,7 @@ export default class FileModule extends Module_Base<
 
     async storeTmpMulterFileInDatabase(multerFile: MulterFile, workspaceId: number, createdBy: number){
 
-        const file = await this.create({
+        const file = await this.createFile({
             name: multerFile.originalname,
             ext: getFileExtension(multerFile.originalname),
             created_by: createdBy,
@@ -297,13 +340,13 @@ export default class FileModule extends Module_Base<
 
             const len = cleanJson.length
 
-            await this.update(fileId, {
+            await this.updateFile(fileId, {
                 exif_data: cleanJson
             })
         } catch (err){
 
             try {
-                await this.update(fileId, {
+                await this.updateFile(fileId, {
                     exif_data_generation_has_failed: true
                 })
             } catch (err){
@@ -317,7 +360,7 @@ export default class FileModule extends Module_Base<
     }
 
     async getExifDataForFile(fileId: number){
-        const file = await this.get(fileId)
+        const file = await this.getFileSafe(fileId)
 
         if(file.exif_data){
             return JSON.parse(file.exif_data) as Tags

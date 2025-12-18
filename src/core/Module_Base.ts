@@ -1,4 +1,4 @@
-import {EventManagerWithPublicDispatch} from '../../util/event_manager'
+import {EventManagerWithPublicDispatch} from '../util/event_manager'
 
 export default class Module_Base<
 
@@ -31,3 +31,28 @@ export default class Module_Base<
     }
 }
 
+export class ModuleError extends Error {
+
+    constructor(message?: string){
+        super(message)
+    }
+}
+
+export class ModuleError_IdNotFound extends ModuleError {
+
+    constructor(id: number){
+        super('id not found: ' + id)
+    }
+}
+
+export function makeFunctionIdSafe<A extends any[], F extends (id: number, ...args: A)=>Promise<false | any>>(that: Object, func: F){
+    return async function(id: number, ...args: A){
+        const ret = await func.apply(that, [id, ...args])
+
+        if(ret === false){
+            throw new ModuleError_IdNotFound(id)
+        }
+
+        return ret
+    } as (...args: Parameters<F>)=>Promise<Exclude<Awaited<ReturnType<F>>, false>>
+}

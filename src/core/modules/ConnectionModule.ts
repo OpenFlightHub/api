@@ -1,7 +1,7 @@
 
 import { DBInsert_Connection, DBUpdate_Connection, delete_Connection, insert_Connection, select_Connection, update_Connection } from '../../generated-definitions/db/DBHelpers'
 import {DBType_Connection} from '../../generated-definitions/db/DBTypes'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import { isConnectionOnline } from '../../connector/dji-pilot-2'
 import dayjs from 'dayjs'
 import { getCore } from '../index'
@@ -24,15 +24,15 @@ export default class ConnectionModule extends Module_Base<
     },
 
     {
-        create: {
+        create_connection: {
             eventDataType: DBType_Connection,
             availableContexts: 'workspaceId' | 'id'
         },
-        update: {
+        update_connection: {
             eventDataType: DBType_Connection,
             availableContexts: 'workspaceId' | 'id'
         },
-        delete: {
+        delete_connection: {
             eventDataType: DBType_Connection,
             availableContexts: 'workspaceId' | 'id'
         }
@@ -43,65 +43,111 @@ export default class ConnectionModule extends Module_Base<
         super()
     }
 
-    async create(data: DBInsert_Connection){
-        const connection = await insert_Connection(data)
-
-        this.dispatch('create', {
-            id: connection.id,
-            workspaceId: connection.workspace_id
-        }, connection)
-
-        return connection
-    }
-
-    async update(id: number, data: DBUpdate_Connection){
-        const connection = await update_Connection(data, id)
-
-        this.dispatch('update', {
-            id: connection.id,
-            workspaceId: connection.workspace_id
-        }, connection)
-
-        return connection
-    }
-
-    async delete(id: number){
-        const connection = await delete_Connection(id)
-
-        this.dispatch('delete', {
-            id: connection.id,
-            workspaceId: connection.workspace_id
-        }, connection)
-    }
-
-    async get(id: number){
-        return await select_Connection(id)
-    }
-
-
 
 
     async createConnection(workspaceId: number, name: string){
 
-        const connection = await getCore().modules.connection.create({
+        const connection = await insert_Connection({
             secret: generateUniqueTokenUrlSafe(25),
             workspace_id: workspaceId,
             name,
             workspace_uuid: getRandomUUIDFromId(workspaceId)
         })
-        //TODO: delete connection if create bucket was unsuccessfull
+
         await createBucketForConnection(connection.id)
+
+        //TODO: delete connection if create bucket was unsuccessfull
+
+        this.dispatch('create_connection', {
+            id: connection.id,
+            workspaceId: connection.workspace_id
+        }, connection)
 
         return connection
     }
 
+    /**
+     *
+     * @returns false if connection does not exist
+     * @see updateConnectionSafe
+     */
+    async updateConnection(id: number, data: DBUpdate_Connection){
+        const connection = await update_Connection(id, data)
 
-    async getDroneConnectionOnlineStatus(connectionId: number): Promise<{
+        if(connection === false){
+            return false
+        }
+
+        this.dispatch('update_connection', {
+            id: connection.id,
+            workspaceId: connection.workspace_id
+        }, connection)
+
+        return connection
+    }
+
+    /**
+     *
+     * @see updateConnection
+     */
+    updateConnectionSafe = makeFunctionIdSafe(this, this.updateConnection)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteConnectionSafe
+     */
+    async deleteConnection(id: number){
+        const connection = await delete_Connection(id)
+
+        if(connection === false){
+            return false
+        }
+
+        this.dispatch('delete_connection', {
+            id: connection.id,
+            workspaceId: connection.workspace_id
+        }, connection)
+    }
+
+    /**
+     *
+     * @see deleteConnection
+     */
+    deleteConnectionSafe = makeFunctionIdSafe(this, this.deleteConnection)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getConnectionSafe
+     */
+    async getConnection(id: number){
+        return await select_Connection(id)
+    }
+    /**
+     *
+     * @see getConnection
+     */
+    getConnectionSafe = makeFunctionIdSafe(this, this.getConnection)
+
+
+
+
+
+    /**
+     *
+     * @returns false if connection does not exist
+     */
+    async getDroneConnectionOnlineStatus(connectionId: number): Promise<false | {
         remoteController: boolean
         drone: boolean
     }> {
 
         const connection = await select_Connection(connectionId)
+
+        if(connection === false){
+            return false
+        }
 
         const mqttIsConnected = isConnectionOnline(connectionId)
 

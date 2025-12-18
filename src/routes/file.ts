@@ -17,9 +17,11 @@ router.get('/:file_id', asyncHandler(async (req, res) => {
 
     const fileId = req.GM.guardParam('file_id', 'id')
 
-    const file = await req.GM.guardDBGone(()=>{
-        return getCore().modules.file.get(fileId)
-    })
+    const file = await getCore().modules.file.getFile(fileId)
+
+    if(file === false){
+        throw GuardError._410_Gone()
+    }
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
 
@@ -33,7 +35,7 @@ router.post('/get-multiple', asyncHandler(async (req, res) => {
     const fileIds = req.GM.guardBodySchema<ApiType_File_Get_Multiple_Post>(ApiSchema_File_Get_Multiple_Post)
 
     const files = await req.GM.guardDBGone(()=>{
-        return db.manyOrNone<DBType_File>('SELECT * FROM files WHERE ID in ${fileIds}', {fileIds})
+        return db.manyOrNone<DBType_File>('SELECT * FROM files WHERE id in ${fileIds}', {fileIds})
     })
 
     for(const file of files){
@@ -49,9 +51,11 @@ router.get('/data/:file_id', asyncHandler(async (req, res) => {
 
     const fileId = req.GM.guardParam('file_id', 'id')
 
-    const file = await req.GM.guardDBGone(()=>{
-        return getCore().modules.file.get(fileId)
-    })
+    const file = await getCore().modules.file.getFile(fileId)
+
+    if(file === false){
+        throw GuardError._410_Gone()
+    }
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
 
@@ -72,9 +76,11 @@ router.get('/thumbnail/:file_id', asyncHandler(async (req, res) => {
 
     const fileId = req.GM.guardParam('file_id', 'id')
 
-    const file = await req.GM.guardDBGone(()=>{
-        return getCore().modules.file.get(fileId)
-    })
+    const file = await getCore().modules.file.getFile(fileId)
+
+    if(file === false){
+        throw GuardError._410_Gone()
+    }
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
 

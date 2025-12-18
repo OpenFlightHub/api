@@ -42,7 +42,7 @@ router.post('/', asyncHandler(async (req, res) => {
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspaces_Post>(ApiSchema_Workspaces_Post)
 
-    const workspace = await getCore().modules.workspace.create(requestBody)
+    const workspace = await getCore().modules.workspace.createWorkspace(requestBody)
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
@@ -54,9 +54,11 @@ router.get('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    const workspace = await req.GM.guardDBGone<DBType_Workspace>(()=>{
-        return getCore().modules.workspace.get(workspaceId)
-    })
+    const workspace = await getCore().modules.workspace.getWorkspace(workspaceId)
+
+    if(workspace === false){
+        throw GuardError._410_Gone()
+    }
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Workspace)
 }))
@@ -70,9 +72,7 @@ router.patch('/:workspace_id', asyncHandler(async (req, res) => {
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Patch>(ApiSchema_Workspace_Patch)
 
-    const updatedWorkspace = await req.GM.guardDBGone(()=>{
-        return updatedWorkspace(requestBody, workspaceId)
-    })
+    const updatedWorkspace = await getCore().modules.workspace.updateWorkspaceSafe(workspaceId, requestBody)
 
     res.GM.guardSend<ApiType_Workspace>(updatedWorkspace, ApiSchema_Workspace)
 }))
@@ -83,7 +83,7 @@ router.delete('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
-    await getCore().modules.workspace.delete(workspaceId)
+    await getCore().modules.workspace.deleteWorkspace(workspaceId)
 
     res.status(200).send()
 }))
@@ -96,7 +96,7 @@ router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -117,7 +117,7 @@ router.post('/:workspace_id/connections', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -140,7 +140,7 @@ router.get('/:workspace_id/files', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -158,7 +158,7 @@ router.post('/:workspace_id/file', multerMiddleware.single('file'), asyncHandler
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -177,7 +177,7 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -209,7 +209,7 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     const workspace = req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     })
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
@@ -223,7 +223,7 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
         })
     })
 
-    await getCore().modules.file.delete(file.id)
+    await getCore().modules.file.deleteFile(file.id)
 
     res.status(200).send()
 }))
@@ -234,7 +234,7 @@ router.use('/:workspace_id/map-elements', (req, res, next) => {//TODO if this ch
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
     req.GM.guardDBGone(()=>{
-        return getCore().modules.workspace.get(workspaceId)
+        return getCore().modules.workspace.getWorkspace(workspaceId)
     }).then(()=>{
         req.GM.guardUserHasPermissionForWorkspace(workspaceId).then(()=>{
             //@ts-ignore

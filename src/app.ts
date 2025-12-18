@@ -193,7 +193,7 @@ app.use((err, req: express.Request, res: express.Response, next)=> {
 import FakeDrone from './util/FakeDrone'
 import FakeTrack from './util/FakeTrack'
 
-const fakeDrone = new FakeDrone(1, new FakeTrack([
+const fakeDrone = new FakeDrone(1, 1, new FakeTrack([
     [10.31123970862481,47.54303902438443,1470],
     [10.31111796634494,47.54531198554595,1610],
     [10.31363253702402,47.5465021623194,1580],

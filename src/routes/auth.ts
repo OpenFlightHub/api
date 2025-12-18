@@ -182,7 +182,7 @@ router.post('/password-change', asyncHandler(async (req, res) => {
         throw GuardError._400_BadRequest('Not allowed for this user')
     }
 
-    await getCore().modules.user.update(user.id, {password: await hashString(body.new_password)})
+    await getCore().modules.user.updateUser(user.id, {password: await hashString(body.new_password)})
 
     res.status(200)
     res.send()
@@ -208,7 +208,7 @@ router.post('/password-set-initial', asyncHandler(async (req, res) => {
         throw GuardError._403_Forbidden('initial password already set')
     }
 
-    await getCore().modules.user.update(user.id, {password: await hashString(body.new_password)})
+    await getCore().modules.user.updateUser(user.id, {password: await hashString(body.new_password)})
 
     res.status(200)
     res.send()
@@ -228,7 +228,7 @@ router.post('/password-set-new', asyncHandler(async (req, res) => {
             throw GuardError._400_invalidBody('new_password')
         }
 
-        await getCore().modules.user.update(user.id, {password: await hashString(body.new_password), reset_code: null})
+        await getCore().modules.user.updateUser(user.id, {password: await hashString(body.new_password), reset_code: null})
 
         res.status(200)
         res.send()
@@ -298,7 +298,7 @@ router.get('/stream-token', asyncHandler(async (req, res) => {
 
         const urlSafeToken = crypto.generateUniqueTokenUrlSafe(STREAM_TOKEN_BYTE_LENGTH)
 
-        user = await getCore().modules.user.update(user.id, {
+        user = await getCore().modules.user.updateUserSafe(user.id, {
             stream_token: urlSafeToken
         })
     }
@@ -316,12 +316,12 @@ export default router
 
 async function confirmUser(userId: number){
     try {
-        const user = await getCore().modules.user.get(userId)
+        const user = await getCore().modules.user.getUserSafe(userId)
 
         if(user.state === DBType_User_STATES.live){
             return
         } else if(user.state === DBType_User_STATES.invited){
-            await getCore().modules.user.update(userId, {state: DBType_User_STATES.live})
+            await getCore().modules.user.updateUserSafe(userId, {state: DBType_User_STATES.live})
         } else {
             throw new Error('user state is neither invited or confirmed')
         }

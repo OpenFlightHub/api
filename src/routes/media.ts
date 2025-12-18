@@ -32,7 +32,7 @@ router.get('/:media_id', asyncHandler(async(req, res) => {
         })
     })
 
-    const drone = await getCore().modules.drone.get(media.drone_id)
+    const drone = await getCore().modules.drone.getDroneSafe(media.drone_id)
     const connection = await getCore().modules.drone.getLastConnectionForDrone(drone)
 
     if(!connection){
@@ -57,7 +57,7 @@ router.get('/ground-coverage/:media_id', asyncHandler(async(req, res) => {
         })
     })
 
-    const drone = await getCore().modules.drone.get(media.drone_id)
+    const drone = await getCore().modules.drone.getDroneSafe(media.drone_id)
     const connection = await getCore().modules.drone.getLastConnectionForDrone(drone)
 
     if(!connection){

@@ -1,6 +1,6 @@
 import * as express from 'express'
 import {DBInsert_User, DBUpdate_User, delete_User, insert_User, select_User, update_User} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe, ModuleError_IdNotFound } from '../Module_Base'
 import {setSessionCookie} from '../../util/cookie'
 import { generateUniqueTokenUrlSafe, hashString } from '../../util/crypto'
 import { sendMailFromTemplate } from '../../mail'
@@ -22,15 +22,15 @@ export default class UserModule extends Module_Base<
     },
 
     {
-        create: {
+        create_user: {
             eventDataType: DBType_User,
             availableContexts: 'id'
         },
-        update: {
+        update_user: {
             eventDataType: DBType_User,
             availableContexts: 'id'
         },
-        delete: {
+        delete_user: {
             eventDataType: DBType_User,
             availableContexts: 'id'
         }
@@ -40,39 +40,6 @@ export default class UserModule extends Module_Base<
     constructor(){
         super()
     }
-
-    private async create(data: DBInsert_User){
-        const user = await insert_User(data)
-
-        this.dispatch('create', {
-            id: user.id
-        }, user)
-
-        return user
-    }
-
-    async update(id: number, data: DBUpdate_User){
-        const user = await update_User(data, id)
-
-        this.dispatch('update', {
-            id: user.id
-        }, user)
-
-        return user
-    }
-
-    async delete(id: number){
-        const user = await delete_User(id)
-
-        this.dispatch('delete', {
-            id: user.id
-        }, user)
-    }
-
-    async get(id: number){
-        return await select_User(id)
-    }
-
 
 
     async createUser(values: {
@@ -94,12 +61,81 @@ export default class UserModule extends Module_Base<
 
         const user = await insert_User(allValues)
 
+        this.dispatch('create_user', {
+            id: user.id
+        }, user)
+
         if(dontSendEmail !== true){
             await this.sendUserCreateEmail(user)
         }
 
         return user
     }
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see updateUserSafe
+     */
+    async updateUser(id: number, data: DBUpdate_User){
+        const user = await update_User(id, data)
+
+        if(user === false){
+            return false
+        }
+
+        this.dispatch('update_user', {
+            id: user.id
+        }, user)
+
+        return user
+    }
+
+    /**
+     *
+     * @see updateUser
+     */
+    updateUserSafe = makeFunctionIdSafe(this, this.updateUser)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteUserSafe
+     */
+    async deleteUser(id: number){
+        const user = await delete_User(id)
+
+        if(user === false){
+            return false
+        }
+
+        this.dispatch('delete_user', {
+            id: user.id
+        }, user)
+    }
+
+    /**
+     *
+     * @see deleteUser
+     */
+    deleteUserSafe = makeFunctionIdSafe(this, this.deleteUser)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getUserSafe
+     */
+    async getUser(id: number){
+        return await select_User(id)
+    }
+
+    /**
+     *
+     * @see getUser
+     */
+    getUserSafe = makeFunctionIdSafe(this, this.getUser)
+
+
 
     async createUserFromEmail(email: string, dontSendEmail?: boolean){
 
@@ -129,10 +165,16 @@ export default class UserModule extends Module_Base<
 
     /**
      * will resend the "welcome to openflighthub" email, if user state is "invited"
+     *
+     * @returns false if user does not exist
      */
     async resendUserCreateEmail(userId: number){
 
-        const user = await this.get(userId)
+        const user = await this.getUser(userId)
+
+        if(user === false){
+            return false
+        }
 
         if(user.state === DBType_User_STATES.invited){
             await this.sendUserCreateEmail(user)
@@ -205,17 +247,22 @@ export default class UserModule extends Module_Base<
 
     /**
      * gets the existing login token or creates one
+     * @returns false if user does not exist
      */
     async getOrMakeLoginToken(userId: ApiType_Id){
 
-        const user = await this.get(userId)
+        const user = await this.getUser(userId)
+
+        if(user === false){
+            return false
+        }
 
         if(user.login_token){
             return user.login_token
         } else {
-            const updatedUser = await this.update(userId, {
+            const updatedUser = await this.updateUser(userId, {
                 login_token: generateUniqueTokenUrlSafe(TOKEN_BYTE_LENGTH)
-            })
+            }) as DBType_User
 
             return updatedUser.login_token as string
         }
@@ -225,12 +272,17 @@ export default class UserModule extends Module_Base<
 
     /**
      * makes a code that can be used to overwrite the password for a user
+     * @returns false if user does not exist
      */
     async makePasswordResetCode(userId: ApiType_Id){
 
-        const updatedUser = await this.update(userId, {
+        const updatedUser = await this.updateUser(userId, {
             reset_code: generateUniqueTokenUrlSafe(TOKEN_BYTE_LENGTH)
         })
+
+        if(updatedUser === false){
+            return false
+        }
 
         return updatedUser.reset_code
     }
@@ -244,12 +296,12 @@ export default class UserModule extends Module_Base<
         return !!res
     }
 
-
     async generateUserSessionCookieAndSet(userId: number, res: express.Response, allowReuseExistingSessionToken?: boolean){
+        const user = await this.getUserSafe(userId)
 
         let sessionToken: string
         if(allowReuseExistingSessionToken){
-            const currentToken = (await this.get(userId)).session_token
+            const currentToken = user.session_token
 
             if(currentToken){
                 sessionToken = currentToken
@@ -260,7 +312,7 @@ export default class UserModule extends Module_Base<
             sessionToken = generateUniqueTokenUrlSafe(TOKEN_BYTE_LENGTH)
         }
 
-        await this.update(userId, {
+        await this.updateUser(userId, {
             session_token: sessionToken
         })
 

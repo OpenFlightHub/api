@@ -1,5 +1,5 @@
 import {DBInsert_Remote_Controller, DBUpdate_Remote_Controller, delete_Remote_Controller, insert_Remote_Controller, insert_Remote_Controller_Data, select_Remote_Controller, update_Remote_Controller} from '../../generated-definitions/db/DBHelpers'
-import Module_Base from './Module_Base'
+import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Connection, DBType_Remote_Controller, DBType_Remote_Controller_Data, DBType_Remote_Controller_Data_TypeType } from '../../generated-definitions/db/DBTypes'
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
@@ -18,15 +18,15 @@ export default class RemoteControllerModule extends Module_Base<
     },
 
     {
-        create: {
+        create_remote_controller: {
             eventDataType: DBType_Remote_Controller,
             availableContexts: 'id'
         },
-        update: {
+        update_remote_controller: {
             eventDataType: DBType_Remote_Controller,
             availableContexts: 'id'
         },
-        delete: {
+        delete_remote_controller: {
             eventDataType: DBType_Remote_Controller,
             availableContexts: 'id'
         }
@@ -47,7 +47,11 @@ export default class RemoteControllerModule extends Module_Base<
                 return 'invalid filter: ' + remoteControllerId
             }
 
-            const remoteController = await this.get(remoteControllerId)//TODO api crashes if not found remote controller
+            const remoteController = await this.getRemoteController(remoteControllerId)
+
+            if(remoteController === false){
+                return 'remote controller does not exist'
+            }
 
             const connection = await this.getConnectionForRemoteController(remoteController.id)//TODO api crashes if no connection has this remote controller
 
@@ -60,37 +64,80 @@ export default class RemoteControllerModule extends Module_Base<
         })
     }
 
-    async create(data: DBInsert_Remote_Controller){
+    async createRemoteController(data: DBInsert_Remote_Controller){
         const remoteController = await insert_Remote_Controller(data)
 
-        this.dispatch('create', {
+        this.dispatch('create_remote_controller', {
             id: remoteController.id
         }, remoteController)
 
         return remoteController
     }
 
-    async update(id: number, data: DBUpdate_Remote_Controller){
-        const remoteController = await update_Remote_Controller(data, id)
+    /**
+     *
+     * @returns false if does not exist
+     * @see updateRemoteControllerSafe
+     */
+    async updateRemoteController(id: number, data: DBUpdate_Remote_Controller){
+        const remoteController = await update_Remote_Controller(id, data)
 
-        this.dispatch('update', {
+        if(remoteController === false){
+            return false
+        }
+
+        this.dispatch('update_remote_controller', {
             id: remoteController.id
         }, remoteController)
 
         return remoteController
     }
 
-    async delete(id: number){
+    /**
+     *
+     * @see updateRemoteController
+     */
+    updateRemoteControllerSafe = makeFunctionIdSafe(this, this.updateRemoteController)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see deleteRemoteControllerSafe
+     */
+    async deleteRemoteController(id: number){
         const remoteController = await delete_Remote_Controller(id)
 
-        this.dispatch('delete', {
+        if(remoteController === false){
+            return false
+        }
+
+        this.dispatch('delete_remote_controller', {
             id: remoteController.id
         }, remoteController)
     }
 
-    async get(id: number){
+    /**
+     *
+     * @see deleteRemoteController
+     */
+    deleteRemoteControllerSafe = makeFunctionIdSafe(this, this.deleteRemoteController)
+
+    /**
+     *
+     * @returns false if does not exist
+     * @see getRemoteControllerSafe
+     */
+    async getRemoteController(id: number){
         return await select_Remote_Controller(id)
     }
+
+
+
+    /**
+     *
+     * @see getRemoteController
+     */
+    getRemoteControllerSafe = makeFunctionIdSafe(this, this.getRemoteController)
 
 
 

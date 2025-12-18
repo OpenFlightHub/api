@@ -4,6 +4,8 @@ import pgp from 'pg-promise'
 import { ApiSchema_Remote_Controller, ApiSchema_Remote_Controller_Position } from '../generated-definitions/api/ApiSchemas';
 import { DBType_Connection, DBType_Remote_Controller_Data } from '../generated-definitions/db/DBTypes';
 import { ApiType_Remote_Controller, ApiType_Remote_Controller_Position } from '../generated-definitions/api/ApiTypes';
+import { getCore } from '../core';
+import { GuardError } from '../ManInTheMiddleware';
 const db : pgp.IDatabase<any> = global.db
 
 
@@ -33,9 +35,11 @@ router.get('/:remote_controller_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    const remoteController = await req.GM.guardDBGone(()=>{
-        return remoteController(remoteControllerId)
-    })
+    const remoteController = await getCore().modules.remoteController.getRemoteController(remoteControllerId)
+
+    if(remoteController === false){
+        throw GuardError._410_Gone()
+    }
 
     res.GM.guardSend<ApiType_Remote_Controller>(remoteController, ApiSchema_Remote_Controller)
 }))
@@ -50,20 +54,13 @@ router.get('/:remote_controller_id/last-position', asyncHandler(async (req, res)
 
     await req.GM.guardUserHasPermissionForWorkspace(connection.workspace_id)
 
-    const remoteControllerLastPosition = await req.GM.guardDBGone(()=>{
-        return db.one<DBType_Remote_Controller_Data>('SELECT * FROM remote_controller_data WHERE remote_controller_id = ${remoteControllerId} AND type = 0 ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains longitude and latitude
-            remoteControllerId
-        })
-    })
+    const remoteControllerLastPosition = await getCore().modules.remoteController.getLastPositionOfRemoteController(remoteControllerId)
 
-    const ret: ApiType_Remote_Controller_Position = {
-        reported_at: remoteControllerLastPosition.created_at,
-        longitude: remoteControllerLastPosition.data.longitude as number,
-        latitude: remoteControllerLastPosition.data.latitude as number,
-        height: remoteControllerLastPosition.data.height as number
+    if(remoteControllerLastPosition === false){
+        throw GuardError._410_Gone()
     }
 
-    res.GM.guardSend<ApiType_Remote_Controller_Position>(ret, ApiSchema_Remote_Controller_Position)
+    res.GM.guardSend<ApiType_Remote_Controller_Position>(remoteControllerLastPosition, ApiSchema_Remote_Controller_Position)
 }))
 
 
