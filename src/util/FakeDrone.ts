@@ -1,19 +1,18 @@
 import * as pgp from 'pg-promise'
 const db : pgp.IDatabase<any> = global.db
-import { DRONE_DATA_TYPES } from "../core/modules/DroneModule"
 import FakeTrack from './FakeTrack'
-import { DBType_Flight_Data_TYPES } from '../generated-definitions/db/DBTypes'
+import { DBType_Drone_Data_TYPES, DBType_Flight_Data_TYPES } from '../generated-definitions/db/DBTypes'
 import { getCore } from '../core'
 
 export default class FakeDrone {
 
     private droneId: number
-    private fakeTrack: FakeTrack
+    private track: FakeTrack
 
-    constructor(droneId: number, workspaceId: number, fakeVehicle: FakeTrack){
+    constructor(droneId: number, workspaceId: number, track: FakeTrack){
         this.droneId = droneId
 
-        this.fakeTrack = fakeVehicle
+        this.track = track
 
         getCore().modules.drone.getDroneSafe(droneId).then(async(drone)=>{
             const connection = await getCore().modules.connection.createConnection(workspaceId, drone.name)
@@ -29,12 +28,16 @@ export default class FakeDrone {
 
             setInterval(async()=>{
 
-                const currentPosition = this.fakeTrack.getCurrentPosition()
+                const currentPosition = this.track.getCurrentPosition()
 
-                await getCore().modules.drone.addDroneData(this.droneId, DRONE_DATA_TYPES.POSITION, {//TODO latitude and longitude seems to be reversed
+                await getCore().modules.drone.addDroneData(this.droneId, DBType_Drone_Data_TYPES.position, {
                     longitude: currentPosition.longitude,
                     latitude: currentPosition.latitude,
-                    height: this.fakeTrack.getCurrentHeight()
+                    height: this.track.getCurrentHeight()
+                })
+
+                await getCore().modules.drone.addDroneData(this.droneId, DBType_Drone_Data_TYPES.telemetry, {
+                    capacity_percent_left: 42
                 })
 
                 await this.getFlightId().then(flightId=>{
@@ -43,7 +46,7 @@ export default class FakeDrone {
                         data: JSON.stringify({
                             longitude: currentPosition.longitude,
                             latitude: currentPosition.latitude,
-                            height: this.fakeTrack.getCurrentHeight()
+                            height: this.track.getCurrentHeight()
                         }),
                         flight_id: flightId,
                         type: DBType_Flight_Data_TYPES.position
@@ -59,7 +62,7 @@ export default class FakeDrone {
     }
 
     public getTrack(){
-        return this.fakeTrack
+        return this.track
     }
 
     public async getFlightId(){
