@@ -85,6 +85,56 @@ export function validate(obj: object, schema: JSONSchema4, skipSerialization = f
         if(schema.additionalItems === undefined){
             schema.additionalItems = false
         }
+    } else if(schema.type === 'array' && schema.items instanceof Object &&
+        //@ts-ignore
+        (schema.items.anyOf || schema.items.allOf)){
+
+        if(data instanceof Array === false){
+            return '. is not an array'
+        }
+
+        //@ts-ignore
+        if(schema.items.anyOf){
+            for(const d of data){
+
+                let foundValidAnyOf = false
+
+                //@ts-ignore
+                for(const s of schema.items.anyOf){
+                    const val = validate(d, s)
+
+                    if(val === true){
+                        foundValidAnyOf = true
+                        break
+                    }
+                }
+
+                if(!foundValidAnyOf){
+                    return '?anyOf? failed for ' + schema
+                }
+            }
+
+            return true
+        }
+
+        //@ts-ignore
+        if(schema.items.allOf){
+            for(const d of data){
+
+                //@ts-ignore
+                for(const s of schema.items.allOf){
+                    const val = validate(d, s)
+
+                    if(val === true){
+                        continue
+                    }
+
+                    return '?allOf? failed for ' + val
+                }
+            }
+
+            return true
+        }
     }
 
 
