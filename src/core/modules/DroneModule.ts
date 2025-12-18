@@ -1,18 +1,10 @@
 import {DBInsert_Drone, DBInsert_Drone_Data, DBUpdate_Drone, delete_Drone, insert_Drone, insert_Drone_Data, select_Drone, select_Workspace, update_Drone} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
-import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TypeType } from '../../generated-definitions/db/DBTypes'
+import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TYPES, DBType_Drone_Data_TypeType } from '../../generated-definitions/db/DBTypes'
 import { getCore } from '..'
-import { GuardError } from '../../ManInTheMiddleware'
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 const db : pgp.IDatabase<any> = global.db
-
-
-export const DRONE_DATA_TYPES = {
-    POSITION: 0 as DBType_Drone_Data_TypeType,
-    TELEMETRY: 1 as DBType_Drone_Data_TypeType
-}
-
 
 export default class DroneModule extends Module_Base<
     {
@@ -204,7 +196,7 @@ export default class DroneModule extends Module_Base<
 
         const droneData = await insert_Drone_Data(data)
 
-        if(droneData.type === DRONE_DATA_TYPES.POSITION){
+        if(droneData.type === DBType_Drone_Data_TYPES.position){
             const droneLastPosition = this.extractPositionFromDroneData(droneData)
 
             if(droneLastPosition === false){
@@ -216,7 +208,7 @@ export default class DroneModule extends Module_Base<
                     position: droneLastPosition
                 })
             }
-        } else if (droneData.type === DRONE_DATA_TYPES.TELEMETRY){
+        } else if (droneData.type === DBType_Drone_Data_TYPES.telemetry){
             const droneLastTelemetry = this.extractTelemetryFromDroneData(droneData)
 
             if(droneLastTelemetry === false){
@@ -251,7 +243,7 @@ export default class DroneModule extends Module_Base<
 
     async getLastPositionOfDrone(droneId: number){
         const droneLastPosition = await db.one<DBType_Drone_Data>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {
-            type: DRONE_DATA_TYPES.POSITION,
+            type: DBType_Drone_Data_TYPES.position,
             droneId
         })
 
@@ -276,7 +268,7 @@ export default class DroneModule extends Module_Base<
 
     async getLastTelemetryOfDrone(droneId: number){
         const droneLastTelemetry = await db.one<DBType_Drone_Data>('SELECT * FROM drone_data WHERE drone_id = ${droneId} AND type = ${type} ORDER BY created_at DESC LIMIT 1', {//TODO we need to make sure the data contains the required telemetry
-            type: DRONE_DATA_TYPES.TELEMETRY,
+            type: DBType_Drone_Data_TYPES.telemetry,
             droneId
         })
 
