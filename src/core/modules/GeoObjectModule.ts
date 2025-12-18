@@ -54,6 +54,10 @@ export default class GeoObjectModule extends Module_Base<
 
             const workspaceId = parseInt(filterOptions.default)
 
+            if(isNaN(workspaceId)){
+                throw new Error('invalid workspaceId')
+            }
+
             if(!(await getCore().modules.user.userHasPermissionForWorkspace(client.userId, workspaceId))){
                 return 'no permission to access this workspace'
             }
@@ -219,7 +223,7 @@ export default class GeoObjectModule extends Module_Base<
         filterParts.map(fp => {
             const keyValueSplit = fp.split('=')
             if(keyValueSplit.length === 1){
-                filterOptions['default'] === keyValueSplit[1]
+                filterOptions['default'] = keyValueSplit[0]
             } else if(keyValueSplit.length === 2) {
                 const key = keyValueSplit[0]
                 let value = keyValueSplit[1]
