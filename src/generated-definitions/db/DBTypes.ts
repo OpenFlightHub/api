@@ -97,6 +97,7 @@ export type DBType_Connection = {
      * the "currently" connected drone (does not mean that the drone is currently online)
      */
     last_drone_id?: number;
+    stream_is_alive: boolean;
 }
 
 

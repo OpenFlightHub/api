@@ -140,45 +140,60 @@ router.post('/', asyncHandler(async(req, res)=>{
 
     const body = req.GM.guardBodySchema<OmeAdmissionRequest>(OME_ADMISSION_REQUEST_SCHEMA)
 
+    const url = new URL(body.request.url)
+
+    const auth = url.searchParams.get('auth')
+
+    if(typeof auth !== 'string' || auth.length === 0){
+        throw GuardError._401_Unauthorized()
+    }
+
+    const match = url.pathname.match(/^\/ofh\/(\d+)$/)
+
+    if(!match){
+        throw GuardError._400_BadRequest('invalid stream id')
+    }
+
+    const connectionId = parseInt(match[1])
+
+    if(isNaN(connectionId)){
+        throw GuardError._400_BadRequest('invalid stream id')
+    }
+
+    const connection = await getCore().modules.connection.getConnection(connectionId)
+
+    if(connection === false){
+        throw GuardError._410_Gone()
+    }
+
     if(body.request.status === 'closing'){//client closed connection
 
-        //TODO anything to do here?
+         if(body.request.direction === 'incoming'){// publisher
+
+            getCore().modules.connection.updateConnectionSafe(connection.id, {
+                stream_is_alive: false
+            })
+
+        }
 
         res.status(200).send()
     } else {
-
-
-        const url = new URL(body.request.url)
-
-        const match = url.pathname.match(/^\/ofh\/(\d+)$/)
-
-        if(!match){
-            throw GuardError._400_BadRequest('invalid stream id')
-        }
-
-        const connectionId = parseInt(match[1])
-
-        if(isNaN(connectionId)){
-            throw GuardError._400_BadRequest('invalid stream id')
-        }
-
-        const auth = url.searchParams.get('auth')
-
-        if(typeof auth !== 'string' || auth.length === 0){
-            throw GuardError._401_Unauthorized()
-        }
-
-        const connection = await getCore().modules.connection.getConnection(connectionId)
-
-        if(connection === false){
-            throw GuardError._410_Gone()
-        }
 
         if(body.request.direction === 'incoming'){// publisher
 
             if(auth !== connection.secret){
                 throw GuardError._403_Forbidden()
             }
+
+            getCore().modules.connection.updateConnectionSafe(connection.id, {
+                stream_is_alive: true
+            })
+
+            res.status(200).GM.guardSend<OmeAdmissionResponse_Opening>({
+                allowed: true
+            }, OME_ADMISSION_RESPONSE_OPENING_SCHEMA)
+
+            return
 
         } else {// viewer
 
@@ -191,11 +206,13 @@ router.post('/', asyncHandler(async(req, res)=>{
             if(await getCore().modules.user.userHasPermissionForWorkspace(user.id, connection.workspace_id) === false){
                 throw GuardError._403_Forbidden()
             }
-        }
 
-        res.status(200).GM.guardSend<OmeAdmissionResponse_Opening>({
-            allowed: true
-        }, OME_ADMISSION_RESPONSE_OPENING_SCHEMA)
+            res.status(200).GM.guardSend<OmeAdmissionResponse_Opening>({
+                allowed: true
+            }, OME_ADMISSION_RESPONSE_OPENING_SCHEMA)
+
+            return
+        }
     }
 }))
 
