@@ -15,7 +15,12 @@ export default class FakeDrone {
         this.track = track
 
         getCore().modules.drone.getDroneSafe(droneId).then(async(drone)=>{
-            const connection = await getCore().modules.connection.createConnection(workspaceId, drone.name)
+
+            let connection = await getCore().modules.drone.getActiveConnectionForDrone(droneId)
+
+            if(connection === false){
+                connection = await getCore().modules.connection.createConnection(workspaceId, drone.name)
+            }
 
             //TODO dont do this manaally, there should be a functiion in droneModule or connectionModule that does this for us
             await getCore().modules.drone.updateDroneSafe(drone.id, {
