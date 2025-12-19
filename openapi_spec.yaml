@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.16.2
+  version: 0.16.3
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -2132,6 +2132,7 @@ components:
         - id
         - name
         - workspace_id
+        - stream_is_alive
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -2143,6 +2144,8 @@ components:
           $ref: "#/components/schemas/id"
         workspace_id:
           $ref: "#/components/schemas/id"
+        stream_is_alive:
+          type: boolean
 
     workspace_geo_objects_get:
       type: array

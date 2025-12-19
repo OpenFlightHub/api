@@ -208,6 +208,7 @@ export type ApiType_Workspace_Connections = {
     remote_controller_id?: number;
     drone_id?: number;
     workspace_id: number;
+    stream_is_alive: boolean;
 }[];
 
 
@@ -231,6 +232,7 @@ export interface ApiType_Connection {
     remote_controller_id?: number;
     drone_id?: number;
     workspace_id: number;
+    stream_is_alive: boolean;
 }
 
 

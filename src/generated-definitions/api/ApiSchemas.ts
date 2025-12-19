@@ -452,7 +452,8 @@ export const ApiSchema_Workspace_Connections : JSONSchema4  = {
         "required": [
             "id",
             "name",
-            "workspace_id"
+            "workspace_id",
+            "stream_is_alive"
         ],
         "properties": {
             "id": {
@@ -473,6 +474,9 @@ export const ApiSchema_Workspace_Connections : JSONSchema4  = {
             "workspace_id": {
                 "type": "number",
                 "example": 42
+            },
+            "stream_is_alive": {
+                "type": "boolean"
             }
         }
     }
@@ -512,7 +516,8 @@ export const ApiSchema_Connection : JSONSchema4  = {
     "required": [
         "id",
         "name",
-        "workspace_id"
+        "workspace_id",
+        "stream_is_alive"
     ],
     "properties": {
         "id": {
@@ -533,6 +538,9 @@ export const ApiSchema_Connection : JSONSchema4  = {
         "workspace_id": {
             "type": "number",
             "example": 42
+        },
+        "stream_is_alive": {
+            "type": "boolean"
         }
     }
 }
