@@ -207,6 +207,7 @@ export type ApiType_Workspace_Connections = {
     name: string;
     remote_controller_id?: number;
     drone_id?: number;
+    workspace_id: number;
 }[];
 
 
@@ -229,6 +230,7 @@ export interface ApiType_Connection {
     name: string;
     remote_controller_id?: number;
     drone_id?: number;
+    workspace_id: number;
 }
 
 

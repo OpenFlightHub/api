@@ -451,7 +451,8 @@ export const ApiSchema_Workspace_Connections : JSONSchema4  = {
         "description": "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)",
         "required": [
             "id",
-            "name"
+            "name",
+            "workspace_id"
         ],
         "properties": {
             "id": {
@@ -466,6 +467,10 @@ export const ApiSchema_Workspace_Connections : JSONSchema4  = {
                 "example": 42
             },
             "drone_id": {
+                "type": "number",
+                "example": 42
+            },
+            "workspace_id": {
                 "type": "number",
                 "example": 42
             }
@@ -506,7 +511,8 @@ export const ApiSchema_Connection : JSONSchema4  = {
     "description": "property `drone_id`: the currently connected drone (does not mean that the drone is currently online)",
     "required": [
         "id",
-        "name"
+        "name",
+        "workspace_id"
     ],
     "properties": {
         "id": {
@@ -521,6 +527,10 @@ export const ApiSchema_Connection : JSONSchema4  = {
             "example": 42
         },
         "drone_id": {
+            "type": "number",
+            "example": 42
+        },
+        "workspace_id": {
             "type": "number",
             "example": 42
         }
