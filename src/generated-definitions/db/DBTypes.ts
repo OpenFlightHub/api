@@ -7,6 +7,7 @@ export const DBType_User_STATES = {
 } as const
 export type DBType_User = {
     id: number;
+    team_id: number;
     name: string;
     /**
      * encrypted
@@ -45,6 +46,26 @@ export type DBType_User = {
 }
 
 
+export type DBType_Team_StateType = 0|1|2|3
+export const DBType_Team_STATES = {
+  invited: 0,
+  live: 1,
+  locked: 2,
+  deleted: 3
+} as const
+export type DBType_Team = {
+    id: number;
+    name: string;
+    owner_user_id: number;
+    created_at: string;
+    /**
+     * 0 = invited, 1 = live, 2 = locked, 3 = deleted
+     */
+    state: DBType_Team_StateType;
+    locale: string;
+}
+
+
 export type DBType_File = {
     id: number;
     workspace_id: number;
@@ -74,7 +95,7 @@ export type DBType_Workspace = {
 
 
 export type DBType_Workspace_Permission = {
-    user_id: number;
+    team_id: number;
     workspace_id: number;
 }
 

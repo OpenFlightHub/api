@@ -9,6 +9,7 @@ import * as pgp from 'pg-promise'
 import {DBType_User_StateType} from "./DBTypes";
 
 export type DBInsert_User = {
+    team_id: number
     name: string
     email: string
     email_hash: string
@@ -23,6 +24,7 @@ export type DBInsert_User = {
 }
 
 export type DBUpdate_User = {
+    team_id?: number
     name?: string
     email?: string
     email_hash?: string
@@ -39,6 +41,9 @@ const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "id",
         "cnd": true
+    },
+    {
+        "name": "team_id"
     },
     {
         "name": "name"
@@ -86,6 +91,10 @@ const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
 const COLUMN_SET_USERS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "team_id",
         "skip": col => !col.exists
     },
     {
@@ -225,6 +234,176 @@ import {DBType_User} from './DBTypes'
             }
 
             const ret = await db.manyOrNone<DBType_User>('SELECT FROM users ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
+    }
+
+
+//teams
+
+import {DBType_Team_StateType} from "./DBTypes";
+
+export type DBInsert_Team = {
+    name: string
+    owner_user_id: number
+    created_at?: string
+    state?: DBType_Team_StateType
+    locale?: string
+}
+
+export type DBUpdate_Team = {
+    name?: string
+    owner_user_id?: number
+    created_at?: string
+    state?: DBType_Team_StateType
+    locale?: string
+}
+const COLUMN_SET_TEAMS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "owner_user_id"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "locale",
+        "skip": col => !col.exists
+    }
+], {table: "teams"})
+
+const COLUMN_SET_TEAMS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "owner_user_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "locale",
+        "skip": col => !col.exists
+    }
+], {table: "teams"})
+import {DBType_Team} from './DBTypes'
+
+
+    export function insert_Team(values: DBInsert_Team){
+        return db.one<DBType_Team>(db.$config.pgp.helpers.insert(values, undefined, 'teams') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Team<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Team): Promise<T extends number ? false | DBType_Team : DBType_Team[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Team>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TEAMS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Team>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TEAMS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Team<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Team : DBType_Team[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Team>('DELETE FROM teams WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Team>('DELETE FROM teams ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Team<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Team : DBType_Team[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Team>('SELECT * FROM teams ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Team>('SELECT FROM teams ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -595,17 +774,17 @@ import {DBType_Workspace} from './DBTypes'
 import {} from "./DBTypes";
 
 export type DBInsert_Workspace_Permission = {
-    user_id: number
+    team_id: number
     workspace_id: number
 }
 
 export type DBUpdate_Workspace_Permission = {
-    user_id?: number
+    team_id?: number
     workspace_id?: number
 }
 const COLUMN_SET_WORKSPACE_PERMISSIONS = new db.$config.pgp.helpers.ColumnSet([
     {
-        "name": "user_id"
+        "name": "team_id"
     },
     {
         "name": "workspace_id"
@@ -614,7 +793,7 @@ const COLUMN_SET_WORKSPACE_PERMISSIONS = new db.$config.pgp.helpers.ColumnSet([
 
 const COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     {
-        "name": "user_id",
+        "name": "team_id",
         "skip": col => !col.exists
     },
     {

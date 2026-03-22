@@ -288,8 +288,15 @@ export default class UserModule extends Module_Base<
     }
 
     async userHasPermissionForWorkspace(userId: number, workspaceId: number){
-        const res = await db.oneOrNone<DBType_Workspace_Permission>('SELECT * FROM workspace_permissions WHERE user_id = ${userId} AND workspace_id = ${workspaceId}', {
-            userId,
+
+        const user = await select_User(userId)
+
+        if(user === false){
+            return false
+        }
+
+        const res = await db.oneOrNone<DBType_Workspace_Permission>('SELECT * FROM workspace_permissions WHERE team_id = ${teamId} AND workspace_id = ${workspaceId}', {
+            teamId: user.team_id,
             workspaceId
         })
 

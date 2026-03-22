@@ -29,8 +29,8 @@ router.get('/my-workspaces', asyncHandler(async (req, res) => {
 
     const user = await req.GM.getCurrentUser()
 
-    const workspaces = await db.manyOrNone('SELECT workspaces.* FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.user_id = ${user_id};', {
-        user_id: user.id
+    const workspaces = await db.manyOrNone('SELECT workspaces.* FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.team_id = ${team_id};', {
+        team_id: user.team_id
     })
 
     req.GM.guardSend<ApiType_Workspace[]>(workspaces, {type: 'array', items: ApiSchema_Workspace})

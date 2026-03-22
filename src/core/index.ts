@@ -2,6 +2,7 @@ import GeoObjectModule from './modules/GeoObjectModule'
 import ConnectionModule from './modules/ConnectionModule'
 import FileModule from './modules/FileModule'
 import UserModule from './modules/UserModule'
+import TeamModule from './modules/TeamModule'
 import DroneModule from './modules/DroneModule'
 import FlightModule from './modules/FlightModule'
 import RemoteControllerModule from './modules/RemoteControllerModule'
@@ -17,6 +18,7 @@ export default class Core {
         readonly connection: ConnectionModule
         readonly file: FileModule
         readonly user: UserModule
+        readonly team: TeamModule
         readonly drone: DroneModule
         readonly flight: FlightModule
         readonly remoteController: RemoteControllerModule
@@ -37,6 +39,7 @@ export default class Core {
             connection: new ConnectionModule(),
             file: new FileModule(),
             user: new UserModule(),
+            team: new TeamModule(),
             drone: new DroneModule(),
             flight: new FlightModule(),
             remoteController: new RemoteControllerModule(),
