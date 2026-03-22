@@ -9,7 +9,7 @@ import * as pgp from 'pg-promise'
 import {DBType_User_StateType} from "./DBTypes";
 
 export type DBInsert_User = {
-    team_id: number
+    team_id?: number
     name: string
     email: string
     email_hash: string
@@ -43,7 +43,8 @@ const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
         "cnd": true
     },
     {
-        "name": "team_id"
+        "name": "team_id",
+        "skip": col => !col.exists
     },
     {
         "name": "name"

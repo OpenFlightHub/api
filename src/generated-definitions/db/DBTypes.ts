@@ -7,7 +7,7 @@ export const DBType_User_STATES = {
 } as const
 export type DBType_User = {
     id: number;
-    team_id: number;
+    team_id?: number;
     name: string;
     /**
      * encrypted

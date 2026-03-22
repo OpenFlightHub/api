@@ -29,6 +29,11 @@ router.get('/my-workspaces', asyncHandler(async (req, res) => {
 
     const user = await req.GM.getCurrentUser()
 
+    if(typeof user.team_id !== 'number'){
+        req.GM.guardSend([], {type: 'array'})
+        return
+    }
+
     const workspaces = await db.manyOrNone('SELECT workspaces.* FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.team_id = ${team_id};', {
         team_id: user.team_id
     })

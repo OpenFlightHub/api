@@ -291,7 +291,7 @@ export default class UserModule extends Module_Base<
 
         const user = await select_User(userId)
 
-        if(user === false){
+        if(user === false || typeof user.team_id !== 'number'){
             return false
         }
 
