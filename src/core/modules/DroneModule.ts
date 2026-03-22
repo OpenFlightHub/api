@@ -207,6 +207,19 @@ export default class DroneModule extends Module_Base<
                     serial_number: (await this.getDroneSafe(droneData.drone_id)).serial_number,
                     position: droneLastPosition
                 })
+
+
+                const currentWorkspaceId = await this.getCurrentWorkspaceOfDrone(drone.id)
+
+                if(currentWorkspaceId !== false){
+                    this.subscribableEventHandlerWorkspaceDronesPosition.triggerListenerIfExists('' + currentWorkspaceId, async ()=>{
+                        return {
+                            id: droneData.drone_id,
+                            serial_number: (await this.getDroneSafe(droneData.drone_id)).serial_number,
+                            position: droneLastPosition
+                        }
+                    })
+                }
             }
         } else if (droneData.type === DBType_Drone_Data_TYPES.telemetry){
             const droneLastTelemetry = this.extractTelemetryFromDroneData(droneData)
