@@ -33,19 +33,14 @@ const db = pgp({
 
 global.db = db
 
-import {setupDB} from './db'
-
 import Core from './core/index'
 new Core()
 
 db.connect({
-    direct: true,
     onLost: ()=>{
         console.warn('lost db connection, restarting')
         process.exit(1)
     }
-}).then(sco=>{
-    setupDB(sco)
 }).catch(error => {
     console.error(error)
     process.exit(1)
