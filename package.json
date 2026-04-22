@@ -30,7 +30,7 @@
     "hpp": "^0.2.3",
     "i18next": "^24.0.5",
     "i18next-fs-backend": "^2.6.0",
-    "image-thumbnail": "^1.0.17",
+    "image-size": "^2.0.2",
     "js-aprs-fap": "^2.0.0",
     "js-aprs-is": "^2.0.1",
     "minio": "^8.0.4",
@@ -39,6 +39,7 @@
     "nodemailer": "^6.9.16",
     "pg-promise": "^11.10.2",
     "safe-json-stringify": "^1.2.0",
+    "sharp": "^0.34.5",
     "typescript": "^5.7.2"
   }
 }

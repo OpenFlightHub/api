@@ -1,7 +1,8 @@
 import * as express from 'express';
 import * as pgp from 'pg-promise'
 import asyncHandler from 'express-async-handler'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 import { ApiSchema_File, ApiSchema_File_Get_Multiple, ApiSchema_File_Get_Multiple_Post } from '../generated-definitions/api/ApiSchemas';
 import { ApiType_File, ApiType_File_Get_Multiple, ApiType_File_Get_Multiple_Post } from '../generated-definitions/api/ApiTypes';
@@ -84,14 +85,14 @@ router.get('/thumbnail/:file_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(file.workspace_id)
 
-    if(file.has_thumbnail === false){
+    if(typeof file.thumbnail_format !== 'string'){
         throw GuardError._410_Gone('file has no thumbnail')
     }
 
     res.appendHeader('Content-Disposition', `attachment; filename="${file.name}"`)
 
     try {
-        res.sendFile(getCore().modules.file.getAbsoluteThumbnailPathForFileId(file.id))
+        res.sendFile(await getCore().modules.file.getAbsoluteThumbnailPathForFile(file))
     } catch (err){
         console.error('error while sending thumbnail', err)
         res.status(500).send()

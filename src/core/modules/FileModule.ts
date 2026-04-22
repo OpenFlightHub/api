@@ -5,19 +5,18 @@ import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import safeJsonStringify from 'safe-json-stringify'
 import fs from 'fs'
 import path from 'path'
-import imageThumbnail from 'image-thumbnail'
 import { readFile } from 'fs/promises'
 import { getExifData } from '../../util/exif'
 import { Tags } from 'exifreader'
 import { getFileExtension } from '../../util/file'
 import { Waitable } from '../../util/waitable'
+import {generateThumbnailForPath} from '../../util/thumbnail'
 
 import SecretsLoader from '../../util/SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['files_path'])
 
 const THUMBNAILS_FOLDER = 'thumbnails'
-const THUMBNAILS_EXT = 'jpg'
 const THUMBNAIL_WIDTH = 300
 
 
@@ -25,7 +24,8 @@ import pgp from 'pg-promise'
 import { downloadObject } from '../../s3-store'
 import { assignObject } from '../../util/typescript'
 import { MulterFile } from '../../app'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 export default class FileModule extends Module_Base<
@@ -58,7 +58,9 @@ export default class FileModule extends Module_Base<
             fs.mkdirSync(thumbnailsFolderPath)
         }
 
-        this.checkForMissingThumbnails()
+        setTimeout(()=>{
+             this.checkForMissingThumbnails()
+        }, 0)
     }
 
     /**
@@ -78,7 +80,7 @@ export default class FileModule extends Module_Base<
             }
 
             try {
-                await this.generateThumbnailForFile(file.id)
+                await this.generateThumbnailForFile(file)
             } catch (err){
                 console.warn('failed to generate thumbnail for file', file.id, err)
             }
@@ -147,7 +149,7 @@ export default class FileModule extends Module_Base<
 
         await this.deleteFileIfExists(this.getAbsoluteFilePathForFile(file))
 
-        await this.deleteThumbnailIfExists(file.id)
+        await this.deleteThumbnailIfExists(file)
     }
 
     /**
@@ -206,22 +208,25 @@ export default class FileModule extends Module_Base<
         return path.join(path.resolve(secrets.files_path), '' + file.id + '.' + file.ext)
     }
 
-    getAbsoluteThumbnailPathForFileId(fileId: number){
-        return path.join(path.resolve(secrets.files_path), THUMBNAILS_FOLDER, '' + fileId + '.' + THUMBNAILS_EXT)
+    async getAbsoluteThumbnailPathForFile(file: DBType_File){
+
+        return path.join(path.resolve(secrets.files_path), THUMBNAILS_FOLDER, '' + file.id + '.' + file.thumbnail_format!)
     }
 
-    private async checkForMissingThumbnails(){
+    private async checkForMissingThumbnails(){//TODO this probably blocks the main thread?
         try {
-            const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE has_thumbnail = false AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + (['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].map(m => '\'' + m + '\'').join(',')) + ');')
+            const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE thumbnail_format is null AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + ('avif gif heif jp2 jpeg jxl png webp tiff'.split(/\s/).map(m => '\'' + m + '\'').join(',')) + ');')
 
             for(const file of filesThatRequireThumbnails){
+
+                // check if thumbnail got generated in the meantime (e.g. by direct api call)
                 const upToDateFile = await this.getFileSafe(file.id)
-                if(upToDateFile.has_thumbnail || upToDateFile.thumbnail_generation_has_failed){
+                if(typeof upToDateFile.thumbnail_format === 'string' || upToDateFile.thumbnail_generation_has_failed){
                     continue
                 }
 
                 console.log('generate missing thumbnail for file', file.id)
-                await this.generateThumbnailForFile(file.id)
+                await this.generateThumbnailForFile(file)
             }
 
         } catch (err){
@@ -240,20 +245,19 @@ export default class FileModule extends Module_Base<
     /**
      * generates a thumbnail for this file, and updates the file database entry. If it fails to generate one, the file database entry is marked as "generation_failed" and after that an error is thrown
      */
-    private async generateThumbnailForFile(fileId: number){
-        const filePath = await this.getAbsoluteFilePathForFileId(fileId)
+    private async generateThumbnailForFile(file: DBType_File){
+        const filePath = await this.getAbsoluteFilePathForFileId(file.id)
 
-        let thumbnailBuffer: any
+        let thumbnail: Awaited<ReturnType<typeof generateThumbnailForPath>>
         try {
-            thumbnailBuffer = await imageThumbnail(filePath, {
-                width: THUMBNAIL_WIDTH,
-                jpegOptions: {
-                    force: true
+            thumbnail = await generateThumbnailForPath(filePath, {
+                size: {
+                    width: THUMBNAIL_WIDTH
                 }
             })
         } catch (err){
             try {
-                await this.updateFile(fileId, {
+                await this.updateFile(file.id, {
                     thumbnail_generation_has_failed: true
                 })
             } catch (err){
@@ -263,14 +267,18 @@ export default class FileModule extends Module_Base<
             throw err
         }
 
-        const thumbnailPath = this.getAbsoluteThumbnailPathForFileId(fileId)
+        assignObject(file, {
+            thumbnail_format: thumbnail.format
+        })
+
+        const thumbnailPath = await this.getAbsoluteThumbnailPathForFile(file)
 
         const writeStream = fs.createWriteStream(thumbnailPath)
-        writeStream.write(thumbnailBuffer)
+        writeStream.write(thumbnail.buffer)
         writeStream.close()
 
-        await this.updateFile(fileId, {
-            has_thumbnail: true
+        await this.updateFile(file.id, {
+            thumbnail_format: thumbnail.format
         })
 
         return thumbnailPath
@@ -303,8 +311,8 @@ export default class FileModule extends Module_Base<
         }
     }
 
-    private async deleteThumbnailIfExists(fileId: number){
-        await this.deleteFileIfExists(this.getAbsoluteThumbnailPathForFileId(fileId))
+    private async deleteThumbnailIfExists(file: DBType_File){
+        await this.deleteFileIfExists(await this.getAbsoluteThumbnailPathForFile(file))
     }
 
     /**
