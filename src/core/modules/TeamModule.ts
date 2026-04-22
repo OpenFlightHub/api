@@ -1,8 +1,11 @@
-import {DBUpdate_Team, delete_Team, insert_Team, select_Team, update_Team} from '../../generated-definitions/db/DBHelpers'
+import {DBUpdate_Team, delete_Team, insert_Team, select_Team, select_User, update_Team} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
-import { DBType_Team, DBType_Team_StateType } from '../../generated-definitions/db/DBTypes'
-const db : pgp.IDatabase<any> = global.db
+import { DBType_Team, DBType_Team_StateType, DBType_User } from '../../generated-definitions/db/DBTypes'
+import { getCore } from '..'
+import {deduplicateIdArray} from '../../util/array'
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class TeamModule extends Module_Base<
     {
@@ -33,6 +36,7 @@ export default class TeamModule extends Module_Base<
     async createTeam(values: {
         name: string
         owner_user_id: number
+        organisation_id: number
         state?: DBType_Team_StateType
     }){
 
@@ -108,4 +112,32 @@ export default class TeamModule extends Module_Base<
      */
     getTeamSafe = makeFunctionIdSafe(this, this.getTeam)
 
+
+    async userCanEditTeam(userId: number, teamId: number) {
+        const team = await this.getTeamSafe(teamId)
+
+        if(await getCore().modules.user.userIsAdmin(userId)){
+            return true
+        }
+
+        if(typeof team.organisation_id === 'number' && await getCore().modules.organisation.userCanEditOrganisation(userId, team.organisation_id) === true){
+            return true
+        }
+
+        if(team.owner_user_id === userId){
+            return true
+        }
+
+        return false
+    }
+
+    async getTeamsUserHasAccessTo(user: DBType_User){
+        const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
+
+        if(typeof user.team_id === 'number'){
+            teams.push(await this.getTeamSafe(user.team_id))
+        }
+
+        return deduplicateIdArray(teams)
+    }
 }

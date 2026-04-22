@@ -10,7 +10,8 @@ import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_Workspac
 import { ApiType_Id } from '../../generated-definitions/api/ApiTypes'
 import { assignObject } from '../../util/typescript'
 import { firstCharAsUppercaseRestAsLowercase } from '../../util/string'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const TOKEN_BYTE_LENGTH = 42
@@ -47,13 +48,14 @@ export default class UserModule extends Module_Base<
         email: string
         password?: string
         state?: DBType_User_StateType
-    }, dontSendEmail?: boolean){
+    }, createdByUserId: number, dontSendEmail?: boolean){
 
         if(values.password){
             values.password = await hashString(values.password)
         }
 
         const allValues = assignObject(values, {
+            created_by_user_id: createdByUserId,
             email_hash: await hashString(values.email,
                 //@ts-ignore
                 global.emailHashPepper)
@@ -137,14 +139,14 @@ export default class UserModule extends Module_Base<
 
 
 
-    async createUserFromEmail(email: string, dontSendEmail?: boolean){
+    async createUserFromEmail(email: string, createdByUserId: number, dontSendEmail?: boolean){
 
         const name = this.deriveUserNameFromEmail(email)
 
         return this.createUser({
             name,
             email
-        }, dontSendEmail)
+        }, createdByUserId, dontSendEmail)
     }
 
     async sendUserCreateEmail(user: DBType_User){
@@ -324,6 +326,14 @@ export default class UserModule extends Module_Base<
         })
 
         setSessionCookie('user-auth', sessionToken, res)
+    }
+
+    async userIsAdmin(user: DBType_User | number){
+        if(typeof user === 'number'){
+            user = await this.getUserSafe(user)
+        }
+
+        return user.id === 4
     }
 
 }

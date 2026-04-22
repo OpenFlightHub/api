@@ -101,6 +101,7 @@ export type ApiType_Auth_Stream_Token = {
 export type ApiType_User = {
     id: number;
     name: string;
+    team_id?: number;
 }
 
 
@@ -114,6 +115,7 @@ export type ApiType_User_Self = {
     created_at: string;
     locale: string;
     registration_incomplete: boolean;
+    team_id?: number;
 }
 
 
@@ -121,6 +123,88 @@ export type ApiType_User_Patch = {
     name?: string;
     email?: string;
     locale?: string;
+}
+
+
+export type ApiType_User_My_Organisations = {
+    id: number;
+    /**
+     * 0 = owner, 1 = member
+     */
+    access_type: number;
+}[];
+
+
+export type ApiType_User_My_Teams = {
+    id: number;
+    /**
+     * 0 = owner, 1 = member
+     */
+    access_type: number;
+}[];
+
+
+export type ApiType_Team = {
+    id: number;
+    name: string;
+    owner_user_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * 0 = invited, 1 = live, 2 = locked, 3 = deleted
+     */
+    state: number;
+    organisation_id?: number;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Team_Post = {
+    name: string;
+    organisation_id: number;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Team_Patch = {
+    name?: string;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Organisation = {
+    id: number;
+    name: string;
+    owner_user_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * 0 = invited, 1 = live, 2 = locked, 3 = deleted
+     */
+    state: number;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Organisation_Post = {
+    name: string;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Organisation_Patch = {
+    name?: string;
+    logo_file_id?: number;
+}
+
+
+export type ApiType_Admin_User_Post = {
+    name?: string;
+    email: string;
 }
 
 
@@ -132,9 +216,9 @@ export type ApiType_File = {
      */
     created_at: string;
     /**
-     * if a thumbnail is available at /file/thumbnail/
+     * e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)
      */
-    has_thumbnail: boolean;
+    thumbnail_format?: string;
 }
 
 
@@ -146,9 +230,9 @@ export type ApiType_File_Get_Multiple = {
      */
     created_at: string;
     /**
-     * if a thumbnail is available at /file/thumbnail/
+     * e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)
      */
-    has_thumbnail: boolean;
+    thumbnail_format?: string;
 }[];
 
 
@@ -185,9 +269,9 @@ export type ApiType_Workspace_Files = {
      */
     created_at: string;
     /**
-     * if a thumbnail is available at /file/thumbnail/
+     * e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)
      */
-    has_thumbnail: boolean;
+    thumbnail_format?: string;
 }[];
 
 

@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.16.3
+  version: 0.17.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -62,6 +62,10 @@ tags:
   - name: authentication
     description: Everything about authentication (for link authentication see `/link` endpoints)
   - name: user
+  - name: team
+  - name: organisation
+  - name: admin
+    description: Server Administration
   - name: workspace
   - name: connection
   - name: geo-object
@@ -366,6 +370,265 @@ paths:
 
         "401":
           $ref: "#/components/responses/401"
+      security:
+        - user_auth: []
+
+  /user/my-organisations:
+    get:
+      tags:
+        - user
+        - organisation
+      summary: Get all the organisations you have acess to
+      responses:
+        "200":
+          description: Returns organisations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_my_organisations"
+
+        "401":
+          $ref: "#/components/responses/401"
+      security:
+        - user_auth: []
+
+  /user/my-teams:
+    get:
+      tags:
+        - user
+        - team
+      summary: Get all the teams you have acess to
+      responses:
+        "200":
+          description: Returns teams
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_my_teams"
+
+        "401":
+          $ref: "#/components/responses/401"
+      security:
+        - user_auth: []
+
+  # team
+
+  /team:
+    post:
+      tags:
+        - team
+      summary: Create a team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/team_post"
+        required: true
+      responses:
+        "200":
+          description: Created team successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+  /team/{team_id}:
+    get:
+      tags:
+        - team
+      summary: Get a team
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns a team definition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/team"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - team
+      summary: Modify an existing team. Each property is optional, only present properties will be updated in the database. Some properties cannot be changed!
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/team_patch"
+        required: true
+      responses:
+        "200":
+          description: Team modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/team"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  # organisation
+
+
+  /organisation:
+    post:
+      tags:
+        - organisation
+      summary: Create an organisation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/organisation_post"
+        required: true
+      responses:
+        "200":
+          description: Created organisation successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+  /organisation/{organisation_id}:
+    get:
+      tags:
+        - organisation
+      summary: Get a organisation
+      parameters:
+        - name: organisation_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns a organisation definition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/organisation"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - organisation
+      summary: Modify an existing organisation. Each property is optional, only present properties will be updated in the database. Some properties cannot be changed!
+      parameters:
+        - name: organisation_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/organisation_patch"
+        required: true
+      responses:
+        "200":
+          description: User modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/organisation"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  # admin
+
+  /admin/user:
+    post:
+      tags:
+        - admin
+      summary: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/admin_user_post"
+        required: true
+      responses:
+        "200":
+          description: Created user successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
       security:
         - user_auth: []
 
@@ -1966,6 +2229,8 @@ components:
         name:
           type: string
           example: Harry Potter
+        team_id:
+          $ref: "#/components/schemas/id"
 
     user_self:
       type: object
@@ -1991,6 +2256,8 @@ components:
           example: en-US
         registration_incomplete:
           type: boolean
+        team_id:
+          $ref: "#/components/schemas/id"
 
     user_patch:
       type: object
@@ -2004,6 +2271,146 @@ components:
           type: string
           example: en-US
 
+
+    user_my_organisations:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - access_type
+        properties:
+          id:
+            $ref: "#/components/schemas/id"
+          access_type:
+            type: integer
+            description: 0 = owner, 1 = member
+
+
+    user_my_teams:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - access_type
+        properties:
+          id:
+            $ref: "#/components/schemas/id"
+          access_type:
+            type: integer
+            description: 0 = owner, 1 = member
+
+    # team
+
+    team:
+      type: object
+      required:
+        - id
+        - name
+        - owner_user_id
+        - created_at
+        - state
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+          example: Harry Potter
+        owner_user_id:
+          $ref: "#/components/schemas/id"
+        created_at:
+          $ref: "#/components/schemas/timestamptz"
+        state:
+          type: integer
+          description: 0 = invited, 1 = live, 2 = locked, 3 = deleted
+        organisation_id:
+          $ref: "#/components/schemas/id"
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    team_post:
+      type: object
+      required:
+        - name
+        - organisation_id
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        organisation_id:
+          $ref: "#/components/schemas/id"
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    team_patch:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    # organisation
+
+    organisation:
+      type: object
+      required:
+        - id
+        - name
+        - owner_user_id
+        - created_at
+        - state
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+          example: Harry Potter
+        owner_user_id:
+          $ref: "#/components/schemas/id"
+        created_at:
+          $ref: "#/components/schemas/timestamptz"
+        state:
+          type: integer
+          description: 0 = invited, 1 = live, 2 = locked, 3 = deleted
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    organisation_post:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    organisation_patch:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        logo_file_id:
+          $ref: "#/components/schemas/id"
+
+    # admin
+
+    admin_user_post:
+      type: object
+      required:
+        - email
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        email:
+          $ref: "#/components/schemas/email"
+
     # file
 
     file:
@@ -2012,7 +2419,6 @@ components:
         - id
         - name
         - created_at
-        - has_thumbnail
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -2020,9 +2426,9 @@ components:
           type: string
         created_at:
           $ref: "#/components/schemas/timestamptz"
-        has_thumbnail:
-          type: boolean
-          description: if a thumbnail is available at /file/thumbnail/
+        thumbnail_format:
+          type: string
+          description: e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)
 
     file_get_multiple:
       type: array

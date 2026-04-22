@@ -43,6 +43,7 @@ export type DBType_User = {
      */
     state: DBType_User_StateType;
     locale: string;
+    created_by_user_id: number;
 }
 
 
@@ -57,12 +58,33 @@ export type DBType_Team = {
     id: number;
     name: string;
     owner_user_id: number;
+    organisation_id?: number;
     created_at: string;
     /**
      * 0 = invited, 1 = live, 2 = locked, 3 = deleted
      */
     state: DBType_Team_StateType;
-    locale: string;
+    logo_file_id?: number;
+}
+
+
+export type DBType_Organisation_StateType = 0|1|2|3
+export const DBType_Organisation_STATES = {
+  invited: 0,
+  live: 1,
+  locked: 2,
+  deleted: 3
+} as const
+export type DBType_Organisation = {
+    id: number;
+    name: string;
+    owner_user_id: number;
+    created_at: string;
+    /**
+     * 0 = invited, 1 = live, 2 = locked, 3 = deleted
+     */
+    state: DBType_Organisation_StateType;
+    logo_file_id?: number;
 }
 
 
@@ -76,7 +98,10 @@ export type DBType_File = {
     name: string;
     created_at: string;
     created_by: number;
-    has_thumbnail: boolean;
+    /**
+     * if not null, thumbnail exists
+     */
+    thumbnail_format?: string;
     thumbnail_generation_has_failed: boolean;
     /**
      * json encoded exif data

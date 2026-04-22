@@ -1,8 +1,8 @@
 import express from 'express';
 import { DBType_User } from '../generated-definitions/db/DBTypes';
-import { ApiSchema_User, ApiSchema_User_Patch, ApiSchema_User_Self } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_User, ApiSchema_User_My_Organisations, ApiSchema_User_My_Teams, ApiSchema_User_Patch, ApiSchema_User_Self } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_User, ApiType_User_Patch, ApiType_User_Self } from '../generated-definitions/api/ApiTypes';
+import { ApiType_User, ApiType_User_My_Organisations, ApiType_User_My_Teams, ApiType_User_Patch, ApiType_User_Self } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript'
 import { getCore } from '../core';
@@ -20,6 +20,29 @@ router.get('/self', asyncHandler(async (req, res) => {
         ApiSchema_User_Self
     )
 
+}))
+
+
+router.get('/my-organisations', asyncHandler(async (req, res) => {
+
+    const user = await req.GM.guardUserIsAuthenticated()
+
+    const organisations = await getCore().modules.organisation.getOrganisationsUserHasAccessTo(user)
+
+    res.GM.guardSend<ApiType_User_My_Organisations>(organisations.map(organisation =>{
+        return {id: organisation.id, access_type: organisation.owner_user_id === user.id ? 0 : 1}
+    }), ApiSchema_User_My_Organisations)
+}))
+
+router.get('/my-teams', asyncHandler(async (req, res) => {
+
+    const user = await req.GM.guardUserIsAuthenticated()
+
+    const teams = await getCore().modules.team.getTeamsUserHasAccessTo(user)
+
+    res.GM.guardSend<ApiType_User_My_Teams>(teams.map(team => {
+        return {id: team.id, access_type: team.owner_user_id === user.id ? 0 : 1}
+    }), ApiSchema_User_My_Teams)
 }))
 
 router.get('/:user_id', asyncHandler(async (req, res) => {

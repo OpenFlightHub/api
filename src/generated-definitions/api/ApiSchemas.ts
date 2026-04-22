@@ -194,6 +194,10 @@ export const ApiSchema_User : JSONSchema4  = {
         "name": {
             "type": "string",
             "example": "Harry Potter"
+        },
+        "team_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -233,6 +237,10 @@ export const ApiSchema_User_Self : JSONSchema4  = {
         },
         "registration_incomplete": {
             "type": "boolean"
+        },
+        "team_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -255,13 +263,220 @@ export const ApiSchema_User_Patch : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_User_My_Organisations : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "access_type"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "access_type": {
+                "type": "integer",
+                "description": "0 = owner, 1 = member"
+            }
+        }
+    }
+}
+
+export const ApiSchema_User_My_Teams : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "access_type"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "access_type": {
+                "type": "integer",
+                "description": "0 = owner, 1 = member"
+            }
+        }
+    }
+}
+
+export const ApiSchema_Team : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "owner_user_id",
+        "created_at",
+        "state"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "owner_user_id": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = invited, 1 = live, 2 = locked, 3 = deleted"
+        },
+        "organisation_id": {
+            "type": "number",
+            "example": 42
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Team_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "organisation_id"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "organisation_id": {
+            "type": "number",
+            "example": 42
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Team_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Organisation : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "owner_user_id",
+        "created_at",
+        "state"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "owner_user_id": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = invited, 1 = live, 2 = locked, 3 = deleted"
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Organisation_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Organisation_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Admin_User_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "email"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+        }
+    }
+}
+
 export const ApiSchema_File : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
         "name",
-        "created_at",
-        "has_thumbnail"
+        "created_at"
     ],
     "properties": {
         "id": {
@@ -277,9 +492,9 @@ export const ApiSchema_File : JSONSchema4  = {
             "description": "ISO 8601 format with a timezone",
             "example": "2023-12-11 23:06:52.7879+00"
         },
-        "has_thumbnail": {
-            "type": "boolean",
-            "description": "if a thumbnail is available at /file/thumbnail/"
+        "thumbnail_format": {
+            "type": "string",
+            "description": "e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)"
         }
     }
 }
@@ -291,8 +506,7 @@ export const ApiSchema_File_Get_Multiple : JSONSchema4  = {
         "required": [
             "id",
             "name",
-            "created_at",
-            "has_thumbnail"
+            "created_at"
         ],
         "properties": {
             "id": {
@@ -308,9 +522,9 @@ export const ApiSchema_File_Get_Multiple : JSONSchema4  = {
                 "description": "ISO 8601 format with a timezone",
                 "example": "2023-12-11 23:06:52.7879+00"
             },
-            "has_thumbnail": {
-                "type": "boolean",
-                "description": "if a thumbnail is available at /file/thumbnail/"
+            "thumbnail_format": {
+                "type": "string",
+                "description": "e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)"
             }
         }
     }
@@ -393,8 +607,7 @@ export const ApiSchema_Workspace_Files : JSONSchema4  = {
         "required": [
             "id",
             "name",
-            "created_at",
-            "has_thumbnail"
+            "created_at"
         ],
         "properties": {
             "id": {
@@ -410,9 +623,9 @@ export const ApiSchema_Workspace_Files : JSONSchema4  = {
                 "description": "ISO 8601 format with a timezone",
                 "example": "2023-12-11 23:06:52.7879+00"
             },
-            "has_thumbnail": {
-                "type": "boolean",
-                "description": "if a thumbnail is available at /file/thumbnail/"
+            "thumbnail_format": {
+                "type": "string",
+                "description": "e.g. jpg (not null if a thumbnail is available at /file/thumbnail/)"
             }
         }
     }

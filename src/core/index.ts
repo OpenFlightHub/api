@@ -8,6 +8,8 @@ import FlightModule from './modules/FlightModule'
 import RemoteControllerModule from './modules/RemoteControllerModule'
 import DroneMediaModule from './modules/DroneMediaModule'
 import WorkspaceModule from './modules/WorkspaceModule'
+import OrganisationModule from './modules/OrganisationModule'
+
 
 let coreInstance: Core
 
@@ -19,6 +21,7 @@ export default class Core {
         readonly file: FileModule
         readonly user: UserModule
         readonly team: TeamModule
+        readonly organisation: OrganisationModule
         readonly drone: DroneModule
         readonly flight: FlightModule
         readonly remoteController: RemoteControllerModule
@@ -40,6 +43,7 @@ export default class Core {
             file: new FileModule(),
             user: new UserModule(),
             team: new TeamModule(),
+            organisation: new OrganisationModule(),
             drone: new DroneModule(),
             flight: new FlightModule(),
             remoteController: new RemoteControllerModule(),

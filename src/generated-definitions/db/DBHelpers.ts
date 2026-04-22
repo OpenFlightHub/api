@@ -1,5 +1,6 @@
 import * as pgp from 'pg-promise'
-    const db : pgp.IDatabase<any> = global.db
+    //@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 
@@ -21,6 +22,7 @@ export type DBInsert_User = {
     created_at?: string
     state?: DBType_User_StateType
     locale?: string
+    created_by_user_id: number
 }
 
 export type DBUpdate_User = {
@@ -36,6 +38,7 @@ export type DBUpdate_User = {
     created_at?: string
     state?: DBType_User_StateType
     locale?: string
+    created_by_user_id?: number
 }
 const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -86,6 +89,9 @@ const COLUMN_SET_USERS = new db.$config.pgp.helpers.ColumnSet([
     {
         "name": "locale",
         "skip": col => !col.exists
+    },
+    {
+        "name": "created_by_user_id"
     }
 ], {table: "users"})
 
@@ -140,6 +146,10 @@ const COLUMN_SET_USERS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "locale",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by_user_id",
         "skip": col => !col.exists
     }
 ], {table: "users"})
@@ -210,7 +220,7 @@ import {DBType_User} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -234,7 +244,7 @@ import {DBType_User} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_User>('SELECT FROM users ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_User>('SELECT * FROM users ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -250,17 +260,19 @@ import {DBType_Team_StateType} from "./DBTypes";
 export type DBInsert_Team = {
     name: string
     owner_user_id: number
+    organisation_id?: number
     created_at?: string
     state?: DBType_Team_StateType
-    locale?: string
+    logo_file_id?: number
 }
 
 export type DBUpdate_Team = {
     name?: string
     owner_user_id?: number
+    organisation_id?: number
     created_at?: string
     state?: DBType_Team_StateType
-    locale?: string
+    logo_file_id?: number
 }
 const COLUMN_SET_TEAMS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -274,6 +286,10 @@ const COLUMN_SET_TEAMS = new db.$config.pgp.helpers.ColumnSet([
         "name": "owner_user_id"
     },
     {
+        "name": "organisation_id",
+        "skip": col => !col.exists
+    },
+    {
         "name": "created_at",
         "skip": col => !col.exists
     },
@@ -282,7 +298,7 @@ const COLUMN_SET_TEAMS = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "locale",
+        "name": "logo_file_id",
         "skip": col => !col.exists
     }
 ], {table: "teams"})
@@ -301,6 +317,10 @@ const COLUMN_SET_TEAMS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
+        "name": "organisation_id",
+        "skip": col => !col.exists
+    },
+    {
         "name": "created_at",
         "skip": col => !col.exists
     },
@@ -309,7 +329,7 @@ const COLUMN_SET_TEAMS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "locale",
+        "name": "logo_file_id",
         "skip": col => !col.exists
     }
 ], {table: "teams"})
@@ -380,7 +400,7 @@ import {DBType_Team} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -404,7 +424,177 @@ import {DBType_Team} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Team>('SELECT FROM teams ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Team>('SELECT * FROM teams ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
+    }
+
+
+//organisations
+
+import {DBType_Organisation_StateType} from "./DBTypes";
+
+export type DBInsert_Organisation = {
+    name: string
+    owner_user_id: number
+    created_at?: string
+    state?: DBType_Organisation_StateType
+    logo_file_id?: number
+}
+
+export type DBUpdate_Organisation = {
+    name?: string
+    owner_user_id?: number
+    created_at?: string
+    state?: DBType_Organisation_StateType
+    logo_file_id?: number
+}
+const COLUMN_SET_ORGANISATIONS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "owner_user_id"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "logo_file_id",
+        "skip": col => !col.exists
+    }
+], {table: "organisations"})
+
+const COLUMN_SET_ORGANISATIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "owner_user_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "logo_file_id",
+        "skip": col => !col.exists
+    }
+], {table: "organisations"})
+import {DBType_Organisation} from './DBTypes'
+
+
+    export function insert_Organisation(values: DBInsert_Organisation){
+        return db.one<DBType_Organisation>(db.$config.pgp.helpers.insert(values, undefined, 'organisations') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Organisation<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Organisation): Promise<T extends number ? false | DBType_Organisation : DBType_Organisation[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Organisation>(db.$config.pgp.helpers.update(values,  COLUMN_SET_ORGANISATIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Organisation>(db.$config.pgp.helpers.update(values,  COLUMN_SET_ORGANISATIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Organisation<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Organisation : DBType_Organisation[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Organisation>('DELETE FROM organisations WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Organisation>('DELETE FROM organisations ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Organisation<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Organisation : DBType_Organisation[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Organisation>('SELECT * FROM organisations ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Organisation>('SELECT * FROM organisations ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -423,7 +613,7 @@ export type DBInsert_File = {
     name: string
     created_at?: string
     created_by: number
-    has_thumbnail?: boolean
+    thumbnail_format?: string
     thumbnail_generation_has_failed?: boolean
     exif_data?: string
     exif_data_generation_has_failed?: boolean
@@ -435,7 +625,7 @@ export type DBUpdate_File = {
     name?: string
     created_at?: string
     created_by?: number
-    has_thumbnail?: boolean
+    thumbnail_format?: string
     thumbnail_generation_has_failed?: boolean
     exif_data?: string
     exif_data_generation_has_failed?: boolean
@@ -462,7 +652,7 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
         "name": "created_by"
     },
     {
-        "name": "has_thumbnail",
+        "name": "thumbnail_format",
         "skip": col => !col.exists
     },
     {
@@ -505,7 +695,7 @@ const COLUMN_SET_FILES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "has_thumbnail",
+        "name": "thumbnail_format",
         "skip": col => !col.exists
     },
     {
@@ -588,7 +778,7 @@ import {DBType_File} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -612,7 +802,7 @@ import {DBType_File} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_File>('SELECT FROM files ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_File>('SELECT * FROM files ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -737,7 +927,7 @@ import {DBType_Workspace} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -761,7 +951,7 @@ import {DBType_Workspace} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Workspace>('SELECT FROM workspaces ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Workspace>('SELECT * FROM workspaces ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -869,7 +1059,7 @@ import {DBType_Workspace_Permission} from './DBTypes'
         }
     }
 
-    
+
 
 
 //connections
@@ -1037,7 +1227,7 @@ import {DBType_Connection} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1061,7 +1251,7 @@ import {DBType_Connection} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Connection>('SELECT FROM connections ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Connection>('SELECT * FROM connections ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -1178,7 +1368,7 @@ import {DBType_Remote_Controller} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1202,7 +1392,7 @@ import {DBType_Remote_Controller} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Remote_Controller>('SELECT FROM remote_controllers ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Remote_Controller>('SELECT * FROM remote_controllers ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -1358,7 +1548,7 @@ import {DBType_Drone} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1382,7 +1572,7 @@ import {DBType_Drone} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Drone>('SELECT FROM drones ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone>('SELECT * FROM drones ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -1528,7 +1718,7 @@ import {DBType_Flight} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1552,7 +1742,7 @@ import {DBType_Flight} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Flight>('SELECT FROM flights ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Flight>('SELECT * FROM flights ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -1696,7 +1886,7 @@ import {DBType_Flight_Data} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1720,7 +1910,7 @@ import {DBType_Flight_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Flight_Data>('SELECT FROM flight_data ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Flight_Data>('SELECT * FROM flight_data ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -1856,7 +2046,7 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1880,7 +2070,7 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Remote_Controller_Data>('SELECT FROM remote_controller_data ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Remote_Controller_Data>('SELECT * FROM remote_controller_data ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -2025,7 +2215,7 @@ import {DBType_Drone_Data} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2049,7 +2239,7 @@ import {DBType_Drone_Data} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Drone_Data>('SELECT FROM drone_data ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone_Data>('SELECT * FROM drone_data ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -2271,7 +2461,7 @@ import {DBType_Drone_Media} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2295,7 +2485,7 @@ import {DBType_Drone_Media} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Drone_Media>('SELECT FROM drone_media ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Drone_Media>('SELECT * FROM drone_media ' + whereCondition)
 
             //@ts-ignore
             return ret
@@ -2468,7 +2658,7 @@ import {DBType_Geo_Object} from './DBTypes'
         }
     }
 
-    
+
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2492,7 +2682,7 @@ import {DBType_Geo_Object} from './DBTypes'
                 whereCondition = whereCondition.substring(0, whereCondition.length - 1)
             }
 
-            const ret = await db.manyOrNone<DBType_Geo_Object>('SELECT FROM geo_objects ' + whereCondition)
+            const ret = await db.manyOrNone<DBType_Geo_Object>('SELECT * FROM geo_objects ' + whereCondition)
 
             //@ts-ignore
             return ret

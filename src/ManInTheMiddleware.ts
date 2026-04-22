@@ -6,7 +6,8 @@ import { JSONSchema4 } from './util/types/JSONSchema'
 import { DBType_User_STATES } from './generated-definitions/db/DBTypes'
 import { getCore } from './core'
 
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 export function guardedMiddleware(app: Express) : RequestHandler {
@@ -158,6 +159,17 @@ export class GuardedMiddleware {
         }
 
         this.currentUser = user
+
+        return user
+    }
+
+
+    async guardUserIsAdmin() : Promise<DBType_User> {
+        const user = await this.guardUserIsAuthenticated()
+
+        if(await getCore().modules.user.userIsAdmin(user) === false){
+            throw GuardError._403_Forbidden()
+        }
 
         return user
     }

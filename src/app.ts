@@ -126,6 +126,15 @@ app.use('/file', fileRoute)
 import userRoute from './routes/user'
 app.use('/user', userRoute)
 
+import teamRoute from './routes/team'
+app.use('/team', teamRoute)
+
+import organisationRoute from './routes/organisation'
+app.use('/organisation', organisationRoute)
+
+import adminRoute from './routes/admin'
+app.use('/admin', adminRoute)
+
 import workspaceRoute from './routes/workspace'
 app.use('/workspace', workspaceRoute)
 
