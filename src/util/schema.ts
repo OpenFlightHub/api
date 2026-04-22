@@ -36,10 +36,10 @@ export class FilterError extends Error {
  * @param schema if additionalProperties or additionalItems is not set, it will be set to true
  * @returns true or a string describing the error
  */
-export function validate(obj: object, schema: JSONSchema4, skipSerialization = false){
+export function validate(obj: object, schema: JSONSchema4, skipSerialization = false): true | string{
 
-    if(schema.oneOf){
-        let lastError : string
+    if(schema.oneOf){//TODO only allow a single schema to match, not any (that would be anyOf implementation)
+        let lastError : true | string = ''
 
         for(const o of schema.oneOf){
             const v = validate(obj, o, skipSerialization)
@@ -69,11 +69,33 @@ export function validate(obj: object, schema: JSONSchema4, skipSerialization = f
         return errors.join(',')
     }
 
+    //TODO why serialization here? shouldnt we serialize at the top of the function?
     let data
     if(!skipSerialization){
         data = JSON.parse(JSON.stringify(obj))
     } else {
         data = obj
+    }
+
+
+    if(schema.anyOf){
+        let foundValidAnyOf: true | string = ''
+
+        for(const s of schema.anyOf){
+            const val = validate(obj, s)
+
+            if(val === true){
+                foundValidAnyOf = true
+                break
+            }
+            foundValidAnyOf = val
+        }
+
+        if(foundValidAnyOf !== true){
+            return 'anyOf (direct) failed: ' + foundValidAnyOf + '. Object: ' + JSON.stringify(obj, null, 2) + ' against schema: ' + JSON.stringify(schema.anyOf, null, 2)
+        }
+
+        return true
     }
 
     // by default prevent additionaProperties
@@ -97,7 +119,7 @@ export function validate(obj: object, schema: JSONSchema4, skipSerialization = f
         if(schema.items.anyOf){
             for(const d of data){
 
-                let foundValidAnyOf = false
+                let foundValidAnyOf: true | string = ''
 
                 //@ts-ignore
                 for(const s of schema.items.anyOf){
@@ -107,10 +129,14 @@ export function validate(obj: object, schema: JSONSchema4, skipSerialization = f
                         foundValidAnyOf = true
                         break
                     }
+                    foundValidAnyOf = val
                 }
 
-                if(!foundValidAnyOf){
-                    return '?anyOf? failed for ' + schema
+                if(foundValidAnyOf !== true){
+                    return 'anyOf failed: '+ foundValidAnyOf + '. Object: ' + JSON.stringify(d, null, 2) + ' against schema: ' + JSON.stringify(
+                        //@ts-ignore
+                        schema.items.anyOf,
+                    null, 2)
                 }
             }
 
