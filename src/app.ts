@@ -55,6 +55,9 @@ import { GuardError } from './ManInTheMiddleware'
 const app = express();
 export default app //for testing
 
+import {test} from './util/performance'
+test()
+
 import expressWs from 'express-ws'
 const ws = expressWs(app)
 
