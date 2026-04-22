@@ -1,7 +1,7 @@
 import express from 'express';
-import { ApiSchema_Team, ApiSchema_Team_Patch } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Team, ApiSchema_Team_Members, ApiSchema_Team_Patch } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Team, ApiType_Team_Patch } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Team, ApiType_Team_Members, ApiType_Team_Patch } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
 
@@ -14,6 +14,10 @@ router.get('/:team_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserIsAuthenticated()
 
     const team_id = req.GM.guardParam('team_id', 'id')
+
+    if(await getCore().modules.team.userCanViewTeam((await req.GM.getCurrentUser()).id, team_id) === false){
+        throw GuardError._403_Forbidden()
+    }
 
     const team = await getCore().modules.team.getTeam(team_id)
 
@@ -42,6 +46,25 @@ router.patch('/:team_id', asyncHandler(async (req, res) => {
         updatedTeam,
         ApiSchema_Team
     )
+}))
+
+router.get('/:team_id/members', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const team_id = req.GM.guardParam('team_id', 'id')
+
+    if(await getCore().modules.team.userCanViewTeam((await req.GM.getCurrentUser()).id, team_id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
+    const team = await getCore().modules.team.getTeam(team_id)
+
+    if(team === false){
+        throw GuardError._410_Gone()
+    }
+
+    res.GM.guardSend<ApiType_Team_Members>(await getCore().modules.team.getTeamMembers(team_id), ApiSchema_Team_Members)
 }))
 
 export default router

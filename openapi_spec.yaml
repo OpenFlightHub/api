@@ -506,6 +506,37 @@ paths:
       security:
         - user_auth: []
 
+
+  /team/{team_id}/members:
+    get:
+      tags:
+        - team
+      summary: Get all team members
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns all team members
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/team_members"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
   # organisation
 
 
@@ -590,6 +621,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/organisation"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /organisation/{organisation_id}/teams:
+    get:
+      tags:
+        - team
+      summary: Get all organisation teams
+      parameters:
+        - name: organisation_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns all organisations teams
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/organisation_teams"
 
         "400":
           $ref: "#/components/responses/400"
@@ -2352,6 +2413,20 @@ components:
         logo_file_id:
           $ref: "#/components/schemas/id"
 
+    team_members:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            $ref: "#/components/schemas/id"
+          name:
+            type: string
+            example: Harry Potter
+
     # organisation
 
     organisation:
@@ -2397,6 +2472,20 @@ components:
           example: Harry Potter
         logo_file_id:
           $ref: "#/components/schemas/id"
+
+    organisation_teams:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            $ref: "#/components/schemas/id"
+          name:
+            type: string
+            example: Harry Potter
 
     # admin
 

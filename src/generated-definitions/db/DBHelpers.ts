@@ -1,6 +1,5 @@
 import * as pgp from 'pg-promise'
-    //@ts-ignore
-const db = global.db as pgp.IDatabase<any>
+    const db : pgp.IDatabase<any> = global.db
 
 
 
@@ -220,7 +219,7 @@ import {DBType_User} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -400,7 +399,7 @@ import {DBType_Team} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -570,7 +569,7 @@ import {DBType_Organisation} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -778,7 +777,7 @@ import {DBType_File} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -927,7 +926,7 @@ import {DBType_Workspace} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1059,7 +1058,7 @@ import {DBType_Workspace_Permission} from './DBTypes'
         }
     }
 
-
+    
 
 
 //connections
@@ -1227,7 +1226,7 @@ import {DBType_Connection} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1368,7 +1367,7 @@ import {DBType_Remote_Controller} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1548,7 +1547,7 @@ import {DBType_Drone} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1718,7 +1717,7 @@ import {DBType_Flight} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -1886,7 +1885,7 @@ import {DBType_Flight_Data} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2046,7 +2045,7 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2215,7 +2214,7 @@ import {DBType_Drone_Data} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2461,7 +2460,7 @@ import {DBType_Drone_Media} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
@@ -2658,7 +2657,7 @@ import {DBType_Geo_Object} from './DBTypes'
         }
     }
 
-
+    
 
     /**
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})

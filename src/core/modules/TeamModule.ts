@@ -131,6 +131,30 @@ export default class TeamModule extends Module_Base<
         return false
     }
 
+    async userCanViewTeam(userId: number, teamId: number) {
+        if(await getCore().modules.user.userIsAdmin(userId)){
+            return true
+        }
+
+        const team = await this.getTeamSafe(teamId)
+        if(team.owner_user_id === userId){
+            //owner
+            return true
+        }
+
+        if((await getCore().modules.user.getUserSafe(userId)).team_id === teamId){
+            //member
+            return true
+        }
+
+        if(typeof team.organisation_id === 'number' && await getCore().modules.organisation.userCanViewOrganisation(userId, team.organisation_id)){
+            //user can view parent organisation of team
+            return true
+        }
+
+        return false
+    }
+
     async getTeamsUserHasAccessTo(user: DBType_User){
         const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
 
@@ -139,5 +163,9 @@ export default class TeamModule extends Module_Base<
         }
 
         return deduplicateIdArray(teams)
+    }
+
+    async getTeamMembers(teamId: number){
+        return await select_User(pgp.as.format('WHERE team_id = ${teamId}', {teamId}))
     }
 }

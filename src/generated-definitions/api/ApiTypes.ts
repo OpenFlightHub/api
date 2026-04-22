@@ -174,6 +174,12 @@ export type ApiType_Team_Patch = {
 }
 
 
+export type ApiType_Team_Members = {
+    id: number;
+    name: string;
+}[];
+
+
 export type ApiType_Organisation = {
     id: number;
     name: string;
@@ -200,6 +206,12 @@ export type ApiType_Organisation_Patch = {
     name?: string;
     logo_file_id?: number;
 }
+
+
+export type ApiType_Organisation_Teams = {
+    id: number;
+    name: string;
+}[];
 
 
 export type ApiType_Admin_User_Post = {

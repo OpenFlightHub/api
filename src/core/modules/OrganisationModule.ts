@@ -1,4 +1,4 @@
-import {DBUpdate_Organisation, delete_Organisation, insert_Organisation, select_Organisation, update_Organisation} from '../../generated-definitions/db/DBHelpers'
+import {DBUpdate_Organisation, delete_Organisation, insert_Organisation, select_Organisation, select_Team, update_Organisation} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Organisation, DBType_Organisation_StateType, DBType_User } from '../../generated-definitions/db/DBTypes'
@@ -127,6 +127,25 @@ export default class OrganisationModule extends Module_Base<
         return false
     }
 
+    async userCanViewOrganisation(userId: number, organisationId: number) {
+        if(await getCore().modules.user.userIsAdmin(userId)){
+            return true
+        }
+
+        if((await this.getOrganisationSafe(organisationId)).owner_user_id === userId){
+            //owns parent organisation of team
+            return true
+        }
+
+        const userTeam = await getCore().modules.user.getUserSafe(userId)
+        if(typeof userTeam.team_id === 'number' && (await getCore().modules.team.getTeamSafe(userTeam.team_id)).organisation_id === organisationId){
+            // user is member of a team that belongs to the organisation
+            return true
+        }
+
+        return false
+    }
+
     async getOrganisationsUserHasAccessTo(user: DBType_User){
         const organisations = await select_Organisation(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
 
@@ -139,5 +158,9 @@ export default class OrganisationModule extends Module_Base<
         }
 
         return deduplicateIdArray(organisations)
+    }
+
+    async getOrganisationTeams(organisationId: number){
+        return await select_Team(pgp.as.format('WHERE organisation_id = ${organisationId}', {organisationId}))
     }
 }

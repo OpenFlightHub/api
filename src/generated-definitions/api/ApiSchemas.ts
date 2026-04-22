@@ -384,6 +384,27 @@ export const ApiSchema_Team_Patch : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Team_Members : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string",
+                "example": "Harry Potter"
+            }
+        }
+    }
+}
+
 export const ApiSchema_Organisation : JSONSchema4  = {
     "type": "object",
     "required": [
@@ -450,6 +471,27 @@ export const ApiSchema_Organisation_Patch : JSONSchema4  = {
         "logo_file_id": {
             "type": "number",
             "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Organisation_Teams : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string",
+                "example": "Harry Potter"
+            }
         }
     }
 }

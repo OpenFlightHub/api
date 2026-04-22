@@ -1,7 +1,7 @@
 import express from 'express';
-import { ApiSchema_Organisation } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Organisation, ApiSchema_Organisation_Teams } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Organisation, ApiType_Organisation_Patch } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Organisation, ApiType_Organisation_Patch, ApiType_Organisation_Teams } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
 
@@ -14,6 +14,10 @@ router.get('/:organisation_id', asyncHandler(async (req, res) => {
     await req.GM.guardUserIsAuthenticated()
 
     const organisation_id = req.GM.guardParam('organisation_id', 'id')
+
+    if(await getCore().modules.organisation.userCanViewOrganisation((await req.GM.getCurrentUser()).id, organisation_id) === false){
+        throw GuardError._403_Forbidden()
+    }
 
     const organisation = await getCore().modules.organisation.getOrganisation(organisation_id)
 
@@ -42,6 +46,25 @@ router.patch('/:organisation_id', asyncHandler(async (req, res) => {
         updatedOrganisation,
         ApiSchema_Organisation
     )
+}))
+
+router.get('/:organisation_id/teams', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const organisation_id = req.GM.guardParam('organisation_id', 'id')
+
+    if(await getCore().modules.organisation.userCanViewOrganisation((await req.GM.getCurrentUser()).id, organisation_id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
+    const organisation = await getCore().modules.organisation.getOrganisation(organisation_id)
+
+    if(organisation === false){
+        throw GuardError._410_Gone()
+    }
+
+    res.GM.guardSend<ApiType_Organisation_Teams>(await getCore().modules.organisation.getOrganisationTeams(organisation_id), ApiSchema_Organisation_Teams)
 }))
 
 export default router

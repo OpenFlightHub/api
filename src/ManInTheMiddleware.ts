@@ -174,16 +174,29 @@ export class GuardedMiddleware {
         return user
     }
 
+
+    async guardUserHasPermissionForTeam(teamId: number){
+        const user = await this.getCurrentUser()
+
+        if(await getCore().modules.team.userCanViewTeam(user.id, teamId) === false){
+            throw GuardError._403_Forbidden()
+        }
+    }
+
     async guardUserHasPermissionForWorkspace(workspaceId: number){
         const user = await this.getCurrentUser()
 
-        return getCore().modules.user.userHasPermissionForWorkspace(user.id, workspaceId)
+        if(await getCore().modules.user.userHasPermissionForWorkspace(user.id, workspaceId) === false){
+            throw GuardError._403_Forbidden()
+        }
     }
 
-    async guardConnectionHasPermissionForWorkspace(workspaceId: number) : Promise<boolean> {
+    async guardConnectionHasPermissionForWorkspace(workspaceId: number){
         const connection = await this.getCurrentConnection()
 
-        return connection.workspace_id === workspaceId
+        if(connection.workspace_id !== workspaceId){
+            throw GuardError._403_Forbidden()
+        }
     }
 
     async getCurrentUser(){
