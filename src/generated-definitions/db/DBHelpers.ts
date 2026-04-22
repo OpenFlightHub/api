@@ -2688,3 +2688,199 @@ import {DBType_Geo_Object} from './DBTypes'
         }
 
     }
+
+
+//api_endpoint_performances
+
+import {} from "./DBTypes";
+
+export type DBInsert_Api_Endpoint_Performance = {
+    url: string
+    query?: string
+    run_time: number
+    work_time: number
+    started_at: string
+    logged_at?: string
+    status_code: number
+    content_length: number
+}
+
+export type DBUpdate_Api_Endpoint_Performance = {
+    url?: string
+    query?: string
+    run_time?: number
+    work_time?: number
+    started_at?: string
+    logged_at?: string
+    status_code?: number
+    content_length?: number
+}
+const COLUMN_SET_API_ENDPOINT_PERFORMANCES = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "url"
+    },
+    {
+        "name": "query",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "run_time"
+    },
+    {
+        "name": "work_time"
+    },
+    {
+        "name": "started_at"
+    },
+    {
+        "name": "logged_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "status_code"
+    },
+    {
+        "name": "content_length"
+    }
+], {table: "api_endpoint_performances"})
+
+const COLUMN_SET_API_ENDPOINT_PERFORMANCES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "url",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "query",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "run_time",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "work_time",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "started_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "logged_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "status_code",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "content_length",
+        "skip": col => !col.exists
+    }
+], {table: "api_endpoint_performances"})
+import {DBType_Api_Endpoint_Performance} from './DBTypes'
+
+
+    export function insert_Api_Endpoint_Performance(values: DBInsert_Api_Endpoint_Performance){
+        return db.one<DBType_Api_Endpoint_Performance>(db.$config.pgp.helpers.insert(values, undefined, 'api_endpoint_performances') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Api_Endpoint_Performance<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Api_Endpoint_Performance): Promise<T extends number ? false | DBType_Api_Endpoint_Performance : DBType_Api_Endpoint_Performance[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Api_Endpoint_Performance>(db.$config.pgp.helpers.update(values,  COLUMN_SET_API_ENDPOINT_PERFORMANCES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Api_Endpoint_Performance>(db.$config.pgp.helpers.update(values,  COLUMN_SET_API_ENDPOINT_PERFORMANCES_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Api_Endpoint_Performance<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Api_Endpoint_Performance : DBType_Api_Endpoint_Performance[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Api_Endpoint_Performance>('DELETE FROM api_endpoint_performances WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Api_Endpoint_Performance>('DELETE FROM api_endpoint_performances ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Api_Endpoint_Performance<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Api_Endpoint_Performance : DBType_Api_Endpoint_Performance[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Api_Endpoint_Performance>('SELECT * FROM api_endpoint_performances ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Api_Endpoint_Performance>('SELECT * FROM api_endpoint_performances ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
+    }

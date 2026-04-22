@@ -31,15 +31,18 @@ export type ApiType_Email = string;
 export type ApiType_Password = string;
 
 
+
 export type ApiType_Reference = {
     id: number;
 }
+
 
 
 export type ApiType_Auth_Login_Post = {
     username: string;
     password: string;
 }
+
 
 
 export type ApiType_Auth_Login_With_Token_Post = {
@@ -59,6 +62,7 @@ export interface ApiType_Auth_Register_Post {
 }
 
 
+
 export type ApiType_Auth_Password_Change_Post = {
     /**
      * Maximum length is 72 Bytes (utf-8).
@@ -71,9 +75,11 @@ export type ApiType_Auth_Password_Change_Post = {
 }
 
 
+
 export type ApiType_Auth_Password_Reset_Post = {
     username: string;
 }
+
 
 
 export type ApiType_Auth_Password_Set_Initial_Post = {
@@ -82,6 +88,7 @@ export type ApiType_Auth_Password_Set_Initial_Post = {
      */
     new_password: string;
 }
+
 
 
 export type ApiType_Auth_Password_Set_New_Post = {
@@ -93,9 +100,11 @@ export type ApiType_Auth_Password_Set_New_Post = {
 }
 
 
+
 export type ApiType_Auth_Stream_Token = {
     token: string;
 }
+
 
 
 export type ApiType_User = {
@@ -103,6 +112,7 @@ export type ApiType_User = {
     name: string;
     team_id?: number;
 }
+
 
 
 export type ApiType_User_Self = {
@@ -117,6 +127,7 @@ export type ApiType_User_Self = {
     registration_incomplete: boolean;
     team_id?: number;
 }
+
 
 
 export type ApiType_User_Patch = {
@@ -144,6 +155,7 @@ export type ApiType_User_My_Teams = {
 }[];
 
 
+
 export type ApiType_Team = {
     id: number;
     name: string;
@@ -161,11 +173,13 @@ export type ApiType_Team = {
 }
 
 
+
 export type ApiType_Team_Post = {
     name: string;
     organisation_id: number;
     logo_file_id?: number;
 }
+
 
 
 export type ApiType_Team_Patch = {
@@ -178,6 +192,7 @@ export type ApiType_Team_Members = {
     id: number;
     name: string;
 }[];
+
 
 
 export type ApiType_Organisation = {
@@ -196,10 +211,12 @@ export type ApiType_Organisation = {
 }
 
 
+
 export type ApiType_Organisation_Post = {
     name: string;
     logo_file_id?: number;
 }
+
 
 
 export type ApiType_Organisation_Patch = {
@@ -214,10 +231,12 @@ export type ApiType_Organisation_Teams = {
 }[];
 
 
+
 export type ApiType_Admin_User_Post = {
     name?: string;
     email: string;
 }
+
 
 
 export type ApiType_File = {
@@ -248,9 +267,11 @@ export type ApiType_File_Get_Multiple = {
 }[];
 
 
+
 export type ApiType_File_Get_Multiple_Post = {
     ids: number[];
 }
+
 
 
 export type ApiType_Workspace = {
@@ -261,9 +282,11 @@ export type ApiType_Workspace = {
 }
 
 
+
 export type ApiType_Workspace_Patch = {
     name?: string;
 }
+
 
 
 export type ApiType_Workspaces_Post = {
@@ -287,10 +310,12 @@ export type ApiType_Workspace_Files = {
 }[];
 
 
+
 export type ApiType_Workspace_File_Post = {
     file: string;
     filename: string;
 }
+
 
 
 export type ApiType_Workspace_File_Patch = {
@@ -308,9 +333,11 @@ export type ApiType_Workspace_Connections = {
 }[];
 
 
+
 export type ApiType_Workspace_Connections_Post = {
     name: string;
 }
+
 
 
 export type ApiType_Workspace_Connections_Post_Response = {
@@ -955,6 +982,7 @@ export type ApiType_Geo_Object =
       };
 
 
+
 export type ApiType_Geo_Object_Base = {
     id: number;
     uuid: string;
@@ -1095,6 +1123,7 @@ export type ApiType_Geo_Object_Type0 =
       };
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype0 = {
     id: number;
     uuid: string;
@@ -1126,6 +1155,7 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype0_Config = {
     /**
      * [lng, lat, elevation]
@@ -1139,6 +1169,7 @@ export type ApiType_Geo_Object_Type0_Subtype0_Config = {
      */
     color: string;
 }
+
 
 
 export type ApiType_Geo_Object_Type0_Subtype1 = {
@@ -1169,6 +1200,7 @@ export type ApiType_Geo_Object_Type0_Subtype1 = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype1_Config = {
     /**
      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1179,6 +1211,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Config = {
      */
     color: string;
 }
+
 
 
 export type ApiType_Geo_Object_Type0_Subtype2 = {
@@ -1209,6 +1242,7 @@ export type ApiType_Geo_Object_Type0_Subtype2 = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype2_Config = {
     /**
      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1219,6 +1253,7 @@ export type ApiType_Geo_Object_Type0_Subtype2_Config = {
      */
     color: string;
 }
+
 
 
 export type ApiType_Geo_Object_Type0_Subtype3 = {
@@ -1253,6 +1288,7 @@ export type ApiType_Geo_Object_Type0_Subtype3 = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype3_Config = {
     /**
      * [lng, lat, elevation]
@@ -1267,6 +1303,7 @@ export type ApiType_Geo_Object_Type0_Subtype3_Config = {
      */
     color: string;
 }
+
 
 
 export type ApiType_Geo_Object_Type1 = {
@@ -1297,6 +1334,7 @@ export type ApiType_Geo_Object_Type1 = {
 }
 
 
+
 export type ApiType_Geo_Object_Type1_Config = {
     longitude: number;
     latitude: number;
@@ -1307,6 +1345,7 @@ export type ApiType_Geo_Object_Type1_Config = {
      */
     speed?: number;
 }
+
 
 
 export type ApiType_Geo_Object_Type2 = {
@@ -1336,6 +1375,7 @@ export type ApiType_Geo_Object_Type2 = {
         speed?: number;
     };
 }
+
 
 
 export type ApiType_Geo_Object_Type2_Config = {
@@ -1502,6 +1542,7 @@ export type ApiType_Geo_Object_Create =
       };
 
 
+
 export type ApiType_Geo_Object_Create_Base = {
     uuid?: string;
     name: string;
@@ -1618,6 +1659,7 @@ export type ApiType_Geo_Object_Type0_Create =
       };
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype0_Create = {
     uuid?: string;
     name: string;
@@ -1645,6 +1687,7 @@ export type ApiType_Geo_Object_Type0_Subtype0_Create = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype1_Create = {
     uuid?: string;
     name: string;
@@ -1669,6 +1712,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Create = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype2_Create = {
     uuid?: string;
     name: string;
@@ -1691,6 +1735,7 @@ export type ApiType_Geo_Object_Type0_Subtype2_Create = {
         color: string;
     };
 }
+
 
 
 export type ApiType_Geo_Object_Type0_Subtype3_Create = {
@@ -1721,6 +1766,7 @@ export type ApiType_Geo_Object_Type0_Subtype3_Create = {
 }
 
 
+
 export type ApiType_Geo_Object_Type1_Create = {
     uuid?: string;
     name: string;
@@ -1743,6 +1789,7 @@ export type ApiType_Geo_Object_Type1_Create = {
         speed?: number;
     };
 }
+
 
 
 export type ApiType_Geo_Object_Type2_Create = {
@@ -1867,6 +1914,7 @@ export type ApiType_Geo_Object_Patch =
       };
 
 
+
 export type ApiType_Geo_Object_Patch_Base = {
     name?: string;
 }
@@ -1938,6 +1986,7 @@ export type ApiType_Geo_Object_Type0_Patch =
       };
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype0_Patch = {
     name?: string;
     config?: {
@@ -1956,6 +2005,7 @@ export type ApiType_Geo_Object_Type0_Subtype0_Patch = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype1_Patch = {
     name?: string;
     config?: {
@@ -1971,6 +2021,7 @@ export type ApiType_Geo_Object_Type0_Subtype1_Patch = {
 }
 
 
+
 export type ApiType_Geo_Object_Type0_Subtype2_Patch = {
     name?: string;
     config?: {
@@ -1984,6 +2035,7 @@ export type ApiType_Geo_Object_Type0_Subtype2_Patch = {
         color: string;
     };
 }
+
 
 
 export type ApiType_Geo_Object_Type0_Subtype3_Patch = {
@@ -2005,6 +2057,7 @@ export type ApiType_Geo_Object_Type0_Subtype3_Patch = {
 }
 
 
+
 export type ApiType_Geo_Object_Type1_Patch = {
     name?: string;
     config?: {
@@ -2018,6 +2071,7 @@ export type ApiType_Geo_Object_Type1_Patch = {
         speed?: number;
     };
 }
+
 
 
 export type ApiType_Geo_Object_Type2_Patch = {
@@ -2036,6 +2090,7 @@ export type ApiType_Geo_Object_Type2_Patch = {
 }
 
 
+
 export type ApiType_Remote_Controller = {
     id: number;
     serial_number: string;
@@ -2052,6 +2107,7 @@ export type ApiType_Remote_Controller = {
 export type ApiType_Remote_Controller_Type = number;
 
 
+
 export type ApiType_Remote_Controller_Position = {
     longitude: number;
     latitude: number;
@@ -2061,6 +2117,7 @@ export type ApiType_Remote_Controller_Position = {
      */
     reported_at: string;
 }
+
 
 
 export type ApiType_Drone = {
@@ -2081,6 +2138,7 @@ export type ApiType_Drone = {
 export type ApiType_Drone_Type = number;
 
 
+
 export type ApiType_Drone_Position = {
     longitude: number;
     latitude: number;
@@ -2090,6 +2148,7 @@ export type ApiType_Drone_Position = {
      */
     reported_at: string;
 }
+
 
 
 export type ApiType_Drone_Battery = {
@@ -2165,6 +2224,7 @@ export type ApiType_Drone_Flights = {
 }[];
 
 
+
 export type ApiType_Flight = {
     id: number;
     drone_id: number;
@@ -2229,6 +2289,7 @@ export type ApiType_Flight_Media = {
 }[];
 
 
+
 export type ApiType_Media = {
     id: number;
     drone_id: number;
@@ -2264,6 +2325,7 @@ export type ApiType_Media = {
         roll?: number;
     };
 }
+
 
 
 export type ApiType_Media_Ground_Coverage = {
@@ -2371,6 +2433,7 @@ export type ApiType_Media_Ground_Coverage = {
 }
 
 
+
 export type ApiType_Ground_Coverage_Location = {
     position: {
         /**
@@ -2406,10 +2469,12 @@ export type ApiType_Ground_Coverage_Location = {
 }
 
 
+
 export type ApiType_Connection_Link_Auth_Login_Post = {
     connection_id: string;
     secret: string;
 }
+
 
 
 export type ApiType_Connection_Link_Config = {
@@ -2423,6 +2488,7 @@ export type ApiType_Connection_Link_Config = {
 }
 
 
+
 export type ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config = {
     app_id: string;
     app_key: string;
@@ -2432,6 +2498,7 @@ export type ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config = {
     api_url: string;
     ws_url: string;
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post = {
@@ -2446,6 +2513,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post = {
     name?: string;
     path?: string;
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post_Response = {
@@ -2464,6 +2532,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post_Response = {
 export interface ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post {}
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post_Response = {
     /**
      * 0 = success
@@ -2474,6 +2543,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post_Response 
         tiny_fingerprints: string[];
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Media_Sts_Post_Response = {
@@ -2499,6 +2569,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Sts_Post_Response = {
         region: string;
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post = {
@@ -2541,6 +2612,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post = {
 }
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response = {
     /**
      * 0 = success
@@ -2553,11 +2625,13 @@ export type ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response = {
 }
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post = {
     file_group_id?: string;
     file_count: number;
     file_uploaded_count: number;
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post_Response = {
@@ -2571,6 +2645,7 @@ export type ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post_Response = 
      */
     data: {};
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post = {
@@ -2593,6 +2668,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post = {
 }
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response = {
     code: number;
     message: string;
@@ -2600,6 +2676,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response = 
         id: string;
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response = {
@@ -2667,6 +2744,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response = {
 }
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put = {
     name: string;
     content: {
@@ -2675,6 +2753,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put = {
         properties: {};
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response = {
@@ -2686,6 +2765,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response = {
 }
 
 
+
 export type ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response = {
     code: number;
     message: string;
@@ -2693,6 +2773,7 @@ export type ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response = {
         id: string;
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response = {
@@ -2743,6 +2824,7 @@ export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Response = {
         }[];
     };
 }
+
 
 
 export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Device = {

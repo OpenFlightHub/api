@@ -5,6 +5,7 @@ export const DBType_User_STATES = {
   locked: 2,
   deleted: 3
 } as const
+
 export type DBType_User = {
     id: number;
     team_id?: number;
@@ -54,6 +55,7 @@ export const DBType_Team_STATES = {
   locked: 2,
   deleted: 3
 } as const
+
 export type DBType_Team = {
     id: number;
     name: string;
@@ -75,6 +77,7 @@ export const DBType_Organisation_STATES = {
   locked: 2,
   deleted: 3
 } as const
+
 export type DBType_Organisation = {
     id: number;
     name: string;
@@ -86,6 +89,7 @@ export type DBType_Organisation = {
     state: DBType_Organisation_StateType;
     logo_file_id?: number;
 }
+
 
 
 export type DBType_File = {
@@ -111,6 +115,7 @@ export type DBType_File = {
 }
 
 
+
 export type DBType_Workspace = {
     id: number;
     name: string;
@@ -119,10 +124,12 @@ export type DBType_Workspace = {
 }
 
 
+
 export type DBType_Workspace_Permission = {
     team_id: number;
     workspace_id: number;
 }
+
 
 
 export type DBType_Connection = {
@@ -155,6 +162,7 @@ export const DBType_Remote_Controller_TYPES = {
   dji_rc_plus_2: 3,
   dji_smart_controller: 4
 } as const
+
 export type DBType_Remote_Controller = {
     id: number;
     serial_number: string;
@@ -173,6 +181,7 @@ export const DBType_Drone_TYPES = {
   dji_matrice_350: 3,
   dji_mavic_3: 4
 } as const
+
 export type DBType_Drone = {
     id: number;
     serial_number: string;
@@ -188,6 +197,7 @@ export type DBType_Drone = {
     current_flight_id?: number;
     in_flight: boolean;
 }
+
 
 
 export type DBType_Flight = {
@@ -210,6 +220,7 @@ export type DBType_Flight_Data_TypeType = 0
 export const DBType_Flight_Data_TYPES = {
   position: 0
 } as const
+
 export type DBType_Flight_Data = {
     id: number;
     flight_id: number;
@@ -233,6 +244,7 @@ export type DBType_Remote_Controller_Data_TypeType = 0
 export const DBType_Remote_Controller_Data_TYPES = {
   position: 0
 } as const
+
 export type DBType_Remote_Controller_Data = {
     id: number;
     remote_controller_id: number;
@@ -250,6 +262,7 @@ export const DBType_Drone_Data_TYPES = {
   position: 0,
   telemetry: 1
 } as const
+
 export type DBType_Drone_Data = {
     id: number;
     drone_id: number;
@@ -269,6 +282,7 @@ export const DBType_Drone_Media_TYPES = {
   picture: 1,
   panorama: 2
 } as const
+
 export type DBType_Drone_Media = {
     id: number;
     drone_id: number;
@@ -373,3 +387,22 @@ export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType
 ) : type extends 2 ? (
     {longitude: number, latitude: number, symbol: string, height?: number, heading?: number, speed?: number}
 ) : unknown
+export type DBType_Api_Endpoint_Performance = {
+    id: number;
+    url: string;
+    query?: string;
+    /**
+     * ms
+     */
+    run_time: number;
+    /**
+     * ms
+     */
+    work_time: number;
+    started_at: string;
+    logged_at: string;
+    status_code: number;
+    content_length: number;
+}
+
+

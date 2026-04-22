@@ -55,11 +55,16 @@ import { GuardError } from './ManInTheMiddleware'
 const app = express();
 export default app //for testing
 
-import {test} from './util/performance'
+/*
+import {test} from './util/performance/test'
 test()
+*/
 
 import expressWs from 'express-ws'
 const ws = expressWs(app)
+
+import {setupPerformanceMiddleware} from './PerformanceMiddleware'
+setupPerformanceMiddleware(app)
 
 //req.body will be an object if content-type header is set to application/json
 app.use(express.json({limit: '100mb'}))
