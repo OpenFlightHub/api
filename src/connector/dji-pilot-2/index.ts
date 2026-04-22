@@ -8,7 +8,8 @@ import { DBType_Connection, DBType_Drone_Data_TYPES, DBType_Drone_TYPES, DBType_
 import {getProductType} from './util/product'
 import type { sendToConnection } from "../../routes/connection-link/dji-pilot-2/ws";
 import { getCore } from "../../core";
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 const connector = new Connector()
 

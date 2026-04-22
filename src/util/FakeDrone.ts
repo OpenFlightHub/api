@@ -1,5 +1,6 @@
 import * as pgp from 'pg-promise'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 import FakeTrack from './FakeTrack'
 import { DBType_Drone_Data_TYPES, DBType_Flight_Data_TYPES } from '../generated-definitions/db/DBTypes'
 import { getCore } from '../core'

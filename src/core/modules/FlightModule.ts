@@ -2,7 +2,8 @@ import {DBInsert_Flight, DBInsert_Flight_Data, DBUpdate_Flight, delete_Flight, i
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Flight, DBType_Flight_Data } from '../../generated-definitions/db/DBTypes'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class FlightModule extends Module_Base<
     {

@@ -13,7 +13,8 @@ import * as express from 'express'
 import pgp from 'pg-promise'
 import { setSessionCookie } from '../../util/cookie'
 import type DroneModule from './DroneModule'
-const db: pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 const TOKEN_BYTE_LENGTH = 42
 

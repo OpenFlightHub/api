@@ -6,7 +6,8 @@ import { DBType_Connection, DBType_Remote_Controller_Data } from '../generated-d
 import { ApiType_Remote_Controller, ApiType_Remote_Controller_Position } from '../generated-definitions/api/ApiTypes';
 import { getCore } from '../core';
 import { GuardError } from '../ManInTheMiddleware';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

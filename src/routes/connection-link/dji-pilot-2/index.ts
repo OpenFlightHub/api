@@ -5,7 +5,8 @@ import { ApiType_Connection_Link_Dji_Pilot_2_Sdk_Config } from '../../../generat
 import { ApiSchema_Connection_Link_Dji_Pilot_2_Sdk_Config } from '../../../generated-definitions/api/ApiSchemas';
 import { connectionLinkAuthMiddleware } from '..';
 import path from 'path';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 import SecretsLoader from '../../../util/SecretsLoader'
 const secretsLoader = new SecretsLoader('secrets.json')

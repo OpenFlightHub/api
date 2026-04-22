@@ -8,7 +8,8 @@ import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import { getCore } from '../core';
 import FlightModule from '../core/modules/FlightModule';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

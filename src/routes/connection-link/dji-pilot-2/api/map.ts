@@ -4,7 +4,8 @@ import pgp from 'pg-promise'
 import {getMillisecondsSinceUnix} from '../../../../util/time'
 import { ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response, ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response, ApiType_Dji_Pilot_2_Api_Map_Elements_Delete_Response, ApiType_Dji_Pilot_2_Api_Map_Elements_Put, ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response } from '../../../../generated-definitions/api/ApiTypes';
 import { ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response, ApiSchema_Dji_Pilot_2_Api_Map_Element_Groups_Get_Response, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Delete_Response, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put, ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put_Response } from '../../../../generated-definitions/api/ApiSchemas';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 import { DBType_Geo_Object, DBType_Geo_Object_Type_TYPES } from '../../../../generated-definitions/db/DBTypes';
 import dayjs from 'dayjs';

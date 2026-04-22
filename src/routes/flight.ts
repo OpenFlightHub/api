@@ -7,7 +7,8 @@ import { GuardError } from '../ManInTheMiddleware';
 import { assignObject } from '../util/typescript';
 import { DBType_Drone_Media } from '../generated-definitions/db/DBTypes';
 import { getCore } from '../core';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

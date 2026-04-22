@@ -3,7 +3,8 @@ import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post, ApiType_Dji_Pilot_2_Api_Media_Fast_Upload_Post_Response, ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post, ApiType_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post_Response, ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post, ApiType_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post_Response, ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post, ApiType_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response } from '../../../../generated-definitions/api/ApiTypes';
 import { ApiSchema_Dji_Pilot_2_Api_Media_Fast_Upload_Post, ApiSchema_Dji_Pilot_2_Api_Media_Fast_Upload_Post_Response, ApiSchema_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post, ApiSchema_Dji_Pilot_2_Api_Media_Files_Tiny_Fingerprints_Post_Response, ApiSchema_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post, ApiSchema_Dji_Pilot_2_Api_Media_Group_Upload_Callback_Post_Response, ApiSchema_Dji_Pilot_2_Api_Media_Upload_Callback_Post, ApiSchema_Dji_Pilot_2_Api_Media_Upload_Callback_Post_Response } from '../../../../generated-definitions/api/ApiSchemas';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 import {deleteObject, downloadObject, getBucketNameForConnectionId} from '../../../../s3-store'
 import { DBType_Connection, DBType_Drone_Media, DBType_Drone_Media_TYPES, DBType_Drone_Media_TypeType } from '../../../../generated-definitions/db/DBTypes';

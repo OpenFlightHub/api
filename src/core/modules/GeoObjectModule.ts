@@ -10,7 +10,8 @@ import TrafficSensing, { SensingHandle } from '../../aircraft_sensing/TrafficSen
 
 import pgp from 'pg-promise'
 import { getCore } from '..'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class GeoObjectModule extends Module_Base<
     {

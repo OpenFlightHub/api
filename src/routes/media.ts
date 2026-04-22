@@ -6,7 +6,8 @@ import { DBType_Drone_Media } from '../generated-definitions/db/DBTypes';
 import { ApiType_Media } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

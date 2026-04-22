@@ -4,7 +4,8 @@ import * as pgp from 'pg-promise'
 import { DBType_Connection, DBType_Remote_Controller, DBType_Remote_Controller_Data, DBType_Remote_Controller_Data_TypeType } from '../../generated-definitions/db/DBTypes'
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { getCore } from '..'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 export const REMOTE_CONTROLLER_DATA_TYPES: Record<string, DBType_Remote_Controller_Data_TypeType> = {

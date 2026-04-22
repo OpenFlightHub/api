@@ -7,7 +7,8 @@ import { ApiType_Geo_Object_Patch, ApiType_Reference, ApiType_Workspace_Geo_Obje
 import { randomUUID } from 'crypto';
 import { getCore } from '../../core';
 import { GuardError } from '../../ManInTheMiddleware';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

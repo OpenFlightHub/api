@@ -8,7 +8,8 @@ import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
 import { getCore } from '../../core';
 import { multerMiddleware } from '../../util/multer';
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 
 const router = express.Router()

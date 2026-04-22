@@ -4,7 +4,8 @@ import * as pgp from 'pg-promise'
 import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TYPES, DBType_Drone_Data_TypeType } from '../../generated-definitions/db/DBTypes'
 import { getCore } from '..'
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
-const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class DroneModule extends Module_Base<
     {
