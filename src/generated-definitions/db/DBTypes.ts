@@ -389,7 +389,9 @@ export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType
 ) : unknown
 export type DBType_Api_Endpoint_Performance = {
     id: number;
-    url: string;
+    url_with_id_params: string;
+    endpoint: string;
+    http_method: string;
     query?: string;
     /**
      * ms

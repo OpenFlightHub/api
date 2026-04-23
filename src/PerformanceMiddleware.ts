@@ -56,14 +56,17 @@ async function logToDB(req: Request, res: Response, runTime: number, workTime: n
         const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?') + 1) : ''
         const contentLengthString = res.get('Content-Length')
 
-        const urlWithoutIdParams = originalUrl.split('?')[0].replace(/\/\d+/g, '/:id')
+        const urlWithIdParams = originalUrl.split('?')[0]
+        const endpoint = urlWithIdParams.replace(/\/\d+/g, '/:id')
 
         //TODO every day, generate a combined report, then delete the old data
         // e.g. SELECT url, count(*) as calls, max(run_time) as max_run_time, max(work_time) max_work_time, avg(run_time) as avg_run_time, avg(work_time) as avg_work_time FROM api_endpoint_performances GROUP BY url;
 
         await insert_Api_Endpoint_Performance({
             started_at: new Date(startedAt).toISOString(),
-            url: urlWithoutIdParams,
+            endpoint,
+            http_method: req.method.toLowerCase(),
+            url_with_id_params: urlWithIdParams,
             query: queryString.length === 0 ? undefined : queryString,
             content_length: typeof contentLengthString === 'string' ? parseInt(contentLengthString) : 0,
             run_time: runTime,

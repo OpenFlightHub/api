@@ -239,6 +239,117 @@ export type ApiType_Admin_User_Post = {
 
 
 
+export type ApiType_Admin_System_Performance_Os = {
+    os: string;
+    cpu: string;
+    /**
+     * in milliseconds
+     */
+    uptime: number;
+    /**
+     * in bytes
+     */
+    ram_total: number;
+    /**
+     * in bytes
+     */
+    ram_free: number;
+    load_avg: {
+        /**
+         * last 1 minute (0-1)
+         */
+        avg_1: number;
+        /**
+         * last 5 minutes (0-1)
+         */
+        avg_5: number;
+        /**
+         * last 15 minutes (0-1)
+         */
+        avg_15: number;
+    };
+}
+
+
+export type ApiType_Admin_System_Performance_Api_Endpoints = {
+    endpoint: string;
+    http_method: string;
+    total_calls: number;
+    /**
+     * time until the response for this request has been sent (milliseconds)
+     */
+    max_run_time: number;
+    /**
+     * approximate time the cpu has worked on this (not accurate) (milliseconds)
+     */
+    max_work_time: number;
+    /**
+     * arithmetic mean (milliseconds)
+     */
+    avg_run_time: number;
+    /**
+     * arithmetic mean (milliseconds)
+     */
+    avg_work_time: number;
+    /**
+     * population standard deviation (milliseconds)
+     */
+    pop_standard_dev_run_time: number;
+    /**
+     * population standard deviation (milliseconds)
+     */
+    pop_standard_dev_work_time: number;
+    /**
+     * population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)
+     */
+    pop_standard_dev_run_time_fractional: number;
+    /**
+     * population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)
+     */
+    pop_standard_dev_work_time_fractional: number;
+}[];
+
+
+export type ApiType_Admin_System_Performance_Api_Endpoint_Detail = {
+    url: string;
+    http_method: string;
+    total_calls: number;
+    /**
+     * time until the response for this request has been sent (milliseconds)
+     */
+    max_run_time: number;
+    /**
+     * approximate time the cpu has worked on this (not accurate) (milliseconds)
+     */
+    max_work_time: number;
+    /**
+     * arithmetic mean (milliseconds)
+     */
+    avg_run_time: number;
+    /**
+     * arithmetic mean (milliseconds)
+     */
+    avg_work_time: number;
+    /**
+     * population standard deviation (milliseconds)
+     */
+    pop_standard_dev_run_time: number;
+    /**
+     * population standard deviation (milliseconds)
+     */
+    pop_standard_dev_work_time: number;
+    /**
+     * population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)
+     */
+    pop_standard_dev_run_time_fractional: number;
+    /**
+     * population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)
+     */
+    pop_standard_dev_work_time_fractional: number;
+}[];
+
+
+
 export type ApiType_File = {
     id: number;
     name: string;

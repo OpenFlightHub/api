@@ -426,6 +426,56 @@ export class GuardedMiddleware {
         }
     }
 
+
+    guardQueryParam<T extends 'integer' | 'id' | 'string' | 'uuid'>(paramName: string, schema: T) : T extends 'integer' ? number : ( T extends 'id' ? number : string) {
+        const value = this.req.query[paramName]
+
+        switch(schema){
+            case 'string': {
+                if(typeof value !== 'string'){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                //@ts-ignore
+                return '' + value
+            }
+
+            case 'uuid': {
+                if(typeof value !== 'string'){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                if(!value.match(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/)){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                //@ts-ignore
+                return '' + value
+            }
+
+            case 'id':
+            case 'integer': {
+
+                if(typeof value !== 'string' || !value.match(/[0-9]+/)){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                const parsed = parseInt(value)
+
+                if(isNaN(parsed)){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                //@ts-ignore
+                return parsed
+            }
+
+            default: {
+                throw new Error('unsupport query param type: ' + schema)
+            }
+        }
+    }
+
     guardSend<T extends Record<string, any>>(responseBody: T, schema: JSONSchema4){
 
         if(responseBody instanceof Promise){

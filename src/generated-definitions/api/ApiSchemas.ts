@@ -513,6 +513,186 @@ export const ApiSchema_Admin_User_Post : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Admin_System_Performance_Os : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "os",
+        "cpu",
+        "uptime",
+        "ram_total",
+        "ram_free",
+        "load_avg"
+    ],
+    "properties": {
+        "os": {
+            "type": "string"
+        },
+        "cpu": {
+            "type": "string"
+        },
+        "uptime": {
+            "type": "number",
+            "description": "in milliseconds"
+        },
+        "ram_total": {
+            "type": "number",
+            "description": "in bytes"
+        },
+        "ram_free": {
+            "type": "number",
+            "description": "in bytes"
+        },
+        "load_avg": {
+            "type": "object",
+            "required": [
+                "avg_1",
+                "avg_5",
+                "avg_15"
+            ],
+            "properties": {
+                "avg_1": {
+                    "type": "number",
+                    "description": "last 1 minute (0-1)"
+                },
+                "avg_5": {
+                    "type": "number",
+                    "description": "last 5 minutes (0-1)"
+                },
+                "avg_15": {
+                    "type": "number",
+                    "description": "last 15 minutes (0-1)"
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Admin_System_Performance_Api_Endpoints : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "endpoint",
+            "http_method",
+            "total_calls",
+            "max_run_time",
+            "max_work_time",
+            "avg_run_time",
+            "avg_work_time",
+            "pop_standard_dev_run_time",
+            "pop_standard_dev_work_time",
+            "pop_standard_dev_run_time_fractional",
+            "pop_standard_dev_work_time_fractional"
+        ],
+        "properties": {
+            "endpoint": {
+                "type": "string"
+            },
+            "http_method": {
+                "type": "string"
+            },
+            "total_calls": {
+                "type": "number"
+            },
+            "max_run_time": {
+                "type": "number",
+                "description": "time until the response for this request has been sent (milliseconds)"
+            },
+            "max_work_time": {
+                "type": "number",
+                "description": "approximate time the cpu has worked on this (not accurate) (milliseconds)"
+            },
+            "avg_run_time": {
+                "type": "number",
+                "description": "arithmetic mean (milliseconds)"
+            },
+            "avg_work_time": {
+                "type": "number",
+                "description": "arithmetic mean (milliseconds)"
+            },
+            "pop_standard_dev_run_time": {
+                "type": "number",
+                "description": "population standard deviation (milliseconds)"
+            },
+            "pop_standard_dev_work_time": {
+                "type": "number",
+                "description": "population standard deviation (milliseconds)"
+            },
+            "pop_standard_dev_run_time_fractional": {
+                "type": "number",
+                "description": "population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)"
+            },
+            "pop_standard_dev_work_time_fractional": {
+                "type": "number",
+                "description": "population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)"
+            }
+        }
+    }
+}
+
+export const ApiSchema_Admin_System_Performance_Api_Endpoint_Detail : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "url",
+            "http_method",
+            "total_calls",
+            "max_run_time",
+            "max_work_time",
+            "avg_run_time",
+            "avg_work_time",
+            "pop_standard_dev_run_time",
+            "pop_standard_dev_work_time",
+            "pop_standard_dev_run_time_fractional",
+            "pop_standard_dev_work_time_fractional"
+        ],
+        "properties": {
+            "url": {
+                "type": "string"
+            },
+            "http_method": {
+                "type": "string"
+            },
+            "total_calls": {
+                "type": "number"
+            },
+            "max_run_time": {
+                "type": "number",
+                "description": "time until the response for this request has been sent (milliseconds)"
+            },
+            "max_work_time": {
+                "type": "number",
+                "description": "approximate time the cpu has worked on this (not accurate) (milliseconds)"
+            },
+            "avg_run_time": {
+                "type": "number",
+                "description": "arithmetic mean (milliseconds)"
+            },
+            "avg_work_time": {
+                "type": "number",
+                "description": "arithmetic mean (milliseconds)"
+            },
+            "pop_standard_dev_run_time": {
+                "type": "number",
+                "description": "population standard deviation (milliseconds)"
+            },
+            "pop_standard_dev_work_time": {
+                "type": "number",
+                "description": "population standard deviation (milliseconds)"
+            },
+            "pop_standard_dev_run_time_fractional": {
+                "type": "number",
+                "description": "population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)"
+            },
+            "pop_standard_dev_work_time_fractional": {
+                "type": "number",
+                "description": "population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)"
+            }
+        }
+    }
+}
+
 export const ApiSchema_File : JSONSchema4  = {
     "type": "object",
     "required": [

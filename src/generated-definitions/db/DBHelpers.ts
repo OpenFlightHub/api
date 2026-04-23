@@ -2695,7 +2695,9 @@ import {DBType_Geo_Object} from './DBTypes'
 import {} from "./DBTypes";
 
 export type DBInsert_Api_Endpoint_Performance = {
-    url: string
+    url_with_id_params: string
+    endpoint: string
+    http_method: string
     query?: string
     run_time: number
     work_time: number
@@ -2706,7 +2708,9 @@ export type DBInsert_Api_Endpoint_Performance = {
 }
 
 export type DBUpdate_Api_Endpoint_Performance = {
-    url?: string
+    url_with_id_params?: string
+    endpoint?: string
+    http_method?: string
     query?: string
     run_time?: number
     work_time?: number
@@ -2721,7 +2725,13 @@ const COLUMN_SET_API_ENDPOINT_PERFORMANCES = new db.$config.pgp.helpers.ColumnSe
         "cnd": true
     },
     {
-        "name": "url"
+        "name": "url_with_id_params"
+    },
+    {
+        "name": "endpoint"
+    },
+    {
+        "name": "http_method"
     },
     {
         "name": "query",
@@ -2754,7 +2764,15 @@ const COLUMN_SET_API_ENDPOINT_PERFORMANCES_UPDATE = new db.$config.pgp.helpers.C
         "skip": col => !col.exists
     },
     {
-        "name": "url",
+        "name": "url_with_id_params",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "endpoint",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "http_method",
         "skip": col => !col.exists
     },
     {

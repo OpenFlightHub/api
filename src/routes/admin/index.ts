@@ -1,13 +1,15 @@
 import express from 'express';
-import { DBType_User } from '../generated-definitions/db/DBTypes';
-import { ApiSchema_Admin_User_Post, ApiSchema_Reference } from '../generated-definitions/api/ApiSchemas';
+import { DBType_User } from '../../generated-definitions/db/DBTypes';
+import { ApiSchema_Admin_User_Post, ApiSchema_Reference } from '../../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Admin_User_Post, ApiType_Reference } from '../generated-definitions/api/ApiTypes';
-import { getCore } from '../core';
+import { ApiType_Admin_User_Post, ApiType_Reference } from '../../generated-definitions/api/ApiTypes';
+import { getCore } from '../../core';
 
+import systemRoute from './system'
 
 const router = express.Router()
 
+router.use('/system', systemRoute)
 
 router.post('/user', asyncHandler(async (req, res) => {
 
