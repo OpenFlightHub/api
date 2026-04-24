@@ -215,7 +215,7 @@ export default class FileModule extends Module_Base<
 
     private async checkForMissingThumbnails(){//TODO this probably blocks the main thread?
         try {
-            const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE thumbnail_format is null AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + ('avif gif heif jp2 jpeg jxl png webp tiff'.split(/\s/).map(m => '\'' + m + '\'').join(',')) + ');')
+            const filesThatRequireThumbnails = await db.manyOrNone('SELECT * FROM files WHERE thumbnail_format is null AND thumbnail_generation_has_failed = false AND LOWER(ext) in(' + ('avif gif heif jp2 jpg jpeg jxl png webp tiff'.split(/\s/).map(m => '\'' + m + '\'').join(',')) + ');')
 
             for(const file of filesThatRequireThumbnails){
 
