@@ -225,7 +225,8 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
                                 height: messageData.height
                             }),
                             flight_id: drone.current_flight_id,
-                            type: DBType_Flight_Data_TYPES.position
+                            type: DBType_Flight_Data_TYPES.position,
+                            received_at: new Date(message.timestamp).toISOString()
                         }).catch(err => {
                             console.error('failed to insert flight data', err)
                         })

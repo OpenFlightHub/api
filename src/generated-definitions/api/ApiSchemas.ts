@@ -5151,7 +5151,8 @@ export const ApiSchema_Drone_Flights : JSONSchema4  = {
                     "required": [
                         "height",
                         "longitude",
-                        "latitude"
+                        "latitude",
+                        "time"
                     ],
                     "properties": {
                         "height": {
@@ -5218,7 +5219,8 @@ export const ApiSchema_Flight : JSONSchema4  = {
                 "required": [
                     "height",
                     "longitude",
-                    "latitude"
+                    "latitude",
+                    "time"
                 ],
                 "properties": {
                     "height": {

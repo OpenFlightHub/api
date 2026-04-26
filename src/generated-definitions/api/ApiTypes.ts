@@ -2330,7 +2330,7 @@ export type ApiType_Drone_Flights = {
         /**
          * ISO 8601 format with a timezone
          */
-        time?: string;
+        time: string;
     }[];
 }[];
 
@@ -2358,7 +2358,7 @@ export type ApiType_Flight = {
         /**
          * ISO 8601 format with a timezone
          */
-        time?: string;
+        time: string;
     }[];
 }
 
