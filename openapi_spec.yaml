@@ -4278,12 +4278,16 @@ components:
         type: object
         required:
           - type
+          - id
           - name
           - marking
         properties:
           type:
             type: integer
             description: 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
+          id:
+            type: number
+            description: unique identifier for collision objects
           name:
             type: string
           marking:
@@ -4302,6 +4306,7 @@ components:
       properties:
         type:
           type: number
+          description: 0 = point, 1 = line, 2 = area
 
     info_collision_objects_marking_0:
       allOf:

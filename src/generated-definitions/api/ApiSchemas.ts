@@ -6804,6 +6804,7 @@ export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
         "type": "object",
         "required": [
             "type",
+            "id",
             "name",
             "marking"
         ],
@@ -6811,6 +6812,10 @@ export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
             "type": {
                 "type": "integer",
                 "description": "0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)"
+            },
+            "id": {
+                "type": "number",
+                "description": "unique identifier for collision objects"
             },
             "name": {
                 "type": "string"
@@ -6827,7 +6832,8 @@ export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
                         ],
                         "properties": {
                             "type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "0 = point, 1 = line, 2 = area"
                             },
                             "longitude": {
                                 "type": "number"
@@ -6849,7 +6855,8 @@ export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
                         ],
                         "properties": {
                             "type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "0 = point, 1 = line, 2 = area"
                             },
                             "points": {
                                 "type": "array",
@@ -6884,7 +6891,8 @@ export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
                         ],
                         "properties": {
                             "type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "0 = point, 1 = line, 2 = area"
                             },
                             "points": {
                                 "type": "array",
@@ -6929,7 +6937,8 @@ export const ApiSchema_Info_Collision_Objects_Marking : JSONSchema4  = {
             ],
             "properties": {
                 "type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "0 = point, 1 = line, 2 = area"
                 },
                 "longitude": {
                     "type": "number"
@@ -6951,7 +6960,8 @@ export const ApiSchema_Info_Collision_Objects_Marking : JSONSchema4  = {
             ],
             "properties": {
                 "type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "0 = point, 1 = line, 2 = area"
                 },
                 "points": {
                     "type": "array",
@@ -6986,7 +6996,8 @@ export const ApiSchema_Info_Collision_Objects_Marking : JSONSchema4  = {
             ],
             "properties": {
                 "type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "0 = point, 1 = line, 2 = area"
                 },
                 "points": {
                     "type": "array",
@@ -7023,7 +7034,8 @@ export const ApiSchema_Info_Collision_Objects_Marking_Base : JSONSchema4  = {
     ],
     "properties": {
         "type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "0 = point, 1 = line, 2 = area"
         }
     }
 }
@@ -7038,7 +7050,8 @@ export const ApiSchema_Info_Collision_Objects_Marking_0 : JSONSchema4  = {
     ],
     "properties": {
         "type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "0 = point, 1 = line, 2 = area"
         },
         "longitude": {
             "type": "number"
@@ -7061,7 +7074,8 @@ export const ApiSchema_Info_Collision_Objects_Marking_1 : JSONSchema4  = {
     ],
     "properties": {
         "type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "0 = point, 1 = line, 2 = area"
         },
         "points": {
             "type": "array",
@@ -7097,7 +7111,8 @@ export const ApiSchema_Info_Collision_Objects_Marking_2 : JSONSchema4  = {
     ],
     "properties": {
         "type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "0 = point, 1 = line, 2 = area"
         },
         "points": {
             "type": "array",

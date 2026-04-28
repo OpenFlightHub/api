@@ -2965,9 +2965,16 @@ export type ApiType_Info_Collision_Objects = {
      * 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
      */
     type: number;
+    /**
+     * unique identifier for collision objects
+     */
+    id: number;
     name: string;
     marking:
         | {
+              /**
+               * 0 = point, 1 = line, 2 = area
+               */
               type: number;
               longitude: number;
               latitude: number;
@@ -2978,6 +2985,9 @@ export type ApiType_Info_Collision_Objects = {
               [k: string]: unknown;
           }
         | {
+              /**
+               * 0 = point, 1 = line, 2 = area
+               */
               type: number;
               points: {
                   longitude: number;
@@ -2995,6 +3005,9 @@ export type ApiType_Info_Collision_Objects = {
 
 export type ApiType_Info_Collision_Objects_Marking =
     | {
+          /**
+           * 0 = point, 1 = line, 2 = area
+           */
           type: number;
           longitude: number;
           latitude: number;
@@ -3005,6 +3018,9 @@ export type ApiType_Info_Collision_Objects_Marking =
           [k: string]: unknown;
       }
     | {
+          /**
+           * 0 = point, 1 = line, 2 = area
+           */
           type: number;
           points: {
               longitude: number;
@@ -3021,12 +3037,18 @@ export type ApiType_Info_Collision_Objects_Marking =
 
 
 export type ApiType_Info_Collision_Objects_Marking_Base = {
+    /**
+     * 0 = point, 1 = line, 2 = area
+     */
     type: number;
 }
 
 
 
 export type ApiType_Info_Collision_Objects_Marking_0 = {
+    /**
+     * 0 = point, 1 = line, 2 = area
+     */
     type: number;
     longitude: number;
     latitude: number;
@@ -3039,6 +3061,9 @@ export type ApiType_Info_Collision_Objects_Marking_0 = {
 
 
 export type ApiType_Info_Collision_Objects_Marking_1 = {
+    /**
+     * 0 = point, 1 = line, 2 = area
+     */
     type: number;
     points: {
         longitude: number;
@@ -3053,6 +3078,9 @@ export type ApiType_Info_Collision_Objects_Marking_1 = {
 
 
 export type ApiType_Info_Collision_Objects_Marking_2 = {
+    /**
+     * 0 = point, 1 = line, 2 = area
+     */
     type: number;
     points: {
         longitude: number;

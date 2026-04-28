@@ -132,6 +132,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         if(element.tags.power === 'tower'){
             return {
                 type: 0,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 0,
@@ -143,6 +144,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         } else if (element.tags.power === 'pole' || element.tags.power === 'catenary_mast'){
             return {
                 type: 1,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 0,
@@ -154,6 +156,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         } else if(element.tags.aerialway === 'pylon'){
             return {
                 type: 4,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 0,
@@ -169,6 +172,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         if(element.tags.power === 'line'){
             return {
                 type: 2,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 1,
@@ -184,6 +188,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         } else if(element.tags.power === 'minor_line'){
             return {
                 type: 3,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 1,
@@ -199,6 +204,7 @@ function convertOsmElementToCollisionObject(element: OsmElement): ApiType_Info_C
         } else if(element.tags.aerialway === 'cable_car' || element.tags.aerialway === 'gondola' || element.tags.aerialway === 'chair_lift' || element.tags.aerialway === 'zip_line' || element.tags.aerialway === 'goods' || element.tags.aerialway === 'mixed_lift' || element.tags.aerialway === 'yes'){
             return {
                 type: 5,
+                id: element.id,
                 name: element.tags.name ?? '',
                 marking: {
                     type: 1,
