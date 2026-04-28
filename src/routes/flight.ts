@@ -54,9 +54,9 @@ router.use('/:flight_id', asyncHandler(async(req, res, next) => {
 
 router.get('/:flight_id', asyncHandler(async (req, res) => {
 
-    const track = await getCore().modules.flight.getTrackForFlight(req._flight.id)
+    const track = await getCore().modules.flight.getTrackForFlight(req._flight!.id)
 
-    res.GM.guardSend<ApiType_Flight>(assignObject({track}, req._flight), ApiSchema_Flight)
+    res.GM.guardSend<ApiType_Flight>(assignObject({track}, req._flight!), ApiSchema_Flight)
 }))
 
 

@@ -127,7 +127,7 @@ export default class FlightModule extends Module_Base<
 
     async getTrackForFlight(flightId: number){
 
-        return await db.manyOrNone<{created_at: string, height: number, longitude: number, latitude: number}>("SELECT created_at, data->'height' as height, data->'longitude' as longitude,  data->'latitude' as latitude, received_at as time FROM flight_data WHERE flight_id = ${flightId} ORDER BY created_at ASC", {
+        return await db.manyOrNone<{created_at: string, height: number, longitude: number, latitude: number, time: string}>("SELECT created_at, data->'height' as height, data->'longitude' as longitude,  data->'latitude' as latitude, received_at as time FROM flight_data WHERE flight_id = ${flightId} ORDER BY created_at ASC", {
             flightId
         })
     }
