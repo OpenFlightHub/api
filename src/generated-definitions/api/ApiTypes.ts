@@ -2960,3 +2960,108 @@ export type ApiType_Dji_Pilot_2_Api_Manage_Devices_Topology_Device = {
 }
 
 
+export type ApiType_Info_Collision_Objects = {
+    /**
+     * 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
+     */
+    type: number;
+    name: string;
+    marking:
+        | {
+              type: number;
+              longitude: number;
+              latitude: number;
+              /**
+               * this is often an estimated value based on the type (e.g. power line large is about 80m)
+               */
+              height_above_ground: number;
+              [k: string]: unknown;
+          }
+        | {
+              type: number;
+              points: {
+                  longitude: number;
+                  latitude: number;
+                  /**
+                   * this is often an estimated value based on the type (e.g. power line large is about 80m)
+                   */
+                  height_above_ground: number;
+                  [k: string]: unknown;
+              }[];
+              [k: string]: unknown;
+          };
+}[];
+
+
+export type ApiType_Info_Collision_Objects_Marking =
+    | {
+          type: number;
+          longitude: number;
+          latitude: number;
+          /**
+           * this is often an estimated value based on the type (e.g. power line large is about 80m)
+           */
+          height_above_ground: number;
+          [k: string]: unknown;
+      }
+    | {
+          type: number;
+          points: {
+              longitude: number;
+              latitude: number;
+              /**
+               * this is often an estimated value based on the type (e.g. power line large is about 80m)
+               */
+              height_above_ground: number;
+              [k: string]: unknown;
+          }[];
+          [k: string]: unknown;
+      };
+
+
+
+export type ApiType_Info_Collision_Objects_Marking_Base = {
+    type: number;
+}
+
+
+
+export type ApiType_Info_Collision_Objects_Marking_0 = {
+    type: number;
+    longitude: number;
+    latitude: number;
+    /**
+     * this is often an estimated value based on the type (e.g. power line large is about 80m)
+     */
+    height_above_ground: number;
+}
+
+
+
+export type ApiType_Info_Collision_Objects_Marking_1 = {
+    type: number;
+    points: {
+        longitude: number;
+        latitude: number;
+        /**
+         * this is often an estimated value based on the type (e.g. power line large is about 80m)
+         */
+        height_above_ground: number;
+    }[];
+}
+
+
+
+export type ApiType_Info_Collision_Objects_Marking_2 = {
+    type: number;
+    points: {
+        longitude: number;
+        latitude: number;
+        /**
+         * this is often an estimated value based on the type (e.g. power line large is about 80m)
+         */
+        height_above_ground: number;
+    }[];
+}
+
+

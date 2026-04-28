@@ -427,7 +427,7 @@ export class GuardedMiddleware {
     }
 
 
-    guardQueryParam<T extends 'integer' | 'id' | 'string' | 'uuid'>(paramName: string, schema: T) : T extends 'integer' ? number : ( T extends 'id' ? number : string) {
+    guardQueryParam<T extends 'integer' | 'id' | 'string' | 'uuid' | 'number'>(paramName: string, schema: T) : T extends 'integer' ? number : ( T extends 'id' ? number : T extends 'number' ? number : string) {
         const value = this.req.query[paramName]
 
         switch(schema){
@@ -461,6 +461,22 @@ export class GuardedMiddleware {
                 }
 
                 const parsed = parseInt(value)
+
+                if(isNaN(parsed)){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                //@ts-ignore
+                return parsed
+            }
+
+            case 'number': {
+
+                if(typeof value !== 'string'){
+                    throw GuardError._400_BadRequest('invalid query param ' + paramName)
+                }
+
+                const parsed = parseFloat(value)
 
                 if(isNaN(parsed)){
                     throw GuardError._400_BadRequest('invalid query param ' + paramName)

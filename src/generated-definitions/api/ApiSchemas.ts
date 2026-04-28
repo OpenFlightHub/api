@@ -6798,3 +6798,330 @@ export const ApiSchema_Dji_Pilot_2_Api_Manage_Devices_Topology_Device : JSONSche
     }
 }
 
+export const ApiSchema_Info_Collision_Objects : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "type",
+            "name",
+            "marking"
+        ],
+        "properties": {
+            "type": {
+                "type": "integer",
+                "description": "0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)"
+            },
+            "name": {
+                "type": "string"
+            },
+            "marking": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "longitude",
+                            "latitude",
+                            "height_above_ground"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "integer"
+                            },
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "height_above_ground": {
+                                "type": "number",
+                                "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "points"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "integer"
+                            },
+                            "points": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "longitude",
+                                        "latitude",
+                                        "height_above_ground"
+                                    ],
+                                    "properties": {
+                                        "longitude": {
+                                            "type": "number"
+                                        },
+                                        "latitude": {
+                                            "type": "number"
+                                        },
+                                        "height_above_ground": {
+                                            "type": "number",
+                                            "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "points"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "integer"
+                            },
+                            "points": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "longitude",
+                                        "latitude",
+                                        "height_above_ground"
+                                    ],
+                                    "properties": {
+                                        "longitude": {
+                                            "type": "number"
+                                        },
+                                        "latitude": {
+                                            "type": "number"
+                                        },
+                                        "height_above_ground": {
+                                            "type": "number",
+                                            "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
+
+export const ApiSchema_Info_Collision_Objects_Marking : JSONSchema4  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "required": [
+                "type",
+                "longitude",
+                "latitude",
+                "height_above_ground"
+            ],
+            "properties": {
+                "type": {
+                    "type": "integer"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "height_above_ground": {
+                    "type": "number",
+                    "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "type",
+                "points"
+            ],
+            "properties": {
+                "type": {
+                    "type": "integer"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "longitude",
+                            "latitude",
+                            "height_above_ground"
+                        ],
+                        "properties": {
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "height_above_ground": {
+                                "type": "number",
+                                "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "type",
+                "points"
+            ],
+            "properties": {
+                "type": {
+                    "type": "integer"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "longitude",
+                            "latitude",
+                            "height_above_ground"
+                        ],
+                        "properties": {
+                            "longitude": {
+                                "type": "number"
+                            },
+                            "latitude": {
+                                "type": "number"
+                            },
+                            "height_above_ground": {
+                                "type": "number",
+                                "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Info_Collision_Objects_Marking_Base : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "type"
+    ],
+    "properties": {
+        "type": {
+            "type": "integer"
+        }
+    }
+}
+
+export const ApiSchema_Info_Collision_Objects_Marking_0 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "type",
+        "longitude",
+        "latitude",
+        "height_above_ground"
+    ],
+    "properties": {
+        "type": {
+            "type": "integer"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "height_above_ground": {
+            "type": "number",
+            "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+        }
+    }
+}
+
+export const ApiSchema_Info_Collision_Objects_Marking_1 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "type",
+        "points"
+    ],
+    "properties": {
+        "type": {
+            "type": "integer"
+        },
+        "points": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "longitude",
+                    "latitude",
+                    "height_above_ground"
+                ],
+                "properties": {
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "height_above_ground": {
+                        "type": "number",
+                        "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Info_Collision_Objects_Marking_2 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "type",
+        "points"
+    ],
+    "properties": {
+        "type": {
+            "type": "integer"
+        },
+        "points": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "longitude",
+                    "latitude",
+                    "height_above_ground"
+                ],
+                "properties": {
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "height_above_ground": {
+                        "type": "number",
+                        "description": "this is often an estimated value based on the type (e.g. power line large is about 80m)"
+                    }
+                }
+            }
+        }
+    }
+}
+

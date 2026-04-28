@@ -167,6 +167,9 @@ app.use('/connection-link', connectionLinkRoute)
 import omeAdmissionRoute from './routes/ome-admission'
 app.use('/ome-admission', omeAdmissionRoute)
 
+import infoRoute from './routes/info'
+app.use('/info', infoRoute)
+
 //websockets
 
 import liveRoute from './routes/live'

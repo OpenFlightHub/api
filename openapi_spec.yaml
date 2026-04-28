@@ -73,6 +73,8 @@ tags:
   - name: drone
   - name: connection-link
     description: All the endpoints for linked devices (e.g. a drone or a remote controller)
+  - name: info
+    description: services that offer different kinds of information
 paths:
   # auth
 
@@ -2216,6 +2218,46 @@ paths:
       security:
         - dji_pilot_2_api: []
 
+
+
+  /info/collision-objects:
+    get:
+      tags:
+        - info
+      summary: Get collision objects in an area
+      parameters:
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: radius
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns the collision objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/info_collision_objects"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
 components:
   schemas:
     # data type
@@ -4227,6 +4269,118 @@ components:
           type: string
         user_id:
           type: string
+
+    # info
+
+    info_collision_objects:
+      type: array
+      items:
+        type: object
+        required:
+          - type
+          - name
+          - marking
+        properties:
+          type:
+            type: integer
+            description: 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
+          name:
+            type: string
+          marking:
+            $ref: "#/components/schemas/info_collision_objects_marking"
+
+    info_collision_objects_marking:
+      anyOf:
+        - $ref: "#/components/schemas/info_collision_objects_marking_0"
+        - $ref: "#/components/schemas/info_collision_objects_marking_1"
+        - $ref: "#/components/schemas/info_collision_objects_marking_2"
+
+    info_collision_objects_marking_base:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: number
+
+    info_collision_objects_marking_0:
+      allOf:
+        - $ref: "#/components/schemas/info_collision_objects_marking_base"
+        - type: object
+          required:
+            - type
+            - longitude
+            - latitude
+            - height_above_ground
+          properties:
+            type:
+              type: integer
+              x-const: 0
+            longitude:
+              type: number
+            latitude:
+              type: number
+            height_above_ground:
+              type: number
+              description: this is often an estimated value based on the type (e.g. power line large is about 80m)
+
+    info_collision_objects_marking_1:
+      allOf:
+        - $ref: "#/components/schemas/info_collision_objects_marking_base"
+        - type: object
+          required:
+            - type
+            - points
+          properties:
+            type:
+              type: integer
+              x-const: 1
+            points:
+              type: array
+              items:
+                type: object
+                required:
+                  - longitude
+                  - latitude
+                  - height_above_ground
+                properties:
+                  longitude:
+                    type: number
+                  latitude:
+                    type: number
+                  height_above_ground:
+                    type: number
+                    description: this is often an estimated value based on the type (e.g. power line large is about 80m)
+
+    info_collision_objects_marking_2:
+      allOf:
+        - $ref: "#/components/schemas/info_collision_objects_marking_base"
+        - type: object
+          required:
+            - type
+            - points
+          properties:
+            type:
+              type: integer
+              x-const: 2
+            points:
+              type: array
+              items:
+                type: object
+                required:
+                  - longitude
+                  - latitude
+                  - height_above_ground
+                properties:
+                  longitude:
+                    type: number
+                  latitude:
+                    type: number
+                  height_above_ground:
+                    type: number
+                    description: this is often an estimated value based on the type (e.g. power line large is about 80m)
+
+
 
   responses:
     "400":
