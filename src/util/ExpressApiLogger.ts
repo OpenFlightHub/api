@@ -32,7 +32,6 @@ export default class ExpressApiLogger {
             let isLogged = false
 
             res.on('close', logIt)
-            res.on('finished', logIt)
 
             function logIt(){
                 if(!isLogged){
