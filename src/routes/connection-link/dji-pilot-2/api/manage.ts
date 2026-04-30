@@ -47,7 +47,11 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
                 online_status: connectionOnlineStatus.drone,
                 user_callsign: connection.name,
                 user_id: makeUUIDFromId(connection.id), //TODO where is this being used?
-                device_model: getModelEnumForDroneType(drone.type)
+                device_model: getModelEnumForDroneType(drone.type),
+                icon_urls: {
+                    normal_icon_url: 'https://dev.openflighthub.org/images/drone/icon.png',
+                    selected_icon_url: 'https://dev.openflighthub.org/images/drone/icon.png'//TODO should we use web-app icons for this
+                }
             })
         }
 
@@ -60,7 +64,11 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
                 online_status: connectionOnlineStatus.remoteController,
                 user_callsign: connection.name,
                 user_id: makeUUIDFromId(connection.id), //TODO where is this being used?
-                device_model: getModelEnumForRemoteControllerType(remoteController.type)
+                device_model: getModelEnumForRemoteControllerType(remoteController.type),
+                icon_urls: {
+                    normal_icon_url: 'https://dev.openflighthub.org/images/remote_controller/icon.png',
+                    selected_icon_url: 'https://dev.openflighthub.org/images/remote_controller/icon.png'//TODO should we use web-app icons for this
+                }
             })
         }
 
@@ -77,8 +85,8 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
             user_callsign: 'Host User Callsign',
             user_id: 'a0000000-ea2e-482c-afdd-2becba536cf2',
             icon_urls: {
-                normal_icon_url: 'https://dev.openflighthub.org/api/icons/drone.png',
-                selected_icon_url: 'https://dev.openflighthub.org/api/icons/drone.png'
+                normal_icon_url: 'https://dev.openflighthub.org/images/drone/icon.png',
+                selected_icon_url: 'https://dev.openflighthub.org/images/drone/icon.png'//TODO should we use web-app icons for this
             }
         }],
         parents: [{
@@ -87,7 +95,11 @@ router.get('/devices/topologies', asyncHandler(async (req, res) => {
             online_status: true,
             sn: 'SN#TEST-SIT-AWARE-PARENT',
             user_callsign: 'Parent User Callsign',
-            user_id: 'b0000000-ea2e-482c-afdd-2becba536cf2'
+            user_id: 'b0000000-ea2e-482c-afdd-2becba536cf2',
+            icon_urls: {
+                normal_icon_url: 'https://dev.openflighthub.org/images/remote_controller/icon.png',
+                selected_icon_url: 'https://dev.openflighthub.org/images/remote_controller/icon.png'//TODO should we use web-app icons for this
+            }
         }]
     })
 
