@@ -39,7 +39,6 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                 const dataString = data.toString()
 
                 if(dataString === 'ping'){
-                    console.log('got ping')
                     //TODO should we respond with "pong" ? ws.send("pong")
 
                     ws.send('ping')// if we dont respond with ping or pong, webcsocket closes with code 4000
@@ -147,7 +146,6 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
             console.warn('did not start traffic sensing, connection has no last_drone_id', connection)
         }
 
-        console.log('send update topo')
         //force update of topology
         ws.send(JSON.stringify({
             biz_code: 'device_update_topo',
@@ -162,7 +160,6 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
         setInterval(()=>{
 
             if(ws.readyState === ws.OPEN){
-                console.log('send device_osd')
 
                 ws.send(JSON.stringify({
                     biz_code: 'device_osd',
