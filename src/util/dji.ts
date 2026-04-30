@@ -9,11 +9,12 @@ export function getDJIGeoJsonForGeoObject(geoObject: DBType_Geo_Object){
                 case 0: return {
                     geometry: {
                         coordinates: geoObject.config.point,
+                        radius: 0,
                         type: 'Point'
                     },
                     properties: {
                         clampToGround: true,//TODO support elevation?
-                        color: geoObject.config.color
+                        color: getDjiColorForColorHex(geoObject.config.color)
                     },
                     type: 'Feature'
                 }
@@ -24,7 +25,7 @@ export function getDJIGeoJsonForGeoObject(geoObject: DBType_Geo_Object){
                     },
                     properties: {
                         clampToGround: true,//TODO support elevation?
-                        color: geoObject.config.color
+                        color: getDjiColorForColorHex(geoObject.config.color)
                     },
                     type: 'Feature'
                 }
@@ -35,7 +36,7 @@ export function getDJIGeoJsonForGeoObject(geoObject: DBType_Geo_Object){
                     },
                     properties: {
                         clampToGround: true,//TODO support elevation?
-                        color: geoObject.config.color
+                        color: getDjiColorForColorHex(geoObject.config.color)
                     },
                     type: 'Feature'
                 }
@@ -47,7 +48,7 @@ export function getDJIGeoJsonForGeoObject(geoObject: DBType_Geo_Object){
                     },
                     properties: {
                         clampToGround: false,//TODO support elevation?
-                        color: geoObject.config.color
+                        color: getDjiColorForColorHex(geoObject.config.color)
                     },
                     type: 'Feature'
                 }
@@ -62,15 +63,15 @@ export function getGeoObjectConfigForDJIMapElementContent(mapElementContent: Api
     switch(geoObjectSubType){
         case 0: return {
             color: (mapElementContent.properties as {color: string}).color,
-            point: (mapElementContent.geometry as {coordinates: [number, number, number]}).coordinates
+            point: enforceElevationIndex((mapElementContent.geometry as {coordinates: [number, number, number?]}).coordinates)
         } satisfies DBType_Geo_Object_ConfigType<0, 0>
         case 1: return {
             color: (mapElementContent.properties as {color: string}).color,
-            line: (mapElementContent.geometry as {coordinates: [[number, number, number][]]}).coordinates[0]//TODO check dji format
+            line: (mapElementContent.geometry as {coordinates: [[number, number, number?], [number, number, number?]]}).coordinates.map(enforceElevationIndex)
         } satisfies DBType_Geo_Object_ConfigType<0, 1>
         case 2: return {
             color: (mapElementContent.properties as {color: string}).color,
-            polygon: (mapElementContent.geometry as {coordinates: [[number, number, number][]]}).coordinates[0]//TODO check dji format
+            polygon: (mapElementContent.geometry as {coordinates: [[number, number, number][]]}).coordinates[0].map(enforceElevationIndex)//TODO check dji format
         } satisfies DBType_Geo_Object_ConfigType<0, 2>
         case 3: return {
             color: (mapElementContent.properties as {color: string}).color,
@@ -80,6 +81,13 @@ export function getGeoObjectConfigForDJIMapElementContent(mapElementContent: Api
     }
 
     throw new Error('invalid geoObjectSubType: ' + geoObjectSubType)
+}
+
+function enforceElevationIndex(coordinates: [number, number, number?]){
+    if(coordinates.length === 2){
+        coordinates[2] = 0
+    }
+    return coordinates as [number, number, number]
 }
 
 export function getDJIMapElementTypeForGeoObject(geoObjectSubType: DBType_Geo_Object_SubTypeType<0>){
@@ -100,4 +108,23 @@ export function getGeoObjectSubTypeForDJIMapElementType(mapElementType: number){
     }
 
     throw new Error('invalid dji map element type: ' + mapElementType)
+}
+
+export function getDjiColorForColorHex(colorHex: string){
+    const SUPPORTED_COLORS = {
+        BLUE: '#2D8CF0',
+        GREEN: '#19BE6B',
+        YELLOW: '#FFBB00',
+        RED: '#E23C39',
+        PURPLE: '#B620E0'
+    }
+
+    for(const [key, value] of Object.entries(SUPPORTED_COLORS)){
+        if(value.toLowerCase() === colorHex.toLowerCase()){
+            return colorHex.toUpperCase()
+        }
+    }
+
+    console.warn('unsupported color for dji map element', colorHex, ', defaulting to blue. supported colors are:', SUPPORTED_COLORS)
+    return '#2D8CF0'
 }

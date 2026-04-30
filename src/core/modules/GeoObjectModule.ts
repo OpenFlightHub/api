@@ -124,13 +124,35 @@ export default class GeoObjectModule extends Module_Base<
         })
     }
 
+    /**
+     * if the new geoObject has the same uuid as an existing one, and the same data, no error wil be thrown!
+     */
     async createGeoObject(data: DBInsert_Geo_Object){
+        const existingObject = (await select_Geo_Object(pgp.as.format('WHERE uuid = ${uuid}', {uuid: data.uuid})))[0]
+
+        if(existingObject){
+            const areSame = areSameGeoObjects(existingObject, data)
+            if(areSame === true){
+                console.log('a geoObject with the same uuid and same data already exists', existingObject.uuid)
+                return existingObject
+            } else {
+                console.error(existingObject, data)
+                throw new Error(`a different geoObject with the same uuid already exists, difference: ${areSame}, id: ${existingObject.id}, uuid: ${existingObject.uuid}`)
+            }
+        }
+
         const geoObject = await insert_Geo_Object(data)
 
         this.dispatch('create_geo_object', {
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
+
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+            event_type: 'create',
+            uuid: geoObject.uuid,
+            data: geoObject
+        })
 
         return geoObject
     }
@@ -156,6 +178,12 @@ export default class GeoObjectModule extends Module_Base<
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
+
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+            event_type: 'update',
+            uuid: geoObject.uuid,
+            data: geoObject
+        })
 
         return geoObject
     }
@@ -186,6 +214,13 @@ export default class GeoObjectModule extends Module_Base<
             id: geoObject.id,
             workspaceId: geoObject.workspace_id
         }, geoObject)
+
+
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+            event_type: 'delete',
+            uuid: geoObject.uuid,
+            data: undefined
+        })
     }
 
     /**
@@ -247,3 +282,18 @@ export default class GeoObjectModule extends Module_Base<
 
 }
 
+
+/**
+ *
+ * @returns true or a string describing what is different between the two geoObjects
+ */
+function areSameGeoObjects(geoObject1: DBType_Geo_Object, geoObject2: DBInsert_Geo_Object){
+    if(geoObject1.uuid !== geoObject2.uuid) return 'uuid'
+    if(geoObject1.name !== geoObject2.name) return 'name'
+    if(geoObject1.type !== geoObject2.type) return 'type'
+    if(geoObject1.sub_type !== geoObject2.sub_type) return 'sub_type'
+    if(geoObject1.workspace_id !== geoObject2.workspace_id) return 'workspace_id'
+    if(JSON.stringify(geoObject1.config) !== JSON.stringify(geoObject2.config)) return 'config'
+
+    return true
+}
