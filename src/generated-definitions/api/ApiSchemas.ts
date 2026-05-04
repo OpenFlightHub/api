@@ -1333,8 +1333,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "type": "object",
                         "required": [
                             "longitude",
-                            "latitude",
-                            "height"
+                            "latitude"
                         ],
                         "properties": {
                             "longitude": {
@@ -1690,8 +1689,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude",
-                        "height"
+                        "latitude"
                     ],
                     "properties": {
                         "longitude": {
@@ -1921,8 +1919,7 @@ export const ApiSchema_Workspace_Geo_Object_Patch : JSONSchema4  = {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude",
-                        "height"
+                        "latitude"
                     ],
                     "properties": {
                         "longitude": {
@@ -2336,8 +2333,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude",
-                        "height"
+                        "latitude"
                     ],
                     "properties": {
                         "longitude": {
@@ -3240,8 +3236,7 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
             "type": "object",
             "required": [
                 "longitude",
-                "latitude",
-                "height"
+                "latitude"
             ],
             "properties": {
                 "longitude": {
@@ -3269,8 +3264,7 @@ export const ApiSchema_Geo_Object_Type1_Config : JSONSchema4  = {
     "type": "object",
     "required": [
         "longitude",
-        "latitude",
-        "height"
+        "latitude"
     ],
     "properties": {
         "longitude": {
@@ -3652,8 +3646,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude",
-                        "height"
+                        "latitude"
                     ],
                     "properties": {
                         "longitude": {
@@ -4233,8 +4226,7 @@ export const ApiSchema_Geo_Object_Type1_Create : JSONSchema4  = {
             "type": "object",
             "required": [
                 "longitude",
-                "latitude",
-                "height"
+                "latitude"
             ],
             "properties": {
                 "longitude": {
@@ -4463,8 +4455,7 @@ export const ApiSchema_Geo_Object_Patch : JSONSchema4  = {
                     "type": "object",
                     "required": [
                         "longitude",
-                        "latitude",
-                        "height"
+                        "latitude"
                     ],
                     "properties": {
                         "longitude": {
@@ -4815,8 +4806,7 @@ export const ApiSchema_Geo_Object_Type1_Patch : JSONSchema4  = {
             "type": "object",
             "required": [
                 "longitude",
-                "latitude",
-                "height"
+                "latitude"
             ],
             "properties": {
                 "longitude": {

@@ -610,7 +610,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           config: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -772,7 +772,7 @@ export type ApiType_Workspace_Geo_Objects_Create =
           config: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -884,7 +884,7 @@ export type ApiType_Workspace_Geo_Object_Patch =
           config?: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -1052,7 +1052,7 @@ export type ApiType_Geo_Object =
           config: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -1435,7 +1435,7 @@ export type ApiType_Geo_Object_Type1 = {
     config: {
         longitude: number;
         latitude: number;
-        height: number;
+        height?: number;
         heading?: number;
         /**
          * TODO unit
@@ -1449,7 +1449,7 @@ export type ApiType_Geo_Object_Type1 = {
 export type ApiType_Geo_Object_Type1_Config = {
     longitude: number;
     latitude: number;
-    height: number;
+    height?: number;
     heading?: number;
     /**
      * TODO unit
@@ -1618,7 +1618,7 @@ export type ApiType_Geo_Object_Create =
           config: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -1892,7 +1892,7 @@ export type ApiType_Geo_Object_Type1_Create = {
     config: {
         longitude: number;
         latitude: number;
-        height: number;
+        height?: number;
         heading?: number;
         /**
          * TODO unit
@@ -1999,7 +1999,7 @@ export type ApiType_Geo_Object_Patch =
           config?: {
               longitude: number;
               latitude: number;
-              height: number;
+              height?: number;
               heading?: number;
               /**
                * TODO unit
@@ -2174,7 +2174,7 @@ export type ApiType_Geo_Object_Type1_Patch = {
     config?: {
         longitude: number;
         latitude: number;
-        height: number;
+        height?: number;
         heading?: number;
         /**
          * TODO unit
