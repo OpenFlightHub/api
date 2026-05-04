@@ -23,8 +23,9 @@ export default class TrafficSensing {
 
     constructor(){
         this.addSource(FakeSensingArea.getFactory())
-        this.addSource(GliderNetSensingArea.getFactory())
-        this.addSource(AdsbLol.getFactory())
+        // this.addSource(GliderNetSensingArea.getFactory())
+        // this.addSource(AdsbLol.getFactory())
+        //TODO reenable sources (unfortunately, they brick the web-app right now)
     }
 
     private addSource(factory: SensingSourceAreaFactory){
