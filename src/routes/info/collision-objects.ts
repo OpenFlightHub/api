@@ -6,7 +6,7 @@ import { ApiSchema_Info_Collision_Objects } from '../../generated-definitions/ap
 import { ApiType_Info_Collision_Objects, ApiType_Info_Collision_Objects_Marking } from '../../generated-definitions/api/ApiTypes';
 
 
-getCollisionObjects(10.2071, 47.5422, 5000).then(result => {
+getCollisionObjects(10.2571, 47.5422, 5000).then(result => {
     collisionObjectsCache = result
     console.log('preloaded collision objects cache with', result.length, 'objects')
 }).catch(err => {
