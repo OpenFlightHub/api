@@ -1,11 +1,10 @@
 import FakeTrack from "../../util/FakeTrack";
 import { SensingSourceArea } from "../Source";
 
-let myIdCounter = 0
 
 export default class FakeArea extends SensingSourceArea {
 
-    private readonly myId = 'fake' + myIdCounter++
+    private readonly myId = 'fake'
     private fakeTrack: FakeTrack
     private intervalHandle: any
 
