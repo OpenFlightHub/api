@@ -41,6 +41,8 @@ export default class GeoObjectModule extends Module_Base<
 
     private readonly activeHandles = new Map<ClientId, SensingHandle>()
 
+    private existingGeoObjectsNameIdMap = new Map<string, number>()
+
     constructor(){
         super()
 
@@ -66,17 +68,26 @@ export default class GeoObjectModule extends Module_Base<
             const sensingArea = filterOptions.area
 
             if(sensingArea){
-                const handle = this.aircraftSensing.startSensing(parseFloat(sensingArea.latitude), sensingArea.longitude, sensingArea.radius)
+                //TODO validate sensing area
+                const handle = this.aircraftSensing.startSensing(sensingArea.latitude, sensingArea.longitude, sensingArea.radius)
 
-                handle.addListener('traffic', async (data)=>{
+                handle.addListener('traffic', async(data)=>{
 
-                    let existingGeoObject = await db.oneOrNone<DBType_Geo_Object>('SELECT * FROM geo_objects WHERE type = ${type} AND name = ${name};', {
-                        type: DBType_Geo_Object_Type_TYPES.traffic,
-                        name: data.id
-                    })
+                    const name = data.name
 
-                    if(existingGeoObject){
-                        existingGeoObject = await this.updateGeoObjectSafe(existingGeoObject.id, {
+                    //TODO urgent: race condition: if two updates for the same traffic data come in at the same time, we might end up with two geoObjects for the same traffic, because both will check if a geoObject with the same name (which is the traffic id) exists, see that it does not exist and then both will create a new one. We should add some locking mechanism to prevent this, or at least add some retry logic to update an existing one if it was created in the meantime
+
+                    // using a hasmap fixes a nasty race condition
+                    let existingGeoObjectId = this.existingGeoObjectsNameIdMap.get(name)
+                    let existingGeoObject: DBType_Geo_Object | undefined
+
+                    if(typeof existingGeoObjectId === 'number'){
+                        if(existingGeoObjectId === -1){
+                            //skip: insert is not done yet
+                            return
+                        }
+
+                        existingGeoObject = await this.updateGeoObjectSafe(existingGeoObjectId, {
                             config: {
                                 longitude: data.position.longitude,
                                 latitude: data.position.latitude,
@@ -91,9 +102,12 @@ export default class GeoObjectModule extends Module_Base<
                         })
 
                     } else {
+
+                        this.existingGeoObjectsNameIdMap.set(name, -1)
+
                         existingGeoObject = await insert_Geo_Object({
                             type: DBType_Geo_Object_Type_TYPES.traffic,
-                            name: data.id,
+                            name: name,
                             workspace_id: workspaceId,
                             sub_type: DBType_Geo_Object_SubType_TYPES.traffic.other, //TODO implement type from sensing area
                             config: {
@@ -102,6 +116,8 @@ export default class GeoObjectModule extends Module_Base<
                                 height: data.position.height
                             }
                         })
+
+                        this.existingGeoObjectsNameIdMap.set(existingGeoObject.name, existingGeoObject.id)
 
                         this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
                             event_type: 'create',
@@ -122,6 +138,16 @@ export default class GeoObjectModule extends Module_Base<
                 handle.stop()
             }
         })
+
+        //TODO ensure this is done before any traffic sensing data is processed, otherwise we might end up with duplicates
+        select_Geo_Object(pgp.as.format('WHERE type = ${type}', {type: DBType_Geo_Object_Type_TYPES.traffic})).then(geoObjects => {
+            for(const geoObject of geoObjects){
+                this.existingGeoObjectsNameIdMap.set(geoObject.name, geoObject.id)
+            }
+        }).catch(err=>{
+            console.error('failed to initialize existingGeoObjectsNameIdMap', err)
+        })
+
     }
 
     /**
