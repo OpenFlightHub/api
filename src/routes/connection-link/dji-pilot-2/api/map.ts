@@ -10,7 +10,7 @@ const db = global.db as pgp.IDatabase<any>
 import { DBType_Geo_Object, DBType_Geo_Object_Type_TYPES } from '../../../../generated-definitions/db/DBTypes';
 import dayjs from 'dayjs';
 
-import {getDJIGeoJsonForGeoObject, getGeoObjectConfigForDJIMapElementContent, getGeoObjectSubTypeForDJIMapElementType} from '../../../../util/dji'
+import {getDJIGeoJsonForGeoObject, getDJIMapElementTypeForGeoObject, getGeoObjectConfigForDJIMapElementContent, getGeoObjectSubTypeForDJIMapElementType} from '../../../../util/dji'
 import { getCore } from '../../../../core';
 import { GuardError } from '../../../../ManInTheMiddleware';
 
@@ -72,7 +72,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
                         create_time: getMillisecondsSinceUnix(element.created_at),
                         update_time: getMillisecondsSinceUnix(element.updated_at),
                         resource: {
-                            type: element.type,
+                            type: getDJIMapElementTypeForGeoObject(element.sub_type),
                             content: getDJIGeoJsonForGeoObject(element)
                         }
                     }
