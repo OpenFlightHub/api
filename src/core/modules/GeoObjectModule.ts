@@ -210,6 +210,7 @@ export default class GeoObjectModule extends Module_Base<
             uuid: geoObject.uuid,
             data: geoObject
         })
+        console.log('updating geo object', geoObject.uuid)
 
         return geoObject
     }
