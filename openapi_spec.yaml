@@ -2932,9 +2932,9 @@ components:
         updated_at:
           $ref: "#/components/schemas/timestamptz"
         type:
-          type: number
+          type: integer
         sub_type:
-          type: number
+          type: integer
 
     geo_object_type0:
       anyOf:
@@ -4285,7 +4285,7 @@ components:
             type: integer
             description: 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
           id:
-            type: number
+            type: integer
             description: unique identifier for collision objects
           name:
             type: string
@@ -4304,7 +4304,7 @@ components:
         - type
       properties:
         type:
-          type: number
+          type: integer
           description: 0 = point, 1 = line, 2 = area
 
     info_collision_objects_marking_0:
