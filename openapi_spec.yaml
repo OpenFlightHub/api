@@ -3182,9 +3182,9 @@ components:
         name:
           type: string
         type:
-          type: number
+          type: integer
         sub_type:
-          type: number
+          type: integer
 
     geo_object_type0_create:
       anyOf:
