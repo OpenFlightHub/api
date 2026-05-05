@@ -29,9 +29,7 @@ router.post('/element-groups/:group_id/elements', asyncHandler(async (req, res) 
         workspace_id: connection.workspace_id,
         type: DBType_Geo_Object_Type_TYPES.marking,
         sub_type: getGeoObjectSubTypeForDJIMapElementType(body.resource.type),
-        config: getGeoObjectConfigForDJIMapElementContent(body.resource.content,
-            //@ts-ignore
-            body.resource.type)
+        config: getGeoObjectConfigForDJIMapElementContent(body.resource.content, getGeoObjectSubTypeForDJIMapElementType(body.resource.type))
     })
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Element_Groups_Elements_Post_Response>({
