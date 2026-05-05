@@ -71,11 +71,11 @@ export function getGeoObjectConfigForDJIMapElementContent(mapElementContent: Api
         } satisfies DBType_Geo_Object_ConfigType<0, 1>
         case 2: return {
             color: (mapElementContent.properties as {color: string}).color,
-            polygon: (mapElementContent.geometry as {coordinates: [[number, number, number][]]}).coordinates[0].map(enforceElevationIndex)//TODO check dji format
+            polygon: (mapElementContent.geometry as {coordinates: [[number, number, number][]]}).coordinates[0].map(enforceElevationIndex)
         } satisfies DBType_Geo_Object_ConfigType<0, 2>
         case 3: return {
             color: (mapElementContent.properties as {color: string}).color,
-            center: (mapElementContent.geometry as {coordinates: [number, number, number]}).coordinates,
+            center: enforceElevationIndex((mapElementContent.geometry as {coordinates: [number, number, number]}).coordinates),
             radius: (mapElementContent.geometry as {radius: number}).radius
         } satisfies DBType_Geo_Object_ConfigType<0, 3>
     }
