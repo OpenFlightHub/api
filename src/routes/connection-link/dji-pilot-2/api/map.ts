@@ -72,7 +72,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
                         create_time: getMillisecondsSinceUnix(element.created_at),
                         update_time: getMillisecondsSinceUnix(element.updated_at),
                         resource: {
-                            type: getDJIMapElementTypeForGeoObject(element.sub_type),
+                            type: getDJIMapElementTypeForGeoObject(element.sub_type as unknown as 0 | 1 | 2 | 3),
                             content: getDJIGeoJsonForGeoObject(element)
                         }
                     }
