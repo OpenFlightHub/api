@@ -86,7 +86,7 @@ router.get('/element-groups', asyncHandler(async (req, res) => {
 
 }))
 
-router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {
+router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {//TODO when this happens to quickly after creation, we might think this geoobject does not exist yet
 
     const connection = await req.GM.getCurrentConnection()
 
