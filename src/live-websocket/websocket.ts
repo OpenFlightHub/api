@@ -296,15 +296,15 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
      * @see triggerListenerIfExists() if you only want to execute some code if there really is at least one listener
      */
     triggerListener(filter: EventFilter, data: server_to_client.Message_Type_Event_Object_Data<T>){
-        const clients = this.filters.get(filter)
-
-        if(clients){
-            for(const client of clients){
-                sendToClient(client, 'event', {
-                    event: this.event,
-                    filter,
-                    eventData: data
-                })
+        for(const [key, clients] of this.filters){
+            if(key === filter || key === filter.split('&')[0]){
+                for(const client of clients){
+                    sendToClient(client, 'event', {
+                        event: this.event,
+                        filter,
+                        eventData: data
+                    })
+                }
             }
         }
     }
@@ -315,37 +315,36 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
      * @see triggerListener()
      */
     triggerListenerIfExists<CR = server_to_client.Message_Type_Event_Object_Data<T> | Promise<server_to_client.Message_Type_Event_Object_Data<T>>>(filter: EventFilter, callback: () => CR): CR extends Promise<void> ? Promise<void> : void {
+        for(const [key, clients] of this.filters){
+            if(key === filter || key === filter.split('&')[0]){
 
-        const clients = this.filters.get(filter)
+                const result = callback()
 
-        if(clients){
+                if(result instanceof Promise){
+                    //@ts-ignore
+                    return new Promise<void>((resolve, reject)=>{
+                        result.then(res => {
 
-            const result = callback()
+                            for(const client of clients){
+                                sendToClient(client, 'event', {
+                                    event: this.event,
+                                    filter,
+                                    eventData: res as server_to_client.Message_Type_Event_Object_Data<T>
+                                })
+                            }
 
-            if(result instanceof Promise){
-                //@ts-ignore
-                return new Promise<void>((resolve, reject)=>{
-                    result.then(res => {
+                            resolve()
 
-                        for(const client of clients){
-                            sendToClient(client, 'event', {
-                                event: this.event,
-                                filter,
-                                eventData: res as server_to_client.Message_Type_Event_Object_Data<T>
-                            })
-                        }
-
-                        resolve()
-
-                    }).catch(reject)
-                })
-            } else {
-                for(const client of clients){
-                    sendToClient(client, 'event', {
-                        event: this.event,
-                        filter,
-                        eventData: result as server_to_client.Message_Type_Event_Object_Data<T>
+                        }).catch(reject)
                     })
+                } else {
+                    for(const client of clients){
+                        sendToClient(client, 'event', {
+                            event: this.event,
+                            filter,
+                            eventData: result as server_to_client.Message_Type_Event_Object_Data<T>
+                        })
+                    }
                 }
             }
         }
