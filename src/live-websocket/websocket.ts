@@ -297,7 +297,7 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
      */
     triggerListener(filter: EventFilter, data: server_to_client.Message_Type_Event_Object_Data<T>){
         for(const [key, clients] of this.filters){
-            if(key === filter || key === filter.split('&')[0]){
+            if(key === filter || key.split('&')[0] === filter){
                 for(const client of clients){
                     sendToClient(client, 'event', {
                         event: this.event,
