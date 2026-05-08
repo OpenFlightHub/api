@@ -512,13 +512,14 @@ export type ApiType_Workspace_Connections = {
 
 
 
-export type ApiType_Workspace_Connections_Post = {
+export type ApiType_Connection_Post = {
     name: string;
+    workspace_id: number;
 }
 
 
 
-export type ApiType_Workspace_Connections_Post_Response = {
+export type ApiType_Connection_Post_Response = {
     connection_id: string;
     secret: string;
 }

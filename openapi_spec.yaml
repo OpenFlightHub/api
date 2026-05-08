@@ -1217,28 +1217,23 @@ paths:
       security:
         - user_auth: []
 
+  /connection:
     post:
       tags:
         - connection
       summary: Create a new connection for a workspace
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/id"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/workspace_connections_post"
+              $ref: "#/components/schemas/connection_post"
       responses:
         "200":
-          description: Returns the connection credentials (used at the "/link" endpoints)
+          description: Returns the connection credentials (used at the "/connection-link" endpoints)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/workspace_connections_post_response"
+                $ref: "#/components/schemas/connection_post_response"
 
         "400":
           $ref: "#/components/responses/400"
@@ -3350,15 +3345,18 @@ components:
       items:
         $ref: "#/components/schemas/connection"
 
-    workspace_connections_post:
+    connection_post:
       type: object
       required:
         - name
+        - workspace_id
       properties:
         name:
           type: string
+        workspace_id:
+          $ref: "#/components/schemas/id"
 
-    workspace_connections_post_response:
+    connection_post_response:
       type: object
       required:
         - connection_id

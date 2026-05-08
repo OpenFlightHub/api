@@ -1127,19 +1127,24 @@ export const ApiSchema_Workspace_Connections : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Workspace_Connections_Post : JSONSchema4  = {
+export const ApiSchema_Connection_Post : JSONSchema4  = {
     "type": "object",
     "required": [
-        "name"
+        "name",
+        "workspace_id"
     ],
     "properties": {
         "name": {
             "type": "string"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
 
-export const ApiSchema_Workspace_Connections_Post_Response : JSONSchema4  = {
+export const ApiSchema_Connection_Post_Response : JSONSchema4  = {
     "type": "object",
     "required": [
         "connection_id",
