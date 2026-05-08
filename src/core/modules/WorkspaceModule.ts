@@ -1,6 +1,7 @@
 
+import { getCore } from '..'
 import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, insert_Workspace_Permission, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
-import { DBType_Workspace } from '../../generated-definitions/db/DBTypes'
+import { DBType_Workspace, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 export default class WorkspaceModule extends Module_Base<
@@ -101,11 +102,26 @@ export default class WorkspaceModule extends Module_Base<
     //TODO move all the workspace scoped events in here ??? (like drone position and such)
 
     async inviteTeam(workspaceId: number, teamId: number){
-        const workspace = this.getWorkspaceSafe(workspaceId)
+        const workspace = await this.getWorkspaceSafe(workspaceId)
 
         await insert_Workspace_Permission({
             workspace_id: workspaceId,
             team_id: teamId
         })
+    }
+
+    async userOwnsWorkspace(workspaceId: number, userId: number){
+
+        const workspace = await this.getWorkspaceSafe(workspaceId)
+
+        if(await getCore().modules.user.userIsAdmin(userId)){
+            return true
+        }
+
+        if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id === 'number'){
+            return await getCore().modules.team.userOwnsTeam(userId, (workspace as DBType_Workspace_ForTeam).owner_team_id)
+        } else {
+            return await getCore().modules.organisation.userOwnsOrganisation(userId, (workspace as DBType_Workspace_ForOrganisation).owner_organisation_id)
+        }
     }
 }

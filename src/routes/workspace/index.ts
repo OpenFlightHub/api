@@ -78,6 +78,10 @@ router.patch('/:workspace_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
 
+    if(await getCore().modules.workspace.userOwnsWorkspace(workspaceId, (await req.GM.getCurrentUser()).id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
     const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Patch>(ApiSchema_Workspace_Patch)
 
     const updatedWorkspace = await getCore().modules.workspace.updateWorkspaceSafe(workspaceId, requestBody)
