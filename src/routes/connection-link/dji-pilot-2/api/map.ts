@@ -100,14 +100,12 @@ router.put('/elements/:element_uuid', asyncHandler(async (req, res) => {//TODO w
 
     const body = req.GM.guardBodySchema<ApiType_Dji_Pilot_2_Api_Map_Elements_Put>(ApiSchema_Dji_Pilot_2_Api_Map_Elements_Put)
 
-    await req.GM.guardDBGone(()=>{
-        return getCore().modules.geoObject.updateGeoObject(elementUUID, {
-            updated_at: dayjs().toISOString(),
-            name: body.name,
-            config: getGeoObjectConfigForDJIMapElementContent(body.content,
-                //@ts-ignore
-                existingGeoObject.sub_type)
-        })
+    await getCore().modules.geoObject.updateGeoObject(elementUUID, {
+        updated_at: dayjs().toISOString(),
+        name: body.name,
+        config: getGeoObjectConfigForDJIMapElementContent(body.content,
+            //@ts-ignore
+            existingGeoObject.sub_type)
     })
 
     res.GM.guardSend<ApiType_Dji_Pilot_2_Api_Map_Elements_Put_Response>({

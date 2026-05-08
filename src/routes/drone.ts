@@ -65,9 +65,7 @@ router.get('/:drone_id/last-position', asyncHandler(async (req, res) => {
 
     const droneId = req.GM.guardParam('drone_id', 'id')
 
-    const droneLastPosition = await req.GM.guardDBGone(()=>{
-        return getCore().modules.drone.getLastPositionOfDrone(droneId)
-    })
+    const droneLastPosition = await getCore().modules.drone.getLastPositionOfDrone(droneId)
 
     if(droneLastPosition === false){
         res.status(410).send()
@@ -82,9 +80,7 @@ router.get('/:drone_id/last-battery', asyncHandler(async (req, res) => {
 
     const droneId = req.GM.guardParam('drone_id', 'id')
 
-    const droneLastBattery = await req.GM.guardDBGone(()=>{
-        return getCore().modules.drone.getLastTelemetryOfDrone(droneId)
-    })
+    const droneLastBattery = await getCore().modules.drone.getLastTelemetryOfDrone(droneId)
 
     if(droneLastBattery === false){
         res.status(410).send()
