@@ -9,6 +9,8 @@ import RemoteControllerModule from './modules/RemoteControllerModule'
 import DroneMediaModule from './modules/DroneMediaModule'
 import WorkspaceModule from './modules/WorkspaceModule'
 import OrganisationModule from './modules/OrganisationModule'
+import MissionModule from './modules/MissionModule'
+import TaskModule from './modules/TaskModule'
 
 
 let coreInstance: Core
@@ -27,6 +29,8 @@ export default class Core {
         readonly remoteController: RemoteControllerModule
         readonly droneMedia: DroneMediaModule
         readonly workspace: WorkspaceModule
+        readonly mission: MissionModule
+        readonly task: TaskModule
     }
 
     constructor(){
@@ -48,7 +52,9 @@ export default class Core {
             flight: new FlightModule(),
             remoteController: new RemoteControllerModule(),
             droneMedia: new DroneMediaModule(),
-            workspace: new WorkspaceModule()
+            workspace: new WorkspaceModule(),
+            mission: new MissionModule(),
+            task: new TaskModule()
         } as const
     }
 

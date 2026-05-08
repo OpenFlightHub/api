@@ -1,4 +1,6 @@
 
+const IS_TEST_ENVIRONMENT = process.env.JEST_WORKER_ID !== undefined
+
 import express from 'express'
 
 import SecretsLoader from './util/SecretsLoader'
@@ -64,7 +66,9 @@ import expressWs from 'express-ws'
 const ws = expressWs(app)
 
 import {setupPerformanceMiddleware} from './PerformanceMiddleware'
-setupPerformanceMiddleware(app)
+if(!IS_TEST_ENVIRONMENT){
+    setupPerformanceMiddleware(app)
+}
 
 //req.body will be an object if content-type header is set to application/json
 app.use(express.json({limit: '100mb'}))
@@ -109,7 +113,6 @@ app.use(guardedMiddleware(app))
 
 
 import morgan from 'morgan'
-const IS_TEST_ENVIRONMENT = process.env.JEST_WORKER_ID !== undefined
 if(!IS_TEST_ENVIRONMENT){
     app.use(morgan('combined'))
 }
@@ -160,6 +163,12 @@ app.use('/flight', flightRoute)
 
 import remoteControllerRoute from './routes/remote-controller'
 app.use('/remote-controller', remoteControllerRoute)
+
+import missionRoute from './routes/mission'
+app.use('/mission', missionRoute)
+
+import taskRoute from './routes/task'
+app.use('/task', taskRoute)
 
 import connectionLinkRoute from './routes/connection-link'
 app.use('/connection-link', connectionLinkRoute)

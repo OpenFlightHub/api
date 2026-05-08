@@ -62,19 +62,20 @@ tags:
   - name: authentication
     description: Everything about authentication (for link authentication see `/link` endpoints)
   - name: user
-  - name: team
-  - name: organisation
-  - name: admin
-    description: Server Administration
+  - name: organisations-and-teams
   - name: workspace
   - name: connection
-  - name: geo-object
   - name: remote-controller
   - name: drone
+  - name: flight
+  - name: missions-and-tasks
   - name: connection-link
     description: All the endpoints for linked devices (e.g. a drone or a remote controller)
   - name: info
     description: services that offer different kinds of information
+  - name: file
+  - name: admin
+    description: Services for server administrators
 paths:
   # auth
 
@@ -379,7 +380,7 @@ paths:
     get:
       tags:
         - user
-        - organisation
+        - organisations-and-teams
       summary: Get all the organisations you have acess to
       responses:
         "200":
@@ -398,7 +399,7 @@ paths:
     get:
       tags:
         - user
-        - team
+        - organisations-and-teams
       summary: Get all the teams you have acess to
       responses:
         "200":
@@ -413,12 +414,10 @@ paths:
       security:
         - user_auth: []
 
-  # team
-
   /team:
     post:
       tags:
-        - team
+        - organisations-and-teams
       summary: Create a team
       requestBody:
         content:
@@ -446,7 +445,7 @@ paths:
   /team/{team_id}:
     get:
       tags:
-        - team
+        - organisations-and-teams
       summary: Get a team
       parameters:
         - name: team_id
@@ -475,7 +474,7 @@ paths:
 
     patch:
       tags:
-        - team
+        - organisations-and-teams
       summary: Modify an existing team. Each property is optional, only present properties will be updated in the database. Some properties cannot be changed!
       parameters:
         - name: team_id
@@ -512,7 +511,7 @@ paths:
   /team/{team_id}/members:
     get:
       tags:
-        - team
+        - organisations-and-teams
       summary: Get all team members
       parameters:
         - name: team_id
@@ -541,39 +540,10 @@ paths:
 
   # organisation
 
-
-  /organisation:
-    post:
-      tags:
-        - organisation
-      summary: Create an organisation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/organisation_post"
-        required: true
-      responses:
-        "200":
-          description: Created organisation successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/reference"
-
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-      security:
-        - user_auth: []
-
   /organisation/{organisation_id}:
     get:
       tags:
-        - organisation
+        - organisations-and-teams
       summary: Get a organisation
       parameters:
         - name: organisation_id
@@ -602,7 +572,7 @@ paths:
 
     patch:
       tags:
-        - organisation
+        - organisations-and-teams
       summary: Modify an existing organisation. Each property is optional, only present properties will be updated in the database. Some properties cannot be changed!
       parameters:
         - name: organisation_id
@@ -638,7 +608,7 @@ paths:
   /organisation/{organisation_id}/teams:
     get:
       tags:
-        - team
+        - organisations-and-teams
       summary: Get all organisation teams
       parameters:
         - name: organisation_id
@@ -667,7 +637,7 @@ paths:
 
   # admin
 
-  /admin/user:
+  /admin/create-user:
     post:
       tags:
         - admin
@@ -676,11 +646,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/admin_user_post"
+              $ref: "#/components/schemas/admin_create_user_post"
         required: true
       responses:
         "200":
           description: Created user successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+
+  /admin/create-organisation:
+    post:
+      tags:
+        - organisations-and-teams
+      summary: Create an organisation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/admin_create_organisation_post"
+        required: true
+      responses:
+        "200":
+          description: Created organisation successfully
           content:
             application/json:
               schema:
@@ -1124,6 +1123,39 @@ paths:
       security:
         - user_auth: []
 
+  /workspace/{workspace_id}/invite-team:
+    post:
+      tags:
+        - workspace
+      summary: Invite a team to a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/workspace_invite_team_post"
+        required: true
+      responses:
+        "200":
+          description: OK
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+
   /workspace/{workspace_id}/files:
     get:
       tags:
@@ -1153,6 +1185,7 @@ paths:
           $ref: "#/components/responses/410"
       security:
         - user_auth: []
+
 
   /workspace/{workspace_id}/connections:
     get:
@@ -1276,7 +1309,7 @@ paths:
   /workspace/{workspace_id}/geo-objects:
     get:
       tags:
-        - geo-object
+        - workspace
       summary: Get all geo objects for this workspace
       parameters:
         - name: workspace_id
@@ -1306,7 +1339,7 @@ paths:
   /workspace/{workspace_id}/geo-objects/create:
     post:
       tags:
-        - geo-object
+        - workspace
       summary: Create a geo object for a workspace
       parameters:
         - name: workspace_id
@@ -1341,7 +1374,7 @@ paths:
   /workspace/{workspace_id}/geo-object/{geo_object_id}:
     patch:
       tags:
-        - geo-object
+        - workspace
       summary: Modify a geo object
       parameters:
         - name: workspace_id
@@ -1381,7 +1414,7 @@ paths:
 
     delete:
       tags:
-        - geo-object
+        - workspace
       summary: Delete a geo object
       parameters:
         - name: workspace_id
@@ -1651,10 +1684,37 @@ paths:
 
   # flight
 
+  /flight:
+    post:
+      tags:
+        - flight
+      summary: Create a flight manually
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/flight_post"
+        required: true
+      responses:
+        "200":
+          description: Flight was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
   /flight/{flight_id}:
     get:
       tags:
-        - drone
+        - flight
       summary: Get a flight
       parameters:
         - name: flight_id
@@ -1681,10 +1741,44 @@ paths:
       security:
         - user_auth: []
 
+    patch:
+      tags:
+        - flight
+      summary: Modify a flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/flight_patch"
+        required: true
+      responses:
+        "200":
+          description: Flight was modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/flight"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
   /flight/{flight_id}/media:
     get:
       tags:
-        - drone
+        - flight
       summary: Get all the uploaded media of this flight
       parameters:
         - name: flight_id
@@ -1711,12 +1805,102 @@ paths:
       security:
         - user_auth: []
 
-  # media
+  /flight/{flight_id}/users:
+    get:
+      tags:
+        - flight
+      summary: Get all the users that participated in this flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the flights users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/flight_users"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    post:
+      tags:
+        - flight
+      summary: Create a user that participated in this flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/flight_users_post"
+        required: true
+      responses:
+        "200":
+          description: OK
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /flight/{flight_id}/user/{user_id}:
+    delete:
+      tags:
+        - flight
+      summary: remove a participating user from a flight
+      parameters:
+        - name: flight_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: OK
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
 
   /media/{media_id}:
     get:
       tags:
-        - drone
+        - flight
       summary: Get a uploaded media
       parameters:
         - name: media_id
@@ -1746,7 +1930,7 @@ paths:
   /media/ground-coverage/{media_id}:
     get:
       tags:
-        - media
+        - flight
       summary: get ground coverage for this media
       parameters:
         - name: media_id
@@ -1770,6 +1954,251 @@ paths:
           $ref: "#/components/responses/403"
         "410":
           description: ground coverage not available
+      security:
+        - user_auth: []
+
+  # mission
+
+  /mission:
+    post:
+      tags:
+        - missions-and-tasks
+      summary: Create a mission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mission_post"
+        required: true
+      responses:
+        "200":
+          description: Mission was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+  /mission/{mission_id}:
+    get:
+      tags:
+        - missions-and-tasks
+      summary: Get a mission
+      parameters:
+        - name: mission_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the mission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mission"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - missions-and-tasks
+      summary: Modify a mission
+      parameters:
+        - name: mission_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mission_patch"
+        required: true
+      responses:
+        "200":
+          description: mission_patch was modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mission"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /mission/{mission_id}/tasks:
+    get:
+      tags:
+        - missions-and-tasks
+      summary: Get all the tasks for this mission
+      parameters:
+        - name: mission_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the missions tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mission_tasks"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /task:
+    post:
+      tags:
+        - missions-and-tasks
+      summary: Create a task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/task_post"
+        required: true
+      responses:
+        "200":
+          description: task was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reference"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+  /task/{task_id}:
+    get:
+      tags:
+        - missions-and-tasks
+      summary: Get a task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/task"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    patch:
+      tags:
+        - missions-and-tasks
+      summary: Modify a task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/task_patch"
+        required: true
+      responses:
+        "200":
+          description: task was modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/task"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    delete:
+      tags:
+        - missions-and-tasks
+      summary: Delete a task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: task was deleted
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
 
   # connection-link
 
@@ -2505,11 +2934,14 @@ components:
       required:
         - name
         - organisation_id
+        - owner_user_id
       properties:
         name:
           type: string
           example: Harry Potter
         organisation_id:
+          $ref: "#/components/schemas/id"
+        owner_user_id:
           $ref: "#/components/schemas/id"
         logo_file_id:
           $ref: "#/components/schemas/id"
@@ -2563,14 +2995,17 @@ components:
         logo_file_id:
           $ref: "#/components/schemas/id"
 
-    organisation_post:
+    admin_create_organisation_post:
       type: object
       required:
         - name
+        - owner_user_id
       properties:
         name:
           type: string
           example: Harry Potter
+        owner_user_id:
+          $ref: "#/components/schemas/id"
         logo_file_id:
           $ref: "#/components/schemas/id"
 
@@ -2599,7 +3034,7 @@ components:
 
     # admin
 
-    admin_user_post:
+    admin_create_user_post:
       type: object
       required:
         - email
@@ -2784,13 +3219,20 @@ components:
 
     # workspace
 
+
     workspace:
+      oneOf:
+        - $ref: "#/components/schemas/workspace_for_team"
+        - $ref: "#/components/schemas/workspace_for_organisation"
+
+    workspace_for_organisation:
       type: object
       required:
         - id
         - name
         - longitude
         - latitude
+        - owner_organisation_id
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -2800,19 +3242,31 @@ components:
           type: number
         latitude:
           type: number
+        owner_organisation_id:
+          $ref: "#/components/schemas/id"
 
-    workspace_patch:
-      type: object
-      properties:
-        name:
-          type: string
-
-    workspaces_post:
+    workspace_for_team:
       type: object
       required:
+        - id
         - name
         - longitude
         - latitude
+        - owner_team_id
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        owner_team_id:
+          $ref: "#/components/schemas/id"
+
+    workspace_patch:
+      type: object
       properties:
         name:
           type: string
@@ -2820,6 +3274,45 @@ components:
           type: number
         latitude:
           type: number
+
+    workspaces_post:
+      oneOf:
+        - $ref: "#/components/schemas/workspaces_post_for_team"
+        - $ref: "#/components/schemas/workspaces_post_for_organisation"
+
+    workspaces_post_for_team:
+      type: object
+      required:
+        - name
+        - longitude
+        - latitude
+        - team_id
+      properties:
+        name:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        team_id:
+          $ref: "#/components/schemas/id"
+
+    workspaces_post_for_organisation:
+      type: object
+      required:
+        - name
+        - longitude
+        - latitude
+        - organisation_id
+      properties:
+        name:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        organisation_id:
+          $ref: "#/components/schemas/id"
 
     workspace_files:
       type: array
@@ -2843,6 +3336,14 @@ components:
       properties:
         filename:
           type: string
+
+    workspace_invite_team_post:
+      type: object
+      required:
+        - team_id
+      properties:
+        team_id:
+          $ref: "#/components/schemas/id"
 
     workspace_connections:
       type: array
@@ -3182,9 +3683,9 @@ components:
         name:
           type: string
         type:
-          type: integer
+          type: number
         sub_type:
-          type: integer
+          type: number
 
     geo_object_type0_create:
       anyOf:
@@ -3483,6 +3984,54 @@ components:
         - drone_id
         - started_at
         - track
+        - is_created_manually
+        - is_changed_manually
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        drone_id:
+          $ref: "#/components/schemas/id"
+        started_at:
+          $ref: "#/components/schemas/timestamptz"
+        landed_at:
+          $ref: "#/components/schemas/timestamptz"
+        ended_at:
+          $ref: "#/components/schemas/timestamptz"
+        track:
+          type: array
+          items:
+            type: object
+            required:
+              - height
+              - longitude
+              - latitude
+              - time
+            properties:
+              height:
+                type: number
+              longitude:
+                type: number
+              latitude:
+                type: number
+              time:
+                $ref: "#/components/schemas/timestamptz"
+        is_created_manually:
+          type: boolean
+        is_changed_manually:
+          type: boolean
+          description: if this is true, updated_by will be have the id of the user that performed the last edit
+        updated_by:
+          $ref: "#/components/schemas/id"
+
+    flight_post:
+      type: object
+      required:
+        - id
+        - drone_id
+        - started_at
+        - landed_at
+        - ended_at
+        - track
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -3513,10 +4062,209 @@ components:
               time:
                 $ref: "#/components/schemas/timestamptz"
 
+    flight_patch:
+      type: object
+      properties:
+        started_at:
+          $ref: "#/components/schemas/timestamptz"
+        landed_at:
+          $ref: "#/components/schemas/timestamptz"
+        ended_at:
+          $ref: "#/components/schemas/timestamptz"
+        track:
+          type: array
+          items:
+            type: object
+            required:
+              - height
+              - longitude
+              - latitude
+              - time
+            properties:
+              height:
+                type: number
+              longitude:
+                type: number
+              latitude:
+                type: number
+              time:
+                $ref: "#/components/schemas/timestamptz"
+
     flight_media:
       type: array
       items:
         $ref: "#/components/schemas/media"
+
+    flight_users:
+      type: array
+      items:
+        $ref: "#/components/schemas/flight_user"
+
+    flight_users_post:
+      type: object
+      required:
+        - user_id
+        - type
+      properties:
+        user_id:
+          $ref: "#/components/schemas/id"
+        type:
+          type: integer
+          description: 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+
+    flight_user:
+      type: object
+      required:
+        - flight_id
+        - user_id
+        - created_by
+        - type
+      properties:
+        flight_id:
+          $ref: "#/components/schemas/id"
+        user_id:
+          $ref: "#/components/schemas/id"
+        created_by:
+          $ref: "#/components/schemas/id"
+        type:
+          type: integer
+          description: 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+
+
+    mission_state:
+      type: integer
+      description: 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+
+    task_state:
+      type: integer
+      description: 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+
+    mission:
+      type: object
+      required:
+        - id
+        - workspace_id
+        - name
+        - created_by
+        - updated_by
+        - created_at
+        - updated_at
+        - state
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        workspace_id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+        description:
+          type: string
+        created_by:
+          $ref: "#/components/schemas/id"
+        updated_by:
+          $ref: "#/components/schemas/id"
+        created_at:
+          $ref: "#/components/schemas/timestamptz"
+        updated_at:
+          $ref: "#/components/schemas/timestamptz"
+        assigned_to_team_id:
+          $ref: "#/components/schemas/id"
+        state:
+          $ref: "#/components/schemas/mission_state"
+
+    mission_post:
+      type: object
+      required:
+        - workspace_id
+        - name
+      properties:
+        workspace_id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+        description:
+          type: string
+        assigned_to_team_id:
+          $ref: "#/components/schemas/id"
+        state:
+          $ref: "#/components/schemas/mission_state"
+
+    mission_patch:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        assigned_to_team_id:
+          $ref: "#/components/schemas/id"
+        state:
+          $ref: "#/components/schemas/mission_state"
+
+    mission_tasks:
+      type: array
+      items:
+          $ref: "#/components/schemas/task"
+
+    task:
+      type: object
+      required:
+        - id
+        - mission_id
+        - name
+        - created_by
+        - updated_by
+        - created_at
+        - updated_at
+        - state
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        mission_id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+        description:
+          type: string
+        created_by:
+          $ref: "#/components/schemas/id"
+        updated_by:
+          $ref: "#/components/schemas/id"
+        created_at:
+          $ref: "#/components/schemas/timestamptz"
+        updated_at:
+          $ref: "#/components/schemas/timestamptz"
+        state:
+          $ref: "#/components/schemas/task_state"
+
+    task_post:
+      type: object
+      required:
+        - mission_id
+        - name
+      properties:
+        mission_id:
+          $ref: "#/components/schemas/id"
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          $ref: "#/components/schemas/task_state"
+
+    task_patch:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          $ref: "#/components/schemas/task_state"
+
+
+
+
 
     media:
       type: object
@@ -4285,7 +5033,7 @@ components:
             type: integer
             description: 0 = power tower, 1 = power pole, 2 = power line large, 3 = power line small or catenary, 4 = aerialway pylon, 5 = aerialway (like chair lift or gondola), 6 = building (e.g. tower)
           id:
-            type: integer
+            type: number
             description: unique identifier for collision objects
           name:
             type: string
@@ -4304,7 +5052,7 @@ components:
         - type
       properties:
         type:
-          type: integer
+          type: number
           description: 0 = point, 1 = line, 2 = area
 
     info_collision_objects_marking_0:

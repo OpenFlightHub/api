@@ -127,7 +127,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                     last_connection_id: connection.id
                 })
 
-                const flight = await getCore().modules.flight.create({
+                const flight = await getCore().modules.flight.createFlight({
                     drone_id: drone.id,
                     workspace_id: connection.workspace_id
                 })

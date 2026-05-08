@@ -1,7 +1,7 @@
 import {DBInsert_Flight, DBInsert_Flight_Data, DBUpdate_Flight, delete_Flight, insert_Flight, insert_Flight_Data, select_Flight, update_Flight} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
-import { DBType_Flight, DBType_Flight_Data } from '../../generated-definitions/db/DBTypes'
+import { DBType_Flight, DBType_Flight_Data, DBType_Flight_User_TYPES, DBType_Flight_User_TypeType, DBType_Task_StateType } from '../../generated-definitions/db/DBTypes'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -14,7 +14,7 @@ export default class FlightModule extends Module_Base<
     {
         create_flight: {
             eventDataType: DBType_Flight,
-            availableContexts: 'id' | 'workspaceId'
+            availableContexts: 'workspaceId'
         },
         update_flight: {
             eventDataType: DBType_Flight,
@@ -35,11 +35,10 @@ export default class FlightModule extends Module_Base<
         super()
     }
 
-    async create(data: DBInsert_Flight){
+    async createFlight(data: DBInsert_Flight){
         const flight = await insert_Flight(data)
 
         this.dispatch('create_flight', {
-            id: flight.id,
             workspaceId: flight.workspace_id
         }, flight)
 
@@ -138,4 +137,15 @@ export default class FlightModule extends Module_Base<
         return flight.workspace_id
     }
 
+
+
+    validateFlightUserType(type: number): DBType_Flight_User_TypeType {
+        if(typeof type === 'number'){
+            if(Object.values(DBType_Flight_User_TYPES).includes(type as unknown as DBType_Flight_User_TypeType)){
+                return type as DBType_Flight_User_TypeType
+            }
+        }
+
+        throw new Error('invalid flight user type: ' + type)
+    }
 }

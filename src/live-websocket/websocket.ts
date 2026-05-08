@@ -200,7 +200,7 @@ export function registerSubscribableEvent<T extends server_to_client.Message_Typ
     return handler
 }
 
-export type OnNewSubscriberCallback<T> = (event: T, filter: EventFilter, client: ClientData) => ((undefined | string) | Promise<undefined | string>)
+export type OnNewSubscriberCallback<T> = (event: T, filter: EventFilter, client: ClientData) => ((void | undefined | string) | Promise<void | undefined | string>)
 export type OnSubscriberLeftCallback<T> = (event: T, filter: EventFilter, client: ClientData) => void
 
 export type {SubscribableEventHandler}

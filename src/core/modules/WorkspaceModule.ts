@@ -1,5 +1,5 @@
 
-import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
+import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, insert_Workspace_Permission, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
 import { DBType_Workspace } from '../../generated-definitions/db/DBTypes'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
@@ -99,4 +99,13 @@ export default class WorkspaceModule extends Module_Base<
     getWorkspaceSafe = makeFunctionIdSafe(this, this.getWorkspace)
 
     //TODO move all the workspace scoped events in here ??? (like drone position and such)
+
+    async inviteTeam(workspaceId: number, teamId: number){
+        const workspace = this.getWorkspaceSafe(workspaceId)
+
+        await insert_Workspace_Permission({
+            workspace_id: workspaceId,
+            team_id: teamId
+        })
+    }
 }

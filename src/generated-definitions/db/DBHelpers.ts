@@ -1,5 +1,6 @@
 import * as pgp from 'pg-promise'
-    const db : pgp.IDatabase<any> = global.db
+//@ts-ignore
+const db : pgp.IDatabase<any> = global.db
 
 
 
@@ -818,12 +819,18 @@ export type DBInsert_Workspace = {
     name: string
     longitude: number
     latitude: number
+    owner_team_id?: number
+    owner_organisation_id?: number
+    created_by: number
 }
 
 export type DBUpdate_Workspace = {
     name?: string
     longitude?: number
     latitude?: number
+    owner_team_id?: number
+    owner_organisation_id?: number
+    created_by?: number
 }
 const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -838,6 +845,17 @@ const COLUMN_SET_WORKSPACES = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "latitude"
+    },
+    {
+        "name": "owner_team_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "owner_organisation_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by"
     }
 ], {table: "workspaces"})
 
@@ -856,6 +874,18 @@ const COLUMN_SET_WORKSPACES_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "latitude",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "owner_team_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "owner_organisation_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by",
         "skip": col => !col.exists
     }
 ], {table: "workspaces"})
@@ -1590,6 +1620,9 @@ export type DBInsert_Flight = {
     started_at?: string
     landed_at?: string
     ended_at?: string
+    is_created_manually?: boolean
+    is_changed_manually?: boolean
+    updated_by?: number
 }
 
 export type DBUpdate_Flight = {
@@ -1598,6 +1631,9 @@ export type DBUpdate_Flight = {
     started_at?: string
     landed_at?: string
     ended_at?: string
+    is_created_manually?: boolean
+    is_changed_manually?: boolean
+    updated_by?: number
 }
 const COLUMN_SET_FLIGHTS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -1620,6 +1656,18 @@ const COLUMN_SET_FLIGHTS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "ended_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_created_manually",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_changed_manually",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_by",
         "skip": col => !col.exists
     }
 ], {table: "flights"})
@@ -1647,6 +1695,18 @@ const COLUMN_SET_FLIGHTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "ended_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_created_manually",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_changed_manually",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_by",
         "skip": col => !col.exists
     }
 ], {table: "flights"})
@@ -1748,6 +1808,126 @@ import {DBType_Flight} from './DBTypes'
         }
 
     }
+
+
+//flight_users
+
+import {DBType_Flight_User_TypeType} from "./DBTypes";
+
+export type DBInsert_Flight_User = {
+    flight_id: number
+    user_id: number
+    type: DBType_Flight_User_TypeType
+    created_by: number
+}
+
+export type DBUpdate_Flight_User = {
+    flight_id?: number
+    user_id?: number
+    type?: DBType_Flight_User_TypeType
+    created_by?: number
+}
+const COLUMN_SET_FLIGHT_USERS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "flight_id"
+    },
+    {
+        "name": "user_id"
+    },
+    {
+        "name": "type"
+    },
+    {
+        "name": "created_by"
+    }
+], {table: "flight_users"})
+
+const COLUMN_SET_FLIGHT_USERS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "flight_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "user_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "type",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by",
+        "skip": col => !col.exists
+    }
+], {table: "flight_users"})
+import {DBType_Flight_User} from './DBTypes'
+
+
+    export function insert_Flight_User(values: DBInsert_Flight_User){
+        return db.one<DBType_Flight_User>(db.$config.pgp.helpers.insert(values, undefined, 'flight_users') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Flight_User<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight_User): Promise<T extends number ? false | DBType_Flight_User : DBType_Flight_User[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_USERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_USERS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Flight_User<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Flight_User : DBType_Flight_User[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Flight_User>('DELETE FROM flight_users WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Flight_User>('DELETE FROM flight_users ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
 
 
 //flight_data
@@ -2688,6 +2868,514 @@ import {DBType_Geo_Object} from './DBTypes'
         }
 
     }
+
+
+//missions
+
+import {DBType_Mission_StateType} from "./DBTypes";
+
+export type DBInsert_Mission = {
+    workspace_id: number
+    name: string
+    description?: string
+    created_by: number
+    updated_by: number
+    created_at?: string
+    updated_at?: string
+    assigned_to_team_id?: number
+    state?: DBType_Mission_StateType
+}
+
+export type DBUpdate_Mission = {
+    workspace_id?: number
+    name?: string
+    description?: string
+    created_by?: number
+    updated_by?: number
+    created_at?: string
+    updated_at?: string
+    assigned_to_team_id?: number
+    state?: DBType_Mission_StateType
+}
+const COLUMN_SET_MISSIONS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "workspace_id"
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "description",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by"
+    },
+    {
+        "name": "updated_by"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "assigned_to_team_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    }
+], {table: "missions"})
+
+const COLUMN_SET_MISSIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "workspace_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "description",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "assigned_to_team_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    }
+], {table: "missions"})
+import {DBType_Mission} from './DBTypes'
+
+
+    export function insert_Mission(values: DBInsert_Mission){
+        return db.one<DBType_Mission>(db.$config.pgp.helpers.insert(values, undefined, 'missions') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Mission<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Mission): Promise<T extends number ? false | DBType_Mission : DBType_Mission[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Mission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_MISSIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Mission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_MISSIONS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Mission<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Mission : DBType_Mission[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Mission>('DELETE FROM missions WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Mission>('DELETE FROM missions ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Mission<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Mission : DBType_Mission[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Mission>('SELECT * FROM missions ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Mission>('SELECT * FROM missions ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
+    }
+
+
+//tasks
+
+import {DBType_Task_StateType} from "./DBTypes";
+
+export type DBInsert_Task = {
+    mission_id: number
+    name: string
+    description?: string
+    created_by: number
+    updated_by: number
+    created_at?: string
+    updated_at?: string
+    state?: DBType_Task_StateType
+}
+
+export type DBUpdate_Task = {
+    mission_id?: number
+    name?: string
+    description?: string
+    created_by?: number
+    updated_by?: number
+    created_at?: string
+    updated_at?: string
+    state?: DBType_Task_StateType
+}
+const COLUMN_SET_TASKS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "mission_id"
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "description",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by"
+    },
+    {
+        "name": "updated_by"
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    }
+], {table: "tasks"})
+
+const COLUMN_SET_TASKS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "mission_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "description",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_by",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "state",
+        "skip": col => !col.exists
+    }
+], {table: "tasks"})
+import {DBType_Task} from './DBTypes'
+
+
+    export function insert_Task(values: DBInsert_Task){
+        return db.one<DBType_Task>(db.$config.pgp.helpers.insert(values, undefined, 'tasks') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Task<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Task): Promise<T extends number ? false | DBType_Task : DBType_Task[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Task>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASKS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Task>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASKS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Task<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Task : DBType_Task[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Task>('DELETE FROM tasks WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Task>('DELETE FROM tasks ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function select_Task<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Task : DBType_Task[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Task>('SELECT * FROM tasks ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Task>('SELECT * FROM tasks ' + whereCondition)
+
+            //@ts-ignore
+            return ret
+        }
+
+    }
+
+
+//task_geo_objects
+
+import {} from "./DBTypes";
+
+export type DBInsert_Task_Geo_Object = {
+    geo_object_id: number
+    task_id: number
+}
+
+export type DBUpdate_Task_Geo_Object = {
+    geo_object_id?: number
+    task_id?: number
+}
+const COLUMN_SET_TASK_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "geo_object_id"
+    },
+    {
+        "name": "task_id"
+    }
+], {table: "task_geo_objects"})
+
+const COLUMN_SET_TASK_GEO_OBJECTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "geo_object_id",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "task_id",
+        "skip": col => !col.exists
+    }
+], {table: "task_geo_objects"})
+import {DBType_Task_Geo_Object} from './DBTypes'
+
+
+    export function insert_Task_Geo_Object(values: DBInsert_Task_Geo_Object){
+        return db.one<DBType_Task_Geo_Object>(db.$config.pgp.helpers.insert(values, undefined, 'task_geo_objects') + ' RETURNING *')
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Task_Geo_Object<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Task_Geo_Object): Promise<T extends number ? false | DBType_Task_Geo_Object : DBType_Task_Geo_Object[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Task_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASK_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Task_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASK_GEO_OBJECTS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Task_Geo_Object<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Task_Geo_Object : DBType_Task_Geo_Object[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Task_Geo_Object>('DELETE FROM task_geo_objects WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Task_Geo_Object>('DELETE FROM task_geo_objects ' + whereCondition + ' RETURNING *')
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    
 
 
 //api_endpoint_performances

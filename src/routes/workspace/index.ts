@@ -1,9 +1,9 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Connections_Post, ApiSchema_Workspace_Connections_Post_Response, ApiSchema_Workspace_Files, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Connections_Post, ApiType_Workspace_Connections_Post_Response, ApiType_Workspace_Files, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
-import { DBType_Connection, DBType_File, DBType_Workspace } from '../../generated-definitions/db/DBTypes';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Connections_Post, ApiSchema_Workspace_Connections_Post_Response, ApiSchema_Workspace_Files, ApiSchema_Workspace_Invite_Team_Post, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Connections_Post, ApiType_Workspace_Connections_Post_Response, ApiType_Workspace_Files, ApiType_Workspace_Invite_Team_Post, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
+import { DBType_Connection, DBType_File, DBType_Workspace, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes';
 import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
 import { getCore } from '../../core';
@@ -48,7 +48,9 @@ router.post('/', asyncHandler(async (req, res) => {
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspaces_Post>(ApiSchema_Workspaces_Post)
 
-    const workspace = await getCore().modules.workspace.createWorkspace(requestBody)
+    const workspace = await getCore().modules.workspace.createWorkspace(assignObject(requestBody, {
+        created_by: (await req.GM.getCurrentUser()).id
+    }))
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
@@ -95,7 +97,6 @@ router.delete('/:workspace_id', asyncHandler(async (req, res) => {
 }))
 
 // connection
-
 
 router.get('/:workspace_id/connections', asyncHandler(async (req, res) => {
 
@@ -201,7 +202,7 @@ router.patch('/:workspace_id/file/:file_id', multerMiddleware.single('file'), as
         throw GuardError._400_invalidBody('file')
     }
 
-    throw new Error('not implementet')
+    throw new Error('not implemented')
     //TODO fix this broken code
     // we currently create a new file, instead of changing the old file
 
@@ -235,7 +236,41 @@ router.delete('/:workspace_id/file/:file_id', asyncHandler(async (req, res) => {
 }))
 
 
-router.use('/:workspace_id/geo-objects', (req, res, next) => {//TODO make sure if this check actually happens first before any other processing
+router.post('/:workspace_id/invite-team', asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = await getCore().modules.workspace.getWorkspace(workspaceId)
+
+    if(workspace === false){
+        throw GuardError._410_Gone()
+    }
+
+    //TODO restrict to user that owns the team?
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    let ownsTeam = false
+
+    if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id !== 'number'){
+        ownsTeam = await getCore().modules.team.userOwnsTeam((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForTeam).owner_team_id)
+    } else {
+        ownsTeam = await getCore().modules.organisation.userOwnsOrganisation((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForOrganisation).owner_organisation_id)
+    }
+
+    if(!ownsTeam){
+        throw GuardError._403_Forbidden()
+    }
+
+    const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Invite_Team_Post>(ApiSchema_Workspace_Invite_Team_Post)
+
+    await getCore().modules.workspace.inviteTeam(workspaceId, requestBody.team_id)
+
+    res.send()
+
+}))
+
+
+router.use('/:workspace_id/geo-object', (req, res, next) => {//TODO make sure if this check actually happens first before any other processing
 
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
@@ -255,7 +290,9 @@ router.use('/:workspace_id/geo-objects', (req, res, next) => {//TODO make sure i
 
 })
 
+
 import geoObjectsRoute from './geo-objects'
+import { assignObject } from '../../util/typescript';
 router.use('/:workspace_id/geo-objects', geoObjectsRoute)
 
 export default router

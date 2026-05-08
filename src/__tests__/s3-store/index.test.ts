@@ -73,7 +73,7 @@ describe('object manipulation', ()=>{
 
     test('upload and overwrite object', async()=>{
 
-        const inputFile = path.resolve('./public/logo.png')
+        const inputFile = path.resolve('./public/index.html')
 
         const fileName = 'test_upload.png'
 
@@ -84,7 +84,7 @@ describe('object manipulation', ()=>{
 
     test('upload and delete object', async()=>{
 
-        const inputFile = path.resolve('./public/logo.png')
+        const inputFile = path.resolve('./public/index.html')
 
         const fileName = 'test_upload.png'
 
@@ -95,7 +95,7 @@ describe('object manipulation', ()=>{
 
     test('upload and delete object', async()=>{
 
-        const inputFile = path.resolve('./public/logo.png')
+        const inputFile = path.resolve('./public/index.html')
 
         const TEST_OBJECT_KEY = 'test-object.png'
 
@@ -107,7 +107,7 @@ describe('object manipulation', ()=>{
 
     test('upload, download and delete object', async()=>{
 
-        const inputFile = path.resolve('./public/logo.png')
+        const inputFile = path.resolve('./public/index.html')
 
         const TEST_OBJECT_KEY = 'test-object.png'
 

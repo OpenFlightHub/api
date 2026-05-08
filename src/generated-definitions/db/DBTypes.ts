@@ -1,3 +1,4 @@
+
 export type DBType_User_StateType = 0|1|2|3
 export const DBType_User_STATES = {
   invited: 0,
@@ -48,6 +49,7 @@ export type DBType_User = {
 }
 
 
+
 export type DBType_Team_StateType = 0|1|2|3
 export const DBType_Team_STATES = {
   invited: 0,
@@ -68,6 +70,7 @@ export type DBType_Team = {
     state: DBType_Team_StateType;
     logo_file_id?: number;
 }
+
 
 
 export type DBType_Organisation_StateType = 0|1|2|3
@@ -116,15 +119,26 @@ export type DBType_File = {
 
 
 
-export type DBType_Workspace = {
+
+export type DBType_Workspace = DBType_Workspace_ForOrganisation | DBType_Workspace_ForTeam
+
+export type DBType_Workspace_ForOrganisation = {
     id: number;
     name: string;
     longitude: number;
     latitude: number;
+    owner_organisation_id: number;
+    created_by: number;
 }
 
-
-
+export type DBType_Workspace_ForTeam = {
+    id: number;
+    name: string;
+    longitude: number;
+    latitude: number;
+    owner_team_id: number;
+    created_by: number;
+}
 export type DBType_Workspace_Permission = {
     team_id: number;
     workspace_id: number;
@@ -154,6 +168,7 @@ export type DBType_Connection = {
 }
 
 
+
 export type DBType_Remote_Controller_TypeType = 0|1|2|3|4
 export const DBType_Remote_Controller_TYPES = {
   unknown: 0,
@@ -171,6 +186,7 @@ export type DBType_Remote_Controller = {
      */
     type: DBType_Remote_Controller_TypeType;
 }
+
 
 
 export type DBType_Drone_TypeType = 0|1|2|3|4
@@ -192,7 +208,7 @@ export type DBType_Drone = {
     type: DBType_Drone_TypeType;
     last_connection_id?: number;
     /**
-     * should never every be null
+     * should never ever be null
      */
     current_flight_id?: number;
     in_flight: boolean;
@@ -213,7 +229,37 @@ export type DBType_Flight = {
      */
     landed_at?: string;
     ended_at?: string;
+    /**
+     * false = is created by telemetry input
+     */
+    is_created_manually: boolean;
+    /**
+     * true if any data has been changed by a user (always true if is_created_manually = true)
+     */
+    is_changed_manually: boolean;
+    updated_by?: number;
 }
+
+
+
+export type DBType_Flight_User_TypeType = 0|1|2|3
+export const DBType_Flight_User_TYPES = {
+  pilot: 0,
+  sensor_operator: 1,
+  leader: 2,
+  air_space_monitoring: 3
+} as const
+
+export type DBType_Flight_User = {
+    flight_id: number;
+    user_id: number;
+    /**
+     * 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+     */
+    type: DBType_Flight_User_TypeType;
+    created_by: number;
+}
+
 
 
 export type DBType_Flight_Data_TypeType = 0
@@ -240,6 +286,7 @@ export type DBType_Flight_Data = {
 }
 
 
+
 export type DBType_Remote_Controller_Data_TypeType = 0
 export const DBType_Remote_Controller_Data_TYPES = {
   position: 0
@@ -255,6 +302,7 @@ export type DBType_Remote_Controller_Data = {
     data: any;
     created_at: string;
 }
+
 
 
 export type DBType_Drone_Data_TypeType = 0|1
@@ -274,6 +322,7 @@ export type DBType_Drone_Data = {
     data: any;
     created_at: string;
 }
+
 
 
 export type DBType_Drone_Media_TypeType = 0|1|2
@@ -387,6 +436,68 @@ export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType
 ) : type extends 2 ? (
     {longitude: number, latitude: number, symbol: string, height?: number, heading?: number, speed?: number}
 ) : unknown
+export type DBType_Mission_StateType = 0|1|2|3|4|5
+export const DBType_Mission_STATES = {
+  pending: 0,
+  accepted: 1,
+  in_progress: 2,
+  done: 3,
+  rejected: 4,
+  failed: 5
+} as const
+
+export type DBType_Mission = {
+    id: number;
+    workspace_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    created_at: string;
+    updated_at: string;
+    assigned_to_team_id?: number;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: DBType_Mission_StateType;
+}
+
+
+
+export type DBType_Task_StateType = 0|1|2|3|4|5
+export const DBType_Task_STATES = {
+  pending: 0,
+  accepted: 1,
+  in_progress: 2,
+  done: 3,
+  rejected: 4,
+  failed: 5
+} as const
+
+export type DBType_Task = {
+    id: number;
+    mission_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    created_at: string;
+    updated_at: string;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: DBType_Task_StateType;
+}
+
+
+
+export type DBType_Task_Geo_Object = {
+    geo_object_id: number;
+    task_id: number;
+}
+
+
+
 export type DBType_Api_Endpoint_Performance = {
     id: number;
     url_with_id_params: string;

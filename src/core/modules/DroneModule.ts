@@ -1,4 +1,4 @@
-import {DBInsert_Drone, DBInsert_Drone_Data, DBUpdate_Drone, delete_Drone, insert_Drone, insert_Drone_Data, select_Drone, select_Workspace, update_Drone} from '../../generated-definitions/db/DBHelpers'
+import {DBInsert_Drone, DBInsert_Drone_Data, DBUpdate_Drone, delete_Drone, insert_Drone, insert_Drone_Data, select_Connection, select_Drone, select_Workspace, update_Drone} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Drone, DBType_Drone_Data, DBType_Drone_Data_TYPES, DBType_Drone_Data_TypeType } from '../../generated-definitions/db/DBTypes'
@@ -185,7 +185,7 @@ export default class DroneModule extends Module_Base<
         let drone = await this.getDroneSafe(data.drone_id)
 
         if(typeof drone.current_flight_id !== 'number'){
-            const newFlight = await getCore().modules.flight.create({
+            const newFlight = await getCore().modules.flight.createFlight({
                 drone_id: drone.id,
                 workspace_id: await this.getCurrentWorkspaceOfDroneOrDefault(drone.id, 0)
             })
@@ -249,7 +249,7 @@ export default class DroneModule extends Module_Base<
 
         await this.insertDroneData({
             drone_id: droneId,
-            flight_id: drone.current_flight_id,
+            flight_id: drone.current_flight_id!,
             type,
             data
         })
@@ -317,16 +317,16 @@ export default class DroneModule extends Module_Base<
         if(isInFlight && !drone.in_flight){
             // start new flight and end old one
 
-            const currentFlight = await getCore().modules.flight.getFlightSafe(drone.current_flight_id)
+            const currentFlight = await getCore().modules.flight.getFlightSafe(drone.current_flight_id!)
 
-            await getCore().modules.flight.updateFlight(drone.current_flight_id, {
+            await getCore().modules.flight.updateFlight(drone.current_flight_id!, {
                 ended_at: new Date().toISOString(),
                 landed_at: currentFlight.landed_at || new Date().toISOString()
             })
 
             const currentWorkspace = await this.getCurrentWorkspaceOfDrone(drone.id)
 
-            const newFlight = await getCore().modules.flight.create({
+            const newFlight = await getCore().modules.flight.createFlight({
                 drone_id: drone.id,
                 workspace_id: currentWorkspace === false ? 0 : currentWorkspace
             })
@@ -344,7 +344,7 @@ export default class DroneModule extends Module_Base<
         if(!isInFlight && drone.in_flight){
             // mark flight as landed
 
-            await getCore().modules.flight.updateFlight(drone.current_flight_id, {
+            await getCore().modules.flight.updateFlight(drone.current_flight_id!, {
                 landed_at: new Date().toISOString()
             })
 
@@ -386,9 +386,7 @@ export default class DroneModule extends Module_Base<
             return false
         }
 
-        const connection = await db.oneOrNone('SELECT * FROM connections WHERE id = ${id}', {
-            id: droneOrDroneId.last_connection_id
-        })
+        const connection = await select_Connection(droneOrDroneId.last_connection_id)
 
         if(connection){
             return connection

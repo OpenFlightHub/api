@@ -352,7 +352,8 @@ export const ApiSchema_Team_Post : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
-        "organisation_id"
+        "organisation_id",
+        "owner_user_id"
     ],
     "properties": {
         "name": {
@@ -360,6 +361,10 @@ export const ApiSchema_Team_Post : JSONSchema4  = {
             "example": "Harry Potter"
         },
         "organisation_id": {
+            "type": "number",
+            "example": 42
+        },
+        "owner_user_id": {
             "type": "number",
             "example": 42
         },
@@ -444,15 +449,20 @@ export const ApiSchema_Organisation : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Organisation_Post : JSONSchema4  = {
+export const ApiSchema_Admin_Create_Organisation_Post : JSONSchema4  = {
     "type": "object",
     "required": [
-        "name"
+        "name",
+        "owner_user_id"
     ],
     "properties": {
         "name": {
             "type": "string",
             "example": "Harry Potter"
+        },
+        "owner_user_id": {
+            "type": "number",
+            "example": 42
         },
         "logo_file_id": {
             "type": "number",
@@ -496,7 +506,7 @@ export const ApiSchema_Organisation_Teams : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Admin_User_Post : JSONSchema4  = {
+export const ApiSchema_Admin_Create_User_Post : JSONSchema4  = {
     "type": "object",
     "required": [
         "email"
@@ -769,12 +779,76 @@ export const ApiSchema_File_Get_Multiple_Post : JSONSchema4  = {
 }
 
 export const ApiSchema_Workspace : JSONSchema4  = {
+    "oneOf": [
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "longitude",
+                "latitude",
+                "owner_team_id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "owner_team_id": {
+                    "type": "number",
+                    "example": 42
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "longitude",
+                "latitude",
+                "owner_organisation_id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "owner_organisation_id": {
+                    "type": "number",
+                    "example": 42
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Workspace_For_Organisation : JSONSchema4  = {
     "type": "object",
     "required": [
         "id",
         "name",
         "longitude",
-        "latitude"
+        "latitude",
+        "owner_organisation_id"
     ],
     "properties": {
         "id": {
@@ -789,6 +863,40 @@ export const ApiSchema_Workspace : JSONSchema4  = {
         },
         "latitude": {
             "type": "number"
+        },
+        "owner_organisation_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Workspace_For_Team : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "longitude",
+        "latitude",
+        "owner_team_id"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "owner_team_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -798,16 +906,76 @@ export const ApiSchema_Workspace_Patch : JSONSchema4  = {
     "properties": {
         "name": {
             "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
         }
     }
 }
 
 export const ApiSchema_Workspaces_Post : JSONSchema4  = {
+    "oneOf": [
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "longitude",
+                "latitude",
+                "team_id"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "team_id": {
+                    "type": "number",
+                    "example": 42
+                }
+            }
+        },
+        {
+            "type": "object",
+            "required": [
+                "name",
+                "longitude",
+                "latitude",
+                "organisation_id"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "organisation_id": {
+                    "type": "number",
+                    "example": 42
+                }
+            }
+        }
+    ]
+}
+
+export const ApiSchema_Workspaces_Post_For_Team : JSONSchema4  = {
     "type": "object",
     "required": [
         "name",
         "longitude",
-        "latitude"
+        "latitude",
+        "team_id"
     ],
     "properties": {
         "name": {
@@ -818,6 +986,35 @@ export const ApiSchema_Workspaces_Post : JSONSchema4  = {
         },
         "latitude": {
             "type": "number"
+        },
+        "team_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Workspaces_Post_For_Organisation : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "longitude",
+        "latitude",
+        "organisation_id"
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "longitude": {
+            "type": "number"
+        },
+        "latitude": {
+            "type": "number"
+        },
+        "organisation_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -875,6 +1072,19 @@ export const ApiSchema_Workspace_File_Patch : JSONSchema4  = {
     "properties": {
         "filename": {
             "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_Workspace_Invite_Team_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "team_id"
+    ],
+    "properties": {
+        "team_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -5105,7 +5315,9 @@ export const ApiSchema_Drone_Flights : JSONSchema4  = {
             "id",
             "drone_id",
             "started_at",
-            "track"
+            "track",
+            "is_created_manually",
+            "is_changed_manually"
         ],
         "properties": {
             "id": {
@@ -5162,6 +5374,17 @@ export const ApiSchema_Drone_Flights : JSONSchema4  = {
                         }
                     }
                 }
+            },
+            "is_created_manually": {
+                "type": "boolean"
+            },
+            "is_changed_manually": {
+                "type": "boolean",
+                "description": "if this is true, updated_by will be have the id of the user that performed the last edit"
+            },
+            "updated_by": {
+                "type": "number",
+                "example": 42
             }
         }
     }
@@ -5173,6 +5396,88 @@ export const ApiSchema_Flight : JSONSchema4  = {
         "id",
         "drone_id",
         "started_at",
+        "track",
+        "is_created_manually",
+        "is_changed_manually"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "drone_id": {
+            "type": "number",
+            "example": 42
+        },
+        "started_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "landed_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "ended_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "track": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "height",
+                    "longitude",
+                    "latitude",
+                    "time"
+                ],
+                "properties": {
+                    "height": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "time": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    }
+                }
+            }
+        },
+        "is_created_manually": {
+            "type": "boolean"
+        },
+        "is_changed_manually": {
+            "type": "boolean",
+            "description": "if this is true, updated_by will be have the id of the user that performed the last edit"
+        },
+        "updated_by": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Flight_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "drone_id",
+        "started_at",
+        "landed_at",
+        "ended_at",
         "track"
     ],
     "properties": {
@@ -5184,6 +5489,59 @@ export const ApiSchema_Flight : JSONSchema4  = {
             "type": "number",
             "example": 42
         },
+        "started_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "landed_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "ended_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "track": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "height",
+                    "longitude",
+                    "latitude",
+                    "time"
+                ],
+                "properties": {
+                    "height": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "time": {
+                        "type": "string",
+                        "format": "timestamptz",
+                        "description": "ISO 8601 format with a timezone",
+                        "example": "2023-12-11 23:06:52.7879+00"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const ApiSchema_Flight_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
         "started_at": {
             "type": "string",
             "format": "timestamptz",
@@ -5324,6 +5682,350 @@ export const ApiSchema_Flight_Media : JSONSchema4  = {
                     }
                 }
             }
+        }
+    }
+}
+
+export const ApiSchema_Flight_Users : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "flight_id",
+            "user_id",
+            "created_by",
+            "type"
+        ],
+        "properties": {
+            "flight_id": {
+                "type": "number",
+                "example": 42
+            },
+            "user_id": {
+                "type": "number",
+                "example": 42
+            },
+            "created_by": {
+                "type": "number",
+                "example": 42
+            },
+            "type": {
+                "type": "integer",
+                "description": "0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring"
+            }
+        }
+    }
+}
+
+export const ApiSchema_Flight_Users_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "user_id",
+        "type"
+    ],
+    "properties": {
+        "user_id": {
+            "type": "number",
+            "example": 42
+        },
+        "type": {
+            "type": "integer",
+            "description": "0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring"
+        }
+    }
+}
+
+export const ApiSchema_Flight_User : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "flight_id",
+        "user_id",
+        "created_by",
+        "type"
+    ],
+    "properties": {
+        "flight_id": {
+            "type": "number",
+            "example": 42
+        },
+        "user_id": {
+            "type": "number",
+            "example": 42
+        },
+        "created_by": {
+            "type": "number",
+            "example": 42
+        },
+        "type": {
+            "type": "integer",
+            "description": "0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring"
+        }
+    }
+}
+
+export const ApiSchema_Mission_State : JSONSchema4  = {
+    "type": "integer",
+    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+}
+
+export const ApiSchema_Task_State : JSONSchema4  = {
+    "type": "integer",
+    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+}
+
+export const ApiSchema_Mission : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "workspace_id",
+        "name",
+        "created_by",
+        "updated_by",
+        "created_at",
+        "updated_at",
+        "state"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "created_by": {
+            "type": "number",
+            "example": 42
+        },
+        "updated_by": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "assigned_to_team_id": {
+            "type": "number",
+            "example": 42
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+        }
+    }
+}
+
+export const ApiSchema_Mission_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "workspace_id",
+        "name"
+    ],
+    "properties": {
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "assigned_to_team_id": {
+            "type": "number",
+            "example": 42
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+        }
+    }
+}
+
+export const ApiSchema_Mission_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "assigned_to_team_id": {
+            "type": "number",
+            "example": 42
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+        }
+    }
+}
+
+export const ApiSchema_Mission_Tasks : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "mission_id",
+            "name",
+            "created_by",
+            "updated_by",
+            "created_at",
+            "updated_at",
+            "state"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "mission_id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "created_by": {
+                "type": "number",
+                "example": 42
+            },
+            "updated_by": {
+                "type": "number",
+                "example": 42
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "state": {
+                "type": "integer",
+                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            }
+        }
+    }
+}
+
+export const ApiSchema_Task : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "mission_id",
+        "name",
+        "created_by",
+        "updated_by",
+        "created_at",
+        "updated_at",
+        "state"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "mission_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "created_by": {
+            "type": "number",
+            "example": 42
+        },
+        "updated_by": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+        }
+    }
+}
+
+export const ApiSchema_Task_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "mission_id",
+        "name"
+    ],
+    "properties": {
+        "mission_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+        }
+    }
+}
+
+export const ApiSchema_Task_Patch : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "state": {
+            "type": "integer",
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
         }
     }
 }

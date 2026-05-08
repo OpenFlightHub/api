@@ -177,6 +177,7 @@ export type ApiType_Team = {
 export type ApiType_Team_Post = {
     name: string;
     organisation_id: number;
+    owner_user_id: number;
     logo_file_id?: number;
 }
 
@@ -212,8 +213,9 @@ export type ApiType_Organisation = {
 
 
 
-export type ApiType_Organisation_Post = {
+export type ApiType_Admin_Create_Organisation_Post = {
     name: string;
+    owner_user_id: number;
     logo_file_id?: number;
 }
 
@@ -232,7 +234,7 @@ export type ApiType_Organisation_Teams = {
 
 
 
-export type ApiType_Admin_User_Post = {
+export type ApiType_Admin_Create_User_Post = {
     name?: string;
     email: string;
 }
@@ -384,26 +386,85 @@ export type ApiType_File_Get_Multiple_Post = {
 }
 
 
+export type ApiType_Workspace =
+    | {
+          id: number;
+          name: string;
+          longitude: number;
+          latitude: number;
+          owner_team_id: number;
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          name: string;
+          longitude: number;
+          latitude: number;
+          owner_organisation_id: number;
+          [k: string]: unknown;
+      };
 
-export type ApiType_Workspace = {
+
+
+export type ApiType_Workspace_For_Organisation = {
     id: number;
     name: string;
     longitude: number;
     latitude: number;
+    owner_organisation_id: number;
+}
+
+
+
+export type ApiType_Workspace_For_Team = {
+    id: number;
+    name: string;
+    longitude: number;
+    latitude: number;
+    owner_team_id: number;
 }
 
 
 
 export type ApiType_Workspace_Patch = {
     name?: string;
+    longitude?: number;
+    latitude?: number;
+}
+
+
+export type ApiType_Workspaces_Post =
+    | {
+          name: string;
+          longitude: number;
+          latitude: number;
+          team_id: number;
+          [k: string]: unknown;
+      }
+    | {
+          name: string;
+          longitude: number;
+          latitude: number;
+          organisation_id: number;
+          [k: string]: unknown;
+      };
+
+
+
+export type ApiType_Workspaces_Post_For_Team = {
+    name: string;
+    longitude: number;
+    latitude: number;
+    team_id: number;
 }
 
 
 
-export type ApiType_Workspaces_Post = {
+export type ApiType_Workspaces_Post_For_Organisation = {
     name: string;
     longitude: number;
     latitude: number;
+    organisation_id: number;
 }
 
 
@@ -431,6 +492,12 @@ export type ApiType_Workspace_File_Post = {
 
 export type ApiType_Workspace_File_Patch = {
     filename?: string;
+}
+
+
+
+export type ApiType_Workspace_Invite_Team_Post = {
+    team_id: number;
 }
 
 
@@ -2332,6 +2399,12 @@ export type ApiType_Drone_Flights = {
          */
         time: string;
     }[];
+    is_created_manually: boolean;
+    /**
+     * if this is true, updated_by will be have the id of the user that performed the last edit
+     */
+    is_changed_manually: boolean;
+    updated_by?: number;
 }[];
 
 
@@ -2352,6 +2425,66 @@ export type ApiType_Flight = {
      */
     ended_at?: string;
     track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format with a timezone
+         */
+        time: string;
+    }[];
+    is_created_manually: boolean;
+    /**
+     * if this is true, updated_by will be have the id of the user that performed the last edit
+     */
+    is_changed_manually: boolean;
+    updated_by?: number;
+}
+
+
+
+export type ApiType_Flight_Post = {
+    id: number;
+    drone_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    started_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    landed_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    ended_at: string;
+    track: {
+        height: number;
+        longitude: number;
+        latitude: number;
+        /**
+         * ISO 8601 format with a timezone
+         */
+        time: string;
+    }[];
+}
+
+
+
+export type ApiType_Flight_Patch = {
+    /**
+     * ISO 8601 format with a timezone
+     */
+    started_at?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    landed_at?: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    ended_at?: string;
+    track?: {
         height: number;
         longitude: number;
         latitude: number;
@@ -2398,6 +2531,168 @@ export type ApiType_Flight_Media = {
         roll?: number;
     };
 }[];
+
+
+export type ApiType_Flight_Users = {
+    flight_id: number;
+    user_id: number;
+    created_by: number;
+    /**
+     * 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+     */
+    type: number;
+}[];
+
+
+
+export type ApiType_Flight_Users_Post = {
+    user_id: number;
+    /**
+     * 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+     */
+    type: number;
+}
+
+
+
+export type ApiType_Flight_User = {
+    flight_id: number;
+    user_id: number;
+    created_by: number;
+    /**
+     * 0 = pilot, 1 = sensor operator, 2 = leader, 3 = air space monitoring
+     */
+    type: number;
+}
+
+
+/**
+ * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+ */
+export type ApiType_Mission_State = number;
+
+
+/**
+ * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+ */
+export type ApiType_Task_State = number;
+
+
+
+export type ApiType_Mission = {
+    id: number;
+    workspace_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    assigned_to_team_id?: number;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: number;
+}
+
+
+
+export type ApiType_Mission_Post = {
+    workspace_id: number;
+    name: string;
+    description?: string;
+    assigned_to_team_id?: number;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state?: number;
+}
+
+
+
+export type ApiType_Mission_Patch = {
+    name?: string;
+    description?: string;
+    assigned_to_team_id?: number;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state?: number;
+}
+
+
+export type ApiType_Mission_Tasks = {
+    id: number;
+    mission_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: number;
+}[];
+
+
+
+export type ApiType_Task = {
+    id: number;
+    mission_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: number;
+}
+
+
+
+export type ApiType_Task_Post = {
+    mission_id: number;
+    name: string;
+    description?: string;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state?: number;
+}
+
+
+
+export type ApiType_Task_Patch = {
+    name?: string;
+    description?: string;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state?: number;
+}
 
 
 

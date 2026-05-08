@@ -1,3 +1,4 @@
+import { off } from 'process'
 import {EventManagerWithPublicDispatch} from '../util/event_manager'
 
 export default class Module_Base<
@@ -13,13 +14,34 @@ export default class Module_Base<
 
     private eventManager = new EventManagerWithPublicDispatch<{[key in keyof Events]: {data: Events[key]['eventDataType'], contexts: Pick<Contexts, Events[key]['availableContexts']>}}>()
 
-    listenTo<EventName extends keyof Events>(eventName: EventName, contexts: Partial<Pick<Contexts, Events[EventName]['availableContexts']>>, callback: (eventName: EventName, contexts: Pick<Contexts, Events[EventName]['availableContexts']>, eventData: Events[EventName]['eventDataType'])=>void){
+    /**
+     * @see stopListen
+     * @param contexts if not false, then your callback will only be called for those specific contexts values
+     * @returns use the returned function to stop listening to the event via stopListen()
+     */
+    listenTo<EventName extends keyof Events>(eventName: EventName, contexts: false | Partial<Pick<Contexts, Events[EventName]['availableContexts']>>, callback: (eventName: EventName, contexts: Pick<Contexts, Events[EventName]['availableContexts']>, eventData: Events[EventName]['eventDataType'])=>void){
 
-        this.eventManager.addListener(eventName, (data)=>{
+        const cb: Parameters<typeof this.eventManager.addListener>[1] = (data)=>{
             //TODO add try catch for better debugging when unhandled error?
 
-            callback(eventName, data.contexts, data.data)
-        })
+            if(contexts === false){
+                callback(eventName, data.contexts, data.data)
+            } else {
+                for(const [contextName, contextValue] of Object.entries(contexts)){
+                    if(data.contexts[contextName as keyof typeof data.contexts] === contextValue){
+                        callback(eventName, data.contexts, data.data)
+                        break
+                    }
+                }
+            }
+        }
+        this.eventManager.addListener(eventName, cb)
+
+        return cb
+    }
+
+    stopListen<EventName extends keyof Events>(eventName: EventName, handle: ReturnType<typeof this.listenTo>){
+        this.eventManager.removeListener(eventName, handle)
     }
 
     protected dispatch<EventName extends keyof Events>(eventName: EventName, contexts: Pick<Contexts, Events[EventName]['availableContexts']>, eventData: Events[EventName]['eventDataType']){

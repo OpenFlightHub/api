@@ -155,6 +155,35 @@ export default class TeamModule extends Module_Base<
         return false
     }
 
+    /**
+     * also returns true if user owns the team through owning the parent organisation or being admin
+     * @see userOwnsTeamDirectly
+     */
+    async userOwnsTeam(userId: number, teamId: number){
+        const team = await this.getTeamSafe(teamId)
+        if(team.owner_user_id === userId){
+            return true
+        }
+
+        if(typeof team.organisation_id !== 'number'){
+            return false
+        }
+
+        if(await getCore().modules.organisation.userOwnsOrganisation(userId, team.organisation_id)){
+            return true
+        }
+
+        return false
+    }
+
+    /**
+     * @see userOwnsTeam
+     */
+    async userOwnsTeamDirectly(userId: number, teamId: number){
+        const team = await this.getTeamSafe(teamId)
+        return team.owner_user_id === userId
+    }
+
     async getTeamsUserHasAccessTo(user: DBType_User){
         const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
 

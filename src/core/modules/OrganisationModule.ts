@@ -163,4 +163,30 @@ export default class OrganisationModule extends Module_Base<
     async getOrganisationTeams(organisationId: number){
         return await select_Team(pgp.as.format('WHERE organisation_id = ${organisationId}', {organisationId}))
     }
+
+    /**
+     * also returns true if user owns the team through owning the parent organisation or being admin
+     * @see userOwnsOrganisationDirectly
+     */
+    async userOwnsOrganisation(userId: number, organisationId: number){
+        const organisation = await this.getOrganisationSafe(organisationId)
+
+        if(organisation.owner_user_id === userId){
+            return true
+        }
+
+        if(await getCore().modules.user.userIsAdmin(userId)){
+            return true
+        }
+
+        return false
+    }
+
+    /**
+     * @see userOwnsOrganisation
+     */
+    async userOwnsOrganisationDirectly(userId: number, organisationId: number){
+        const organisation = await this.getOrganisationSafe(organisationId)
+        return organisation.owner_user_id === userId
+    }
 }

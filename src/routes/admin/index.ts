@@ -1,8 +1,8 @@
 import express from 'express';
 import { DBType_User } from '../../generated-definitions/db/DBTypes';
-import { ApiSchema_Admin_User_Post, ApiSchema_Reference } from '../../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Admin_Create_Organisation_Post, ApiSchema_Admin_Create_User_Post, ApiSchema_Reference } from '../../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Admin_User_Post, ApiType_Reference } from '../../generated-definitions/api/ApiTypes';
+import { ApiType_Admin_Create_Organisation_Post, ApiType_Admin_Create_User_Post, ApiType_Reference } from '../../generated-definitions/api/ApiTypes';
 import { getCore } from '../../core';
 
 import systemRoute from './system'
@@ -11,11 +11,11 @@ const router = express.Router()
 
 router.use('/system', systemRoute)
 
-router.post('/user', asyncHandler(async (req, res) => {
+router.post('/create-user', asyncHandler(async (req, res) => {
 
     const currentUser = await req.GM.guardUserIsAdmin()
 
-    const userToCreate = req.GM.guardBodySchema<ApiType_Admin_User_Post>(ApiSchema_Admin_User_Post)
+    const userToCreate = req.GM.guardBodySchema<ApiType_Admin_Create_User_Post>(ApiSchema_Admin_Create_User_Post)
 
     let createdUser: DBType_User
 
@@ -30,6 +30,22 @@ router.post('/user', asyncHandler(async (req, res) => {
 
     res.GM.guardSend<ApiType_Reference>(
         createdUser,
+        ApiSchema_Reference
+    )
+}))
+
+
+
+router.post('/create-organisation', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAdmin()
+
+    const requestBody = req.GM.guardBodySchema<ApiType_Admin_Create_Organisation_Post>(ApiSchema_Admin_Create_Organisation_Post)
+
+    const organisation = await getCore().modules.organisation.createOrganisation(requestBody)
+
+    res.GM.guardSend<ApiType_Reference>(
+        organisation,
         ApiSchema_Reference
     )
 }))
