@@ -1,7 +1,7 @@
 import express from 'express';
-import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_Invite_Member, ApiSchema_Team_Invite_Member_Post_Response, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Reference, ApiType_Team, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Reference, ApiType_Team, ApiType_Team_Invite_Member, ApiType_Team_Invite_Member_Post_Response, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
 
@@ -46,6 +46,72 @@ router.patch('/:team_id', asyncHandler(async (req, res) => {
         updatedTeam,
         ApiSchema_Team
     )
+}))
+
+
+router.post('/:team_id/invite-member', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const team_id = req.GM.guardParam('team_id', 'id')
+
+    const team = await getCore().modules.team.getTeam(team_id)
+
+    if(team === false){
+        throw GuardError._410_Gone()
+    }
+
+    const currentUser = await req.GM.getCurrentUser()
+
+    if(await getCore().modules.team.userOwnsTeam(currentUser.id, team_id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
+    const invitedUser = await getCore().modules.team.inviteUserToTeam(team_id, req.GM.guardBodySchema<ApiType_Team_Invite_Member>(ApiSchema_Team_Invite_Member).email, currentUser.id)
+
+    if(invitedUser === false){
+        throw GuardError._400_BadRequest('user already in a different team')
+    }
+
+    res.GM.guardSend<ApiType_Team_Invite_Member_Post_Response>(
+        invitedUser,
+        ApiSchema_Team_Invite_Member_Post_Response
+    )
+}))
+
+
+router.delete('/:team_id/member/:user_id', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const team_id = req.GM.guardParam('team_id', 'id')
+
+
+    const team = await getCore().modules.team.getTeam(team_id)
+
+    if(team === false){
+        throw GuardError._410_Gone()
+    }
+
+    const user_id = req.GM.guardParam('user_id', 'id')
+
+    const user = await getCore().modules.user.getUser(user_id)
+
+    if(user === false){
+        throw GuardError._410_Gone()
+    }
+
+    if(user.team_id !== team_id){
+        throw GuardError._400_BadRequest('user is not a member of this team')
+    }
+
+    if(await getCore().modules.team.userOwnsTeam((await req.GM.getCurrentUser()).id, team_id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
+    await getCore().modules.user.removeUserFromTeam(user_id)
+
+    res.send()
 }))
 
 router.get('/:team_id/members', asyncHandler(async (req, res) => {

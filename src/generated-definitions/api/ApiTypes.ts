@@ -189,6 +189,18 @@ export type ApiType_Team_Patch = {
 }
 
 
+
+export type ApiType_Team_Invite_Member = {
+    email: string;
+}
+
+
+
+export type ApiType_Team_Invite_Member_Post_Response = {
+    id: number;
+}
+
+
 export type ApiType_Team_Members = {
     id: number;
     name: string;
@@ -217,6 +229,13 @@ export type ApiType_Organisation_Patch = {
     name?: string;
     logo_file_id?: number;
 }
+
+
+export type ApiType_Organisation_Users = {
+    id: number;
+    name: string;
+    team_id?: number;
+}[];
 
 
 export type ApiType_Organisation_Teams = {

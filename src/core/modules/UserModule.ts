@@ -10,6 +10,7 @@ import { DBType_User, DBType_User_STATES, DBType_User_StateType, DBType_Workspac
 import { ApiType_Id } from '../../generated-definitions/api/ApiTypes'
 import { assignObject } from '../../util/typescript'
 import { firstCharAsUppercaseRestAsLowercase } from '../../util/string'
+import { getCore } from '..'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -297,6 +298,10 @@ export default class UserModule extends Module_Base<
             return false
         }
 
+        if(await getCore().modules.user.userIsAdmin(user)){
+            return true
+        }
+
         const res = await db.oneOrNone<DBType_Workspace_Permission>('SELECT * FROM workspace_permissions WHERE team_id = ${teamId} AND workspace_id = ${workspaceId}', {
             teamId: user.team_id,
             workspaceId
@@ -334,6 +339,49 @@ export default class UserModule extends Module_Base<
         }
 
         return user.id === 4
+    }
+
+
+    /**
+     *
+     * @returns falseif user is already in a different team
+     */
+    async assignUserToTeam(userId: number, teamId: number, ignoreIfAlreadyInTeam = false){
+
+        const user = await this.getUserSafe(userId)
+
+        if(user.team_id === teamId){
+            // user is already in the team, do nothing
+            return user
+        }
+
+        if(typeof user.team_id !== 'number' || ignoreIfAlreadyInTeam){
+            const updatedUser = await update_User(user.id, {
+                team_id: teamId
+            })
+
+            if(updatedUser === false){
+                throw new ModuleError_IdNotFound(user.id)
+            }
+
+            this.dispatch('update_user', {
+                id: user.id
+            }, updatedUser)
+
+            return user
+        } else {
+            return false
+        }
+    }
+
+    async removeUserFromTeam(userId: number){
+
+        const user = await this.getUserSafe(userId)
+
+        await update_User(user.id, {
+            //@ts-ignore
+            team_id: null
+        })
     }
 
 }

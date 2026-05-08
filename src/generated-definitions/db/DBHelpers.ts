@@ -608,7 +608,7 @@ import {DBType_Organisation} from './DBTypes'
 import {} from "./DBTypes";
 
 export type DBInsert_File = {
-    workspace_id: number
+    workspace_id?: number
     ext: string
     name: string
     created_at?: string
@@ -636,7 +636,8 @@ const COLUMN_SET_FILES = new db.$config.pgp.helpers.ColumnSet([
         "cnd": true
     },
     {
-        "name": "workspace_id"
+        "name": "workspace_id",
+        "skip": col => !col.exists
     },
     {
         "name": "ext"

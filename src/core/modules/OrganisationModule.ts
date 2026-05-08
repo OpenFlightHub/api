@@ -1,4 +1,4 @@
-import {DBUpdate_Organisation, delete_Organisation, insert_Organisation, select_Organisation, select_Team, update_Organisation} from '../../generated-definitions/db/DBHelpers'
+import {DBUpdate_Organisation, delete_Organisation, insert_Organisation, select_Organisation, select_Team, select_User, update_Organisation} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Organisation, DBType_Organisation_StateType, DBType_User } from '../../generated-definitions/db/DBTypes'
@@ -158,6 +158,10 @@ export default class OrganisationModule extends Module_Base<
         }
 
         return deduplicateIdArray(organisations)
+    }
+
+    async getOrganisationUsers(organisationId: number){
+        return await db.manyOrNone<DBType_User>('SELECT DISTINCT u.* FROM users u WHERE EXISTS ( SELECT 1 FROM teams t WHERE t.id = u.team_id AND t.organisation_id = ${organisationId} ) OR EXISTS ( SELECT 1 FROM organisations o WHERE o.id = ${organisationId} AND o.owner_user_id = u.id ) OR EXISTS ( SELECT 1 FROM teams t2 WHERE t2.owner_user_id = u.id AND t2.organisation_id = ${organisationId} );', {organisationId})
     }
 
     async getOrganisationTeams(organisationId: number){

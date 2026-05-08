@@ -1,4 +1,4 @@
-import {DBUpdate_Team, delete_Team, insert_Team, select_Team, select_User, update_Team} from '../../generated-definitions/db/DBHelpers'
+import {DBUpdate_Team, delete_Team, insert_Team, select_Team, select_User, update_Team, update_User} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Team, DBType_Team_StateType, DBType_User } from '../../generated-definitions/db/DBTypes'
@@ -196,5 +196,20 @@ export default class TeamModule extends Module_Base<
 
     async getTeamMembers(teamId: number){
         return await select_User(pgp.as.format('WHERE team_id = ${teamId}', {teamId}))
+    }
+
+    /**
+     *
+     * @returns false if user was already in different team
+     */
+    async inviteUserToTeam(teamId: number, email: string, invitedByUserId: number){
+
+        let user = await getCore().modules.user.getUserForEmail(email)
+
+        if(user === false){
+            user = await getCore().modules.user.createUserFromEmail(email, invitedByUserId)
+        }
+
+        return await getCore().modules.user.assignUserToTeam(user.id, teamId)
     }
 }

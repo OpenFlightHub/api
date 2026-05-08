@@ -507,6 +507,39 @@ paths:
       security:
         - user_auth: []
 
+  /team/{team_id}/invite-member:
+    post:
+      tags:
+        - organisations-and-teams
+      summary: Invite someone to a team
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/team_invite_member"
+        required: true
+      responses:
+        "200":
+          description: Returns id of invited user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/team_invite_member_post_response"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
 
   /team/{team_id}/members:
     get:
@@ -526,6 +559,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/team_members"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /team/{team_id}/member/{user_id}:
+    delete:
+      tags:
+        - organisations-and-teams
+      summary: Remove member from team
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: OK
 
         "400":
           $ref: "#/components/responses/400"
@@ -593,6 +657,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/organisation"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /organisation/{organisation_id}/users:
+    get:
+      tags:
+        - organisations-and-teams
+      summary: Get all users inside an organisation
+      parameters:
+        - name: organisation_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/organisation_users"
 
         "400":
           $ref: "#/components/responses/400"
@@ -2988,6 +3082,17 @@ components:
         logo_file_id:
           $ref: "#/components/schemas/id"
 
+    team_invite_member:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          $ref: "#/components/schemas/email"
+
+    team_invite_member_post_response:
+      $ref: "#/components/schemas/reference"
+
     team_members:
       type: array
       items:
@@ -3036,6 +3141,11 @@ components:
           example: Harry Potter
         logo_file_id:
           $ref: "#/components/schemas/id"
+
+    organisation_users:
+      type: array
+      items:
+        $ref: "#/components/schemas/user"
 
     organisation_teams:
       type: array

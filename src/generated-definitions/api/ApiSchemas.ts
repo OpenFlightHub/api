@@ -389,6 +389,32 @@ export const ApiSchema_Team_Patch : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Team_Invite_Member : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "email"
+    ],
+    "properties": {
+        "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+        }
+    }
+}
+
+export const ApiSchema_Team_Invite_Member_Post_Response : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
 export const ApiSchema_Team_Members : JSONSchema4  = {
     "type": "array",
     "items": {
@@ -459,6 +485,31 @@ export const ApiSchema_Organisation_Patch : JSONSchema4  = {
         "logo_file_id": {
             "type": "number",
             "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Organisation_Users : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string",
+                "example": "Harry Potter"
+            },
+            "team_id": {
+                "type": "number",
+                "example": 42
+            }
         }
     }
 }

@@ -97,7 +97,7 @@ export type DBType_Organisation = {
 
 export type DBType_File = {
     id: number;
-    workspace_id: number;
+    workspace_id?: number;
     ext: string;
     /**
      * full original name including extension
