@@ -449,28 +449,6 @@ export const ApiSchema_Organisation : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Admin_Create_Organisation_Post : JSONSchema4  = {
-    "type": "object",
-    "required": [
-        "name",
-        "owner_user_id"
-    ],
-    "properties": {
-        "name": {
-            "type": "string",
-            "example": "Harry Potter"
-        },
-        "owner_user_id": {
-            "type": "number",
-            "example": 42
-        },
-        "logo_file_id": {
-            "type": "number",
-            "example": 42
-        }
-    }
-}
-
 export const ApiSchema_Organisation_Patch : JSONSchema4  = {
     "type": "object",
     "properties": {
@@ -506,7 +484,53 @@ export const ApiSchema_Organisation_Teams : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Admin_Create_User_Post : JSONSchema4  = {
+export const ApiSchema_Admin_Users : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name",
+            "email",
+            "created_at",
+            "locale",
+            "registration_incomplete"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string",
+                "example": "Harry Potter"
+            },
+            "email": {
+                "type": "string",
+                "example": "john.doe@example.com"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "locale": {
+                "type": "string",
+                "example": "en-US"
+            },
+            "registration_incomplete": {
+                "type": "boolean"
+            },
+            "team_id": {
+                "type": "number",
+                "example": 42
+            }
+        }
+    }
+}
+
+export const ApiSchema_Admin_Users_Post : JSONSchema4  = {
     "type": "object",
     "required": [
         "email"
@@ -519,6 +543,70 @@ export const ApiSchema_Admin_Create_User_Post : JSONSchema4  = {
         "email": {
             "type": "string",
             "example": "john.doe@example.com"
+        }
+    }
+}
+
+export const ApiSchema_Admin_Organisations : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name",
+            "owner_user_id",
+            "created_at",
+            "state"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string",
+                "example": "Harry Potter"
+            },
+            "owner_user_id": {
+                "type": "number",
+                "example": 42
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "state": {
+                "type": "integer",
+                "description": "0 = invited, 1 = live, 2 = locked, 3 = deleted"
+            },
+            "logo_file_id": {
+                "type": "number",
+                "example": 42
+            }
+        }
+    }
+}
+
+export const ApiSchema_Admin_Organisation_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "name",
+        "owner_user_id"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "example": "Harry Potter"
+        },
+        "owner_user_id": {
+            "type": "number",
+            "example": 42
+        },
+        "logo_file_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }

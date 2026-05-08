@@ -213,14 +213,6 @@ export type ApiType_Organisation = {
 
 
 
-export type ApiType_Admin_Create_Organisation_Post = {
-    name: string;
-    owner_user_id: number;
-    logo_file_id?: number;
-}
-
-
-
 export type ApiType_Organisation_Patch = {
     name?: string;
     logo_file_id?: number;
@@ -233,10 +225,48 @@ export type ApiType_Organisation_Teams = {
 }[];
 
 
+export type ApiType_Admin_Users = {
+    id: number;
+    name: string;
+    email: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    locale: string;
+    registration_incomplete: boolean;
+    team_id?: number;
+}[];
 
-export type ApiType_Admin_Create_User_Post = {
+
+
+export type ApiType_Admin_Users_Post = {
     name?: string;
     email: string;
+}
+
+
+export type ApiType_Admin_Organisations = {
+    id: number;
+    name: string;
+    owner_user_id: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * 0 = invited, 1 = live, 2 = locked, 3 = deleted
+     */
+    state: number;
+    logo_file_id?: number;
+}[];
+
+
+
+export type ApiType_Admin_Organisation_Post = {
+    name: string;
+    owner_user_id: number;
+    logo_file_id?: number;
 }
 
 

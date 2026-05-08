@@ -12,8 +12,6 @@ const db = global.db as pgp.IDatabase<any>
 
 router.get('/os', asyncHandler(async (req, res) => {
 
-    await req.GM.guardUserIsAdmin()
-
     const cpuInfo = os.cpus()
 
     const cpuCountMap = new Map<string, number>()
@@ -48,8 +46,6 @@ router.get('/os', asyncHandler(async (req, res) => {
 
 
 router.get('/api-endpoints', asyncHandler(async (req, res) => {
-
-    await req.GM.guardUserIsAdmin()
 
     const result = await db.many(`
         SELECT
@@ -88,8 +84,6 @@ router.get('/api-endpoints', asyncHandler(async (req, res) => {
 
 
 router.get('/api-endpoint/details', asyncHandler(async (req, res) => {
-
-    await req.GM.guardUserIsAdmin()
 
     const endpoint = req.GM.guardQueryParam('endpoint', 'string')
 

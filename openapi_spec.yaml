@@ -637,7 +637,26 @@ paths:
 
   # admin
 
-  /admin/create-user:
+
+  /admin/users:
+    get:
+      tags:
+        - admin
+      summary: get all users
+      responses:
+        "200":
+          description: All users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/admin_users"
+
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
     post:
       tags:
         - admin
@@ -646,7 +665,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/admin_create_user_post"
+              $ref: "#/components/schemas/admin_users_post"
         required: true
       responses:
         "200":
@@ -666,16 +685,35 @@ paths:
         - user_auth: []
 
 
-  /admin/create-organisation:
+  /admin/organisations:
+    get:
+      tags:
+        - admin
+      summary: get all organisations
+      responses:
+        "200":
+          description: All organisations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/admin_organisations"
+
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
     post:
       tags:
-        - organisations-and-teams
+        - admin
       summary: Create an organisation
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/admin_create_organisation_post"
+              $ref: "#/components/schemas/admin_organisation_post"
         required: true
       responses:
         "200":
@@ -2990,20 +3028,6 @@ components:
         logo_file_id:
           $ref: "#/components/schemas/id"
 
-    admin_create_organisation_post:
-      type: object
-      required:
-        - name
-        - owner_user_id
-      properties:
-        name:
-          type: string
-          example: Harry Potter
-        owner_user_id:
-          $ref: "#/components/schemas/id"
-        logo_file_id:
-          $ref: "#/components/schemas/id"
-
     organisation_patch:
       type: object
       properties:
@@ -3029,7 +3053,12 @@ components:
 
     # admin
 
-    admin_create_user_post:
+    admin_users:
+      type: array
+      items:
+        $ref: "#/components/schemas/user_self"
+
+    admin_users_post:
       type: object
       required:
         - email
@@ -3039,6 +3068,25 @@ components:
           example: Harry Potter
         email:
           $ref: "#/components/schemas/email"
+
+    admin_organisations:
+      type: array
+      items:
+        $ref: "#/components/schemas/organisation"
+
+    admin_organisation_post:
+      type: object
+      required:
+        - name
+        - owner_user_id
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+        owner_user_id:
+          $ref: "#/components/schemas/id"
+        logo_file_id:
+          $ref: "#/components/schemas/id"
 
 
     admin_system_performance_os:

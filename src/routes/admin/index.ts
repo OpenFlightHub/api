@@ -1,53 +1,24 @@
 import express from 'express';
-import { DBType_User } from '../../generated-definitions/db/DBTypes';
-import { ApiSchema_Admin_Create_Organisation_Post, ApiSchema_Admin_Create_User_Post, ApiSchema_Reference } from '../../generated-definitions/api/ApiSchemas';
-import asyncHandler from 'express-async-handler'
-import { ApiType_Admin_Create_Organisation_Post, ApiType_Admin_Create_User_Post, ApiType_Reference } from '../../generated-definitions/api/ApiTypes';
-import { getCore } from '../../core';
-
-import systemRoute from './system'
 
 const router = express.Router()
 
+router.use((req, res, next) => {
+
+    req.GM.guardUserIsAdmin().then(()=>{
+        next()
+    }).catch(err => {
+        next(err)
+    })
+
+})
+
+import systemRoute from './system'
 router.use('/system', systemRoute)
 
-router.post('/create-user', asyncHandler(async (req, res) => {
+import usersRoute from './users'
+router.use('/users', usersRoute)
 
-    const currentUser = await req.GM.guardUserIsAdmin()
-
-    const userToCreate = req.GM.guardBodySchema<ApiType_Admin_Create_User_Post>(ApiSchema_Admin_Create_User_Post)
-
-    let createdUser: DBType_User
-
-    if(typeof userToCreate.name === 'string' && userToCreate.name.length > 0){
-        createdUser = await getCore().modules.user.createUser({
-            email: userToCreate.email,
-            name: userToCreate.name
-        }, currentUser.id)
-    } else {
-        createdUser = await getCore().modules.user.createUserFromEmail(userToCreate.email, currentUser.id)
-    }
-
-    res.GM.guardSend<ApiType_Reference>(
-        createdUser,
-        ApiSchema_Reference
-    )
-}))
-
-
-
-router.post('/create-organisation', asyncHandler(async (req, res) => {
-
-    await req.GM.guardUserIsAdmin()
-
-    const requestBody = req.GM.guardBodySchema<ApiType_Admin_Create_Organisation_Post>(ApiSchema_Admin_Create_Organisation_Post)
-
-    const organisation = await getCore().modules.organisation.createOrganisation(requestBody)
-
-    res.GM.guardSend<ApiType_Reference>(
-        organisation,
-        ApiSchema_Reference
-    )
-}))
+import organisationsRoute from './organisations'
+router.use('/organisations', organisationsRoute)
 
 export default router
