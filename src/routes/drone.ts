@@ -55,7 +55,7 @@ router.use('/:drone_id', asyncHandler(async(req, res, next) => {
 
 router.get('/:drone_id', asyncHandler(async (req, res) => {
 
-    res.GM.guardSend<ApiType_Drone>(req._drone, ApiSchema_Drone)
+    res.GM.guardSend<ApiType_Drone>(req._drone!, ApiSchema_Drone)
 }))
 
 
