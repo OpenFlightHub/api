@@ -1,7 +1,7 @@
 import express from 'express';
-import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_Invite_Member, ApiSchema_Team_Invite_Member_Post_Response, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_Invite_Member, ApiSchema_Team_Invite_Member_Post_Response, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post, ApiSchema_Team_Workspaces } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Reference, ApiType_Team, ApiType_Team_Invite_Member, ApiType_Team_Invite_Member_Post_Response, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Reference, ApiType_Team, ApiType_Team_Invite_Member, ApiType_Team_Invite_Member_Post_Response, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post, ApiType_Team_Workspaces } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
 
@@ -161,6 +161,26 @@ router.post('/', asyncHandler(async (req, res) => {
         team,
         ApiSchema_Reference
     )
+}))
+
+
+router.get('/:team_id/workspaces', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const team_id = req.GM.guardParam('team_id', 'id')
+
+    if(await getCore().modules.team.userCanViewTeam((await req.GM.getCurrentUser()).id, team_id) === false){
+        throw GuardError._403_Forbidden()
+    }
+
+    const workspaces = await getCore().modules.team.getWorkspacesForTeam(team_id)
+
+    if(workspaces === false){
+        throw GuardError._410_Gone()
+    }
+
+    res.GM.guardSend<ApiType_Team_Workspaces>(workspaces, ApiSchema_Team_Workspaces)
 }))
 
 export default router

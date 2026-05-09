@@ -436,6 +436,72 @@ export const ApiSchema_Team_Members : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Team_Workspaces : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "oneOf": [
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "longitude",
+                    "latitude",
+                    "owner_team_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "owner_team_id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "longitude",
+                    "latitude",
+                    "owner_organisation_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "owner_organisation_id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        ]
+    }
+}
+
 export const ApiSchema_Organisation : JSONSchema4  = {
     "type": "object",
     "required": [

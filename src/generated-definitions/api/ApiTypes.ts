@@ -207,6 +207,26 @@ export type ApiType_Team_Members = {
 }[];
 
 
+export type ApiType_Team_Workspaces = (
+    | {
+          id: number;
+          name: string;
+          longitude: number;
+          latitude: number;
+          owner_team_id: number;
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          name: string;
+          longitude: number;
+          latitude: number;
+          owner_organisation_id: number;
+          [k: string]: unknown;
+      }
+)[];
+
+
 
 export type ApiType_Organisation = {
     id: number;

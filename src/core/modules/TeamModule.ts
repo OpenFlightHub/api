@@ -1,4 +1,4 @@
-import {DBUpdate_Team, delete_Team, insert_Team, select_Team, select_User, update_Team, update_User} from '../../generated-definitions/db/DBHelpers'
+import {DBUpdate_Team, delete_Team, insert_Team, select_Team, select_User, select_Workspace, update_Team, update_User} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import * as pgp from 'pg-promise'
 import { DBType_Team, DBType_Team_StateType, DBType_User } from '../../generated-definitions/db/DBTypes'
@@ -211,5 +211,18 @@ export default class TeamModule extends Module_Base<
         }
 
         return await getCore().modules.user.assignUserToTeam(user.id, teamId)
+    }
+
+    /**
+     * @returns false if team does not exist
+     */
+    async getWorkspacesForTeam(teamId: number){
+        const team = await this.getTeam(teamId)
+
+        if(team === false){
+            return false
+        }
+
+        return await db.manyOrNone('SELECT * FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.team_id = ${teamId} OR workspaces.owner_team_id = ${teamId}', {teamId})
     }
 }

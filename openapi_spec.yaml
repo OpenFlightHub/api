@@ -602,6 +602,37 @@ paths:
       security:
         - user_auth: []
 
+
+  /team/{team_id}/workspaces:
+    get:
+      tags:
+        - workspace
+      summary: Get all your workspaces
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the workspaces of this team, workspaces come from different sources, either the team owns the workspace or the team has access to the workspace via permissions (in that case you can tell if the workspace belongs to the same organisation as the team by comparing team.organsiation_id with workspace.owner_organisation_id)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/team_workspaces"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
   # organisation
 
   /organisation/{organisation_id}:
@@ -3106,6 +3137,12 @@ components:
           name:
             type: string
             example: Harry Potter
+
+
+    team_workspaces:
+      type: array
+      items:
+        $ref: "#/components/schemas/workspace"
 
     # organisation
 
