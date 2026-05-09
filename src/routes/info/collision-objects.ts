@@ -36,7 +36,7 @@ type OpenStreetMapTags = {
 
 const router = express.Router()
 
-let collisionObjectsCache: ApiType_Info_Collision_Objects | null = null
+let collisionObjectsCache: ApiType_Info_Collision_Objects | null = []//just for dev reasons
 
 router.get('/', asyncHandler(async (req, res) => {
 
