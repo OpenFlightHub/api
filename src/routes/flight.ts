@@ -8,6 +8,7 @@ import { assignObject } from '../util/typescript';
 import { DBType_Drone_Media, DBType_Flight_User } from '../generated-definitions/db/DBTypes';
 import { getCore } from '../core';
 import { insert_Flight_User } from '../generated-definitions/db/DBHelpers';
+import dayjs from 'dayjs';
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -166,6 +167,20 @@ router.post('/', asyncHandler(async (req, res) => {
     }
 
     await req.GM.guardUserHasPermissionForWorkspace(lastConnection.workspace_id)
+
+    //TODO check if request body schema valdiation ensures dates are valid
+
+    if(typeof requestBody.ended_at === 'string' && dayjs(requestBody.ended_at).isBefore(dayjs(requestBody.started_at))){
+        throw GuardError._400_invalidBody('ended_at cannot be before started_at')
+    }
+
+    if(typeof requestBody.landed_at === 'string' && dayjs(requestBody.landed_at).isBefore(dayjs(requestBody.started_at))){
+        throw GuardError._400_invalidBody('landed_at cannot be before started_at')
+    }
+
+    if(requestBody.track && requestBody.track.length > 0){
+        throw GuardError._501_Not_Implemented('track is not supported yet')
+    }
 
     const flight = await getCore().modules.flight.createFlight({
         drone_id: requestBody.drone_id,

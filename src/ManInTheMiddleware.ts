@@ -575,4 +575,8 @@ export class GuardError extends Error {
         return this._make(410, 'Gone (Record not found)', detailedMessage)
     }
 
+    static _501_Not_Implemented(detailedMessage?: string){
+        return this._make(501, 'Not Implemented', detailedMessage)
+    }
+
 }
