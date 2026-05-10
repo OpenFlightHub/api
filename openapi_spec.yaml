@@ -4225,8 +4225,6 @@ components:
         - ended_at
         - track
       properties:
-        id:
-          $ref: "#/components/schemas/id"
         drone_id:
           $ref: "#/components/schemas/id"
         started_at:

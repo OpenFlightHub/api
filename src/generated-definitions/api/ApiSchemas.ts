@@ -5690,10 +5690,6 @@ export const ApiSchema_Flight_Post : JSONSchema4  = {
         "track"
     ],
     "properties": {
-        "id": {
-            "type": "number",
-            "example": 42
-        },
         "drone_id": {
             "type": "number",
             "example": 42

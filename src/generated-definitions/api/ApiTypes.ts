@@ -2514,7 +2514,6 @@ export type ApiType_Flight = {
 
 
 export type ApiType_Flight_Post = {
-    id?: number;
     drone_id: number;
     /**
      * ISO 8601 format with a timezone
