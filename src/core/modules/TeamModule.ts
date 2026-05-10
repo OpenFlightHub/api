@@ -192,7 +192,7 @@ export default class TeamModule extends Module_Base<
 
         const organisationsUserOwns = await getCore().modules.organisation.getOrganisationsUserOwns(user)
 
-        const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId} OR id = ${teamId} OR team.organisation.id in ${orgIds}', {
+        const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId} OR id = ${teamId} OR organisation_id in (${orgIds:csv})', {
             userId: user.id,
             teamId: user.team_id,
             orgIds: organisationsUserOwns.map(org => org.id)
