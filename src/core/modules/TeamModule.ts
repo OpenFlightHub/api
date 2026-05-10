@@ -234,6 +234,6 @@ export default class TeamModule extends Module_Base<
             return false
         }
 
-        return await db.manyOrNone('SELECT * FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.team_id = ${teamId} OR workspaces.owner_team_id = ${teamId}', {teamId})
+        return await db.manyOrNone('SELECT DISTINCT workspaces.id, workspaces.* FROM workspaces INNER JOIN workspace_permissions ON workspace_permissions.workspace_id = workspaces.id WHERE workspace_permissions.team_id = ${teamId} OR workspaces.owner_team_id = ${teamId}', {teamId})
     }
 }
