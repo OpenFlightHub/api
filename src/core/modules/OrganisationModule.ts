@@ -146,8 +146,22 @@ export default class OrganisationModule extends Module_Base<
         return false
     }
 
-    async getOrganisationsUserHasAccessTo(user: DBType_User){
+    async getOrganisationsUserOwns(user: DBType_User){
         const organisations = await select_Organisation(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
+
+        if(typeof user.team_id === 'number'){
+            const directTeam = await getCore().modules.team.getTeamSafe(user.team_id)
+
+            if(typeof directTeam.organisation_id === 'number'){
+                organisations.push(await this.getOrganisationSafe(directTeam.organisation_id))
+            }
+        }
+
+        return deduplicateIdArray(organisations)
+    }
+
+    async getOrganisationsUserHasAccessTo(user: DBType_User){
+        const organisations = await this.getOrganisationsUserOwns(user)
 
         if(typeof user.team_id === 'number'){
             const directTeam = await getCore().modules.team.getTeamSafe(user.team_id)

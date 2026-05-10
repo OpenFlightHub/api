@@ -184,8 +184,19 @@ export default class TeamModule extends Module_Base<
         return team.owner_user_id === userId
     }
 
+    async getTeamsUserOwns(user: DBType_User){
+        return await select_Team(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
+    }
+
     async getTeamsUserHasAccessTo(user: DBType_User){
-        const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId}', {userId: user.id}))
+
+        const organisationsUserOwns = await getCore().modules.organisation.getOrganisationsUserOwns(user)
+
+        const teams = await select_Team(pgp.as.format('WHERE owner_user_id = ${userId} OR id = ${teamId} OR team.organisation.id in ${orgIds}', {
+            userId: user.id,
+            teamId: user.team_id,
+            orgIds: organisationsUserOwns.map(org => org.id)
+        }))
 
         if(typeof user.team_id === 'number'){
             teams.push(await this.getTeamSafe(user.team_id))
