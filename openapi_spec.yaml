@@ -4221,9 +4221,6 @@ components:
       required:
         - drone_id
         - started_at
-        - landed_at
-        - ended_at
-        - track
       properties:
         drone_id:
           $ref: "#/components/schemas/id"

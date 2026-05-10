@@ -2522,12 +2522,12 @@ export type ApiType_Flight_Post = {
     /**
      * ISO 8601 format with a timezone
      */
-    landed_at: string;
+    landed_at?: string;
     /**
      * ISO 8601 format with a timezone
      */
-    ended_at: string;
-    track: {
+    ended_at?: string;
+    track?: {
         height: number;
         longitude: number;
         latitude: number;
