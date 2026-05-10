@@ -5683,7 +5683,6 @@ export const ApiSchema_Flight : JSONSchema4  = {
 export const ApiSchema_Flight_Post : JSONSchema4  = {
     "type": "object",
     "required": [
-        "id",
         "drone_id",
         "started_at",
         "landed_at",

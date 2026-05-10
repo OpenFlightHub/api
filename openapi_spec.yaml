@@ -4219,7 +4219,6 @@ components:
     flight_post:
       type: object
       required:
-        - id
         - drone_id
         - started_at
         - landed_at
