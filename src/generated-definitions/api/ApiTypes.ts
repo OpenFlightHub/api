@@ -435,6 +435,29 @@ export type ApiType_Admin_System_Performance_Api_Endpoint_Detail = {
 
 
 
+export type ApiType_Admin_System_Database_Info = {
+    tables: {
+        name: string;
+        /**
+         * in bytes
+         */
+        size: number;
+        /**
+         * estimated
+         */
+        row_count: number;
+    }[];
+    database: {
+        /**
+         * in bytes
+         */
+        size: number;
+        version: string;
+    };
+}
+
+
+
 export type ApiType_File = {
     id: number;
     name: string;

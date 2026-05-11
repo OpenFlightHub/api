@@ -941,6 +941,56 @@ export const ApiSchema_Admin_System_Performance_Api_Endpoint_Detail : JSONSchema
     }
 }
 
+export const ApiSchema_Admin_System_Database_Info : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "tables",
+        "database"
+    ],
+    "properties": {
+        "tables": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "size",
+                    "row_count"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "in bytes"
+                    },
+                    "row_count": {
+                        "type": "integer",
+                        "description": "estimated"
+                    }
+                }
+            }
+        },
+        "database": {
+            "type": "object",
+            "required": [
+                "size",
+                "version"
+            ],
+            "properties": {
+                "size": {
+                    "type": "integer",
+                    "description": "in bytes"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
+
 export const ApiSchema_File : JSONSchema4  = {
     "type": "object",
     "required": [

@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.19.1
+  version: 0.19.2
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -938,6 +938,26 @@ paths:
 
         "400":
           $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+      security:
+        - user_auth: []
+
+  /admin/system/database/info:
+    get:
+      tags:
+        - admin
+      summary: Get information about the database
+      responses:
+        "200":
+          description: Returns database information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/admin_system_database_info"
+
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -3442,6 +3462,40 @@ components:
           pop_standard_dev_work_time_fractional:
             type: number
             description: population standard deviation relative to arithmetic mean (pop standard deviation / arithmetic mean)
+
+
+    admin_system_database_info:
+      type: object
+      required:
+        - tables
+        - database
+      properties:
+        tables:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - size
+              - row_count
+            properties:
+              name:
+                type: string
+              size:
+                $ref: "#/components/schemas/size_in_bytes"
+              row_count:
+                type: integer
+                description: estimated
+        database:
+          type: object
+          required:
+            - size
+            - version
+          properties:
+            size:
+              $ref: "#/components/schemas/size_in_bytes"
+            version:
+              type: string
 
 
     # file
