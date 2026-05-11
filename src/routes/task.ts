@@ -43,7 +43,9 @@ router.post('/', asyncHandler(async (req, res) => {
         state: getCore().modules.task.validateTaskState(requestBody.state)
     }))
 
-    res.GM.guardSend<ApiType_Task>(task, ApiSchema_Reference)
+    res.GM.guardSend<ApiType_Task>(assignObject(task, {
+        geo_objects: await getCore().modules.task.getGeoObjectsForTask(task.id)
+    }), ApiSchema_Reference)
 }))
 
 router.get('/:task_id', asyncHandler(async (req, res) => {
@@ -65,7 +67,9 @@ router.get('/:task_id', asyncHandler(async (req, res) => {
 
     await req.GM.guardUserHasPermissionForWorkspace(mission.workspace_id)
 
-    res.GM.guardSend<ApiType_Task>(task, ApiSchema_Task)
+    res.GM.guardSend<ApiType_Task>(assignObject(task, {
+        geo_objects: await getCore().modules.task.getGeoObjectsForTask(taskId)
+    }), ApiSchema_Task)
 }))
 
 
@@ -96,7 +100,9 @@ router.patch('/:task_id', asyncHandler(async (req, res) => {
         state: getCore().modules.task.validateTaskState(requestBody.state)
     }))
 
-    res.GM.guardSend<ApiType_Task>(updatedTask, ApiSchema_Task)
+    res.GM.guardSend<ApiType_Task>(assignObject(updatedTask, {
+        geo_objects: await getCore().modules.task.getGeoObjectsForTask(taskId)
+    }), ApiSchema_Task)
 }))
 
 router.delete('/:task_id', asyncHandler(async (req, res) => {

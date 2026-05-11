@@ -2,7 +2,7 @@ import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
 import { ApiSchema_Mission, ApiSchema_Mission_Patch, ApiSchema_Mission_Post, ApiSchema_Reference } from '../generated-definitions/api/ApiSchemas';
-import { ApiType_Mission, ApiType_Mission_Patch, ApiType_Mission_Post } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Mission, ApiType_Mission_Patch, ApiType_Mission_Post, ApiType_Task } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
 import { assignObject } from '../util/typescript';
@@ -68,7 +68,17 @@ router.get('/:mission_id/tasks', asyncHandler(async (req, res) => {
 
     const tasks = await getCore().modules.mission.getTasksForMission(missionId)
 
-    res.GM.guardSend<ApiType_Mission_Tasks>(tasks, ApiSchema_Mission_Tasks)
+    const tasksWithGeoObjects: ApiType_Task[] = []
+
+    await Promise.all(tasks.map(task => {
+        return getCore().modules.task.getGeoObjectsForTask(task.id).then(geoObjects => {
+            tasksWithGeoObjects.push(assignObject(task, {
+                geo_objects: geoObjects
+            }))
+        })
+    }))
+
+    res.GM.guardSend<ApiType_Mission_Tasks>(tasksWithGeoObjects, ApiSchema_Mission_Tasks)
 }))
 
 

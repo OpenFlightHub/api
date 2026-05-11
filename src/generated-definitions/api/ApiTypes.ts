@@ -31,6 +31,12 @@ export type ApiType_Email = string;
 export type ApiType_Password = string;
 
 
+/**
+ * in bytes
+ */
+export type ApiType_Size_In_Bytes = number;
+
+
 
 export type ApiType_Reference = {
     id: number;
@@ -171,6 +177,14 @@ export type ApiType_Team = {
     organisation_id?: number;
     logo_file_id?: number;
 }
+
+
+export type ApiType_Team_All_Teams = {
+    id: number;
+    name: string;
+    organisation_id?: number;
+    logo_file_id?: number;
+}[];
 
 
 
@@ -587,7 +601,7 @@ export type ApiType_Workspace_Missions = {
     updated_at: string;
     assigned_to_team_id?: number;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: number;
 }[];
@@ -647,6 +661,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -678,6 +693,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -706,6 +722,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -734,6 +751,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -767,6 +785,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               longitude: number;
               latitude: number;
@@ -795,6 +814,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               longitude: number;
               latitude: number;
@@ -1089,6 +1109,7 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -1120,6 +1141,7 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1148,6 +1170,7 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1176,6 +1199,7 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
+                task_id?: number;
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -1209,6 +1233,7 @@ export type ApiType_Geo_Object =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               longitude: number;
               latitude: number;
@@ -1237,6 +1262,7 @@ export type ApiType_Geo_Object =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               longitude: number;
               latitude: number;
@@ -1269,6 +1295,7 @@ export type ApiType_Geo_Object_Base = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
 }
 
 
@@ -1288,6 +1315,7 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               /**
                * [lng, lat, elevation]
@@ -1319,6 +1347,7 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1347,6 +1376,7 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1375,6 +1405,7 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
+          task_id?: number;
           config: {
               /**
                * [lng, lat, elevation]
@@ -1410,6 +1441,7 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         /**
          * [lng, lat, elevation]
@@ -1458,6 +1490,7 @@ export type ApiType_Geo_Object_Type0_Subtype1 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1500,6 +1533,7 @@ export type ApiType_Geo_Object_Type0_Subtype2 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1542,6 +1576,7 @@ export type ApiType_Geo_Object_Type0_Subtype3 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         /**
          * [lng, lat, elevation]
@@ -1592,6 +1627,7 @@ export type ApiType_Geo_Object_Type1 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         longitude: number;
         latitude: number;
@@ -1634,6 +1670,7 @@ export type ApiType_Geo_Object_Type2 = {
     updated_at: string;
     type: number;
     sub_type: number;
+    task_id?: number;
     config: {
         longitude: number;
         latitude: number;
@@ -2659,13 +2696,13 @@ export type ApiType_Flight_User = {
 
 
 /**
- * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+ * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
  */
 export type ApiType_Mission_State = number;
 
 
 /**
- * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+ * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
  */
 export type ApiType_Task_State = number;
 
@@ -2688,7 +2725,7 @@ export type ApiType_Mission = {
     updated_at: string;
     assigned_to_team_id?: number;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: number;
 }
@@ -2701,7 +2738,7 @@ export type ApiType_Mission_Post = {
     description?: string;
     assigned_to_team_id?: number;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state?: number;
 }
@@ -2713,7 +2750,7 @@ export type ApiType_Mission_Patch = {
     description?: string;
     assigned_to_team_id?: number;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state?: number;
 }
@@ -2735,9 +2772,183 @@ export type ApiType_Mission_Tasks = {
      */
     updated_at: string;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: number;
+    geo_objects: (
+        | (
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        point: [number, number, number];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        line: [number, number, number][];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        polygon: [number, number, number][];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        center: [number, number, number];
+                        radius: number;
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+          )
+        | {
+              id: number;
+              uuid: string;
+              workspace_id: number;
+              name: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              created_at: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              updated_at: string;
+              type: number;
+              sub_type: number;
+              task_id?: number;
+              config: {
+                  longitude: number;
+                  latitude: number;
+                  height?: number;
+                  heading?: number;
+                  /**
+                   * TODO unit
+                   */
+                  speed?: number;
+              };
+          }
+        | {
+              id: number;
+              uuid: string;
+              workspace_id: number;
+              name: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              created_at: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              updated_at: string;
+              type: number;
+              sub_type: number;
+              task_id?: number;
+              config: {
+                  longitude: number;
+                  latitude: number;
+                  symbol: string;
+                  height?: number;
+                  heading?: number;
+                  /**
+                   * TODO unit
+                   */
+                  speed?: number;
+              };
+          }
+    )[];
 }[];
 
 
@@ -2758,9 +2969,183 @@ export type ApiType_Task = {
      */
     updated_at: string;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: number;
+    geo_objects: (
+        | (
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        point: [number, number, number];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        line: [number, number, number][];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        polygon: [number, number, number][];
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    sub_type: number;
+                    task_id?: number;
+                    config: {
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        center: [number, number, number];
+                        radius: number;
+                        /**
+                         * hex
+                         */
+                        color: string;
+                    };
+                }
+          )
+        | {
+              id: number;
+              uuid: string;
+              workspace_id: number;
+              name: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              created_at: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              updated_at: string;
+              type: number;
+              sub_type: number;
+              task_id?: number;
+              config: {
+                  longitude: number;
+                  latitude: number;
+                  height?: number;
+                  heading?: number;
+                  /**
+                   * TODO unit
+                   */
+                  speed?: number;
+              };
+          }
+        | {
+              id: number;
+              uuid: string;
+              workspace_id: number;
+              name: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              created_at: string;
+              /**
+               * ISO 8601 format with a timezone
+               */
+              updated_at: string;
+              type: number;
+              sub_type: number;
+              task_id?: number;
+              config: {
+                  longitude: number;
+                  latitude: number;
+                  symbol: string;
+                  height?: number;
+                  heading?: number;
+                  /**
+                   * TODO unit
+                   */
+                  speed?: number;
+              };
+          }
+    )[];
 }
 
 
@@ -2770,7 +3155,7 @@ export type ApiType_Task_Post = {
     name: string;
     description?: string;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state?: number;
 }
@@ -2781,7 +3166,7 @@ export type ApiType_Task_Patch = {
     name?: string;
     description?: string;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state?: number;
 }

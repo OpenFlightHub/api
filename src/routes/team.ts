@@ -1,13 +1,23 @@
 import express from 'express';
-import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_Invite_Member, ApiSchema_Team_Invite_Member_Post_Response, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post, ApiSchema_Team_Workspaces } from '../generated-definitions/api/ApiSchemas';
+import { ApiSchema_Reference, ApiSchema_Team, ApiSchema_Team_All_Teams, ApiSchema_Team_Invite_Member, ApiSchema_Team_Invite_Member_Post_Response, ApiSchema_Team_Members, ApiSchema_Team_Patch, ApiSchema_Team_Post, ApiSchema_Team_Workspaces } from '../generated-definitions/api/ApiSchemas';
 import asyncHandler from 'express-async-handler'
-import { ApiType_Reference, ApiType_Team, ApiType_Team_Invite_Member, ApiType_Team_Invite_Member_Post_Response, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post, ApiType_Team_Workspaces } from '../generated-definitions/api/ApiTypes';
+import { ApiType_Reference, ApiType_Team, ApiType_Team_All_Teams, ApiType_Team_Invite_Member, ApiType_Team_Invite_Member_Post_Response, ApiType_Team_Members, ApiType_Team_Patch, ApiType_Team_Post, ApiType_Team_Workspaces } from '../generated-definitions/api/ApiTypes';
 import { GuardError } from '../ManInTheMiddleware';
 import { getCore } from '../core';
+import { select_Team } from '../generated-definitions/db/DBHelpers';
 
 
 const router = express.Router()
 
+
+router.get('/all-teams', asyncHandler(async (req, res) => {
+
+    await req.GM.guardUserIsAuthenticated()
+
+    const teams = await select_Team('')
+
+    res.GM.guardSend<ApiType_Team_All_Teams>(teams, ApiSchema_Team_All_Teams)
+}))
 
 router.get('/:team_id', asyncHandler(async (req, res) => {
 

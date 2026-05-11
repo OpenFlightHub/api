@@ -1,8 +1,11 @@
 
 import { DBInsert_Task, DBUpdate_Task, delete_Task, insert_Task, select_Task, update_Task } from '../../generated-definitions/db/DBHelpers'
-import { DBType_Task, DBType_Task_STATES, DBType_Task_StateType } from '../../generated-definitions/db/DBTypes'
+import { DBType_Geo_Object, DBType_Task, DBType_Task_STATES, DBType_Task_StateType } from '../../generated-definitions/db/DBTypes'
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
+
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class TaskModule extends Module_Base<
     {
@@ -138,5 +141,9 @@ export default class TaskModule extends Module_Base<
             return 0
         }
 
+    }
+
+    async getGeoObjectsForTask(taskId: number){
+        return await db.manyOrNone('SELECT geo_objects.* FROM geo_objects INNER JOIN task_geo_objects ON geo_objects.id = task_geo_objects.geo_object_id WHERE task_geo_objects.task_id = ${taskId}', { taskId }) as DBType_Geo_Object[]
     }
 }

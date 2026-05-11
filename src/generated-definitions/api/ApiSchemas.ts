@@ -41,6 +41,11 @@ export const ApiSchema_Password : JSONSchema4  = {
     "example": "j9876sa1kjhqsa6dtasd12="
 }
 
+export const ApiSchema_Size_In_Bytes : JSONSchema4  = {
+    "type": "integer",
+    "description": "in bytes"
+}
+
 export const ApiSchema_Reference : JSONSchema4  = {
     "type": "object",
     "required": [
@@ -344,6 +349,34 @@ export const ApiSchema_Team : JSONSchema4  = {
         "logo_file_id": {
             "type": "number",
             "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Team_All_Teams : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "name"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string"
+            },
+            "organisation_id": {
+                "type": "number",
+                "example": 42
+            },
+            "logo_file_id": {
+                "type": "number",
+                "example": 42
+            }
         }
     }
 }
@@ -1349,7 +1382,7 @@ export const ApiSchema_Workspace_Missions : JSONSchema4  = {
             },
             "state": {
                 "type": "integer",
-                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
             }
         }
     }
@@ -1514,6 +1547,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
+                            },
                             "config": {
                                 "type": "object",
                                 "required": [
@@ -1584,6 +1621,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             },
                             "sub_type": {
                                 "type": "integer"
+                            },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
                             },
                             "config": {
                                 "type": "object",
@@ -1659,6 +1700,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
+                            },
                             "config": {
                                 "type": "object",
                                 "required": [
@@ -1732,6 +1777,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             },
                             "sub_type": {
                                 "type": "integer"
+                            },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
                             },
                             "config": {
                                 "type": "object",
@@ -1810,6 +1859,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     "sub_type": {
                         "type": "integer"
                     },
+                    "task_id": {
+                        "type": "number",
+                        "example": 42
+                    },
                     "config": {
                         "type": "object",
                         "required": [
@@ -1883,6 +1936,10 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     },
                     "sub_type": {
                         "type": "integer"
+                    },
+                    "task_id": {
+                        "type": "number",
+                        "example": 42
                     },
                     "config": {
                         "type": "object",
@@ -2514,6 +2571,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
+                        "task_id": {
+                            "type": "number",
+                            "example": 42
+                        },
                         "config": {
                             "type": "object",
                             "required": [
@@ -2584,6 +2645,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         },
                         "sub_type": {
                             "type": "integer"
+                        },
+                        "task_id": {
+                            "type": "number",
+                            "example": 42
                         },
                         "config": {
                             "type": "object",
@@ -2659,6 +2724,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
+                        "task_id": {
+                            "type": "number",
+                            "example": 42
+                        },
                         "config": {
                             "type": "object",
                             "required": [
@@ -2732,6 +2801,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         },
                         "sub_type": {
                             "type": "integer"
+                        },
+                        "task_id": {
+                            "type": "number",
+                            "example": 42
                         },
                         "config": {
                             "type": "object",
@@ -2810,6 +2883,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
+                },
                 "config": {
                     "type": "object",
                     "required": [
@@ -2883,6 +2960,10 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 },
                 "sub_type": {
                     "type": "integer"
+                },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
                 },
                 "config": {
                     "type": "object",
@@ -2963,6 +3044,10 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
         },
         "sub_type": {
             "type": "integer"
+        },
+        "task_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }
@@ -3015,6 +3100,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 },
                 "sub_type": {
                     "type": "integer"
+                },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
                 },
                 "config": {
                     "type": "object",
@@ -3086,6 +3175,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 },
                 "sub_type": {
                     "type": "integer"
+                },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
                 },
                 "config": {
                     "type": "object",
@@ -3161,6 +3254,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
+                },
                 "config": {
                     "type": "object",
                     "required": [
@@ -3234,6 +3331,10 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 },
                 "sub_type": {
                     "type": "integer"
+                },
+                "task_id": {
+                    "type": "number",
+                    "example": 42
                 },
                 "config": {
                     "type": "object",
@@ -3312,6 +3413,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
         },
         "sub_type": {
             "type": "integer"
+        },
+        "task_id": {
+            "type": "number",
+            "example": 42
         },
         "config": {
             "type": "object",
@@ -3407,6 +3512,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
         },
         "sub_type": {
             "type": "integer"
+        },
+        "task_id": {
+            "type": "number",
+            "example": 42
         },
         "config": {
             "type": "object",
@@ -3509,6 +3618,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
+        "task_id": {
+            "type": "number",
+            "example": 42
+        },
         "config": {
             "type": "object",
             "required": [
@@ -3609,6 +3722,10 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
         },
         "sub_type": {
             "type": "integer"
+        },
+        "task_id": {
+            "type": "number",
+            "example": 42
         },
         "config": {
             "type": "object",
@@ -3713,6 +3830,10 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
+        "task_id": {
+            "type": "number",
+            "example": 42
+        },
         "config": {
             "type": "object",
             "required": [
@@ -3813,6 +3934,10 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
         },
         "sub_type": {
             "type": "integer"
+        },
+        "task_id": {
+            "type": "number",
+            "example": 42
         },
         "config": {
             "type": "object",
@@ -6028,12 +6153,12 @@ export const ApiSchema_Flight_User : JSONSchema4  = {
 
 export const ApiSchema_Mission_State : JSONSchema4  = {
     "type": "integer",
-    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
 }
 
 export const ApiSchema_Task_State : JSONSchema4  = {
     "type": "integer",
-    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+    "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
 }
 
 export const ApiSchema_Mission : JSONSchema4  = {
@@ -6089,7 +6214,7 @@ export const ApiSchema_Mission : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
         }
     }
 }
@@ -6117,7 +6242,7 @@ export const ApiSchema_Mission_Post : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
         }
     }
 }
@@ -6137,7 +6262,7 @@ export const ApiSchema_Mission_Patch : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
         }
     }
 }
@@ -6154,7 +6279,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
             "updated_by",
             "created_at",
             "updated_at",
-            "state"
+            "state",
+            "geo_objects"
         ],
         "properties": {
             "id": {
@@ -6193,7 +6319,488 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
             },
             "state": {
                 "type": "integer",
-                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
+            },
+            "geo_objects": {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "workspace_id",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer"
+                                        },
+                                        "task_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "point",
+                                                "color"
+                                            ],
+                                            "properties": {
+                                                "point": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "description": "[lng, lat, elevation]"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "description": "hex"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "workspace_id",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer"
+                                        },
+                                        "task_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "line",
+                                                "color"
+                                            ],
+                                            "properties": {
+                                                "line": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "description": "hex"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "workspace_id",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer"
+                                        },
+                                        "task_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "polygon",
+                                                "color"
+                                            ],
+                                            "properties": {
+                                                "polygon": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "description": "hex"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "workspace_id",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer"
+                                        },
+                                        "task_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "center",
+                                                "radius",
+                                                "color"
+                                            ],
+                                            "properties": {
+                                                "center": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "description": "[lng, lat, elevation]"
+                                                },
+                                                "radius": {
+                                                    "type": "number"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "description": "hex"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "uuid",
+                                "workspace_id",
+                                "name",
+                                "created_at",
+                                "updated_at",
+                                "type",
+                                "sub_type",
+                                "config"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "uuid": {
+                                    "type": "string",
+                                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                },
+                                "workspace_id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "format": "timestamptz",
+                                    "description": "ISO 8601 format with a timezone",
+                                    "example": "2023-12-11 23:06:52.7879+00"
+                                },
+                                "updated_at": {
+                                    "type": "string",
+                                    "format": "timestamptz",
+                                    "description": "ISO 8601 format with a timezone",
+                                    "example": "2023-12-11 23:06:52.7879+00"
+                                },
+                                "type": {
+                                    "type": "integer"
+                                },
+                                "sub_type": {
+                                    "type": "integer"
+                                },
+                                "task_id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "required": [
+                                        "longitude",
+                                        "latitude"
+                                    ],
+                                    "properties": {
+                                        "longitude": {
+                                            "type": "number"
+                                        },
+                                        "latitude": {
+                                            "type": "number"
+                                        },
+                                        "height": {
+                                            "type": "number"
+                                        },
+                                        "heading": {
+                                            "type": "number"
+                                        },
+                                        "speed": {
+                                            "type": "number",
+                                            "description": "TODO unit"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "uuid",
+                                "workspace_id",
+                                "name",
+                                "created_at",
+                                "updated_at",
+                                "type",
+                                "sub_type",
+                                "config"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "uuid": {
+                                    "type": "string",
+                                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                },
+                                "workspace_id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "format": "timestamptz",
+                                    "description": "ISO 8601 format with a timezone",
+                                    "example": "2023-12-11 23:06:52.7879+00"
+                                },
+                                "updated_at": {
+                                    "type": "string",
+                                    "format": "timestamptz",
+                                    "description": "ISO 8601 format with a timezone",
+                                    "example": "2023-12-11 23:06:52.7879+00"
+                                },
+                                "type": {
+                                    "type": "integer"
+                                },
+                                "sub_type": {
+                                    "type": "integer"
+                                },
+                                "task_id": {
+                                    "type": "number",
+                                    "example": 42
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "required": [
+                                        "longitude",
+                                        "latitude",
+                                        "symbol"
+                                    ],
+                                    "properties": {
+                                        "longitude": {
+                                            "type": "number"
+                                        },
+                                        "latitude": {
+                                            "type": "number"
+                                        },
+                                        "symbol": {
+                                            "type": "string"
+                                        },
+                                        "height": {
+                                            "type": "number"
+                                        },
+                                        "heading": {
+                                            "type": "number"
+                                        },
+                                        "speed": {
+                                            "type": "number",
+                                            "description": "TODO unit"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         }
     }
@@ -6209,7 +6816,8 @@ export const ApiSchema_Task : JSONSchema4  = {
         "updated_by",
         "created_at",
         "updated_at",
-        "state"
+        "state",
+        "geo_objects"
     ],
     "properties": {
         "id": {
@@ -6248,7 +6856,488 @@ export const ApiSchema_Task : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
+        },
+        "geo_objects": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "workspace_id",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer"
+                                    },
+                                    "task_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "point",
+                                            "color"
+                                        ],
+                                        "properties": {
+                                            "point": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number"
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 3,
+                                                "description": "[lng, lat, elevation]"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "description": "hex"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "workspace_id",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer"
+                                    },
+                                    "task_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "line",
+                                            "color"
+                                        ],
+                                        "properties": {
+                                            "line": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "description": "hex"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "workspace_id",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer"
+                                    },
+                                    "task_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "polygon",
+                                            "color"
+                                        ],
+                                        "properties": {
+                                            "polygon": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "description": "hex"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "workspace_id",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer"
+                                    },
+                                    "task_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "center",
+                                            "radius",
+                                            "color"
+                                        ],
+                                        "properties": {
+                                            "center": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number"
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 3,
+                                                "description": "[lng, lat, elevation]"
+                                            },
+                                            "radius": {
+                                                "type": "number"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "description": "hex"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer"
+                            },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "longitude",
+                                    "latitude"
+                                ],
+                                "properties": {
+                                    "longitude": {
+                                        "type": "number"
+                                    },
+                                    "latitude": {
+                                        "type": "number"
+                                    },
+                                    "height": {
+                                        "type": "number"
+                                    },
+                                    "heading": {
+                                        "type": "number"
+                                    },
+                                    "speed": {
+                                        "type": "number",
+                                        "description": "TODO unit"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "workspace_id",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer"
+                            },
+                            "task_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "longitude",
+                                    "latitude",
+                                    "symbol"
+                                ],
+                                "properties": {
+                                    "longitude": {
+                                        "type": "number"
+                                    },
+                                    "latitude": {
+                                        "type": "number"
+                                    },
+                                    "symbol": {
+                                        "type": "string"
+                                    },
+                                    "height": {
+                                        "type": "number"
+                                    },
+                                    "heading": {
+                                        "type": "number"
+                                    },
+                                    "speed": {
+                                        "type": "number",
+                                        "description": "TODO unit"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
         }
     }
 }
@@ -6272,7 +7361,7 @@ export const ApiSchema_Task_Post : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
         }
     }
 }
@@ -6288,7 +7377,7 @@ export const ApiSchema_Task_Patch : JSONSchema4  = {
         },
         "state": {
             "type": "integer",
-            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
         }
     }
 }
