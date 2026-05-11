@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.19.0
+  version: 0.19.1
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1337,6 +1337,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/workspace_files"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/missions:
+    get:
+      tags:
+        - workspace
+      summary: Get all missions for this workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the missions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/workspace_missions"
 
         "400":
           $ref: "#/components/responses/400"
@@ -3534,6 +3564,11 @@ components:
       properties:
         team_id:
           $ref: "#/components/schemas/id"
+
+    workspace_missions:
+      type: array
+      items:
+        $ref: "#/components/schemas/mission"
 
     workspace_connections:
       type: array

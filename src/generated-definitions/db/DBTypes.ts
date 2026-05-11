@@ -436,14 +436,15 @@ export type DBType_Geo_Object_ConfigType<type extends DBType_Geo_Object_TypeType
 ) : type extends 2 ? (
     {longitude: number, latitude: number, symbol: string, height?: number, heading?: number, speed?: number}
 ) : unknown
-export type DBType_Mission_StateType = 0|1|2|3|4|5
+export type DBType_Mission_StateType = 0|1|2|3|4|5|6
 export const DBType_Mission_STATES = {
-  pending: 0,
+  planned: 0,
   accepted: 1,
   in_progress: 2,
   done: 3,
   rejected: 4,
-  failed: 5
+  failed: 5,
+  canceled: 6
 } as const
 
 export type DBType_Mission = {
@@ -457,21 +458,22 @@ export type DBType_Mission = {
     updated_at: string;
     assigned_to_team_id?: number;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = planned, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: DBType_Mission_StateType;
 }
 
 
 
-export type DBType_Task_StateType = 0|1|2|3|4|5
+export type DBType_Task_StateType = 0|1|2|3|4|5|6
 export const DBType_Task_STATES = {
-  pending: 0,
+  planned: 0,
   accepted: 1,
   in_progress: 2,
   done: 3,
   rejected: 4,
-  failed: 5
+  failed: 5,
+  canceled: 6
 } as const
 
 export type DBType_Task = {
@@ -484,7 +486,7 @@ export type DBType_Task = {
     created_at: string;
     updated_at: string;
     /**
-     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     * 0 = planned, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state: DBType_Task_StateType;
 }

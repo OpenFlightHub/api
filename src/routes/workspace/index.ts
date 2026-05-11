@@ -1,8 +1,8 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Files, ApiSchema_Workspace_Invite_Team_Post, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Files, ApiType_Workspace_Invite_Team_Post, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Files, ApiSchema_Workspace_Invite_Team_Post, ApiSchema_Workspace_Missions, ApiSchema_Workspace_Patch, ApiSchema_Workspaces_Post } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Files, ApiType_Workspace_Invite_Team_Post, ApiType_Workspace_Missions, ApiType_Workspace_Patch, ApiType_Workspaces_Post } from '../../generated-definitions/api/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes';
 import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
@@ -261,6 +261,27 @@ router.post('/:workspace_id/invite-team', asyncHandler(async (req, res) => {
 
 }))
 
+router.get('/:workspace_id/missions', asyncHandler(async (req, res) => {
+
+    const workspaceId = req.GM.guardParam('workspace_id', 'id')
+
+    const workspace = await getCore().modules.workspace.getWorkspace(workspaceId)
+
+    if(workspace === false){
+        throw GuardError._410_Gone()
+    }
+
+    await req.GM.guardUserHasPermissionForWorkspace(workspaceId)
+
+    const missions = await select_Mission(pgp.as.format('WHERE workspace_id = ${workspaceId}', {
+        workspaceId
+    }))
+
+    res.GM.guardSend<ApiType_Workspace_Missions>(missions, ApiSchema_Workspace_Missions)
+
+}))
+
+
 
 router.use('/:workspace_id/geo-object', (req, res, next) => {//TODO make sure if this check actually happens first before any other processing
 
@@ -288,6 +309,7 @@ router.use('/:workspace_id/geo-object', (req, res, next) => {//TODO make sure if
 
 import geoObjectsRoute from './geo-objects'
 import { assignObject } from '../../util/typescript';
+import { select_Mission } from '../../generated-definitions/db/DBHelpers';
 router.use('/:workspace_id/geo-objects', geoObjectsRoute)
 
 export default router

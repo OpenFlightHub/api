@@ -570,6 +570,29 @@ export type ApiType_Workspace_Invite_Team_Post = {
 }
 
 
+export type ApiType_Workspace_Missions = {
+    id: number;
+    workspace_id: number;
+    name: string;
+    description?: string;
+    created_by: number;
+    updated_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    assigned_to_team_id?: number;
+    /**
+     * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed
+     */
+    state: number;
+}[];
+
+
 export type ApiType_Workspace_Connections = {
     id: number;
     name: string;

@@ -1294,6 +1294,67 @@ export const ApiSchema_Workspace_Invite_Team_Post : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Workspace_Missions : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "workspace_id",
+            "name",
+            "created_by",
+            "updated_by",
+            "created_at",
+            "updated_at",
+            "state"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "workspace_id": {
+                "type": "number",
+                "example": 42
+            },
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "created_by": {
+                "type": "number",
+                "example": 42
+            },
+            "updated_by": {
+                "type": "number",
+                "example": 42
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "assigned_to_team_id": {
+                "type": "number",
+                "example": 42
+            },
+            "state": {
+                "type": "integer",
+                "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed"
+            }
+        }
+    }
+}
+
 export const ApiSchema_Workspace_Connections : JSONSchema4  = {
     "type": "array",
     "items": {
