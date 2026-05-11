@@ -19,7 +19,7 @@ router.get('/', asyncHandler(async(req, res) => {
     //@ts-ignore
     const workspaceId = req._workspaceId as number
 
-    const geoObjects = await db.manyOrNone<DBType_Geo_Object>('SELECT geo_objects.*, task_geo_objects.task_id FROM geo_objects INNER JOIN task_geo_objects ON geo_objects.id = task_geo_objects.geo_object_id WHERE geo_objects.workspace_id = ${workspaceId}', {
+    const geoObjects = await db.manyOrNone<DBType_Geo_Object>('SELECT geo_objects.*, task_geo_objects.task_id FROM geo_objects LEFT JOIN task_geo_objects ON geo_objects.id = task_geo_objects.geo_object_id WHERE geo_objects.workspace_id = ${workspaceId}', {
         workspaceId
     })
 

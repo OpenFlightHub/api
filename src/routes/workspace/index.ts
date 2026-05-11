@@ -283,7 +283,7 @@ router.get('/:workspace_id/missions', asyncHandler(async (req, res) => {
 
 
 
-router.use('/:workspace_id/geo-object', (req, res, next) => {//TODO make sure if this check actually happens first before any other processing
+router.use('/:workspace_id/geo-objects', (req, res, next) => {//TODO make sure if this check actually happens first before any other processing
 
     const workspaceId = req.GM.guardParam('workspace_id', 'id')
 
