@@ -8,6 +8,10 @@ import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
 import { getCore } from '../../core';
 import { multerMiddleware } from '../../util/multer';
+import geoObjectsRoute from './geo-objects'
+import { assignObject } from '../../util/typescript';
+import { select_Mission } from '../../generated-definitions/db/DBHelpers';
+
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -304,12 +308,6 @@ router.use('/:workspace_id/geo-objects', (req, res, next) => {//TODO make sure i
         next(err)
     })
 
-})
-
-
-import geoObjectsRoute from './geo-objects'
-import { assignObject } from '../../util/typescript';
-import { select_Mission } from '../../generated-definitions/db/DBHelpers';
-router.use('/:workspace_id/geo-objects', geoObjectsRoute)
+}, geoObjectsRoute)
 
 export default router
