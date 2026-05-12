@@ -1561,6 +1561,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -1597,9 +1598,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -1636,6 +1648,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -1672,9 +1685,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -1714,6 +1738,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -1750,9 +1775,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -1792,6 +1828,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -1828,9 +1865,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -1873,6 +1921,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     "updated_at",
                     "type",
                     "sub_type",
+                    "tasks",
                     "config"
                 ],
                 "properties": {
@@ -1909,9 +1958,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     "sub_type": {
                         "type": "integer"
                     },
-                    "task_id": {
-                        "type": "number",
-                        "example": 42
+                    "tasks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number",
+                                    "example": 42
+                                }
+                            }
+                        }
                     },
                     "config": {
                         "type": "object",
@@ -1951,6 +2011,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     "updated_at",
                     "type",
                     "sub_type",
+                    "tasks",
                     "config"
                 ],
                 "properties": {
@@ -1987,9 +2048,20 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     "sub_type": {
                         "type": "integer"
                     },
-                    "task_id": {
-                        "type": "number",
-                        "example": 42
+                    "tasks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number",
+                                    "example": 42
+                                }
+                            }
+                        }
                     },
                     "config": {
                         "type": "object",
@@ -2026,7 +2098,7 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
     }
 }
 
-export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
+export const ApiSchema_Workspace_Geo_Objects_Post : JSONSchema4  = {
     "anyOf": [
         {
             "anyOf": [
@@ -2036,8 +2108,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -2087,8 +2158,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -2141,8 +2211,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -2195,8 +2264,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -2252,8 +2320,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -2306,8 +2373,7 @@ export const ApiSchema_Workspace_Geo_Objects_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -2585,6 +2651,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "updated_at",
                         "type",
                         "sub_type",
+                        "tasks",
                         "config"
                     ],
                     "properties": {
@@ -2621,9 +2688,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
-                        "task_id": {
-                            "type": "number",
-                            "example": 42
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
                         },
                         "config": {
                             "type": "object",
@@ -2660,6 +2738,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "updated_at",
                         "type",
                         "sub_type",
+                        "tasks",
                         "config"
                     ],
                     "properties": {
@@ -2696,9 +2775,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
-                        "task_id": {
-                            "type": "number",
-                            "example": 42
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
                         },
                         "config": {
                             "type": "object",
@@ -2738,6 +2828,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "updated_at",
                         "type",
                         "sub_type",
+                        "tasks",
                         "config"
                     ],
                     "properties": {
@@ -2774,9 +2865,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
-                        "task_id": {
-                            "type": "number",
-                            "example": 42
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
                         },
                         "config": {
                             "type": "object",
@@ -2816,6 +2918,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "updated_at",
                         "type",
                         "sub_type",
+                        "tasks",
                         "config"
                     ],
                     "properties": {
@@ -2852,9 +2955,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         "sub_type": {
                             "type": "integer"
                         },
-                        "task_id": {
-                            "type": "number",
-                            "example": 42
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
                         },
                         "config": {
                             "type": "object",
@@ -2897,6 +3011,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -2933,9 +3048,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -2975,6 +3101,7 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -3011,9 +3138,20 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -3059,7 +3197,8 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
         "created_at",
         "updated_at",
         "type",
-        "sub_type"
+        "sub_type",
+        "tasks"
     ],
     "properties": {
         "id": {
@@ -3095,9 +3234,20 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         }
     }
 }
@@ -3115,6 +3265,7 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -3151,9 +3302,20 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -3190,6 +3352,7 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -3226,9 +3389,20 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -3268,6 +3442,7 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -3304,9 +3479,20 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -3346,6 +3532,7 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "updated_at",
                 "type",
                 "sub_type",
+                "tasks",
                 "config"
             ],
             "properties": {
@@ -3382,9 +3569,20 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                 "sub_type": {
                     "type": "integer"
                 },
-                "task_id": {
-                    "type": "number",
-                    "example": 42
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
                 },
                 "config": {
                     "type": "object",
@@ -3428,6 +3626,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3464,9 +3663,20 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -3527,6 +3737,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3563,9 +3774,20 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -3632,6 +3854,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3668,9 +3891,20 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -3737,6 +3971,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3773,9 +4008,20 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -3844,6 +4090,7 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3880,9 +4127,20 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -3949,6 +4207,7 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
         "updated_at",
         "type",
         "sub_type",
+        "tasks",
         "config"
     ],
     "properties": {
@@ -3985,9 +4244,20 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
         "sub_type": {
             "type": "integer"
         },
-        "task_id": {
-            "type": "number",
-            "example": 42
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
         },
         "config": {
             "type": "object",
@@ -4061,8 +4331,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -4112,8 +4381,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -4166,8 +4434,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -4220,8 +4487,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                         "name",
                         "type",
                         "sub_type",
-                        "config",
-                        "subtype"
+                        "config"
                     ],
                     "properties": {
                         "uuid": {
@@ -4277,8 +4543,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4331,8 +4596,7 @@ export const ApiSchema_Geo_Object_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4422,8 +4686,7 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4473,8 +4736,7 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4527,8 +4789,7 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4581,8 +4842,7 @@ export const ApiSchema_Geo_Object_Type0_Create : JSONSchema4  = {
                 "name",
                 "type",
                 "sub_type",
-                "config",
-                "subtype"
+                "config"
             ],
             "properties": {
                 "uuid": {
@@ -4639,8 +4899,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype0_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -4691,8 +4950,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype1_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -4746,8 +5004,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype2_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -4801,8 +5058,7 @@ export const ApiSchema_Geo_Object_Type0_Subtype3_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -4857,8 +5113,7 @@ export const ApiSchema_Geo_Object_Type1_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -4912,8 +5167,7 @@ export const ApiSchema_Geo_Object_Type2_Create : JSONSchema4  = {
         "name",
         "type",
         "sub_type",
-        "config",
-        "subtype"
+        "config"
     ],
     "properties": {
         "uuid": {
@@ -6388,6 +6642,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "updated_at",
                                         "type",
                                         "sub_type",
+                                        "tasks",
                                         "config"
                                     ],
                                     "properties": {
@@ -6424,9 +6679,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "sub_type": {
                                             "type": "integer"
                                         },
-                                        "task_id": {
-                                            "type": "number",
-                                            "example": 42
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
                                         },
                                         "config": {
                                             "type": "object",
@@ -6463,6 +6729,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "updated_at",
                                         "type",
                                         "sub_type",
+                                        "tasks",
                                         "config"
                                     ],
                                     "properties": {
@@ -6499,9 +6766,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "sub_type": {
                                             "type": "integer"
                                         },
-                                        "task_id": {
-                                            "type": "number",
-                                            "example": 42
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
                                         },
                                         "config": {
                                             "type": "object",
@@ -6541,6 +6819,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "updated_at",
                                         "type",
                                         "sub_type",
+                                        "tasks",
                                         "config"
                                     ],
                                     "properties": {
@@ -6577,9 +6856,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "sub_type": {
                                             "type": "integer"
                                         },
-                                        "task_id": {
-                                            "type": "number",
-                                            "example": 42
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
                                         },
                                         "config": {
                                             "type": "object",
@@ -6619,6 +6909,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "updated_at",
                                         "type",
                                         "sub_type",
+                                        "tasks",
                                         "config"
                                     ],
                                     "properties": {
@@ -6655,9 +6946,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         "sub_type": {
                                             "type": "integer"
                                         },
-                                        "task_id": {
-                                            "type": "number",
-                                            "example": 42
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
                                         },
                                         "config": {
                                             "type": "object",
@@ -6700,6 +7002,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                 "updated_at",
                                 "type",
                                 "sub_type",
+                                "tasks",
                                 "config"
                             ],
                             "properties": {
@@ -6736,9 +7039,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                 "sub_type": {
                                     "type": "integer"
                                 },
-                                "task_id": {
-                                    "type": "number",
-                                    "example": 42
+                                "tasks": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "id"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number",
+                                                "example": 42
+                                            }
+                                        }
+                                    }
                                 },
                                 "config": {
                                     "type": "object",
@@ -6778,6 +7092,7 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                 "updated_at",
                                 "type",
                                 "sub_type",
+                                "tasks",
                                 "config"
                             ],
                             "properties": {
@@ -6814,9 +7129,20 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                 "sub_type": {
                                     "type": "integer"
                                 },
-                                "task_id": {
-                                    "type": "number",
-                                    "example": 42
+                                "tasks": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "id"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number",
+                                                "example": 42
+                                            }
+                                        }
+                                    }
                                 },
                                 "config": {
                                     "type": "object",
@@ -6925,6 +7251,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "updated_at",
                                     "type",
                                     "sub_type",
+                                    "tasks",
                                     "config"
                                 ],
                                 "properties": {
@@ -6961,9 +7288,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "sub_type": {
                                         "type": "integer"
                                     },
-                                    "task_id": {
-                                        "type": "number",
-                                        "example": 42
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
                                     },
                                     "config": {
                                         "type": "object",
@@ -7000,6 +7338,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "updated_at",
                                     "type",
                                     "sub_type",
+                                    "tasks",
                                     "config"
                                 ],
                                 "properties": {
@@ -7036,9 +7375,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "sub_type": {
                                         "type": "integer"
                                     },
-                                    "task_id": {
-                                        "type": "number",
-                                        "example": 42
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
                                     },
                                     "config": {
                                         "type": "object",
@@ -7078,6 +7428,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "updated_at",
                                     "type",
                                     "sub_type",
+                                    "tasks",
                                     "config"
                                 ],
                                 "properties": {
@@ -7114,9 +7465,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "sub_type": {
                                         "type": "integer"
                                     },
-                                    "task_id": {
-                                        "type": "number",
-                                        "example": 42
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
                                     },
                                     "config": {
                                         "type": "object",
@@ -7156,6 +7518,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "updated_at",
                                     "type",
                                     "sub_type",
+                                    "tasks",
                                     "config"
                                 ],
                                 "properties": {
@@ -7192,9 +7555,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     "sub_type": {
                                         "type": "integer"
                                     },
-                                    "task_id": {
-                                        "type": "number",
-                                        "example": 42
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
                                     },
                                     "config": {
                                         "type": "object",
@@ -7237,6 +7611,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -7273,9 +7648,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -7315,6 +7701,7 @@ export const ApiSchema_Task : JSONSchema4  = {
                             "updated_at",
                             "type",
                             "sub_type",
+                            "tasks",
                             "config"
                         ],
                         "properties": {
@@ -7351,9 +7738,20 @@ export const ApiSchema_Task : JSONSchema4  = {
                             "sub_type": {
                                 "type": "integer"
                             },
-                            "task_id": {
-                                "type": "number",
-                                "example": 42
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
                             },
                             "config": {
                                 "type": "object",
@@ -7428,6 +7826,32 @@ export const ApiSchema_Task_Patch : JSONSchema4  = {
         "state": {
             "type": "integer",
             "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
+        }
+    }
+}
+
+export const ApiSchema_Task_Link_Geo_Object : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "geo_object_id"
+    ],
+    "properties": {
+        "geo_object_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Task_Unlink_Geo_Object : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "geo_object_id"
+    ],
+    "properties": {
+        "geo_object_id": {
+            "type": "number",
+            "example": 42
         }
     }
 }

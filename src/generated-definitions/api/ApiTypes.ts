@@ -684,7 +684,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -716,7 +718,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -745,7 +749,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -774,7 +780,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -808,7 +816,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               longitude: number;
               latitude: number;
@@ -837,7 +847,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               longitude: number;
               latitude: number;
@@ -855,7 +867,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
 )[];
 
 
-export type ApiType_Workspace_Geo_Objects_Create =
+export type ApiType_Workspace_Geo_Objects_Post =
     | (
           | {
                 uuid?: string;
@@ -1132,7 +1144,9 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -1164,7 +1178,9 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1193,7 +1209,9 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1222,7 +1240,9 @@ export type ApiType_Geo_Object =
                 updated_at: string;
                 type: number;
                 sub_type: number;
-                task_id?: number;
+                tasks: {
+                    id: number;
+                }[];
                 config: {
                     /**
                      * [lng, lat, elevation]
@@ -1256,7 +1276,9 @@ export type ApiType_Geo_Object =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               longitude: number;
               latitude: number;
@@ -1285,7 +1307,9 @@ export type ApiType_Geo_Object =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               longitude: number;
               latitude: number;
@@ -1318,7 +1342,9 @@ export type ApiType_Geo_Object_Base = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
 }
 
 
@@ -1338,7 +1364,9 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               /**
                * [lng, lat, elevation]
@@ -1370,7 +1398,9 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1399,7 +1429,9 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               /**
                * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1428,7 +1460,9 @@ export type ApiType_Geo_Object_Type0 =
           updated_at: string;
           type: number;
           sub_type: number;
-          task_id?: number;
+          tasks: {
+              id: number;
+          }[];
           config: {
               /**
                * [lng, lat, elevation]
@@ -1464,7 +1498,9 @@ export type ApiType_Geo_Object_Type0_Subtype0 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         /**
          * [lng, lat, elevation]
@@ -1513,7 +1549,9 @@ export type ApiType_Geo_Object_Type0_Subtype1 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1556,7 +1594,9 @@ export type ApiType_Geo_Object_Type0_Subtype2 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         /**
          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -1599,7 +1639,9 @@ export type ApiType_Geo_Object_Type0_Subtype3 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         /**
          * [lng, lat, elevation]
@@ -1650,7 +1692,9 @@ export type ApiType_Geo_Object_Type1 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         longitude: number;
         latitude: number;
@@ -1693,7 +1737,9 @@ export type ApiType_Geo_Object_Type2 = {
     updated_at: string;
     type: number;
     sub_type: number;
-    task_id?: number;
+    tasks: {
+        id: number;
+    }[];
     config: {
         longitude: number;
         latitude: number;
@@ -2815,7 +2861,9 @@ export type ApiType_Mission_Tasks = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [lng, lat, elevation]
@@ -2845,7 +2893,9 @@ export type ApiType_Mission_Tasks = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -2872,7 +2922,9 @@ export type ApiType_Mission_Tasks = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -2899,7 +2951,9 @@ export type ApiType_Mission_Tasks = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [lng, lat, elevation]
@@ -2931,7 +2985,9 @@ export type ApiType_Mission_Tasks = {
               updated_at: string;
               type: number;
               sub_type: number;
-              task_id?: number;
+              tasks: {
+                  id: number;
+              }[];
               config: {
                   longitude: number;
                   latitude: number;
@@ -2958,7 +3014,9 @@ export type ApiType_Mission_Tasks = {
               updated_at: string;
               type: number;
               sub_type: number;
-              task_id?: number;
+              tasks: {
+                  id: number;
+              }[];
               config: {
                   longitude: number;
                   latitude: number;
@@ -3012,7 +3070,9 @@ export type ApiType_Task = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [lng, lat, elevation]
@@ -3042,7 +3102,9 @@ export type ApiType_Task = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -3069,7 +3131,9 @@ export type ApiType_Task = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [[lng, lat, elevation], [lng, lat, elevation]]
@@ -3096,7 +3160,9 @@ export type ApiType_Task = {
                     updated_at: string;
                     type: number;
                     sub_type: number;
-                    task_id?: number;
+                    tasks: {
+                        id: number;
+                    }[];
                     config: {
                         /**
                          * [lng, lat, elevation]
@@ -3128,7 +3194,9 @@ export type ApiType_Task = {
               updated_at: string;
               type: number;
               sub_type: number;
-              task_id?: number;
+              tasks: {
+                  id: number;
+              }[];
               config: {
                   longitude: number;
                   latitude: number;
@@ -3155,7 +3223,9 @@ export type ApiType_Task = {
               updated_at: string;
               type: number;
               sub_type: number;
-              task_id?: number;
+              tasks: {
+                  id: number;
+              }[];
               config: {
                   longitude: number;
                   latitude: number;
@@ -3192,6 +3262,18 @@ export type ApiType_Task_Patch = {
      * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
     state?: number;
+}
+
+
+
+export type ApiType_Task_Link_Geo_Object = {
+    geo_object_id: number;
+}
+
+
+
+export type ApiType_Task_Unlink_Geo_Object = {
+    geo_object_id: number;
 }
 
 

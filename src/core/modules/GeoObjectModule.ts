@@ -1,15 +1,15 @@
 
-import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
-import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
+import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES, DBType_Task} from '../../generated-definitions/db/DBTypes'
+import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, select_Task, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { ClientId } from '../../live-websocket/websocket'
 import TrafficSensing, { SensingHandle } from '../../aircraft_sensing/TrafficSensing'
-
+import { getCore } from '..'
 
 import pgp from 'pg-promise'
-import { getCore } from '..'
+import { assignObject } from '../../util/typescript'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -275,6 +275,23 @@ export default class GeoObjectModule extends Module_Base<
      * @see getGeoObject
      */
     getGeoObjectSafe = makeFunctionIdSafe(this, this.getGeoObject)
+
+    async getGeoObjectsWithTasks(geoObjects: DBType_Geo_Object[]) {
+
+        const geoObjectsWithTasks: (DBType_Geo_Object & {tasks: {id: number}[]})[] = []
+
+        await Promise.all(geoObjects.map(geoObject => {
+            return db.manyOrNone<{id: number}>('SELECT tasks.id FROM tasks INNER JOIN task_geo_objects ON tasks.id = task_geo_objects.task_id WHERE task_geo_objects.geo_object_id = ${geoObjectId}', {
+                geoObjectId: geoObject.id
+            }).then(tasks => {
+                geoObjectsWithTasks.push(assignObject(geoObject, {
+                    tasks
+                }))
+            })
+        }))
+
+        return geoObjectsWithTasks
+    }
 
     private parseFilter(filter: string){
         const filterOptions: Record<string, any> & {default: string} = {

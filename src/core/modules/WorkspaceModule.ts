@@ -1,8 +1,12 @@
 
 import { getCore } from '..'
-import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, insert_Workspace_Permission, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
+import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, insert_Workspace_Permission, select_Geo_Object, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
 import { DBType_Workspace, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
+
+import pgp from 'pg-promise'
+//@ts-ignore
+const db = global.db as pgp.IDatabase<any>
 
 export default class WorkspaceModule extends Module_Base<
     {
@@ -123,5 +127,11 @@ export default class WorkspaceModule extends Module_Base<
         } else {
             return await getCore().modules.organisation.userOwnsOrganisation(userId, (workspace as DBType_Workspace_ForOrganisation).owner_organisation_id)
         }
+    }
+
+    async getGeoObjectsForWorkspace(workspaceId: number){
+        return await select_Geo_Object(pgp.as.format('WHERE geo_objects.workspace_id = ${workspaceId}', {
+            workspaceId
+        }))
     }
 }

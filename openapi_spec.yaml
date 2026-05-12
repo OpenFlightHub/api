@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.19.2
+  version: 0.19.3
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1564,7 +1564,6 @@ paths:
       security:
         - user_auth: []
 
-  /workspace/{workspace_id}/geo-objects/create:
     post:
       tags:
         - workspace
@@ -1579,7 +1578,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/workspace_geo_objects_create"
+              $ref: "#/components/schemas/workspace_geo_objects_post"
       responses:
         "200":
           description: Returns the id
@@ -2415,6 +2414,71 @@ paths:
       responses:
         "200":
           description: task was deleted
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+
+  /task/{task_id}/link-geo-object:
+    post:
+      tags:
+        - missions-and-tasks
+      summary: link geo object to task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/task_link_geo_object"
+        required: true
+      responses:
+        "200":
+          description: geo object was linked
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /task/{task_id}/unlink-geo-object:
+    post:
+      tags:
+        - missions-and-tasks
+      summary: Unlink geo object from task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/task_unlink_geo_object"
+        required: true
+      responses:
+        "200":
+          description: geo object was unlinked
 
         "400":
           $ref: "#/components/responses/400"
@@ -3719,7 +3783,7 @@ components:
       items:
         $ref: "#/components/schemas/geo_object"
 
-    workspace_geo_objects_create:
+    workspace_geo_objects_post:
       $ref: "#/components/schemas/geo_object_create"
 
     workspace_geo_object_patch:
@@ -3742,6 +3806,7 @@ components:
         - updated_at
         - type
         - sub_type
+        - tasks
       properties:
         id:
           $ref: "#/components/schemas/id"
@@ -3759,8 +3824,10 @@ components:
           type: integer
         sub_type:
           type: integer
-        task_id:
-          $ref: "#/components/schemas/id"
+        tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/reference"
 
     geo_object_type0:
       anyOf:
@@ -4026,7 +4093,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4046,7 +4113,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4066,7 +4133,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4086,7 +4153,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4106,7 +4173,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4126,7 +4193,7 @@ components:
           required:
             - config
             - type
-            - subtype
+            - sub_type
           properties:
             type:
               type: integer
@@ -4587,6 +4654,21 @@ components:
         state:
           $ref: "#/components/schemas/task_state"
 
+    task_link_geo_object:
+      type: object
+      required:
+        - geo_object_id
+      properties:
+        geo_object_id:
+          $ref: "#/components/schemas/id"
+
+    task_unlink_geo_object:
+      type: object
+      required:
+        - geo_object_id
+      properties:
+        geo_object_id:
+          $ref: "#/components/schemas/id"
 
 
 

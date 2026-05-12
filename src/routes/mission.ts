@@ -71,10 +71,11 @@ router.get('/:mission_id/tasks', asyncHandler(async (req, res) => {
     const tasksWithGeoObjects: ApiType_Task[] = []
 
     await Promise.all(tasks.map(task => {
-        return getCore().modules.task.getGeoObjectsForTask(task.id).then(geoObjects => {
+        return new Promise<void>(async (resolve) => {
             tasksWithGeoObjects.push(assignObject(task, {
-                geo_objects: geoObjects
+                geo_objects: await getCore().modules.geoObject.getGeoObjectsWithTasks(await getCore().modules.task.getGeoObjectsForTask(task.id))
             }))
+            resolve()
         })
     }))
 
