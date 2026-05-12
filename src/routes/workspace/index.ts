@@ -48,9 +48,39 @@ router.post('/', asyncHandler(async (req, res) => {
 
     const requestBody = req.GM.guardBodySchema<ApiType_Workspaces_Post>(ApiSchema_Workspaces_Post)
 
-    const workspace = await getCore().modules.workspace.createWorkspace(assignObject(requestBody, {
-        created_by: (await req.GM.getCurrentUser()).id
-    }))
+
+    if(typeof requestBody.team_id === 'number' && typeof requestBody.organisation_id === 'number'){
+        throw GuardError._400_invalidBody('team_id and organisation_id cannot both be set')
+    }
+
+    if(typeof requestBody.team_id === 'number'){
+        const team = await getCore().modules.team.getTeam(requestBody.team_id)
+        if(team === false){
+            throw GuardError._410_Gone('team_id')
+        }
+    }
+
+    if(typeof requestBody.organisation_id === 'number'){
+        const organisation = await getCore().modules.organisation.getOrganisation(requestBody.organisation_id)
+        if(organisation === false){
+            throw GuardError._410_Gone('organisation_id')
+        }
+    }
+
+    const currentUser = await req.GM.getCurrentUser()
+
+    const workspace = await getCore().modules.workspace.createWorkspace({
+        name: requestBody.name,
+        latitude: requestBody.latitude,
+        longitude: requestBody.longitude,
+        created_by: currentUser.id,
+        owner_team_id: typeof requestBody.team_id === 'number' ? requestBody.team_id : undefined,
+        owner_organisation_id: typeof requestBody.organisation_id === 'number' ? requestBody.organisation_id : undefined
+    })
+
+    if(typeof requestBody.team_id === 'number'){
+        await getCore().modules.workspace.inviteTeam(workspace.id, requestBody.team_id)
+    }
 
     res.GM.guardSend<ApiType_Workspace>(workspace, ApiSchema_Reference)
 }))
