@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.19.3
+  version: 0.19.4
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -1326,6 +1326,36 @@ paths:
       security:
         - user_auth: []
 
+  /workspace/{workspace_id}/permissions:
+    get:
+      tags:
+        - workspace
+      summary: Get permissions to a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the permissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/workspace_permissions"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
   /workspace/{workspace_id}/invite-team:
     post:
       tags:
@@ -1339,9 +1369,41 @@ paths:
             $ref: "#/components/schemas/id"
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: "#/components/schemas/workspace_invite_team_post"
+        required: true
+      responses:
+        "200":
+          description: OK
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+  /workspace/{workspace_id}/kick-team:
+    post:
+      tags:
+        - workspace
+      summary: Kicks a team from a workspace (remove permissions)
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/workspace_kick_team_post"
         required: true
       responses:
         "200":
@@ -3723,6 +3785,25 @@ components:
       properties:
         team_id:
           $ref: "#/components/schemas/id"
+
+    workspace_kick_team_post:
+      type: object
+      required:
+        - team_id
+      properties:
+        team_id:
+          $ref: "#/components/schemas/id"
+
+    workspace_permissions:
+      type: array
+      items:
+        type: object
+        required:
+          - team_id
+        properties:
+          team_id:
+            $ref: "#/components/schemas/id"
+
 
     workspace_missions:
       type: array

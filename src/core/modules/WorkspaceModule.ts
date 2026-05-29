@@ -114,6 +114,33 @@ export default class WorkspaceModule extends Module_Base<
         })
     }
 
+    async kickTeam(workspaceId: number, teamId: number){
+        const workspace = await this.getWorkspaceSafe(workspaceId)
+
+        const permissions = await this.getPermissions(workspaceId)
+
+        if(!permissions.find(p => p.team_id === teamId)){
+            throw new Error('team has no permissions for this workspace')
+        }
+
+        if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id === 'number'){
+            if((workspace as DBType_Workspace_ForTeam).owner_team_id === teamId){
+                throw new Error('team is the owner of this workspace and cannot be kicked')
+            }
+        }
+
+        await db.none('DELETE FROM workspace_permissions WHERE workspace_id = ${workspaceId} AND team_id = ${teamId}', {
+            workspaceId,
+            teamId
+        })
+    }
+
+    async getPermissions(workspaceId: number){
+        return await db.manyOrNone<{team_id: number}>('SELECT team_id FROM workspace_permissions WHERE workspace_id = ${workspaceId}', {
+            workspaceId
+        })
+    }
+
     async userOwnsWorkspace(workspaceId: number, userId: number){
 
         const workspace = await this.getWorkspaceSafe(workspaceId)

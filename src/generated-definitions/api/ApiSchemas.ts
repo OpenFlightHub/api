@@ -1377,6 +1377,35 @@ export const ApiSchema_Workspace_Invite_Team_Post : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Workspace_Kick_Team_Post : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "team_id"
+    ],
+    "properties": {
+        "team_id": {
+            "type": "number",
+            "example": 42
+        }
+    }
+}
+
+export const ApiSchema_Workspace_Permissions : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "team_id"
+        ],
+        "properties": {
+            "team_id": {
+                "type": "number",
+                "example": 42
+            }
+        }
+    }
+}
+
 export const ApiSchema_Workspace_Missions : JSONSchema4  = {
     "type": "array",
     "items": {

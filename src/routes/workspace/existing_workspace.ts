@@ -1,8 +1,8 @@
 import express, { Request } from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiSchema_Geo_Object, ApiSchema_Geo_Object_Patch, ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Files, ApiSchema_Workspace_Geo_Objects_Get, ApiSchema_Workspace_Geo_Objects_Post, ApiSchema_Workspace_Invite_Team_Post, ApiSchema_Workspace_Missions, ApiSchema_Workspace_Patch } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_Geo_Object_Patch, ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Files, ApiType_Workspace_Geo_Objects_Get, ApiType_Workspace_Geo_Objects_Post, ApiType_Workspace_Invite_Team_Post, ApiType_Workspace_Missions, ApiType_Workspace_Patch } from '../../generated-definitions/api/ApiTypes';
+import { ApiSchema_Geo_Object, ApiSchema_Geo_Object_Patch, ApiSchema_Reference, ApiSchema_Workspace, ApiSchema_Workspace_Connections, ApiSchema_Workspace_Files, ApiSchema_Workspace_Geo_Objects_Get, ApiSchema_Workspace_Geo_Objects_Post, ApiSchema_Workspace_Invite_Team_Post, ApiSchema_Workspace_Kick_Team_Post, ApiSchema_Workspace_Missions, ApiSchema_Workspace_Patch, ApiSchema_Workspace_Permissions } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Geo_Object_Patch, ApiType_Reference, ApiType_Workspace, ApiType_Workspace_Connections, ApiType_Workspace_Files, ApiType_Workspace_Geo_Objects_Get, ApiType_Workspace_Geo_Objects_Post, ApiType_Workspace_Invite_Team_Post, ApiType_Workspace_Kick_Team_Post, ApiType_Workspace_Missions, ApiType_Workspace_Patch, ApiType_Workspace_Permissions } from '../../generated-definitions/api/ApiTypes';
 import { DBType_Connection, DBType_File, DBType_Workspace, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes';
 import { MulterFile } from '../../app';
 import { GuardError } from '../../ManInTheMiddleware';
@@ -147,6 +147,17 @@ router.delete('/file/:file_id', asyncHandler(async (req, res) => {
 }))
 
 
+router.get('/permissions', asyncHandler(async (req, res) => {
+
+    //@ts-ignore
+    const workspace = req._workspace as DBType_Workspace
+
+    const permissions = await getCore().modules.workspace.getPermissions(workspace.id)
+
+    res.GM.guardSend<ApiType_Workspace_Permissions>(permissions, ApiSchema_Workspace_Permissions)
+
+}))
+
 router.post('/invite-team', asyncHandler(async (req, res) => {
 
     //@ts-ignore
@@ -154,7 +165,7 @@ router.post('/invite-team', asyncHandler(async (req, res) => {
 
     let ownsTeam = false
 
-    if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id !== 'number'){
+    if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id === 'number'){
         ownsTeam = await getCore().modules.team.userOwnsTeam((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForTeam).owner_team_id)
     } else {
         ownsTeam = await getCore().modules.organisation.userOwnsOrganisation((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForOrganisation).owner_organisation_id)
@@ -167,6 +178,32 @@ router.post('/invite-team', asyncHandler(async (req, res) => {
     const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Invite_Team_Post>(ApiSchema_Workspace_Invite_Team_Post)
 
     await getCore().modules.workspace.inviteTeam(workspace.id, requestBody.team_id)
+
+    res.send()
+
+}))
+
+
+router.post('/kick-team', asyncHandler(async (req, res) => {
+
+    //@ts-ignore
+    const workspace = req._workspace as DBType_Workspace
+
+    let userOwnsTeam = false
+
+    if(typeof (workspace as DBType_Workspace_ForTeam).owner_team_id === 'number'){
+        userOwnsTeam = await getCore().modules.team.userOwnsTeam((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForTeam).owner_team_id)
+    } else {
+        userOwnsTeam = await getCore().modules.organisation.userOwnsOrganisation((await req.GM.getCurrentUser()).id, (workspace as DBType_Workspace_ForOrganisation).owner_organisation_id)
+    }
+
+    if(!userOwnsTeam){
+        throw GuardError._403_Forbidden()
+    }
+
+    const requestBody = req.GM.guardBodySchema<ApiType_Workspace_Kick_Team_Post>(ApiSchema_Workspace_Kick_Team_Post)
+
+    await getCore().modules.workspace.kickTeam(workspace.id, requestBody.team_id)
 
     res.send()
 

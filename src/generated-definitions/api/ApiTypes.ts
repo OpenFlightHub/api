@@ -607,6 +607,17 @@ export type ApiType_Workspace_Invite_Team_Post = {
 }
 
 
+
+export type ApiType_Workspace_Kick_Team_Post = {
+    team_id: number;
+}
+
+
+export type ApiType_Workspace_Permissions = {
+    team_id: number;
+}[];
+
+
 export type ApiType_Workspace_Missions = {
     id: number;
     workspace_id: number;
