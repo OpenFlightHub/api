@@ -27,7 +27,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }))
 
 
-router.patch('/:task_id', asyncHandler(async (req, res) => {
+router.patch('/', asyncHandler(async (req, res) => {
 
     //@ts-ignore
     const task = req._task as DBType_Task
@@ -45,7 +45,7 @@ router.patch('/:task_id', asyncHandler(async (req, res) => {
     }), ApiSchema_Task)
 }))
 
-router.delete('/:task_id', asyncHandler(async (req, res) => {
+router.delete('/', asyncHandler(async (req, res) => {
 
     //@ts-ignore
     const task = req._task as DBType_Task
@@ -57,7 +57,7 @@ router.delete('/:task_id', asyncHandler(async (req, res) => {
 
 
 
-router.post('/:task_id/link-geo-object', asyncHandler(async (req, res) => {
+router.post('/link-geo-object', asyncHandler(async (req, res) => {
 
     //@ts-ignore
     const task = req._task as DBType_Task
@@ -81,7 +81,7 @@ router.post('/:task_id/link-geo-object', asyncHandler(async (req, res) => {
     res.send()
 }))
 
-router.post('/:task_id/unlink-geo-object', asyncHandler(async (req, res) => {
+router.post('/unlink-geo-object', asyncHandler(async (req, res) => {
 
     //@ts-ignore
     const task = req._task as DBType_Task
