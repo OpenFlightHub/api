@@ -3049,6 +3049,11 @@ components:
       type: number
       example: 42
 
+    id_nullable:
+      type: number
+      nullable: true
+      example: 42
+
     uuid:
       type: string
       example: "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
@@ -3328,7 +3333,7 @@ components:
           type: string
           example: Harry Potter
         logo_file_id:
-          $ref: "#/components/schemas/id"
+          $ref: "#/components/schemas/id_nullable"
 
     team_invite_member:
       type: object
@@ -3394,7 +3399,7 @@ components:
           type: string
           example: Harry Potter
         logo_file_id:
-          $ref: "#/components/schemas/id"
+          $ref: "#/components/schemas/id_nullable"
 
     organisation_users:
       type: array
@@ -4663,8 +4668,9 @@ components:
           type: string
         description:
           type: string
+          nullable: true
         assigned_to_team_id:
-          $ref: "#/components/schemas/id"
+          $ref: "#/components/schemas/id_nullable"
         state:
           $ref: "#/components/schemas/mission_state"
 
@@ -4732,6 +4738,7 @@ components:
           type: string
         description:
           type: string
+          nullable: true
         state:
           $ref: "#/components/schemas/task_state"
 

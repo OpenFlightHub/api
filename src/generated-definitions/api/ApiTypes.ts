@@ -1,6 +1,9 @@
 export type ApiType_Id = number;
 
 
+export type ApiType_Id_Nullable = number;
+
+
 export type ApiType_Uuid = string;
 
 

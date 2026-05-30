@@ -5,6 +5,12 @@ export const ApiSchema_Id : JSONSchema4  = {
     "example": 42
 }
 
+export const ApiSchema_Id_Nullable : JSONSchema4  = {
+    "type": "number",
+    "nullable": true,
+    "example": 42
+}
+
 export const ApiSchema_Uuid : JSONSchema4  = {
     "type": "string",
     "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
@@ -417,6 +423,7 @@ export const ApiSchema_Team_Patch : JSONSchema4  = {
         },
         "logo_file_id": {
             "type": "number",
+            "nullable": true,
             "example": 42
         }
     }
@@ -583,6 +590,7 @@ export const ApiSchema_Organisation_Patch : JSONSchema4  = {
         },
         "logo_file_id": {
             "type": "number",
+            "nullable": true,
             "example": 42
         }
     }
@@ -6587,10 +6595,12 @@ export const ApiSchema_Mission_Patch : JSONSchema4  = {
             "type": "string"
         },
         "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
         },
         "assigned_to_team_id": {
             "type": "number",
+            "nullable": true,
             "example": 42
         },
         "state": {
@@ -7850,7 +7860,8 @@ export const ApiSchema_Task_Patch : JSONSchema4  = {
             "type": "string"
         },
         "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
         },
         "state": {
             "type": "integer",
