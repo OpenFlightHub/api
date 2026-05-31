@@ -2680,7 +2680,7 @@ import {} from "./DBTypes";
 
 export type DBInsert_Geo_Object = {
     uuid?: string
-    workspace_id: number
+    workspace_id?: number
     name: string
     type: number
     sub_type: number
@@ -2709,7 +2709,8 @@ const COLUMN_SET_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
         "skip": col => !col.exists
     },
     {
-        "name": "workspace_id"
+        "name": "workspace_id",
+        "skip": col => !col.exists
     },
     {
         "name": "name"

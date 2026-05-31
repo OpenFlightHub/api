@@ -686,7 +686,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -720,7 +720,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -751,7 +751,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -782,7 +782,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -818,7 +818,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -849,7 +849,7 @@ export type ApiType_Workspace_Geo_Objects_Get = (
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1146,7 +1146,7 @@ export type ApiType_Geo_Object =
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -1180,7 +1180,7 @@ export type ApiType_Geo_Object =
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -1211,7 +1211,7 @@ export type ApiType_Geo_Object =
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -1242,7 +1242,7 @@ export type ApiType_Geo_Object =
           | {
                 id: number;
                 uuid: string;
-                workspace_id: number;
+                workspace_id?: number;
                 name: string;
                 /**
                  * ISO 8601 format with a timezone
@@ -1278,7 +1278,7 @@ export type ApiType_Geo_Object =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1309,7 +1309,7 @@ export type ApiType_Geo_Object =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1340,11 +1340,13 @@ export type ApiType_Geo_Object =
       };
 
 
-
-export type ApiType_Geo_Object_Base = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Base {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1366,7 +1368,7 @@ export type ApiType_Geo_Object_Type0 =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1400,7 +1402,7 @@ export type ApiType_Geo_Object_Type0 =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1431,7 +1433,7 @@ export type ApiType_Geo_Object_Type0 =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1462,7 +1464,7 @@ export type ApiType_Geo_Object_Type0 =
     | {
           id: number;
           uuid: string;
-          workspace_id: number;
+          workspace_id?: number;
           name: string;
           /**
            * ISO 8601 format with a timezone
@@ -1496,11 +1498,13 @@ export type ApiType_Geo_Object_Type0 =
       };
 
 
-
-export type ApiType_Geo_Object_Type0_Subtype0 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type0_Subtype0 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1547,11 +1551,13 @@ export type ApiType_Geo_Object_Type0_Subtype0_Config = {
 }
 
 
-
-export type ApiType_Geo_Object_Type0_Subtype1 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type0_Subtype1 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1592,11 +1598,13 @@ export type ApiType_Geo_Object_Type0_Subtype1_Config = {
 }
 
 
-
-export type ApiType_Geo_Object_Type0_Subtype2 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type0_Subtype2 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1637,11 +1645,13 @@ export type ApiType_Geo_Object_Type0_Subtype2_Config = {
 }
 
 
-
-export type ApiType_Geo_Object_Type0_Subtype3 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type0_Subtype3 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1690,11 +1700,13 @@ export type ApiType_Geo_Object_Type0_Subtype3_Config = {
 }
 
 
-
-export type ApiType_Geo_Object_Type1 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type1 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -1735,11 +1747,13 @@ export type ApiType_Geo_Object_Type1_Config = {
 }
 
 
-
-export type ApiType_Geo_Object_Type2 = {
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type2 {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     /**
      * ISO 8601 format with a timezone
@@ -2863,7 +2877,7 @@ export type ApiType_Mission_Tasks = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -2895,7 +2909,7 @@ export type ApiType_Mission_Tasks = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -2924,7 +2938,7 @@ export type ApiType_Mission_Tasks = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -2953,7 +2967,7 @@ export type ApiType_Mission_Tasks = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -2987,7 +3001,7 @@ export type ApiType_Mission_Tasks = {
         | {
               id: number;
               uuid: string;
-              workspace_id: number;
+              workspace_id?: number;
               name: string;
               /**
                * ISO 8601 format with a timezone
@@ -3016,7 +3030,7 @@ export type ApiType_Mission_Tasks = {
         | {
               id: number;
               uuid: string;
-              workspace_id: number;
+              workspace_id?: number;
               name: string;
               /**
                * ISO 8601 format with a timezone
@@ -3072,7 +3086,7 @@ export type ApiType_Task = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -3104,7 +3118,7 @@ export type ApiType_Task = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -3133,7 +3147,7 @@ export type ApiType_Task = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -3162,7 +3176,7 @@ export type ApiType_Task = {
               | {
                     id: number;
                     uuid: string;
-                    workspace_id: number;
+                    workspace_id?: number;
                     name: string;
                     /**
                      * ISO 8601 format with a timezone
@@ -3196,7 +3210,7 @@ export type ApiType_Task = {
         | {
               id: number;
               uuid: string;
-              workspace_id: number;
+              workspace_id?: number;
               name: string;
               /**
                * ISO 8601 format with a timezone
@@ -3225,7 +3239,7 @@ export type ApiType_Task = {
         | {
               id: number;
               uuid: string;
-              workspace_id: number;
+              workspace_id?: number;
               name: string;
               /**
                * ISO 8601 format with a timezone

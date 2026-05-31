@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.19.4
+  version: 0.20.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -3886,7 +3886,6 @@ components:
       required:
         - id
         - uuid
-        - workspace_id
         - name
         - created_at
         - updated_at
@@ -3914,6 +3913,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/reference"
+      description: "if workspace_id is not present, it is a global geoobject"
 
     geo_object_type0:
       anyOf:
@@ -4640,7 +4640,7 @@ components:
         updated_at:
           $ref: "#/components/schemas/timestamptz"
         assigned_to_team_id:
-          $ref: "#/components/schemas/id"
+          $ref: "#/components/schemas/id_nullable"
         state:
           $ref: "#/components/schemas/mission_state"
 

@@ -2,6 +2,9 @@ import express from 'express';
 import ws from 'ws'
 import TrafficSensing, { SensingHandle } from '../../../aircraft_sensing/TrafficSensing';
 import { getCore } from '../../../core';
+import { WorkspaceTrafficSensingHandle } from '../../../core/modules/WorkspaceModule';
+import { DJI_SUPPORTED_COLORS } from '../../../util/dji';
+//@ts-ignore
 const trafficSense : TrafficSensing = global.trafficSense
 
 if(!trafficSense){
@@ -10,15 +13,17 @@ if(!trafficSense){
 
 const router = express.Router()
 
-const DRONE_SENSING_RADIUS_ON_MAP = 1000 * 50
+const DRONE_SENSING_RADIUS_ON_MAP = 1000 * 100
 
 const connectedDjiPilot2Clients = new Map<number /* connectionId */, {
     ws: ws.WebSocket
     droneSensingHandle?: SensingHandle,
+    workspaceTrafficSensingHandle?: WorkspaceTrafficSensingHandle,
     existingMapElementIds: string[]
 }>()
 
 //TODO fix this dirty hack (used in connector/dji-pilot-2/index.ts)
+//@ts-ignore
 global.sendToConnection = sendToConnection
 
 router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when user is not authenticated (right now we open the connection, then check, then close) https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketserveroptions-callback https://github.com/websockets/ws/issues/377 https://github.com/expressjs/express/issues/2556
@@ -54,6 +59,8 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                     console.error('failed to parse ws message', connection.id, dataString, err)
                 }
 
+                ////TODO we should update the drone traffic sensing area when we receive a new position from the drone
+
                 try {
                     handleMessage(ws, connection.id, parsed)
                 } catch (err){
@@ -79,71 +86,81 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
                 existingClient.droneSensingHandle.stop()
             }
 
+            if(existingClient.workspaceTrafficSensingHandle){
+                existingClient.workspaceTrafficSensingHandle.stop()
+            }
+
             connectedDjiPilot2Clients.delete(connection.id)
         })
 
-        //TODO also implement sensing for position of remote controller
-        if(typeof connection.last_drone_id === 'number'){
-            getCore().modules.drone.getLastPositionOfDrone(connection.last_drone_id).then(lastDronePosition => {
-                if(lastDronePosition === false){
-                    console.warn('did not start traffic sensing, drone has no last position', connection)//TODO we should update the traffic sensing area when we receive a new position from the drone
-                } else {
-                    const handle = trafficSense.startSensing(lastDronePosition.latitude, lastDronePosition.longitude, DRONE_SENSING_RADIUS_ON_MAP)
+        if(typeof connection.workspace_id === 'number'){
 
-                    const theConnectedClient = connectedDjiPilot2Clients.get(connection.id)
+            const theConnectedClient = connectedDjiPilot2Clients.get(connection.id)
+            if(theConnectedClient){
+                getCore().modules.workspace.activateTrafficSensing(connection.workspace_id).then(handle => {
+                    theConnectedClient.workspaceTrafficSensingHandle = handle
+                }).catch(err => {
+                    console.error('failed to activate traffic sensing for workspace', connection.workspace_id, err)
+                })
+            }
+        } else {
 
-                    if(!theConnectedClient){
-                        return
-                    }
+            //TODO also implement sensing for position of remote controller
+            if(typeof connection.last_drone_id === 'number'){
+                getCore().modules.drone.getLastPositionOfDrone(connection.last_drone_id).then(lastDronePosition => {
+                    if(lastDronePosition !== false){
+                        const handle = trafficSense.startSensing(lastDronePosition.latitude, lastDronePosition.longitude, DRONE_SENSING_RADIUS_ON_MAP)
 
-                    theConnectedClient.droneSensingHandle = handle
+                        const theConnectedClient = connectedDjiPilot2Clients.get(connection.id)
 
+                        if(!theConnectedClient){
+                            return
+                        }
 
-                    //TODO implement removing existing map element ids after we havent received an update for a long time
+                        theConnectedClient.droneSensingHandle = handle
 
-                    handle.addListener('traffic', trafficData=>{
+                        //TODO implement removing existing map element ids after we havent received an update for a long time
 
+                        handle.addListener('traffic', trafficData=>{
 
+                            const existsAlready = theConnectedClient.existingMapElementIds.includes(trafficData.id)
 
-                        const existsAlready = theConnectedClient.existingMapElementIds.includes(trafficData.id)
-
-                        ws.send(JSON.stringify({
-                            biz_code: existsAlready ? 'map_element_update' : 'map_element_create',
-                            version: '1.0',
-                            timestamp: Date.now(),
-                            data: {
-                                group_id: connection.workspace_uuid,
-                                id: trafficData.id,
-                                name: trafficData.name,
-                                resource: {
-                                    type: 0,
-                                    user_name: 'OpenFlightHub Server',
-                                    content: {
-                                        type: 'Feature',
-                                        properties: {
-                                            color: '#0091FF'
-                                        },
-                                        geometry: {
-                                            type: 'Point',
-                                            coordinates: [trafficData.position.longitude, trafficData.position.latitude, trafficData.position.height]
+                            ws.send(JSON.stringify({
+                                biz_code: existsAlready ? 'map_element_update' : 'map_element_create',
+                                version: '1.0',
+                                timestamp: Date.now(),
+                                data: {
+                                    group_id: connection.workspace_uuid,
+                                    id: trafficData.id,
+                                    name: trafficData.name,
+                                    resource: {
+                                        type: 0,
+                                        user_name: 'OpenFlightHub Server',
+                                        content: {
+                                            type: 'Feature',
+                                            properties: {
+                                                color: DJI_SUPPORTED_COLORS.RED,
+                                            },
+                                            geometry: {
+                                                type: 'Point',
+                                                coordinates: [trafficData.position.longitude, trafficData.position.latitude, trafficData.position.height]
+                                            }
                                         }
                                     }
                                 }
+                            }))
+
+                            if(!existsAlready){
+                                theConnectedClient.existingMapElementIds.push(trafficData.id)
                             }
-                        }))
+                        })
 
-                        if(!existsAlready){
-                            theConnectedClient.existingMapElementIds.push(trafficData.id)
-                        }
-                    })
-
-                    console.log('done with setting up traffic map markers for dji pilot 2 ws', connection)
-                }
-            }).catch(err => {
-                console.error('failed to get last position of drone in order to set up traffic sensing', err)
-            })
-        } else {
-            console.warn('did not start traffic sensing, connection has no last_drone_id', connection)
+                        console.log('done with setting up traffic map markers for dji pilot 2 ws', connection)
+                    }
+                }).catch(err => {
+                    console.error('failed to get last position of drone in order to set up traffic sensing', err)
+                })
+            }
         }
 
         //force update of topology
@@ -222,6 +239,8 @@ export function sendToConnection(connectionId: number, messageData: object): boo
     }
 
     client.ws.send(JSON.stringify(messageData))
+
+    return true
 }
 
 export default router

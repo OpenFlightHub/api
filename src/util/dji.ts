@@ -110,21 +110,22 @@ export function getGeoObjectSubTypeForDJIMapElementType(mapElementType: number){
     throw new Error('invalid dji map element type: ' + mapElementType)
 }
 
-export function getDjiColorForColorHex(colorHex: string){
-    const SUPPORTED_COLORS = {
-        BLUE: '#2D8CF0',
-        GREEN: '#19BE6B',
-        YELLOW: '#FFBB00',
-        RED: '#E23C39',
-        PURPLE: '#B620E0'
-    }
+export const DJI_SUPPORTED_COLORS = {
+    BLUE: '#2D8CF0',
+    GREEN: '#19BE6B',
+    YELLOW: '#FFBB00',
+    RED: '#E23C39',
+    PURPLE: '#B620E0'
+} as const
 
-    for(const [key, value] of Object.entries(SUPPORTED_COLORS)){
+export function getDjiColorForColorHex(colorHex: string){
+
+    for(const [key, value] of Object.entries(DJI_SUPPORTED_COLORS)){
         if(value.toLowerCase() === colorHex.toLowerCase()){
             return colorHex.toUpperCase()
         }
     }
 
-    console.warn('unsupported color for dji map element', colorHex, ', defaulting to blue. supported colors are:', SUPPORTED_COLORS)
+    console.warn('unsupported color for dji map element', colorHex, ', defaulting to blue. supported colors are:', DJI_SUPPORTED_COLORS)
     return '#2D8CF0'
 }

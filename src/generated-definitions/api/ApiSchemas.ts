@@ -1465,6 +1465,7 @@ export const ApiSchema_Workspace_Missions : JSONSchema4  = {
             },
             "assigned_to_team_id": {
                 "type": "number",
+                "nullable": true,
                 "example": 42
             },
             "state": {
@@ -1592,7 +1593,6 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -1672,14 +1672,14 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     },
                     {
                         "type": "object",
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -1762,14 +1762,14 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     },
                     {
                         "type": "object",
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -1852,14 +1852,14 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     },
                     {
                         "type": "object",
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -1943,7 +1943,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     }
                 ]
             },
@@ -1952,7 +1953,6 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                 "required": [
                     "id",
                     "uuid",
-                    "workspace_id",
                     "name",
                     "created_at",
                     "updated_at",
@@ -2035,14 +2035,14 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             }
                         }
                     }
-                }
+                },
+                "description": "if workspace_id is not present, it is a global geoobject"
             },
             {
                 "type": "object",
                 "required": [
                     "id",
                     "uuid",
-                    "workspace_id",
                     "name",
                     "created_at",
                     "updated_at",
@@ -2129,7 +2129,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                             }
                         }
                     }
-                }
+                },
+                "description": "if workspace_id is not present, it is a global geoobject"
             }
         ]
     }
@@ -2682,7 +2683,6 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "required": [
                         "id",
                         "uuid",
-                        "workspace_id",
                         "name",
                         "created_at",
                         "updated_at",
@@ -2762,14 +2762,14 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                 }
                             }
                         }
-                    }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
                 },
                 {
                     "type": "object",
                     "required": [
                         "id",
                         "uuid",
-                        "workspace_id",
                         "name",
                         "created_at",
                         "updated_at",
@@ -2852,14 +2852,14 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                 }
                             }
                         }
-                    }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
                 },
                 {
                     "type": "object",
                     "required": [
                         "id",
                         "uuid",
-                        "workspace_id",
                         "name",
                         "created_at",
                         "updated_at",
@@ -2942,14 +2942,14 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                 }
                             }
                         }
-                    }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
                 },
                 {
                     "type": "object",
                     "required": [
                         "id",
                         "uuid",
-                        "workspace_id",
                         "name",
                         "created_at",
                         "updated_at",
@@ -3033,7 +3033,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                                 }
                             }
                         }
-                    }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
                 }
             ]
         },
@@ -3042,7 +3043,6 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3125,14 +3125,14 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         },
         {
             "type": "object",
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3219,7 +3219,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         }
     ]
 }
@@ -3229,7 +3230,6 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -3286,7 +3286,8 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
@@ -3296,7 +3297,6 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3376,14 +3376,14 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         },
         {
             "type": "object",
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3466,14 +3466,14 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         },
         {
             "type": "object",
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3556,14 +3556,14 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         },
         {
             "type": "object",
             "required": [
                 "id",
                 "uuid",
-                "workspace_id",
                 "name",
                 "created_at",
                 "updated_at",
@@ -3647,7 +3647,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                         }
                     }
                 }
-            }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
         }
     ]
 }
@@ -3657,7 +3658,6 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -3737,7 +3737,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type0_Subtype0_Config : JSONSchema4  = {
@@ -3768,7 +3769,6 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -3851,7 +3851,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type0_Subtype1_Config : JSONSchema4  = {
@@ -3885,7 +3886,6 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -3968,7 +3968,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type0_Subtype2_Config : JSONSchema4  = {
@@ -4002,7 +4003,6 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -4086,7 +4086,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type0_Subtype3_Config : JSONSchema4  = {
@@ -4121,7 +4122,6 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -4204,7 +4204,8 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type1_Config : JSONSchema4  = {
@@ -4238,7 +4239,6 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
     "required": [
         "id",
         "uuid",
-        "workspace_id",
         "name",
         "created_at",
         "updated_at",
@@ -4325,7 +4325,8 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
                 }
             }
         }
-    }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
 }
 
 export const ApiSchema_Geo_Object_Type2_Config : JSONSchema4  = {
@@ -6551,6 +6552,7 @@ export const ApiSchema_Mission : JSONSchema4  = {
         },
         "assigned_to_team_id": {
             "type": "number",
+            "nullable": true,
             "example": 42
         },
         "state": {
@@ -6675,7 +6677,6 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                     "required": [
                                         "id",
                                         "uuid",
-                                        "workspace_id",
                                         "name",
                                         "created_at",
                                         "updated_at",
@@ -6755,14 +6756,14 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
                                 },
                                 {
                                     "type": "object",
                                     "required": [
                                         "id",
                                         "uuid",
-                                        "workspace_id",
                                         "name",
                                         "created_at",
                                         "updated_at",
@@ -6845,14 +6846,14 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
                                 },
                                 {
                                     "type": "object",
                                     "required": [
                                         "id",
                                         "uuid",
-                                        "workspace_id",
                                         "name",
                                         "created_at",
                                         "updated_at",
@@ -6935,14 +6936,14 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
                                 },
                                 {
                                     "type": "object",
                                     "required": [
                                         "id",
                                         "uuid",
-                                        "workspace_id",
                                         "name",
                                         "created_at",
                                         "updated_at",
@@ -7026,7 +7027,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
                                 }
                             ]
                         },
@@ -7035,7 +7037,6 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                             "required": [
                                 "id",
                                 "uuid",
-                                "workspace_id",
                                 "name",
                                 "created_at",
                                 "updated_at",
@@ -7118,14 +7119,14 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         }
                                     }
                                 }
-                            }
+                            },
+                            "description": "if workspace_id is not present, it is a global geoobject"
                         },
                         {
                             "type": "object",
                             "required": [
                                 "id",
                                 "uuid",
-                                "workspace_id",
                                 "name",
                                 "created_at",
                                 "updated_at",
@@ -7212,7 +7213,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                         }
                                     }
                                 }
-                            }
+                            },
+                            "description": "if workspace_id is not present, it is a global geoobject"
                         }
                     ]
                 }
@@ -7284,7 +7286,6 @@ export const ApiSchema_Task : JSONSchema4  = {
                                 "required": [
                                     "id",
                                     "uuid",
-                                    "workspace_id",
                                     "name",
                                     "created_at",
                                     "updated_at",
@@ -7364,14 +7365,14 @@ export const ApiSchema_Task : JSONSchema4  = {
                                             }
                                         }
                                     }
-                                }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
                             },
                             {
                                 "type": "object",
                                 "required": [
                                     "id",
                                     "uuid",
-                                    "workspace_id",
                                     "name",
                                     "created_at",
                                     "updated_at",
@@ -7454,14 +7455,14 @@ export const ApiSchema_Task : JSONSchema4  = {
                                             }
                                         }
                                     }
-                                }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
                             },
                             {
                                 "type": "object",
                                 "required": [
                                     "id",
                                     "uuid",
-                                    "workspace_id",
                                     "name",
                                     "created_at",
                                     "updated_at",
@@ -7544,14 +7545,14 @@ export const ApiSchema_Task : JSONSchema4  = {
                                             }
                                         }
                                     }
-                                }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
                             },
                             {
                                 "type": "object",
                                 "required": [
                                     "id",
                                     "uuid",
-                                    "workspace_id",
                                     "name",
                                     "created_at",
                                     "updated_at",
@@ -7635,7 +7636,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                             }
                                         }
                                     }
-                                }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
                             }
                         ]
                     },
@@ -7644,7 +7646,6 @@ export const ApiSchema_Task : JSONSchema4  = {
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -7727,14 +7728,14 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     },
                     {
                         "type": "object",
                         "required": [
                             "id",
                             "uuid",
-                            "workspace_id",
                             "name",
                             "created_at",
                             "updated_at",
@@ -7821,7 +7822,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
                     }
                 ]
             }

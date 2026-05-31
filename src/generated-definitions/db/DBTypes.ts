@@ -377,7 +377,7 @@ DBType_Geo_Object_Base<2, 0> | DBType_Geo_Object_Base<2, 1> | DBType_Geo_Object_
 export type DBType_Geo_Object_Base<type extends DBType_Geo_Object_TypeType, sub_type extends DBType_Geo_Object_SubTypeType<type>> = {
     id: number;
     uuid: string;
-    workspace_id: number;
+    workspace_id?: number;
     name: string;
     type: type;
     sub_type: sub_type;

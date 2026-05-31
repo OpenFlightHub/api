@@ -11,6 +11,7 @@ const FETCH_INTERVAL = 1000 * 5
 export default class AdsbLolSensingArea extends SensingSourceArea {
 
 
+    //@ts-ignore
     private callApiInterval: ReturnType<typeof setInterval>
 
     protected onSetup(): void {
@@ -78,6 +79,7 @@ function feetToMeter(feet: number){
 
 function mapADSBCategoryToTrafficType(category: string): TrafficType {
     switch (category) {
+        case 'A0':
         case 'A1':
         case 'A2':
         case 'A3':
@@ -87,6 +89,7 @@ function mapADSBCategoryToTrafficType(category: string): TrafficType {
             return 'aircraft'
         case 'A7':
             return 'helicopter'
+
         case 'B0':
             return 'other'
         case 'B1':

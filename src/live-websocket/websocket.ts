@@ -294,10 +294,11 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
 
     /**
      * @see triggerListenerIfExists() if you only want to execute some code if there really is at least one listener
+     * @param filter if empty string, dispatches to all clients
      */
     triggerListener(filter: EventFilter, data: server_to_client.Message_Type_Event_Object_Data<T>){
         for(const [key, clients] of this.filters){
-            if(key === filter || key.split('&')[0] === filter){
+            if(filter === '' || key === filter || key.split('&')[0] === filter){
                 for(const client of clients){
                     sendToClient(client, 'event', {
                         event: this.event,
@@ -313,10 +314,11 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
      *
      * @param callback will be executed only if at least one listener for this event and filter exists. The returned data of this callback will be sent to all the listeners
      * @see triggerListener()
+     * @param filter if empty string, dispatches to all clients
      */
     triggerListenerIfExists<CR = server_to_client.Message_Type_Event_Object_Data<T> | Promise<server_to_client.Message_Type_Event_Object_Data<T>>>(filter: EventFilter, callback: () => CR): CR extends Promise<void> ? Promise<void> : void {
         for(const [key, clients] of this.filters){
-            if(key === filter || key === filter.split('&')[0]){
+            if(filter === '' || key === filter || key.split('&')[0] === filter){
 
                 const result = callback()
 

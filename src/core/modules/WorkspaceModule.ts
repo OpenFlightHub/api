@@ -1,12 +1,21 @@
 
+import { get } from 'http'
 import { getCore } from '..'
+import TrafficSensing, { SensingHandle } from '../../aircraft_sensing/TrafficSensing'
 import { DBInsert_Workspace, DBUpdate_Workspace, delete_Workspace, insert_Workspace, insert_Workspace_Permission, select_Geo_Object, select_Workspace, update_Workspace } from '../../generated-definitions/db/DBHelpers'
 import { DBType_Workspace, DBType_Workspace_ForOrganisation, DBType_Workspace_ForTeam } from '../../generated-definitions/db/DBTypes'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import pgp from 'pg-promise'
+import LiveUpdatedObjectManager, { LiveUpdatedObjectReference } from '../LiveUpdatedObjectManager'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
+
+const WORKSPACE_TRAFFIC_SENSING_RADIUS = 1000 * 100 // 100km
+
+type WorkspaceId = number
+
+const aircraftSensing = new TrafficSensing()
 
 export default class WorkspaceModule extends Module_Base<
     {
@@ -28,6 +37,10 @@ export default class WorkspaceModule extends Module_Base<
         }
     }
 > {
+
+    private readonly activeHandles = new Map<WorkspaceId, WorkspaceTrafficSensingHandles>()
+
+    private readonly liveUpdatedObjectManager: LiveUpdatedObjectManager<DBType_Workspace> = new LiveUpdatedObjectManager()
 
     constructor(){
         super()
@@ -54,6 +67,16 @@ export default class WorkspaceModule extends Module_Base<
         if(workspace === false){
             return false
         }
+
+        if(typeof data.longitude === 'number' || typeof data.latitude === 'number'){
+            const activeHandlesForWorkspace = this.activeHandles.get(workspace.id)
+
+            if(activeHandlesForWorkspace){
+                activeHandlesForWorkspace.restart()
+            }
+        }
+
+        this.liveUpdatedObjectManager.updateLiveUpdatedObjectIfExists(id, workspace)
 
         this.dispatch('update_workspace', {
             id: workspace.id
@@ -160,5 +183,98 @@ export default class WorkspaceModule extends Module_Base<
         return await select_Geo_Object(pgp.as.format('WHERE geo_objects.workspace_id = ${workspaceId}', {
             workspaceId
         }))
+    }
+
+    async activateTrafficSensing(workspaceId: number): Promise<WorkspaceTrafficSensingHandle> {
+
+        let activeHandlesForWorkspace = this.activeHandles.get(workspaceId)
+
+        if(!activeHandlesForWorkspace){
+            activeHandlesForWorkspace = new WorkspaceTrafficSensingHandles(await this.getLiveUpdatedWorkspace(workspaceId))
+            this.activeHandles.set(workspaceId, activeHandlesForWorkspace)
+        }
+
+        return activeHandlesForWorkspace.makeHandle()
+    }
+
+    async getLiveUpdatedWorkspace(workspaceId: number){
+        return this.liveUpdatedObjectManager.createLiveUpdatedObject(workspaceId, await this.getWorkspaceSafe(workspaceId))
+    }
+
+}
+
+export class WorkspaceTrafficSensingHandle {
+    private readonly handles: WorkspaceTrafficSensingHandles
+
+    constructor(handles: WorkspaceTrafficSensingHandles){
+        this.handles = handles
+    }
+
+    stop(){
+        this.handles.stopHandle(this)
+    }
+}
+
+export class WorkspaceTrafficSensingHandles {
+    private sensingHandle?: SensingHandle
+    private readonly handles: WorkspaceTrafficSensingHandle[]
+    private readonly workspaceRef: LiveUpdatedObjectReference<DBType_Workspace>
+
+    constructor(workspaceRef: LiveUpdatedObjectReference<DBType_Workspace>){
+        this.workspaceRef = workspaceRef
+        this.handles = []
+    }
+
+    makeHandle(){
+        const handle = new WorkspaceTrafficSensingHandle(this)
+        this.handles.push(handle)
+
+        if(this.handles.length === 1){
+            this.setupSensingHandle().catch(err => {
+                console.error('error while setting up sensing handle for workspace ' + this.workspaceRef.get().id, err)
+            })
+        }
+
+        return handle
+    }
+
+    stopHandle(handle: WorkspaceTrafficSensingHandle){
+        const handleIndex = this.handles.indexOf(handle)
+
+        if(handleIndex < 0){
+            console.error(handle, this.handles)
+            throw new Error('handle not part of this handles!')
+        }
+
+        this.handles.splice(handleIndex, 1)
+
+        if(this.handles.length === 0){
+            this.tearDownSensingHandle()
+        }
+    }
+
+    restart(){
+        this.setupSensingHandle().catch(err => {
+            console.error('error while restarting sensing handle for workspace ' + this.workspaceRef.get().id, err)
+        })
+    }
+
+    private async setupSensingHandle(){
+
+        if(this.sensingHandle){
+            this.tearDownSensingHandle()
+        }
+
+        this.sensingHandle = aircraftSensing.startSensing(this.workspaceRef.get().latitude, this.workspaceRef.get().longitude, WORKSPACE_TRAFFIC_SENSING_RADIUS)
+
+        this.sensingHandle.addListener('traffic', trafficData => {
+            getCore().modules.geoObject.processTrafficSensingData(trafficData)
+        })
+    }
+
+    private tearDownSensingHandle(){
+        if(this.sensingHandle){
+            this.sensingHandle.stop()
+        }
     }
 }

@@ -6,14 +6,20 @@ export default class FakeArea extends SensingSourceArea {
 
     private readonly myId = 'fake'
     private fakeTrack: FakeTrack
-    private intervalHandle: any
+    //@ts-ignore
+    private intervalHandle: ReturnType<typeof setInterval>
 
-    protected onSetup(): void {
+    constructor(latitude: number, longitude: number, radius: number){
+        super(latitude, longitude, radius)
+
         this.fakeTrack = new FakeTrack([
             [10.221,47.558,1400],
             [10.285,47.544,1600],
             [10.350,47.561,1900],
             [10.290,47.587,1600]], 200)
+    }
+
+    protected onSetup(): void {
 
         this.intervalHandle = setInterval(()=>{
 

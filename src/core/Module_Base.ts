@@ -1,4 +1,3 @@
-import { off } from 'process'
 import {EventManagerWithPublicDispatch} from '../util/event_manager'
 
 export default class Module_Base<
@@ -13,6 +12,7 @@ export default class Module_Base<
 >{
 
     private eventManager = new EventManagerWithPublicDispatch<{[key in keyof Events]: {data: Events[key]['eventDataType'], contexts: Pick<Contexts, Events[key]['availableContexts']>}}>()
+
 
     /**
      * @see stopListen
@@ -51,6 +51,7 @@ export default class Module_Base<
             contexts
         })
     }
+
 }
 
 export class ModuleError extends Error {

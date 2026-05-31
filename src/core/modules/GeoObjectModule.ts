@@ -1,22 +1,23 @@
 
-import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES, DBType_Task} from '../../generated-definitions/db/DBTypes'
-import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, select_Task, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
+import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
+import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { ClientId } from '../../live-websocket/websocket'
-import TrafficSensing, { SensingHandle, TrafficType } from '../../aircraft_sensing/TrafficSensing'
+import { TrafficData, TrafficType } from '../../aircraft_sensing/TrafficSensing'
 import { getCore } from '..'
 
 import pgp from 'pg-promise'
 import { assignObject } from '../../util/typescript'
 import dayjs from 'dayjs'
+import { WorkspaceTrafficSensingHandle } from './WorkspaceModule'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
 export default class GeoObjectModule extends Module_Base<
     {
-        workspaceId: number,
+        workspaceId: number | true,//true means global context
         id: number
     },
 
@@ -38,11 +39,9 @@ export default class GeoObjectModule extends Module_Base<
 
     readonly subscribableEventHandlerGeoObjects: SubscribableEventHandler<'geo_object'>
 
-    private readonly aircraftSensing = new TrafficSensing()
+    private readonly activeHandles = new Map<ClientId, WorkspaceTrafficSensingHandle>()
 
-    private readonly activeHandles = new Map<ClientId, SensingHandle>()
-
-    private existingGeoObjectsNameIdMap = new Map<string, number>()
+    private existingGeoObjectsNameIdMap = new Map<number, Map<string, number>>()//workspaceId -> name -> id (if workspaceId = -1, it means global)
     private existingGeoObjectsNameIdMap_isInitialized = false
 
     constructor(){
@@ -58,11 +57,6 @@ export default class GeoObjectModule extends Module_Base<
 
         this.subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object', async(event, filter, client)=>{
 
-            if(this.activeHandles.has(client.id)){
-                console.warn('prevented a client from subscribing to multiple traffic sensing filters', client.id)
-                return 'can not have multiple traffic filters'
-            }
-
             const filterOptions = this.parseFilter(filter)
 
             const workspaceId = parseInt(filterOptions.default)
@@ -75,76 +69,8 @@ export default class GeoObjectModule extends Module_Base<
                 return 'no permission to access this workspace'
             }
 
-            const sensingArea = filterOptions.area
-
-            if(sensingArea){
-                //TODO validate sensing area
-                const handle = this.aircraftSensing.startSensing(sensingArea.latitude, sensingArea.longitude, sensingArea.radius)
-
-                handle.addListener('traffic', async(data)=>{
-
-                    if(this.existingGeoObjectsNameIdMap_isInitialized === false){
-                        return
-                    }
-
-                    const name = data.name
-
-                    //TODO urgent: race condition: if two updates for the same traffic data come in at the same time, we might end up with two geoObjects for the same traffic, because both will check if a geoObject with the same name (which is the traffic id) exists, see that it does not exist and then both will create a new one. We should add some locking mechanism to prevent this, or at least add some retry logic to update an existing one if it was created in the meantime
-
-                    // using a hasmap fixes a nasty race condition
-                    let existingGeoObjectId = this.existingGeoObjectsNameIdMap.get(name)
-                    let existingGeoObject: DBType_Geo_Object | undefined
-
-                    if(typeof existingGeoObjectId === 'number'){
-                        if(existingGeoObjectId === -1){
-                            //skip: insert is not done yet
-                            return
-                        }
-
-                        existingGeoObject = await this.updateGeoObjectSafe(existingGeoObjectId, {
-                            config: {
-                                longitude: data.position.longitude,
-                                latitude: data.position.latitude,
-                                height: data.position.height
-                            }
-                        })
-
-                        this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
-                            event_type: 'update',
-                            uuid: existingGeoObject.uuid,
-                            data: existingGeoObject
-                        })
-
-                    } else {
-
-                        this.existingGeoObjectsNameIdMap.set(name, -1)// a flag to prevent race conditions, see above
-
-                        existingGeoObject = await insert_Geo_Object({
-                            type: DBType_Geo_Object_Type_TYPES.traffic,
-                            name: name,
-                            workspace_id: workspaceId,
-                            sub_type: mapTrafficTypeToDBType(data.type),
-                            config: {
-                                longitude: data.position.longitude,
-                                latitude: data.position.latitude,
-                                height: data.position.height
-                            }
-                        })
-
-                        this.existingGeoObjectsNameIdMap.set(existingGeoObject.name, existingGeoObject.id)//TODO this does not work for multiple workspaces!
-
-                        this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
-                            event_type: 'create',
-                            uuid: existingGeoObject.uuid,
-                            data: existingGeoObject
-                        })
-                    }
-
-                    //TODO add something that checks if traffic has not been seen for 60 seconds and then trigger 'delete' event and kill it from database
-                })
-
-                this.activeHandles.set(client.id, handle)
-            }
+            const handle = await getCore().modules.workspace.activateTrafficSensing(workspaceId)
+            this.activeHandles.set(client.id, handle)
 
         }, (event, filter, client)=>{
             const handle = this.activeHandles.get(client.id)
@@ -176,7 +102,7 @@ export default class GeoObjectModule extends Module_Base<
 
         this.dispatch('create_geo_object', {
             id: geoObject.id,
-            workspaceId: geoObject.workspace_id
+            workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
         this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
@@ -210,10 +136,10 @@ export default class GeoObjectModule extends Module_Base<
 
         this.dispatch('update_geo_object', {
             id: geoObject.id,
-            workspaceId: geoObject.workspace_id
+            workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
-        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + (typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : 'global'), {
             event_type: 'update',
             uuid: geoObject.uuid,
             data: geoObject
@@ -244,15 +170,19 @@ export default class GeoObjectModule extends Module_Base<
             geoObject = geoObject[0]
         }
 
-        this.existingGeoObjectsNameIdMap.delete(geoObject.name)
+        const workspaceKey = typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : -1
+        let workspaceMap = this.existingGeoObjectsNameIdMap.get(workspaceKey)
+        if(workspaceMap){
+            workspaceMap.delete(geoObject.name)
+        }
 
         this.dispatch('delete_geo_object', {
             id: geoObject.id,
-            workspaceId: geoObject.workspace_id
+            workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
 
-        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+        this.subscribableEventHandlerGeoObjects.triggerListener(typeof geoObject.workspace_id === 'number' ? '' + geoObject.workspace_id : '', {
             event_type: 'delete',
             uuid: geoObject.uuid,
             data: undefined
@@ -303,6 +233,79 @@ export default class GeoObjectModule extends Module_Base<
         return geoObjectsWithTasks
     }
 
+    /**
+     *
+     * @param data
+     * @param workspaceId only set for traffic data, that you dont want to make globally available
+     * @returns
+     */
+    async processTrafficSensingData(data: TrafficData, workspaceId?: number){
+
+        if(this.existingGeoObjectsNameIdMap_isInitialized === false){
+            return
+        }
+
+        const filter = typeof workspaceId === 'number' ? '' + workspaceId : ''
+
+        // using a hasmap fixes a nasty race condition
+        const workspaceKey = typeof workspaceId === 'number' ? workspaceId : -1
+        let workspaceMap = this.existingGeoObjectsNameIdMap.get(workspaceKey)
+
+        if(!workspaceMap){
+            workspaceMap = new Map<string, number>()
+            this.existingGeoObjectsNameIdMap.set(workspaceKey, workspaceMap)
+        }
+
+        let existingGeoObjectId = workspaceMap.get(data.name)//TODO use id
+        let existingGeoObject: DBType_Geo_Object | undefined
+
+        if(typeof existingGeoObjectId === 'number'){
+            if(existingGeoObjectId === -1){
+                //skip: insert is not done yet
+                return
+            }
+
+            existingGeoObject = await this.updateGeoObjectSafe(existingGeoObjectId, {
+                config: {
+                    longitude: data.position.longitude,
+                    latitude: data.position.latitude,
+                    height: data.position.height
+                },
+                workspace_id: typeof workspaceId === 'number' ? workspaceId : undefined
+            })
+
+            this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
+                event_type: 'update',
+                uuid: existingGeoObject.uuid,
+                data: existingGeoObject
+            })
+
+        } else {
+
+            workspaceMap.set(data.name, -1)// a flag to prevent race conditions, see above
+
+            existingGeoObject = await insert_Geo_Object({
+                type: DBType_Geo_Object_Type_TYPES.traffic,
+                name: data.name,
+                workspace_id: workspaceId,
+                sub_type: mapTrafficTypeToDBType(data.type),
+                config: {
+                    longitude: data.position.longitude,
+                    latitude: data.position.latitude,
+                    height: data.position.height
+                }
+            })
+
+            workspaceMap.set(existingGeoObject.name, existingGeoObject.id)
+
+            this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
+                event_type: 'create',
+                uuid: existingGeoObject.uuid,
+                data: existingGeoObject
+            })
+        }
+    }
+
     private parseFilter(filter: string){
         const filterOptions: Record<string, any> & {default: string} = {
             default: ''
@@ -335,16 +338,30 @@ export default class GeoObjectModule extends Module_Base<
 
     private async initExistingGeoObjectsNameIdMap() {
 
-        // delete old data
-        await db.none('DELETE FROM geo_objects WHERE type = ${type} AND updated_at < ${cleanupDate}', {
+        const oldGeoObjects = await select_Geo_Object(pgp.as.format('WHERE type = ${type} AND updated_at < ${cleanupDate}', {
             type: DBType_Geo_Object_Type_TYPES.traffic,
             cleanupDate: dayjs().subtract(1, 'hour').toISOString()
-        })
+        }))
+
+        await Promise.all(oldGeoObjects.map(geoObject => {
+            return this.deleteGeoObject(geoObject.id)
+        }))
+
 
         const trafficGeoObjects = await db.manyOrNone('SELECT name, id FROM geo_objects WHERE type = ${type}', {type: DBType_Geo_Object_Type_TYPES.traffic})
 
+
         for(const geoObject of trafficGeoObjects){
-            this.existingGeoObjectsNameIdMap.set(geoObject.name, geoObject.id)
+            const workspaceKey = typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : -1
+
+            let workspaceMap = this.existingGeoObjectsNameIdMap.get(workspaceKey)
+
+            if(!workspaceMap){
+                workspaceMap = new Map<string, number>()
+                this.existingGeoObjectsNameIdMap.set(workspaceKey, workspaceMap)
+            }
+
+            workspaceMap.set(geoObject.name, geoObject.id)
         }
         this.existingGeoObjectsNameIdMap_isInitialized = true
     }
