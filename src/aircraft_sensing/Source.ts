@@ -14,7 +14,7 @@ export default class SensingSource {
     /**
      * @param radius in meters
      */
-    startSensing(latitude: number, longitude: number, radius: number){
+    startSensing(latitude: number, longitude: number, radius: number){//TODO idea for performance optimization: double radius of the new area and when there is traffic, check if it is inside the original radius, that way, we can increase the chance to reuse existing areas and reduce the number of areas we have to create
 
         for(const area of this.areas){
 
