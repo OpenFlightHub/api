@@ -133,8 +133,6 @@ router.get('/check', asyncHandler(async (req, res) => {
 
     const sessionToken = req.cookies['user-auth']
 
-    console.log('checking session token', sessionToken)//TODO remove logging
-
     const validSessionToken = typeof sessionToken === 'string'
     if(!validSessionToken){
         console.log('invalid session token')
