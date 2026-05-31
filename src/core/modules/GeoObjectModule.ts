@@ -5,11 +5,12 @@ import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { ClientId } from '../../live-websocket/websocket'
-import TrafficSensing, { SensingHandle } from '../../aircraft_sensing/TrafficSensing'
+import TrafficSensing, { SensingHandle, TrafficType } from '../../aircraft_sensing/TrafficSensing'
 import { getCore } from '..'
 
 import pgp from 'pg-promise'
 import { assignObject } from '../../util/typescript'
+import dayjs from 'dayjs'
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -42,9 +43,18 @@ export default class GeoObjectModule extends Module_Base<
     private readonly activeHandles = new Map<ClientId, SensingHandle>()
 
     private existingGeoObjectsNameIdMap = new Map<string, number>()
+    private existingGeoObjectsNameIdMap_isInitialized = false
 
     constructor(){
         super()
+
+        this.initExistingGeoObjectsNameIdMap().catch(err => {
+            console.error('failed to initialize existingGeoObjectsNameIdMap', err)
+        })
+
+        setInterval(()=>{
+            this.cleanupOldTrafficGeoObjects()
+        }, 1000 * 30)//every 30 seconds
 
         this.subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object', async(event, filter, client)=>{
 
@@ -72,6 +82,10 @@ export default class GeoObjectModule extends Module_Base<
                 const handle = this.aircraftSensing.startSensing(sensingArea.latitude, sensingArea.longitude, sensingArea.radius)
 
                 handle.addListener('traffic', async(data)=>{
+
+                    if(this.existingGeoObjectsNameIdMap_isInitialized === false){
+                        return
+                    }
 
                     const name = data.name
 
@@ -103,13 +117,13 @@ export default class GeoObjectModule extends Module_Base<
 
                     } else {
 
-                        this.existingGeoObjectsNameIdMap.set(name, -1)
+                        this.existingGeoObjectsNameIdMap.set(name, -1)// a flag to prevent race conditions, see above
 
                         existingGeoObject = await insert_Geo_Object({
                             type: DBType_Geo_Object_Type_TYPES.traffic,
                             name: name,
                             workspace_id: workspaceId,
-                            sub_type: DBType_Geo_Object_SubType_TYPES.traffic.other, //TODO implement type from sensing area
+                            sub_type: mapTrafficTypeToDBType(data.type),
                             config: {
                                 longitude: data.position.longitude,
                                 latitude: data.position.latitude,
@@ -117,7 +131,7 @@ export default class GeoObjectModule extends Module_Base<
                             }
                         })
 
-                        this.existingGeoObjectsNameIdMap.set(existingGeoObject.name, existingGeoObject.id)
+                        this.existingGeoObjectsNameIdMap.set(existingGeoObject.name, existingGeoObject.id)//TODO this does not work for multiple workspaces!
 
                         this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
                             event_type: 'create',
@@ -137,15 +151,6 @@ export default class GeoObjectModule extends Module_Base<
             if(handle){
                 handle.stop()
             }
-        })
-
-        //TODO ensure this is done before any traffic sensing data is processed, otherwise we might end up with duplicates
-        select_Geo_Object(pgp.as.format('WHERE type = ${type}', {type: DBType_Geo_Object_Type_TYPES.traffic})).then(geoObjects => {
-            for(const geoObject of geoObjects){
-                this.existingGeoObjectsNameIdMap.set(geoObject.name, geoObject.id)
-            }
-        }).catch(err=>{
-            console.error('failed to initialize existingGeoObjectsNameIdMap', err)
         })
 
     }
@@ -190,6 +195,9 @@ export default class GeoObjectModule extends Module_Base<
      * @see updateGeoObjectSafe
      */
     async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object){
+
+        data.updated_at = dayjs().toISOString()
+
         let geoObject = (await update_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID, data))
 
         if(geoObject === false){
@@ -235,6 +243,8 @@ export default class GeoObjectModule extends Module_Base<
         if(geoObject instanceof Array){
             geoObject = geoObject[0]
         }
+
+        this.existingGeoObjectsNameIdMap.delete(geoObject.name)
 
         this.dispatch('delete_geo_object', {
             id: geoObject.id,
@@ -323,6 +333,33 @@ export default class GeoObjectModule extends Module_Base<
         return filterOptions
     }
 
+    private async initExistingGeoObjectsNameIdMap() {
+
+        // delete old data
+        await db.none('DELETE FROM geo_objects WHERE type = ${type} AND updated_at < ${cleanupDate}', {
+            type: DBType_Geo_Object_Type_TYPES.traffic,
+            cleanupDate: dayjs().subtract(1, 'hour').toISOString()
+        })
+
+        const trafficGeoObjects = await db.manyOrNone('SELECT name, id FROM geo_objects WHERE type = ${type}', {type: DBType_Geo_Object_Type_TYPES.traffic})
+
+        for(const geoObject of trafficGeoObjects){
+            this.existingGeoObjectsNameIdMap.set(geoObject.name, geoObject.id)
+        }
+        this.existingGeoObjectsNameIdMap_isInitialized = true
+    }
+
+    private async cleanupOldTrafficGeoObjects(){
+        const oldTrafficGeoObjects = await db.manyOrNone('SELECT * FROM geo_objects WHERE type = ${type} AND updated_at < ${cleanupDate}', {
+            type: DBType_Geo_Object_Type_TYPES.traffic,
+            cleanupDate: dayjs().subtract(1, 'minute').toISOString()
+        })
+
+        for(const geoObject of oldTrafficGeoObjects){
+            await this.deleteGeoObject(geoObject.id)
+        }
+    }
+
 }
 
 
@@ -339,4 +376,21 @@ function areSameGeoObjects(geoObject1: DBType_Geo_Object, geoObject2: DBInsert_G
     if(JSON.stringify(geoObject1.config) !== JSON.stringify(geoObject2.config)) return 'config'
 
     return true
+}
+
+function mapTrafficTypeToDBType(trafficType: TrafficType): number {
+    switch (trafficType) {
+        case 'aircraft':
+            return DBType_Geo_Object_SubType_TYPES.traffic.airplane
+        case 'helicopter':
+            return DBType_Geo_Object_SubType_TYPES.traffic.helicopter
+        case 'glider':
+            return DBType_Geo_Object_SubType_TYPES.traffic.glider
+        case 'uav':
+            return DBType_Geo_Object_SubType_TYPES.traffic.uav
+        case 'chute':
+            return DBType_Geo_Object_SubType_TYPES.traffic.chute
+            case 'other':
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
+    }
 }

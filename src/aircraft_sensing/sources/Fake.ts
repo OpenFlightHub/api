@@ -22,6 +22,7 @@ export default class FakeArea extends SensingSourceArea {
             this.dispatch('traffic', {
                 id: this.myId,
                 name: this.myId,
+                type: 'aircraft',
                 position: {
                     latitude: currentPosition.latitude,
                     longitude: currentPosition.longitude,

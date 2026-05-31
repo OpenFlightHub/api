@@ -5,7 +5,7 @@ import { SensingSourceArea } from "../Source";
 
 import {ISSocket} from 'js-aprs-is'
 import {aprsPacket, aprsParser} from 'js-aprs-fap'
-import { TrafficData } from "../TrafficSensing";
+import { TrafficData, TrafficType } from "../TrafficSensing";
 
 
 
@@ -21,6 +21,7 @@ export default class GliderNetSensingArea extends SensingSourceArea {
             this.dispatch('traffic', {
                 id: data.id,
                 name: '[Glidernet] ' + data.id,
+                type: data.type,
                 position: data.position
             })
         })
@@ -100,7 +101,7 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
                 // Receiver Stations seem to be pac.type = 'location' && pac.symbolcode === '&'
                 // (while aircraft have pac.symbolcode === 'g'
 
-                if(parsed.symbolcode !== 'g' && parsed.symbolcode !== '^'){// no aircraft
+                if(parsed.symbolcode !== 'g' && parsed.symbolcode !== '\'' && parsed.symbolcode !== '^'){// no glider, small aircraft, large aicraft
                     return
                 }
 
@@ -109,6 +110,7 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
                 this.dispatch('aircraft', {
                     id,
                     name: id,
+                    type: parsed.flarm ? mapFlarmTypeToTrafficType(parsed.flarm.senderType) : (parsed.symbolcode === 'g' ? 'glider' : 'aircraft'),
                     position: {
                         latitude: parsed.latitude,
                         longitude: parsed.longitude,
@@ -206,4 +208,30 @@ function parseOGNFlarmComment(comment: string){
     }
 
     return ret as FlarmData
+}
+
+function mapFlarmTypeToTrafficType(flarmType: FlarmSenderType): TrafficType {
+    switch (flarmType) {
+        case 1:
+            return 'glider'
+        case 2:
+        case 3:
+            return 'aircraft'
+        case 4:
+            return 'helicopter'
+        case 5:
+            return 'uav'
+
+        case 7:
+            return 'chute'
+
+        case 0:
+        case 6:
+        case 8:
+            return 'other'
+
+        default:
+            console.warn('unknown flarm sender type received from glidernet: ' + flarmType)
+            return 'other'
+    }
 }

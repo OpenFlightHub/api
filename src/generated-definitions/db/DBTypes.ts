@@ -412,8 +412,9 @@ export const DBType_Geo_Object_SubType_TYPES = {
     airplane: 0,
     helicopter: 1,
     uav: 2,
-    gliding: 3,
-    other: 4
+    glider: 3,
+    chute: 4,
+    other: 5
   },
   unit: {
     airplane: 0,

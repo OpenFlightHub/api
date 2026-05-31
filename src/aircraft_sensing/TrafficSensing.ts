@@ -8,6 +8,7 @@ import AdsbLol from './sources/AdsbLol'
 export type TrafficData = {
     id: string //uuid v4
     name: string
+    type: TrafficType
     position: {
         latitude: number
         longitude: number
@@ -16,6 +17,8 @@ export type TrafficData = {
     }
 }
 
+export type TrafficType = 'aircraft' | 'helicopter' | 'uav' | 'glider' | 'chute' | 'other'
+
 
 export default class TrafficSensing {
 
@@ -23,9 +26,8 @@ export default class TrafficSensing {
 
     constructor(){
         this.addSource(FakeSensingArea.getFactory())
-        // this.addSource(GliderNetSensingArea.getFactory())
-        // this.addSource(AdsbLol.getFactory())
-        //TODO reenable sources (unfortunately, they brick the web-app right now)
+        this.addSource(GliderNetSensingArea.getFactory())//TODO glidernet generates duplicates
+        this.addSource(AdsbLol.getFactory())
     }
 
     private addSource(factory: SensingSourceAreaFactory){
@@ -71,8 +73,9 @@ export class SensingHandle extends EventManager<SensingHandleEvents> {
         for(const sourceHandle of this.sourceHandles){
             sourceHandle.addListener('traffic', data => {
                 this.dispatch('traffic', {
-                    id: this.getUuidForId(data.id),
+                    id: data.id,//this.getUuidForId(data.id),
                     name: data.name,
+                    type: data.type,
                     position: data.position
                 })
             })

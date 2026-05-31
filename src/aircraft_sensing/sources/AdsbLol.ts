@@ -4,6 +4,7 @@ import { SensingSourceArea } from "../Source";
 
 import { validate } from "../../util/schema";
 import dayjs from "dayjs";
+import { TrafficType } from "../TrafficSensing";
 
 const FETCH_INTERVAL = 1000 * 5
 
@@ -43,6 +44,7 @@ export default class AdsbLolSensingArea extends SensingSourceArea {
                         this.dispatch('traffic', {
                             id: aircraft.hex,
                             name: '[adsb.lol] ' + aircraft.hex,
+                            type: mapADSBCategoryToTrafficType(aircraft.category),
                             position: {
                                 latitude: aircraft.lat,
                                 longitude: aircraft.lon,
@@ -72,4 +74,45 @@ export default class AdsbLolSensingArea extends SensingSourceArea {
 
 function feetToMeter(feet: number){
     return feet / 3.281
+}
+
+function mapADSBCategoryToTrafficType(category: string): TrafficType {
+    switch (category) {
+        case 'A1':
+        case 'A2':
+        case 'A3':
+        case 'A4':
+        case 'A5':
+        case 'A6':
+            return 'aircraft'
+        case 'A7':
+            return 'helicopter'
+        case 'B0':
+            return 'other'
+        case 'B1':
+            return 'glider'
+        case 'B2':
+            return 'other'
+        case 'B3':
+        case 'B4':
+            return 'chute'
+        case 'B6':
+            return 'uav'
+
+        case 'B7':
+            return 'other'
+
+        case 'C0':
+        case 'C1':
+        case 'C2':
+        case 'C3':
+        case 'C4':
+        case 'C5':
+            return 'other'
+
+        default:
+            console.warn('unknown adsb category received from adsb.lol: ' + category)
+            return 'other'
+    }
+
 }
