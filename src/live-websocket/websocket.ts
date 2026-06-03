@@ -277,7 +277,11 @@ class SubscribableEventHandler<T extends server_to_client.Message_Type_Event_Typ
         }
 
         if(this.subscriberLeftCallback){
-            this.subscriberLeftCallback(this.event, filter, client)
+            try {
+                this.subscriberLeftCallback(this.event, filter, client)
+            } catch (error) {
+                console.error('Error in subscriberLeftCallback:', error)
+            }
         }
     }
 
