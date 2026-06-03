@@ -384,7 +384,7 @@ export type DBType_Geo_Object_Base<type extends DBType_Geo_Object_TypeType, sub_
     config: DBType_Geo_Object_ConfigType<type, sub_type>;
     created_at: string;
     updated_at: string;
-    is_synced_with_dji: boolean
+    is_synced_with_dji: boolean;
 }
 
 
@@ -398,7 +398,7 @@ export const DBType_Geo_Object_Type_TYPES = {
 
 export type DBType_Geo_Object_SubTypeType<type extends DBType_Geo_Object_TypeType> =
     type extends 0 ? (0|1|2|3) :
-    type extends 1 ? (0|1|2|3|4|5) :
+    type extends 1 ? (0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15) :
     type extends 2 ? (0|1|2|3|4|5|6) : unknown
 
 
@@ -410,12 +410,22 @@ export const DBType_Geo_Object_SubType_TYPES = {
     circle: 3
   },
   traffic: {
-    airplane: 0,
-    helicopter: 1,
-    uav: 2,
-    glider: 3,
-    chute: 4,
-    other: 5
+    other: 0,
+    moto_glider: 1,
+    tow_plane: 2,
+    helicopter: 3,
+    parachute: 4,
+    drop_plane: 5,
+    hang_glider: 6,
+    para_glider: 7,
+    powered_aircraft: 8,
+    jet_aicraft: 9,
+    ufo: 10,
+    balloon: 11,
+    airship: 12,
+    uav: 13,
+    ground_support: 14,
+    static_object: 15
   },
   unit: {
     airplane: 0,

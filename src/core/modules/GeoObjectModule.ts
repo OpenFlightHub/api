@@ -5,7 +5,7 @@ import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
 import { registerSubscribableEvent, SubscribableEventHandler } from '../../live-websocket/websocket'
 import { ClientId } from '../../live-websocket/websocket'
-import { TrafficData, TrafficType } from '../../aircraft_sensing/TrafficSensing'
+import { TrafficData } from '../../aircraft_sensing/TrafficSensing'
 import { getCore } from '..'
 
 import pgp from 'pg-promise'
@@ -309,7 +309,7 @@ export default class GeoObjectModule extends Module_Base<
                 type: DBType_Geo_Object_Type_TYPES.traffic,
                 name: data.name,
                 workspace_id: workspaceId,
-                sub_type: mapTrafficTypeToDBType(data.type),
+                sub_type: data.type,
                 config: {
                     longitude: data.position.longitude,
                     latitude: data.position.latitude,
@@ -435,21 +435,4 @@ function areSameGeoObjects(geoObject1: DBType_Geo_Object, geoObject2: DBInsert_G
     if(JSON.stringify(geoObject1.config) !== JSON.stringify(geoObject2.config)) return 'config'
 
     return true
-}
-
-function mapTrafficTypeToDBType(trafficType: TrafficType): number {
-    switch (trafficType) {
-        case 'aircraft':
-            return DBType_Geo_Object_SubType_TYPES.traffic.airplane
-        case 'helicopter':
-            return DBType_Geo_Object_SubType_TYPES.traffic.helicopter
-        case 'glider':
-            return DBType_Geo_Object_SubType_TYPES.traffic.glider
-        case 'uav':
-            return DBType_Geo_Object_SubType_TYPES.traffic.uav
-        case 'chute':
-            return DBType_Geo_Object_SubType_TYPES.traffic.chute
-            case 'other':
-            return DBType_Geo_Object_SubType_TYPES.traffic.other
-    }
 }

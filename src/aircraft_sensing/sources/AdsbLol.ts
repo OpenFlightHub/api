@@ -4,7 +4,7 @@ import { SensingSourceArea } from "../Source";
 
 import { validate } from "../../util/schema";
 import dayjs from "dayjs";
-import { TrafficType } from "../TrafficSensing";
+import { DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType } from "../../generated-definitions/db/DBTypes";
 
 const FETCH_INTERVAL = 1000 * 5
 
@@ -77,48 +77,55 @@ function feetToMeter(feet: number){
     return feet / 3.281
 }
 
-function mapADSBCategoryToTrafficType(category?: string): TrafficType {
+// see https://support.adsbexchange.com/hc/en-us/articles/44705224053517-Emitter-Category-ADS-B-DO-260B-2-2-3-2-5-2
+function mapADSBCategoryToTrafficType(category?: string): DBType_Geo_Object_SubTypeType<1> {
     switch (category) {
         case undefined:
-            return 'other'
-
         case 'A0':
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
+
         case 'A1':
         case 'A2':
+            return DBType_Geo_Object_SubType_TYPES.traffic.powered_aircraft
+
         case 'A3':
         case 'A4':
         case 'A5':
         case 'A6':
-            return 'aircraft'
+            return DBType_Geo_Object_SubType_TYPES.traffic.jet_aicraft
         case 'A7':
-            return 'helicopter'
+            return DBType_Geo_Object_SubType_TYPES.traffic.helicopter
 
         case 'B0':
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
         case 'B1':
-            return 'glider'
+            return DBType_Geo_Object_SubType_TYPES.traffic.moto_glider
         case 'B2':
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.balloon
         case 'B3':
+            return DBType_Geo_Object_SubType_TYPES.traffic.parachute
         case 'B4':
-            return 'chute'
+            return DBType_Geo_Object_SubType_TYPES.traffic.para_glider
         case 'B6':
-            return 'uav'
+            return DBType_Geo_Object_SubType_TYPES.traffic.uav
 
         case 'B7':
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
 
         case 'C0':
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
         case 'C1':
+            return DBType_Geo_Object_SubType_TYPES.traffic.ground_support
         case 'C2':
+            return DBType_Geo_Object_SubType_TYPES.traffic.ground_support
         case 'C3':
         case 'C4':
         case 'C5':
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.static_object
 
         default:
             console.warn('unknown adsb category received from adsb.lol: ' + category)
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
     }
 
 }

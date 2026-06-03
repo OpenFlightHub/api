@@ -5,7 +5,8 @@ import { SensingSourceArea } from "../Source";
 
 import {ISSocket} from 'js-aprs-is'
 import {aprsPacket, aprsParser} from 'js-aprs-fap'
-import { TrafficData, TrafficType } from "../TrafficSensing";
+import { TrafficData } from "../TrafficSensing";
+import { DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType } from "../../generated-definitions/db/DBTypes";
 
 
 
@@ -110,10 +111,15 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
 
                 const id = parsed.flarm?.id || parsed.sourceCallsign || ('' + parsed.id)//TODO sourceCallsign and parsed.id are not really helpfull...
 
+
+                if(typeof parsed.flarm?.senderType === 'number' && parsed.flarm.senderType > 8){
+                    console.log('unknown flarm sender type:', parsed)
+                }
+
                 this.dispatch('aircraft', {
                     id,
                     name: id,
-                    type: parsed.flarm ? mapFlarmTypeToTrafficType(parsed.flarm.senderType) : (parsed.symbolcode === 'g' ? 'glider' : 'aircraft'),
+                    type: parsed.flarm ? parsed.flarm.senderType : mapAprsSymbolCodeToTrafficType(parsed.symbolcode),
                     position: {
                         latitude: parsed.latitude,
                         longitude: parsed.longitude,
@@ -153,7 +159,7 @@ type FlarmData = {
     frequencyOffset: number // in kHz
 }
 
-type FlarmSenderType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 // 0 = unknown, 1 = gliders, 2 = planes, 3 = ultralights, 4 = helicopters, 5 = drones/uav, 6 = other, 7 = paragliders, 8 none
+type FlarmSenderType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 // see APRS symbol table http://wiki.glidernet.org/wiki:ogn-flavoured-aprs
 
 type FlarmAddressType = 0 | 1 | 2 | 3 // 0 = unknown, 1 = ICAO, 2 = flarm, 3 = ogn tracker
 
@@ -187,9 +193,7 @@ function parseOGNFlarmComment(comment?: string){
 
             ret.noTracking = (encoded & 64) == 64 //bool
 
-            ret.senderType = ((encoded & 60) >> 2) as FlarmSenderType // 0 = unknown, 1 = gliders, 2 = planes, 3 = ultralights, 4 = helicopters, 5 = drones/uav, 6 = other, 7 = paragliders, 8 = none
-            //TODO add source for definition!
-            //TODO what are: 13 and 9?
+            ret.senderType = ((encoded & 60) >> 2) as FlarmSenderType
 
             ret.addressType = (encoded & 3) as FlarmAddressType// 0 = unknown, 1 = ICAO, 2 = flarm, 3 = ogn tracker
 
@@ -215,28 +219,30 @@ function parseOGNFlarmComment(comment?: string){
     return ret as FlarmData
 }
 
-function mapFlarmTypeToTrafficType(flarmType: FlarmSenderType): TrafficType {
-    switch (flarmType) {
-        case 1:
-            return 'glider'
-        case 2:
-        case 3:
-            return 'aircraft'
-        case 4:
-            return 'helicopter'
-        case 5:
-            return 'uav'
+function mapAprsSymbolCodeToTrafficType(symbolCode: string): DBType_Geo_Object_SubTypeType<1> {
+    switch(symbolCode){
+        case 'g'://glider
+            return DBType_Geo_Object_SubType_TYPES.traffic.moto_glider
+        case '\''://small aircraft
+            return DBType_Geo_Object_SubType_TYPES.traffic.powered_aircraft
+        case '^'://large aircraft
+            return DBType_Geo_Object_SubType_TYPES.traffic.jet_aicraft
+        case 'O'://balolon
+            return DBType_Geo_Object_SubType_TYPES.traffic.balloon
+        case '>'://car
+        case '<'://motorcycle
+        case 'U'://bus
+        case 'v'://van
+        case 'k'://truck
+        case 'u'://truck large
+        case '!'://police
+        case 'a'://ambulance
+            return DBType_Geo_Object_SubType_TYPES.traffic.ground_support
 
-        case 7:
-            return 'chute'
-
-        case 0:
-        case 6:
-        case 8:
-            return 'other'
+        case 'r'://antenna
+            return DBType_Geo_Object_SubType_TYPES.traffic.static_object
 
         default:
-            console.warn('unknown flarm sender type received from glidernet: ' + flarmType)
-            return 'other'
+            return DBType_Geo_Object_SubType_TYPES.traffic.other
     }
 }

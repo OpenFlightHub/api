@@ -4,11 +4,12 @@ import SensingSource, { SensingSourceAreaFactory, SensingSourceHandle } from './
 import FakeSensingArea from './sources/Fake'
 import GliderNetSensingArea from './sources/GliderNet'
 import AdsbLol from './sources/AdsbLol'
+import {DBType_Geo_Object_SubTypeType} from '../generated-definitions/db/DBTypes'
 
 export type TrafficData = {
     id: string //uuid v4
     name: string
-    type: TrafficType
+    type: DBType_Geo_Object_SubTypeType<1>
     position: {
         latitude: number
         longitude: number
@@ -16,9 +17,6 @@ export type TrafficData = {
         reported_at: string // ISO 8601 timestamp
     }
 }
-
-export type TrafficType = 'aircraft' | 'helicopter' | 'uav' | 'glider' | 'chute' | 'other'
-
 
 export default class TrafficSensing {
 
