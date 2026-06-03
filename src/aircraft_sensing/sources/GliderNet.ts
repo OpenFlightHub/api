@@ -185,6 +185,8 @@ function parseOGNFlarmComment(comment: string){
             ret.noTracking = (encoded & 64) == 64 //bool
 
             ret.senderType = ((encoded & 60) >> 2) as FlarmSenderType // 0 = unknown, 1 = gliders, 2 = planes, 3 = ultralights, 4 = helicopters, 5 = drones/uav, 6 = other, 7 = paragliders, 8 = none
+            //TODO add source for definition!
+            //TODO what are: 13 and 9?
 
             ret.addressType = (encoded & 3) as FlarmAddressType// 0 = unknown, 1 = ICAO, 2 = flarm, 3 = ogn tracker
 
