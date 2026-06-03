@@ -1,3 +1,4 @@
+import { DBType_Geo_Object_SubType_TYPES } from "../../generated-definitions/db/DBTypes";
 import FakeTrack from "../../util/FakeTrack";
 import { SensingSourceArea } from "../Source";
 
@@ -28,7 +29,7 @@ export default class FakeArea extends SensingSourceArea {
             this.dispatch('traffic', {
                 id: this.myId,
                 name: this.myId,
-                type: 'aircraft',
+                type: DBType_Geo_Object_SubType_TYPES.traffic.ufo,
                 position: {
                     latitude: currentPosition.latitude,
                     longitude: currentPosition.longitude,
