@@ -2687,6 +2687,7 @@ export type DBInsert_Geo_Object = {
     config: any
     created_at?: string
     updated_at?: string
+    is_synced_with_dji?: boolean
 }
 
 export type DBUpdate_Geo_Object = {
@@ -2698,6 +2699,7 @@ export type DBUpdate_Geo_Object = {
     config?: any
     created_at?: string
     updated_at?: string
+    is_synced_with_dji?: boolean
 }
 const COLUMN_SET_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
     {
@@ -2730,6 +2732,10 @@ const COLUMN_SET_GEO_OBJECTS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_synced_with_dji",
         "skip": col => !col.exists
     }
 ], {table: "geo_objects"})
@@ -2769,6 +2775,10 @@ const COLUMN_SET_GEO_OBJECTS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "updated_at",
+        "skip": col => !col.exists
+    },
+    {
+        "name": "is_synced_with_dji",
         "skip": col => !col.exists
     }
 ], {table: "geo_objects"})

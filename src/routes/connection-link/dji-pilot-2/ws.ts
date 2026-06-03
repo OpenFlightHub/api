@@ -3,7 +3,8 @@ import ws from 'ws'
 import TrafficSensing, { SensingHandle } from '../../../aircraft_sensing/TrafficSensing';
 import { getCore } from '../../../core';
 import { WorkspaceTrafficSensingHandle } from '../../../core/modules/WorkspaceModule';
-import { DJI_SUPPORTED_COLORS } from '../../../util/dji';
+import { DJI_SUPPORTED_COLORS, getDJIGeoJsonForGeoObject, getDJIMapElementTypeForGeoObject } from '../../../util/dji';
+import { DBType_Connection, DBType_Geo_Object } from '../../../generated-definitions/db/DBTypes';
 //@ts-ignore
 const trafficSense : TrafficSensing = global.trafficSense
 
@@ -172,6 +173,30 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
         }))
 
 
+        //sync geo objects
+
+        getCore().modules.geoObject.getUnsyncedGeoObjects(connection.workspace_id).then(geoObjects => {
+
+            console.log('syncing geo objects with dji pilot 2 ws client', connection.id, geoObjects.length, 'geo objects to sync')
+
+            for(const geoObject of geoObjects){
+
+                if(geoObject.type === 0){
+                    sendCreateGeoObjectMessage(ws, geoObject, connection)
+                    getCore().modules.geoObject.updateGeoObject(geoObject.id, {
+                        is_synced_with_dji: true
+                    }).catch(err => {
+                        console.error('failed to update geo object after syncing with dji pilot 2 ws client', geoObject.id, connection.id, err)
+                    })
+                }
+
+                //TODO support traffic and unit geo objects
+            }
+
+        }).catch(err => {
+            console.error('failed to get unsynced geo objects for syncing with dji pilot 2 ws client', connection.id, err)
+        })
+
         //TODO remove this testing code
 
         setInterval(()=>{
@@ -226,6 +251,31 @@ router.ws('/', (ws: ws.WebSocket, req) => {//TODO implement deny handshake when 
 function handleMessage(ws: ws.WebSocket, connectionId: number, data: any){
     console.warn('received unexpected message from dji pilot 2 ws client', connectionId, data)
 }
+
+function sendCreateGeoObjectMessage(ws: ws.WebSocket, geoObject: DBType_Geo_Object, connection: DBType_Connection){
+    ws.send(JSON.stringify({
+        biz_code: 'map_element_create',
+        version: '1.0',
+        timestamp: Date.now(),
+        data: {
+            group_id: connection.workspace_uuid,
+            id: geoObject.id,
+            name: geoObject.name,
+            type: getDJIMapElementTypeForGeoObject(geoObject.sub_type as unknown as 0 | 1 | 2 | 3),
+            content: getDJIGeoJsonForGeoObject(geoObject)
+        }
+    }))
+
+    //TODO check if the websocket responds with success/erro
+}
+
+function sendCreateGeoObjectMessageToClient(geoObject: DBType_Geo_Object, connection: DBType_Connection){
+    const client = connectedDjiPilot2Clients.get(connection.id)
+
+    return sendCreateGeoObjectMessage(client!.ws, geoObject, connection)
+}
+//@ts-ignore
+global.sendCreateGeoObjectMessageToClient = sendCreateGeoObjectMessageToClient //TODO fix this hack (otherwise import circle breaks everything)
 
 /**
  * @param messageData will be stringified as json

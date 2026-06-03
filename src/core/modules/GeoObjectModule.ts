@@ -1,5 +1,5 @@
 
-import {DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
+import {DBType_Connection, DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
 import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
@@ -9,11 +9,15 @@ import { TrafficData, TrafficType } from '../../aircraft_sensing/TrafficSensing'
 import { getCore } from '..'
 
 import pgp from 'pg-promise'
-import { assignObject } from '../../util/typescript'
+import { assignObject, WithRequired } from '../../util/typescript'
 import dayjs from 'dayjs'
 import { WorkspaceTrafficSensingHandle } from './WorkspaceModule'
+
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
+
+//@ts-ignore
+const sendCreateGeoObjectMessageToClient = global.sendCreateGeoObjectMessageToClient as (geoObject: DBType_Geo_Object, connection: DBType_Connection) => void
 
 export default class GeoObjectModule extends Module_Base<
     {
@@ -91,6 +95,13 @@ export default class GeoObjectModule extends Module_Base<
             const areSame = areSameGeoObjects(existingObject, data)
             if(areSame === true){
                 console.log('a geoObject with the same uuid and same data already exists', existingObject.uuid)
+
+
+                if(!existingObject.is_synced_with_dji && typeof existingObject.workspace_id === 'number'){
+                    //@ts-ignore
+                    this.syncGeoObjectWithDjiAsyncronously(existingObject)
+                }
+
                 return existingObject
             } else {
                 console.error(existingObject, data)
@@ -99,6 +110,11 @@ export default class GeoObjectModule extends Module_Base<
         }
 
         const geoObject = await insert_Geo_Object(data)
+
+        if(!geoObject.is_synced_with_dji && typeof geoObject.workspace_id === 'number'){
+            //@ts-ignore
+            this.syncGeoObjectWithDjiAsyncronously(geoObject)
+        }
 
         this.dispatch('create_geo_object', {
             id: geoObject.id,
@@ -132,6 +148,11 @@ export default class GeoObjectModule extends Module_Base<
 
         if(geoObject instanceof Array){
             geoObject = geoObject[0]
+        }
+
+        if(!geoObject.is_synced_with_dji && typeof geoObject.workspace_id === 'number'){
+            //@ts-ignore
+            this.syncGeoObjectWithDjiAsyncronously(geoObject)
         }
 
         this.dispatch('update_geo_object', {
@@ -304,6 +325,27 @@ export default class GeoObjectModule extends Module_Base<
                 data: existingGeoObject
             })
         }
+    }
+
+    getUnsyncedGeoObjects(workspaceId: number){
+        return select_Geo_Object(pgp.as.format('WHERE workspace_id = ${workspaceId} AND is_synced_with_dji = false', {
+            workspaceId
+        }))
+    }
+
+    private syncGeoObjectWithDjiAsyncronously(geoObject: WithRequired<DBType_Geo_Object, 'workspace_id'>){
+
+        getCore().modules.connection.getFirstConnectionForWorkspaceThatHasConnectedRemoteController(geoObject.workspace_id).then(connection => {
+            if(connection){
+                sendCreateGeoObjectMessageToClient(geoObject, connection)
+
+                this.updateGeoObjectSafe(geoObject.id, {
+                    is_synced_with_dji: true
+                })//TODO only set this to true if the message was successfully sent and acknowledged by the client, otherwise we might lose unsynced geoObjects if the server restarts before the next update
+            }
+        }).catch(err => {
+            console.error('@syncGeoObjectWithDjiAsyncronously(): failed to get first connection for workspace', err)
+        })
     }
 
     private parseFilter(filter: string){

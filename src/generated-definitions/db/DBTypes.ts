@@ -384,6 +384,7 @@ export type DBType_Geo_Object_Base<type extends DBType_Geo_Object_TypeType, sub_
     config: DBType_Geo_Object_ConfigType<type, sub_type>;
     created_at: string;
     updated_at: string;
+    is_synced_with_dji: boolean
 }
 
 

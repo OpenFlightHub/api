@@ -186,4 +186,19 @@ export default class ConnectionModule extends Module_Base<
 
         setSessionCookie('connection-link-auth', sessionToken, res, longTime)
     }
+
+    /**
+     * @returns
+     */
+    async getFirstConnectionForWorkspaceThatHasConnectedRemoteController(workspaceId: number): Promise<DBType_Connection | false>{
+        const connections = await select_Connection(pgp.as.format('SELECT * FROM connections WHERE workspace_id = ${workspaceId} AND remote_controller_id IS NOT NULL', {
+            workspaceId
+        }))//TODO is this correct?
+
+        if(connections.length === 0){
+            return false
+        }
+
+        return connections[0]
+    }
 }
