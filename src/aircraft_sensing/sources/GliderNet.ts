@@ -93,7 +93,7 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
 
                 if(parsed.destCallsign === 'OGFLR'){
                     parsed.flarm = parseOGNFlarmComment(parsed.comment)
-                    if(typeof parsed.flarm !== 'string'){
+                    if(typeof parsed.flarm === 'undefined'){
                         console.warn('no comment provided for OGN Flarm data: ', parsed)
                     }
                 }
