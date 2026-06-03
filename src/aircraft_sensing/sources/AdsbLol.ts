@@ -77,8 +77,11 @@ function feetToMeter(feet: number){
     return feet / 3.281
 }
 
-function mapADSBCategoryToTrafficType(category: string): TrafficType {
+function mapADSBCategoryToTrafficType(category?: string): TrafficType {
     switch (category) {
+        case undefined:
+            return 'other'
+
         case 'A0':
         case 'A1':
         case 'A2':
