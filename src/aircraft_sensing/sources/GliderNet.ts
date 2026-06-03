@@ -93,6 +93,9 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
 
                 if(parsed.destCallsign === 'OGFLR'){
                     parsed.flarm = parseOGNFlarmComment(parsed.comment)
+                    if(typeof parsed.flarm !== 'string'){
+                        console.warn('no comment provided for OGN Flarm data: ', parsed)
+                    }
                 }
 
 
@@ -156,13 +159,13 @@ type FlarmAddressType = 0 | 1 | 2 | 3 // 0 = unknown, 1 = ICAO, 2 = flarm, 3 = o
 
 
 // Note: some fields my be undefined if comment does not include them
-function parseOGNFlarmComment(comment: string){
+function parseOGNFlarmComment(comment?: string){
     //parse ogn data, see section "OGN-specific beacons" http://wiki.glidernet.org/wiki:ogn-flavoured-aprs
 
     const ret: Partial<FlarmData> = {}
 
     if(typeof comment !== 'string'){
-       throw new Error('arg must be a string')
+       return undefined
     }
 
     let commentFields = comment.split(' ')
