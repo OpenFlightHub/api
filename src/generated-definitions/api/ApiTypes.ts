@@ -697,6 +697,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -731,6 +734,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -762,6 +768,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -793,6 +802,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -829,6 +841,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -860,6 +875,9 @@ export type ApiType_Workspace_Geo_Objects_Get = (
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1157,6 +1175,9 @@ export type ApiType_Geo_Object =
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -1191,6 +1212,9 @@ export type ApiType_Geo_Object =
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -1222,6 +1246,9 @@ export type ApiType_Geo_Object =
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -1253,6 +1280,9 @@ export type ApiType_Geo_Object =
                  */
                 updated_at: string;
                 type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
                 sub_type: number;
                 tasks: {
                     id: number;
@@ -1289,6 +1319,9 @@ export type ApiType_Geo_Object =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1320,6 +1353,9 @@ export type ApiType_Geo_Object =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1357,6 +1393,9 @@ export interface ApiType_Geo_Object_Base {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1379,6 +1418,9 @@ export type ApiType_Geo_Object_Type0 =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1413,6 +1455,9 @@ export type ApiType_Geo_Object_Type0 =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1444,6 +1489,9 @@ export type ApiType_Geo_Object_Type0 =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1475,6 +1523,9 @@ export type ApiType_Geo_Object_Type0 =
            */
           updated_at: string;
           type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
           sub_type: number;
           tasks: {
               id: number;
@@ -1515,6 +1566,9 @@ export interface ApiType_Geo_Object_Type0_Subtype0 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1568,6 +1622,9 @@ export interface ApiType_Geo_Object_Type0_Subtype1 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1615,6 +1672,9 @@ export interface ApiType_Geo_Object_Type0_Subtype2 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1662,6 +1722,9 @@ export interface ApiType_Geo_Object_Type0_Subtype3 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1717,6 +1780,9 @@ export interface ApiType_Geo_Object_Type1 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -1764,6 +1830,9 @@ export interface ApiType_Geo_Object_Type2 {
      */
     updated_at: string;
     type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
     sub_type: number;
     tasks: {
         id: number;
@@ -2888,6 +2957,9 @@ export type ApiType_Mission_Tasks = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -2920,6 +2992,9 @@ export type ApiType_Mission_Tasks = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -2949,6 +3024,9 @@ export type ApiType_Mission_Tasks = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -2978,6 +3056,9 @@ export type ApiType_Mission_Tasks = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -3012,6 +3093,9 @@ export type ApiType_Mission_Tasks = {
                */
               updated_at: string;
               type: number;
+              /**
+               * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+               */
               sub_type: number;
               tasks: {
                   id: number;
@@ -3041,6 +3125,9 @@ export type ApiType_Mission_Tasks = {
                */
               updated_at: string;
               type: number;
+              /**
+               * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+               */
               sub_type: number;
               tasks: {
                   id: number;
@@ -3097,6 +3184,9 @@ export type ApiType_Task = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -3129,6 +3219,9 @@ export type ApiType_Task = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -3158,6 +3251,9 @@ export type ApiType_Task = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -3187,6 +3283,9 @@ export type ApiType_Task = {
                      */
                     updated_at: string;
                     type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
                     sub_type: number;
                     tasks: {
                         id: number;
@@ -3221,6 +3320,9 @@ export type ApiType_Task = {
                */
               updated_at: string;
               type: number;
+              /**
+               * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+               */
               sub_type: number;
               tasks: {
                   id: number;
@@ -3250,6 +3352,9 @@ export type ApiType_Task = {
                */
               updated_at: string;
               type: number;
+              /**
+               * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+               */
               sub_type: number;
               tasks: {
                   id: number;

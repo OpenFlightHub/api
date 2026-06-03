@@ -1633,7 +1633,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
@@ -1720,7 +1721,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
@@ -1810,7 +1812,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
@@ -1900,7 +1903,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
@@ -1993,7 +1997,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "type": "integer"
                     },
                     "sub_type": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                     },
                     "tasks": {
                         "type": "array",
@@ -2083,7 +2088,8 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                         "type": "integer"
                     },
                     "sub_type": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                     },
                     "tasks": {
                         "type": "array",
@@ -2723,7 +2729,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "type": "integer"
                         },
                         "sub_type": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                         },
                         "tasks": {
                             "type": "array",
@@ -2810,7 +2817,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "type": "integer"
                         },
                         "sub_type": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                         },
                         "tasks": {
                             "type": "array",
@@ -2900,7 +2908,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "type": "integer"
                         },
                         "sub_type": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                         },
                         "tasks": {
                             "type": "array",
@@ -2990,7 +2999,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                             "type": "integer"
                         },
                         "sub_type": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                         },
                         "tasks": {
                             "type": "array",
@@ -3083,7 +3093,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3173,7 +3184,8 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3269,7 +3281,8 @@ export const ApiSchema_Geo_Object_Base : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -3337,7 +3350,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3424,7 +3438,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3514,7 +3529,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3604,7 +3620,8 @@ export const ApiSchema_Geo_Object_Type0 : JSONSchema4  = {
                     "type": "integer"
                 },
                 "sub_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                 },
                 "tasks": {
                     "type": "array",
@@ -3698,7 +3715,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype0 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -3809,7 +3827,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype1 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -3926,7 +3945,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype2 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -4043,7 +4063,8 @@ export const ApiSchema_Geo_Object_Type0_Subtype3 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -4162,7 +4183,8 @@ export const ApiSchema_Geo_Object_Type1 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -4279,7 +4301,8 @@ export const ApiSchema_Geo_Object_Type2 : JSONSchema4  = {
             "type": "integer"
         },
         "sub_type": {
-            "type": "integer"
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
         },
         "tasks": {
             "type": "array",
@@ -6717,7 +6740,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                             "type": "integer"
                                         },
                                         "sub_type": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                         },
                                         "tasks": {
                                             "type": "array",
@@ -6804,7 +6828,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                             "type": "integer"
                                         },
                                         "sub_type": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                         },
                                         "tasks": {
                                             "type": "array",
@@ -6894,7 +6919,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                             "type": "integer"
                                         },
                                         "sub_type": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                         },
                                         "tasks": {
                                             "type": "array",
@@ -6984,7 +7010,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                             "type": "integer"
                                         },
                                         "sub_type": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                         },
                                         "tasks": {
                                             "type": "array",
@@ -7077,7 +7104,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                     "type": "integer"
                                 },
                                 "sub_type": {
-                                    "type": "integer"
+                                    "type": "integer",
+                                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                 },
                                 "tasks": {
                                     "type": "array",
@@ -7167,7 +7195,8 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                     "type": "integer"
                                 },
                                 "sub_type": {
-                                    "type": "integer"
+                                    "type": "integer",
+                                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                 },
                                 "tasks": {
                                     "type": "array",
@@ -7326,7 +7355,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                         "type": "integer"
                                     },
                                     "sub_type": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                     },
                                     "tasks": {
                                         "type": "array",
@@ -7413,7 +7443,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                         "type": "integer"
                                     },
                                     "sub_type": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                     },
                                     "tasks": {
                                         "type": "array",
@@ -7503,7 +7534,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                         "type": "integer"
                                     },
                                     "sub_type": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                     },
                                     "tasks": {
                                         "type": "array",
@@ -7593,7 +7625,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                         "type": "integer"
                                     },
                                     "sub_type": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                                     },
                                     "tasks": {
                                         "type": "array",
@@ -7686,7 +7719,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
@@ -7776,7 +7810,8 @@ export const ApiSchema_Task : JSONSchema4  = {
                                 "type": "integer"
                             },
                             "sub_type": {
-                                "type": "integer"
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
                             },
                             "tasks": {
                                 "type": "array",
