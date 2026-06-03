@@ -220,6 +220,8 @@ export class WorkspaceTrafficSensingHandles {
     private readonly handles: WorkspaceTrafficSensingHandle[]
     private readonly workspaceRef: LiveUpdatedObjectReference<DBType_Workspace>
 
+    private isStopped = false
+
     constructor(workspaceRef: LiveUpdatedObjectReference<DBType_Workspace>){
         this.workspaceRef = workspaceRef
         this.handles = []
@@ -242,8 +244,13 @@ export class WorkspaceTrafficSensingHandles {
         const handleIndex = this.handles.indexOf(handle)
 
         if(handleIndex < 0){
-            console.error(handle, this.handles)
-            throw new Error('handle not part of this handles!')
+            if(this.isStopped){
+                //already stopped
+                return
+            } else {
+                console.warn('tried to stop a workspace traffic sensing handle that was not found in the active handles list, but the sensing was not marked as stopped. This should not happen and might be a sign of a bug. handle:', handle)
+                return
+            }
         }
 
         this.handles.splice(handleIndex, 1)
@@ -276,5 +283,6 @@ export class WorkspaceTrafficSensingHandles {
         if(this.sensingHandle){
             this.sensingHandle.stop()
         }
+        this.isStopped = true
     }
 }
