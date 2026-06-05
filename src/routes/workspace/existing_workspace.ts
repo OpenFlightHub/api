@@ -231,7 +231,7 @@ router.get('/geo-objects', asyncHandler(async(req, res) => {
 
     const geoObjectsWithTasks = await getCore().modules.geoObject.getGeoObjectsWithTasks(await getCore().modules.workspace.getGeoObjectsForWorkspace(workspace.id))
 
-    res.GM.guardSend<ApiType_Workspace_Geo_Objects_Get>(geoObjectsWithTasks, ApiSchema_Workspace_Geo_Objects_Get)
+    res.GM.guardSend<ApiType_Workspace_Geo_Objects_Get>(geoObjectsWithTasks.filter(g => g.type !== 3) /* TODO: remove filter when we decide to include type 3 objects */, ApiSchema_Workspace_Geo_Objects_Get)
 }))
 
 router.post('/geo-objects', asyncHandler(async(req, res) => {

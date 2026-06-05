@@ -7,7 +7,24 @@ Following custom rules apply (because of depending build scripts):
 - every request body should be a `$ref` to `components/schemas` because we can then automatically generate the JSON Schema and use that in our `api` code
 
 ## Types and Schemas
-Types and schemas are automatically generated with this repo: https://github.com/OpenFlightHub/api-typegenerator
+Types and schemas are automatically generated with this repo: https://github.com/OpenFlightHub/definition-typegenerator
+
+### Postgis Types
+
+if you read from database and you have geometry columns, they will automatically be converted into ST_Geometry instances if you use the DBHelpers!
+For inserting stuff into the database, also use ST_Geometry.
+
+If you have to write your own SQL queries for pg-promise, you have to deal with this yourself:
+
+example for a select query:
+```js
+// use ST_AsGeoJSON
+const result = await db.manyOrNone<{id: number, geom: ST_Geometry}>('SELECT id, ST_AsGeoJSON(my_table.geom) as geom_parsed FROM my_table')
+
+// use the replacement helper
+replaceGeometryWithParsed(result, 'geom', 'geom_parsed')
+```
+
 
 ## Guarding system
 

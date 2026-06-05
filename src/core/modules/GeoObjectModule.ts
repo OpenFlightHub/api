@@ -1,5 +1,5 @@
 
-import {DBType_Connection, DBType_Geo_Object, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_Type_TYPES} from '../../generated-definitions/db/DBTypes'
+import {DBType_Connection, DBType_Geo_Object, DBType_Geo_Object_ConfigType, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType, DBType_Geo_Object_Type_TYPES, DBType_Geo_Object_TypeType} from '../../generated-definitions/db/DBTypes'
 import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
@@ -12,6 +12,9 @@ import pgp from 'pg-promise'
 import { assignObject, WithRequired } from '../../util/typescript'
 import dayjs from 'dayjs'
 import { WorkspaceTrafficSensingHandle } from './WorkspaceModule'
+import { ST_Geometry, ST_Line, ST_Point } from '../../util/postgis'
+import CollisionObjectsManager from '../../collision-objects'
+import * as turf from '@turf/turf'
 
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
@@ -48,6 +51,8 @@ export default class GeoObjectModule extends Module_Base<
     private existingGeoObjectsNameIdMap = new Map<number, Map<string, number>>()//workspaceId -> name -> id (if workspaceId = -1, it means global)
     private existingGeoObjectsNameIdMap_isInitialized = false
 
+    readonly collisionObjectsManager: CollisionObjectsManager
+
     constructor(){
         super()
 
@@ -56,7 +61,11 @@ export default class GeoObjectModule extends Module_Base<
         })
 
         setInterval(()=>{
-            this.cleanupOldTrafficGeoObjects()
+            try {
+                this.cleanupOldTrafficGeoObjects()
+            } catch (err){
+                console.error('Error in cleanupOldTrafficGeoObjects:', err)
+            }
         }, 1000 * 30)//every 30 seconds
 
         this.subscribableEventHandlerGeoObjects = registerSubscribableEvent('geo_object', async(event, filter, client)=>{
@@ -83,12 +92,13 @@ export default class GeoObjectModule extends Module_Base<
             }
         })
 
+        this.collisionObjectsManager = new CollisionObjectsManager(this)
     }
 
     /**
      * if the new geoObject has the same uuid as an existing one, and the same data, no error wil be thrown!
      */
-    async createGeoObject(data: DBInsert_Geo_Object){
+    async createGeoObject(data: DBInsert_Geo_Object_without_geom){
         const existingObject = (await select_Geo_Object(pgp.as.format('WHERE uuid = ${uuid}', {uuid: data.uuid})))[0]
 
         if(existingObject){
@@ -109,7 +119,7 @@ export default class GeoObjectModule extends Module_Base<
             }
         }
 
-        const geoObject = await insert_Geo_Object(data)
+        const geoObject = await insert_Geo_Object(recalculateGeom(data))
 
         if(!geoObject.is_synced_with_dji && typeof geoObject.workspace_id === 'number'){
             //@ts-ignore
@@ -121,7 +131,7 @@ export default class GeoObjectModule extends Module_Base<
             workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
-        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + geoObject.workspace_id, {//TODO if workspace_id is not a number then filter geo object location, if the location is very far away from the client, we should not send it to the client, this has to be done for all events
             event_type: 'create',
             uuid: geoObject.uuid,
             data: geoObject
@@ -136,11 +146,23 @@ export default class GeoObjectModule extends Module_Base<
      * @returns false if does not exist
      * @see updateGeoObjectSafe
      */
-    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object){
+    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object_without_geom){
 
         data.updated_at = dayjs().toISOString()
 
-        let geoObject = (await update_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID, data))
+        const existingGeoObject = await this.getGeoObject(idOrUUID)
+
+        if(existingGeoObject === false){
+            return false
+        }
+
+        let geoObject = (await update_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID,
+            recalculateGeom({
+                type: existingGeoObject.type,
+                sub_type: existingGeoObject.sub_type,
+                config: data.config
+            })
+        ))
 
         if(geoObject === false){
             return false
@@ -305,7 +327,8 @@ export default class GeoObjectModule extends Module_Base<
 
             workspaceMap.set(data.name, -1)// a flag to prevent race conditions, see above
 
-            existingGeoObject = await insert_Geo_Object({
+
+            const dataToInsert: DBInsert_Geo_Object_without_geom = {
                 type: DBType_Geo_Object_Type_TYPES.traffic,
                 name: data.name,
                 workspace_id: workspaceId,
@@ -315,7 +338,9 @@ export default class GeoObjectModule extends Module_Base<
                     latitude: data.position.latitude,
                     height: data.position.height
                 }
-            })
+            }
+
+            existingGeoObject = await insert_Geo_Object(recalculateGeom(dataToInsert))
 
             workspaceMap.set(existingGeoObject.name, existingGeoObject.id)
 
@@ -419,14 +444,24 @@ export default class GeoObjectModule extends Module_Base<
         }
     }
 
+    async getGeoObjectsCollision(longitude: number, latitude: number, radiusInMeters: number){
+        return await select_Geo_Object(pgp.as.format('WHERE ST_Distance(\'SRID=4979;POINT(${longitude} ${latitude})\'::geometry, geo_objects.geom) < ${radius}', {
+            longitude,
+            latitude,
+            radius: turf.lengthToDegrees(radiusInMeters, 'meters')//TODO we should probably first convert to 2D, otherwise 3d ST_Distance might give weird results
+        }))
+    }
 }
 
+type DBType_Geo_Object_without_geom = Omit<DBType_Geo_Object, 'geom'>
+export type DBInsert_Geo_Object_without_geom = Omit<DBInsert_Geo_Object, 'geom'>
+export type DBUpdate_Geo_Object_without_geom = Omit<DBUpdate_Geo_Object, 'geom'>
 
 /**
  *
  * @returns true or a string describing what is different between the two geoObjects
  */
-function areSameGeoObjects(geoObject1: DBType_Geo_Object, geoObject2: DBInsert_Geo_Object){
+function areSameGeoObjects(geoObject1: DBType_Geo_Object_without_geom, geoObject2: DBInsert_Geo_Object_without_geom){
     if(geoObject1.uuid !== geoObject2.uuid) return 'uuid'
     if(geoObject1.name !== geoObject2.name) return 'name'
     if(geoObject1.type !== geoObject2.type) return 'type'
@@ -435,4 +470,69 @@ function areSameGeoObjects(geoObject1: DBType_Geo_Object, geoObject2: DBInsert_G
     if(JSON.stringify(geoObject1.config) !== JSON.stringify(geoObject2.config)) return 'config'
 
     return true
+}
+
+type GeoObjectWithTypesAndConfig = {
+    type: number
+    sub_type: number
+    config?: DBType_Geo_Object_ConfigType<DBType_Geo_Object_TypeType, DBType_Geo_Object_SubTypeType<DBType_Geo_Object_TypeType>>
+}
+
+function recalculateGeom<G extends GeoObjectWithTypesAndConfig>(
+    geoObject: G
+): G['config'] extends undefined ? G : G & {geom: ST_Geometry} {
+    if(typeof geoObject.config === 'undefined'){
+        //@ts-ignore
+        return geoObject
+    }
+
+    return assignObject(geoObject, {
+        geom: makeGeomFromConfig(geoObject)
+    })
+}
+
+function makeGeomFromConfig(geoObject: GeoObjectWithTypesAndConfig): ST_Geometry {
+
+    if(geoObject.type === DBType_Geo_Object_Type_TYPES.marking) {
+        const config = geoObject.config
+
+        if(geoObject.sub_type === DBType_Geo_Object_SubType_TYPES.marking.point){
+            const typedConfig = config as unknown as DBType_Geo_Object_ConfigType<0, 0>
+            return new ST_Point(typedConfig.point[0], typedConfig.point[1], typedConfig.point[2])
+        } else if(geoObject.sub_type === DBType_Geo_Object_SubType_TYPES.marking.line){
+            const typedConfig = config as unknown as DBType_Geo_Object_ConfigType<0, 1>
+            return new ST_Line(typedConfig.line.map(point => new ST_Point(point[0], point[1], point[2])))
+        } else if(geoObject.sub_type === DBType_Geo_Object_SubType_TYPES.marking.polygon){
+            const typedConfig = config as unknown as DBType_Geo_Object_ConfigType<0, 2>
+            return new ST_Line(typedConfig.polygon.map(point => new ST_Point(point[0], point[1], point[2])))
+        } else if(geoObject.sub_type === DBType_Geo_Object_SubType_TYPES.marking.circle){
+            const typedConfig = config as unknown as DBType_Geo_Object_ConfigType<0, 3>
+            return new ST_Point(typedConfig.center[0], typedConfig.center[1], typedConfig.center[2])
+        }
+
+    } else if(geoObject.type === DBType_Geo_Object_Type_TYPES.traffic) {
+        const config = geoObject.config as unknown as DBType_Geo_Object_ConfigType<1, DBType_Geo_Object_SubTypeType<1>>
+
+        return new ST_Point(config.longitude, config.latitude, config.height)
+    } else if(geoObject.type === DBType_Geo_Object_Type_TYPES.unit) {
+        const config = geoObject.config as unknown as DBType_Geo_Object_ConfigType<2, DBType_Geo_Object_SubTypeType<2>>
+
+        return new ST_Point(config.longitude, config.latitude, config.height)
+    } else if(geoObject.type === DBType_Geo_Object_Type_TYPES.collision) {
+        const config = geoObject.config as unknown as DBType_Geo_Object_ConfigType<3, DBType_Geo_Object_SubTypeType<3>>
+
+        if([0, 1, 4].includes(geoObject.sub_type)){
+            const configTyped = config as unknown as DBType_Geo_Object_ConfigType<3, 0 | 1 | 4>
+
+            return new ST_Point(configTyped.point[0], configTyped.point[1], configTyped.point[2])
+        } else if(geoObject.sub_type === 6){
+            return new ST_Line((config as unknown as DBType_Geo_Object_ConfigType<3, 6>).polygon.map(point => new ST_Point(point[0], point[1], point[2])))
+        } else {
+            return new ST_Line((config as unknown as DBType_Geo_Object_ConfigType<3, 2 | 3 | 5>).line.map(point => new ST_Point(point[0], point[1], point[2])))
+        }
+
+    }
+
+    //@ts-ignore
+    throw new Error('unsupported geoobject type and subtype: ' + geoObject.type + ', ' + geoObject.sub_type)
 }

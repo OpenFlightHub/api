@@ -51,7 +51,7 @@ info:
     * 403: you do not have permission to do this
     * 410: we understood your request but whatever you where looking for does not exist
 
-  version: 0.21.0
+  version: 0.22.0
 externalDocs:
   description: Learn more about Swagger Editor and OpenApi
   url: http://swagger.io
@@ -3031,6 +3031,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/info_collision_objects"
+
+        "204":
+          description: No Content (api is fetching the data from 3rd party service, call this endpoint again later to receive the result)
 
         "400":
           $ref: "#/components/responses/400"
