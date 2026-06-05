@@ -112,8 +112,8 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
                 const id = parsed.flarm?.id || parsed.sourceCallsign || ('' + parsed.id)//TODO sourceCallsign and parsed.id are not really helpfull...
 
 
-                if(typeof parsed.flarm?.senderType === 'number' && parsed.flarm.senderType > 8){
-                    console.log('unknown flarm sender type:', parsed)
+                if(typeof parsed.flarm?.senderType === 'number' && parsed.flarm.senderType > 15){
+                    console.log('unknown flarm sender type:', parsed.flarm.senderType, parsed)
                 }
 
                 this.dispatch('aircraft', {
