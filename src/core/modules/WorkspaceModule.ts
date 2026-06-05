@@ -45,6 +45,7 @@ export default class WorkspaceModule extends Module_Base<
         super()
     }
 
+    //TODO prefill collission objects for workspace when created or updated with new location, so that they are directly available when the client requests them for the first time
     async createWorkspace(data: DBInsert_Workspace){
         const workspace = await insert_Workspace(data)
 
