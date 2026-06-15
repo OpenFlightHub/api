@@ -267,15 +267,17 @@ export default class DroneModule extends Module_Base<
 
     private extractPositionFromDroneData(droneData: DBType_Drone_Data){
 
-        if(typeof droneData.data.latitude !== 'number' || typeof droneData.data.longitude !== 'number' || typeof droneData.data.height !== 'number'){
+        const possiblePositionData = droneData.data as any
+
+        if(typeof possiblePositionData.latitude !== 'number' || typeof possiblePositionData.longitude !== 'number' || typeof possiblePositionData.height !== 'number'){
             return false
         }
 
         return {
             reported_at: droneData.created_at,
-            latitude: droneData.data.latitude as number,
-            longitude: droneData.data.longitude as number,
-            height: droneData.data.height as number
+            latitude: possiblePositionData.latitude as number,
+            longitude: possiblePositionData.longitude as number,
+            height: possiblePositionData.height as number
         }
     }
 
@@ -292,13 +294,15 @@ export default class DroneModule extends Module_Base<
 
     private extractTelemetryFromDroneData(droneData: DBType_Drone_Data){
 
-        if(typeof droneData.data.capacity_percent_left !== 'number'){
+        const possibleTelemetryData = droneData.data as any
+
+        if(typeof possibleTelemetryData.capacity_percent_left !== 'number'){
             return false
         }
 
         return {
             reported_at: droneData.created_at,
-            capacity_percent_left: droneData.data.capacity_percent_left as number
+            capacity_percent_left: possibleTelemetryData.capacity_percent_left as number
         }
     }
 

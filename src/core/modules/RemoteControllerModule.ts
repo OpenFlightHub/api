@@ -174,15 +174,17 @@ export default class RemoteControllerModule extends Module_Base<
 
     private extractPositionFromRemoteController(remoteControllerData: DBType_Remote_Controller_Data){
 
-        if(typeof remoteControllerData.data.latitude !== 'number' || typeof remoteControllerData.data.longitude !== 'number' || typeof remoteControllerData.data.height !== 'number'){
+        const possibleData = remoteControllerData.data as any
+
+        if(typeof possibleData.latitude !== 'number' || typeof possibleData.longitude !== 'number' || typeof possibleData.height !== 'number'){
             return false
         }
 
         return {
             reported_at: remoteControllerData.created_at,
-            latitude: remoteControllerData.data.latitude as number,
-            longitude: remoteControllerData.data.longitude as number,
-            height: remoteControllerData.data.height as number
+            latitude: possibleData.latitude as number,
+            longitude: possibleData.longitude as number,
+            height: possibleData.height as number
         }
     }
 
