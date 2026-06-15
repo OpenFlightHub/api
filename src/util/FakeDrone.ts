@@ -49,12 +49,12 @@ export default class FakeDrone {
                 await this.getFlightId().then(flightId=>{
                     getCore().modules.flight.createFlightData({
                         created_at: new Date().toISOString(),
-                        data: JSON.stringify({
+                        data: {
                             longitude: currentPosition.longitude,
                             latitude: currentPosition.latitude,
                             height: this.track.getCurrentHeight()
-                        }),
-                        flight_id: flightId,
+                        },
+                        flight_id: flightId!,
                         type: DBType_Flight_Data_TYPES.position
                     })
                 })
