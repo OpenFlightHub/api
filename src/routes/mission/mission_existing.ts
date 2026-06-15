@@ -1,14 +1,13 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler'
 import pgp from 'pg-promise'
-import { ApiSchema_Mission, ApiSchema_Mission_Patch, ApiSchema_Mission_Post, ApiSchema_Reference } from '../../generated-definitions/api/ApiSchemas';
-import { ApiType_Mission, ApiType_Mission_Patch, ApiType_Mission_Post, ApiType_Task } from '../../generated-definitions/api/ApiTypes';
-import { GuardError } from '../../ManInTheMiddleware';
+import { ApiSchema_Mission, ApiSchema_Mission_Patch } from '../../generated-definitions/api/ApiSchemas';
+import { ApiType_Mission, ApiType_Mission_Patch, ApiType_Task } from '../../generated-definitions/api/ApiTypes';
 import { getCore } from '../../core';
 import { assignObject } from '../../util/typescript';
 import { ApiType_Mission_Tasks } from '../../generated-definitions/api/ApiTypes';
 import { ApiSchema_Mission_Tasks } from '../../generated-definitions/api/ApiSchemas';
-import { DBType_Mission, DBType_Mission_StateType } from '../../generated-definitions/db/DBTypes';
+import { DBType_Mission } from '../../generated-definitions/db/DBTypes';
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
