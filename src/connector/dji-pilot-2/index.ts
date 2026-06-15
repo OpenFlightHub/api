@@ -74,6 +74,7 @@ async function updateProductForConnection(connection: DBType_Connection, serialN
                     console.warn('transfering remote controller from connection', oldConnection.id, 'to', connection.id)
 
                     await getCore().modules.connection.updateConnection(oldConnection.id, {
+                        //@ts-ignore
                         remote_controller_id: null
                     })
 
@@ -219,12 +220,12 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
                         getCore().modules.flight.createFlightData({
                             created_at: new Date(message.timestamp).toISOString(),
-                            data: JSON.stringify({
+                            data: {
                                 longitude: messageData.longitude,
                                 latitude: messageData.latitude,
                                 height: messageData.height
-                            }),
-                            flight_id: drone.current_flight_id,
+                            },
+                            flight_id: drone.current_flight_id!,
                             type: DBType_Flight_Data_TYPES.position,
                             received_at: new Date(message.timestamp).toISOString()
                         }).catch(err => {
@@ -237,6 +238,7 @@ connector.onMessage_Osd(async (connectionId, message, productSerialNumber)=>{
 
                     //TODO fix this ugly hack (because we can not import ws before setting up global traffic sense)
 
+                    //@ts-ignore
                     ;(global.sendToConnection as typeof sendToConnection)(connection.id, {
                         "biz_code": "device_osd",
                         "version": "1.0",
@@ -338,13 +340,13 @@ export async function handleMqttAuth(client: Client, username: string, password:
 
 
 export function handleMqttConnect(client: Client){
-    onlineConnections.set(authedClientIdToConnectionIdMap.get(client.id).connection_id, {client})
+    onlineConnections.set(authedClientIdToConnectionIdMap.get(client.id)!.connection_id, {client})
 
     //TODO notify dji pilot 2 ws Situatun awareness deviceOnline
 }
 
 export function handleMqttDisconnect(client: Client){
-    onlineConnections.delete(authedClientIdToConnectionIdMap.get(client.id).connection_id)
+    onlineConnections.delete(authedClientIdToConnectionIdMap.get(client.id)!.connection_id)
 
     //TODO notify dji pilot 2 ws Situatun awareness deviceOffline
 }
