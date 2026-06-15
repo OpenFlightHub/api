@@ -274,9 +274,7 @@ export class WorkspaceTrafficSensingHandles {
 
         this.sensingHandle = aircraftSensing.startSensing(this.workspaceRef.get().latitude, this.workspaceRef.get().longitude, WORKSPACE_TRAFFIC_SENSING_RADIUS)
 
-        this.sensingHandle.addListener('traffic', trafficData => {
-            getCore().modules.geoObject.processTrafficSensingData(trafficData)
-        })
+        this.sensingHandle.addListener('traffic', getCore().modules.geoObject.processTrafficSensingData.bind(getCore().modules.geoObject))
     }
 
     private tearDownSensingHandle(){
