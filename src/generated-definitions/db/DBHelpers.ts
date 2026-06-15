@@ -178,6 +178,9 @@ import {DBType_User} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_User<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_User): Promise<T extends number ? false | DBType_User : DBType_User[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_USERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -372,6 +375,9 @@ import {DBType_Team} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Team<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Team): Promise<T extends number ? false | DBType_Team : DBType_Team[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Team>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TEAMS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -556,6 +562,9 @@ import {DBType_Organisation} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Organisation<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Organisation): Promise<T extends number ? false | DBType_Organisation : DBType_Organisation[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Organisation>(db.$config.pgp.helpers.update(values,  COLUMN_SET_ORGANISATIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -779,6 +788,9 @@ import {DBType_File} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_File<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_File): Promise<T extends number ? false | DBType_File : DBType_File[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_File>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FILES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -971,6 +983,9 @@ import {DBType_Workspace} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Workspace<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Workspace): Promise<T extends number ? false | DBType_Workspace : DBType_Workspace[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Workspace>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -1117,6 +1132,9 @@ import {DBType_Workspace_Permission} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Workspace_Permission<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Workspace_Permission): Promise<T extends number ? false | DBType_Workspace_Permission : DBType_Workspace_Permission[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Workspace_Permission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_WORKSPACE_PERMISSIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -1295,6 +1313,9 @@ import {DBType_Connection} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Connection<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Connection): Promise<T extends number ? false | DBType_Connection : DBType_Connection[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Connection>(db.$config.pgp.helpers.update(values,  COLUMN_SET_CONNECTIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -1450,6 +1471,9 @@ import {DBType_Remote_Controller} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Remote_Controller<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Remote_Controller): Promise<T extends number ? false | DBType_Remote_Controller : DBType_Remote_Controller[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Remote_Controller>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -1644,6 +1668,9 @@ import {DBType_Drone} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Drone<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone): Promise<T extends number ? false | DBType_Drone : DBType_Drone[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Drone>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -1858,6 +1885,9 @@ import {DBType_Flight} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Flight<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight): Promise<T extends number ? false | DBType_Flight : DBType_Flight[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Flight>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -2022,6 +2052,9 @@ import {DBType_Flight_User} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Flight_User<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight_User): Promise<T extends number ? false | DBType_Flight_User : DBType_Flight_User[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Flight_User>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_USERS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -2170,6 +2203,9 @@ import {DBType_Flight_Data} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Flight_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Flight_Data): Promise<T extends number ? false | DBType_Flight_Data : DBType_Flight_Data[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Flight_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_FLIGHT_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -2344,6 +2380,9 @@ import {DBType_Remote_Controller_Data} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Remote_Controller_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Remote_Controller_Data): Promise<T extends number ? false | DBType_Remote_Controller_Data : DBType_Remote_Controller_Data[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Remote_Controller_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_REMOTE_CONTROLLER_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -2527,6 +2566,9 @@ import {DBType_Drone_Data} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Drone_Data<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone_Data): Promise<T extends number ? false | DBType_Drone_Data : DBType_Drone_Data[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Drone_Data>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_DATA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -2787,6 +2829,9 @@ import {DBType_Drone_Media} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Drone_Media<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Drone_Media): Promise<T extends number ? false | DBType_Drone_Media : DBType_Drone_Media[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Drone_Media>(db.$config.pgp.helpers.update(values,  COLUMN_SET_DRONE_MEDIA_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -3019,6 +3064,9 @@ import {DBType_Geo_Object} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Geo_Object<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Geo_Object): Promise<T extends number ? false | DBType_Geo_Object : DBType_Geo_Object[]>{
+
+        if(!values.updated_at){values.updated_at = new Date().toISOString()}
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *, ST_AsGeoJSON(geom) as geom_parsed')
@@ -3241,6 +3289,9 @@ import {DBType_Mission} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Mission<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Mission): Promise<T extends number ? false | DBType_Mission : DBType_Mission[]>{
+
+        if(!values.updated_at){values.updated_at = new Date().toISOString()}
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Mission>(db.$config.pgp.helpers.update(values,  COLUMN_SET_MISSIONS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -3453,6 +3504,9 @@ import {DBType_Task} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Task<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Task): Promise<T extends number ? false | DBType_Task : DBType_Task[]>{
+
+        if(!values.updated_at){values.updated_at = new Date().toISOString()}
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Task>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASKS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -3599,6 +3653,9 @@ import {DBType_Task_Geo_Object} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Task_Geo_Object<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Task_Geo_Object): Promise<T extends number ? false | DBType_Task_Geo_Object : DBType_Task_Geo_Object[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Task_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_TASK_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -3739,6 +3796,9 @@ import {DBType_Collision_Object_Coverage_Area} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Collision_Object_Coverage_Area<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Collision_Object_Coverage_Area): Promise<T extends number ? false | DBType_Collision_Object_Coverage_Area : DBType_Collision_Object_Coverage_Area[]>{
+
+        if(!values.updated_at){values.updated_at = new Date().toISOString()}
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Collision_Object_Coverage_Area>(db.$config.pgp.helpers.update(values,  COLUMN_SET_COLLISION_OBJECT_COVERAGE_AREAS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *, ST_AsGeoJSON(geom) as geom_parsed')
@@ -3885,6 +3945,9 @@ import {DBType_Collision_Object_Geo_Object} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Collision_Object_Geo_Object<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Collision_Object_Geo_Object): Promise<T extends number ? false | DBType_Collision_Object_Geo_Object : DBType_Collision_Object_Geo_Object[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Collision_Object_Geo_Object>(db.$config.pgp.helpers.update(values,  COLUMN_SET_COLLISION_OBJECT_GEO_OBJECTS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
@@ -4079,6 +4142,9 @@ import {DBType_Api_Endpoint_Performance} from './DBTypes'
     @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
     */
     export async function update_Api_Endpoint_Performance<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Api_Endpoint_Performance): Promise<T extends number ? false | DBType_Api_Endpoint_Performance : DBType_Api_Endpoint_Performance[]>{
+
+        
+
         if(typeof idOrWhereCondition === 'number'){
             const id = idOrWhereCondition as number
             const ret = await db.oneOrNone<DBType_Api_Endpoint_Performance>(db.$config.pgp.helpers.update(values,  COLUMN_SET_API_ENDPOINT_PERFORMANCES_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')

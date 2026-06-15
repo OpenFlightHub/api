@@ -15,6 +15,7 @@ import { WorkspaceTrafficSensingHandle } from './WorkspaceModule'
 import { ST_Geometry, ST_Line, ST_Point } from '../../util/postgis'
 import CollisionObjectsManager from '../../collision-objects'
 import * as turf from '@turf/turf'
+import {joinObjects} from '../../util/object'
 
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
@@ -146,9 +147,7 @@ export default class GeoObjectModule extends Module_Base<
      * @returns false if does not exist
      * @see updateGeoObjectSafe
      */
-    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object_without_geom){
-
-        data.updated_at = dayjs().toISOString()
+    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object_without_geom, skipNotifyWebsockets?: boolean){
 
         const existingGeoObject = await this.getGeoObject(idOrUUID)
 
@@ -156,12 +155,10 @@ export default class GeoObjectModule extends Module_Base<
             return false
         }
 
+        const newGeoObject = recalculateGeom(joinObjects(existingGeoObject, data))
+
         let geoObject = (await update_Geo_Object(typeof idOrUUID === 'string' ? pgp.as.format('WHERE uuid = ${uuid}', {uuid: idOrUUID}) : idOrUUID,
-            recalculateGeom({
-                type: existingGeoObject.type,
-                sub_type: existingGeoObject.sub_type,
-                config: data.config
-            })
+            newGeoObject
         ))
 
         if(geoObject === false){
@@ -182,11 +179,13 @@ export default class GeoObjectModule extends Module_Base<
             workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
-        this.subscribableEventHandlerGeoObjects.triggerListener('' + (typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : 'global'), {
-            event_type: 'update',
-            uuid: geoObject.uuid,
-            data: geoObject
-        })
+        if(skipNotifyWebsockets !== true){
+            this.subscribableEventHandlerGeoObjects.triggerListener('' + (typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : ''), {
+                event_type: 'update',
+                uuid: geoObject.uuid,
+                data: geoObject
+            })
+        }
 
         return geoObject
     }
@@ -308,25 +307,19 @@ export default class GeoObjectModule extends Module_Base<
                 return
             }
 
-            existingGeoObject = await this.updateGeoObjectSafe(existingGeoObjectId, {
+            await this.updateGeoObjectSafe(existingGeoObjectId, {
                 config: {
                     longitude: data.position.longitude,
                     latitude: data.position.latitude,
                     height: data.position.height
                 },
+                updated_at: new Date().toISOString(),
                 workspace_id: typeof workspaceId === 'number' ? workspaceId : undefined
-            })
-
-            this.subscribableEventHandlerGeoObjects.triggerListener(filter, {
-                event_type: 'update',
-                uuid: existingGeoObject.uuid,
-                data: existingGeoObject
             })
 
         } else {
 
             workspaceMap.set(data.name, -1)// a flag to prevent race conditions, see above
-
 
             const dataToInsert: DBInsert_Geo_Object_without_geom = {
                 type: DBType_Geo_Object_Type_TYPES.traffic,
@@ -365,7 +358,7 @@ export default class GeoObjectModule extends Module_Base<
             // but set the others as "synced" too, to prevent infinite sync attempts
             this.updateGeoObject(geoObject.id, {
                 is_synced_with_dji: true
-            })
+            }, true)
             return
         }
 
@@ -375,7 +368,7 @@ export default class GeoObjectModule extends Module_Base<
 
                 this.updateGeoObjectSafe(geoObject.id, {
                     is_synced_with_dji: true
-                })//TODO only set this to true if the message was successfully sent and acknowledged by the client, otherwise we might lose unsynced geoObjects if the server restarts before the next update
+                }, true)//TODO only set this to true if the message was successfully sent and acknowledged by the client, otherwise we might lose unsynced geoObjects if the server restarts before the next update
             }
         }).catch(err => {
             console.error('@syncGeoObjectWithDjiAsyncronously(): failed to get first connection for workspace', err)
