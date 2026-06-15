@@ -896,6 +896,104 @@ export type ApiType_Workspace_Geo_Objects_Get = (
           };
           [k: string]: unknown;
       }
+    | (
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
+                     */
+                    point: [number, number, number];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: [number, number, number][];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: [number, number, number][];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      )
 )[];
 
 
@@ -1373,7 +1471,105 @@ export type ApiType_Geo_Object =
               [k: string]: unknown;
           };
           [k: string]: unknown;
-      };
+      }
+    | (
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [lng, lat, elevation]
+                     *
+                     * @minItems 3
+                     * @maxItems 3
+                     */
+                    point: [number, number, number];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    line: [number, number, number][];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+          | {
+                id: number;
+                uuid: string;
+                workspace_id?: number;
+                name: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                created_at: string;
+                /**
+                 * ISO 8601 format with a timezone
+                 */
+                updated_at: string;
+                type: number;
+                /**
+                 * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                 */
+                sub_type: number;
+                tasks: {
+                    id: number;
+                }[];
+                config: {
+                    id: number;
+                    /**
+                     * [[lng, lat, elevation], [lng, lat, elevation]]
+                     */
+                    polygon: [number, number, number][];
+                    [k: string]: unknown;
+                };
+                [k: string]: unknown;
+            }
+      );
 
 
 /**
@@ -1862,6 +2058,431 @@ export type ApiType_Geo_Object_Type2_Config = {
      * TODO unit
      */
     speed?: number;
+}
+
+
+export type ApiType_Geo_Object_Type3 =
+    | {
+          id: number;
+          uuid: string;
+          workspace_id?: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
+          sub_type: number;
+          tasks: {
+              id: number;
+          }[];
+          config: {
+              id: number;
+              /**
+               * [lng, lat, elevation]
+               *
+               * @minItems 3
+               * @maxItems 3
+               */
+              point: [number, number, number];
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id?: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
+          sub_type: number;
+          tasks: {
+              id: number;
+          }[];
+          config: {
+              id: number;
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              line: [number, number, number][];
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      }
+    | {
+          id: number;
+          uuid: string;
+          workspace_id?: number;
+          name: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          created_at: string;
+          /**
+           * ISO 8601 format with a timezone
+           */
+          updated_at: string;
+          type: number;
+          /**
+           * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+           */
+          sub_type: number;
+          tasks: {
+              id: number;
+          }[];
+          config: {
+              id: number;
+              /**
+               * [[lng, lat, elevation], [lng, lat, elevation]]
+               */
+              polygon: [number, number, number][];
+              [k: string]: unknown;
+          };
+          [k: string]: unknown;
+      };
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype0 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
+         */
+        point: [number, number, number];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype0_Config = {
+    id: number;
+    /**
+     * [lng, lat, elevation]
+     *
+     * @minItems 3
+     * @maxItems 3
+     */
+    point: [number, number, number];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype1 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
+         */
+        point: [number, number, number];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype1_Config = {
+    id: number;
+    /**
+     * [lng, lat, elevation]
+     *
+     * @minItems 3
+     * @maxItems 3
+     */
+    point: [number, number, number];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype2 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: [number, number, number][];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype2_Config = {
+    id: number;
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    line: [number, number, number][];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype3 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: [number, number, number][];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype3_Config = {
+    id: number;
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    line: [number, number, number][];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype4 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [lng, lat, elevation]
+         *
+         * @minItems 3
+         * @maxItems 3
+         */
+        point: [number, number, number];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype4_Config = {
+    id: number;
+    /**
+     * [lng, lat, elevation]
+     *
+     * @minItems 3
+     * @maxItems 3
+     */
+    point: [number, number, number];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype5 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        line: [number, number, number][];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype5_Config = {
+    id: number;
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    line: [number, number, number][];
+}
+
+
+/**
+ * if workspace_id is not present, it is a global geoobject
+ */
+export interface ApiType_Geo_Object_Type3_Subtype6 {
+    id: number;
+    uuid: string;
+    workspace_id?: number;
+    name: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    updated_at: string;
+    type: number;
+    /**
+     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+     */
+    sub_type: number;
+    tasks: {
+        id: number;
+    }[];
+    config: {
+        id: number;
+        /**
+         * [[lng, lat, elevation], [lng, lat, elevation]]
+         */
+        polygon: [number, number, number][];
+    };
+}
+
+
+
+export type ApiType_Geo_Object_Type3_Subtype6_Config = {
+    id: number;
+    /**
+     * [[lng, lat, elevation], [lng, lat, elevation]]
+     */
+    polygon: [number, number, number][];
 }
 
 
@@ -3144,6 +3765,98 @@ export type ApiType_Mission_Tasks = {
                   speed?: number;
               };
           }
+        | (
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        point: [number, number, number];
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        line: [number, number, number][];
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        polygon: [number, number, number][];
+                    };
+                }
+          )
     )[];
 }[];
 
@@ -3371,6 +4084,98 @@ export type ApiType_Task = {
                   speed?: number;
               };
           }
+        | (
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [lng, lat, elevation]
+                         *
+                         * @minItems 3
+                         * @maxItems 3
+                         */
+                        point: [number, number, number];
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        line: [number, number, number][];
+                    };
+                }
+              | {
+                    id: number;
+                    uuid: string;
+                    workspace_id?: number;
+                    name: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    created_at: string;
+                    /**
+                     * ISO 8601 format with a timezone
+                     */
+                    updated_at: string;
+                    type: number;
+                    /**
+                     * other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15
+                     */
+                    sub_type: number;
+                    tasks: {
+                        id: number;
+                    }[];
+                    config: {
+                        id: number;
+                        /**
+                         * [[lng, lat, elevation], [lng, lat, elevation]]
+                         */
+                        polygon: [number, number, number][];
+                    };
+                }
+          )
     )[];
 }
 

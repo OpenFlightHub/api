@@ -3883,6 +3883,7 @@ components:
         - $ref: "#/components/schemas/geo_object_type0"
         - $ref: "#/components/schemas/geo_object_type1"
         - $ref: "#/components/schemas/geo_object_type2"
+        - $ref: "#/components/schemas/geo_object_type3"
 
     geo_object_base:
       type: object
@@ -4146,6 +4147,263 @@ components:
         speed:
           type: number
           description: TODO unit
+
+
+    geo_object_type3:
+      anyOf:
+        - $ref: "#/components/schemas/geo_object_type3_subtype0"
+        - $ref: "#/components/schemas/geo_object_type3_subtype1"
+        - $ref: "#/components/schemas/geo_object_type3_subtype2"
+        - $ref: "#/components/schemas/geo_object_type3_subtype3"
+        - $ref: "#/components/schemas/geo_object_type3_subtype4"
+        - $ref: "#/components/schemas/geo_object_type3_subtype5"
+        - $ref: "#/components/schemas/geo_object_type3_subtype6"
+
+    geo_object_type3_subtype0:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 0
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype0_config"
+
+    geo_object_type3_subtype0_config:
+      type: object
+      required:
+        - id
+        - point
+      properties:
+        id:
+          type: number
+        point:
+          type: array
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+          description: "[lng, lat, elevation]"
+
+    geo_object_type3_subtype1:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 1
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype1_config"
+
+    geo_object_type3_subtype1_config:
+      type: object
+      required:
+        - id
+        - point
+      properties:
+        id:
+          type: number
+        point:
+          type: array
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+          description: "[lng, lat, elevation]"
+
+    geo_object_type3_subtype2:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 2
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype2_config"
+
+    geo_object_type3_subtype2_config:
+      type: object
+      required:
+        - id
+        - line
+      properties:
+        id:
+          type: number
+        line:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 3
+            maxItems: 3
+          description: "[[lng, lat, elevation], [lng, lat, elevation]]"
+
+    geo_object_type3_subtype3:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 3
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype3_config"
+
+    geo_object_type3_subtype3_config:
+      type: object
+      required:
+        - id
+        - line
+      properties:
+        id:
+          type: number
+        line:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 3
+            maxItems: 3
+          description: "[[lng, lat, elevation], [lng, lat, elevation]]"
+
+    geo_object_type3_subtype4:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 4
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype4_config"
+
+    geo_object_type3_subtype4_config:
+      type: object
+      required:
+        - id
+        - point
+      properties:
+        id:
+          type: number
+        point:
+          type: array
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+          description: "[lng, lat, elevation]"
+
+    geo_object_type3_subtype5:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 5
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype5_config"
+
+    geo_object_type3_subtype5_config:
+      type: object
+      required:
+        - id
+        - line
+      properties:
+        id:
+          type: number
+        line:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 3
+            maxItems: 3
+          description: "[[lng, lat, elevation], [lng, lat, elevation]]"
+
+    geo_object_type3_subtype6:
+      allOf:
+        - $ref: "#/components/schemas/geo_object_base"
+        - type: object
+          required:
+            - type
+            - sub_type
+            - config
+          properties:
+            type:
+              type: integer
+              x-const: 3
+            sub_type:
+              type: integer
+              x-const: 6
+            config:
+              $ref: "#/components/schemas/geo_object_type3_subtype6_config"
+
+    geo_object_type3_subtype6_config:
+      type: object
+      required:
+        - id
+        - polygon
+      properties:
+        id:
+          type: number
+        polygon:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 3
+            maxItems: 3
+          description: "[[lng, lat, elevation], [lng, lat, elevation]]"
 
     geo_object_create:
       anyOf:

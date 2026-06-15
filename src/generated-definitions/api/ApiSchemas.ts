@@ -2137,6 +2137,631 @@ export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
                     }
                 },
                 "description": "if workspace_id is not present, it is a global geoobject"
+            },
+            {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "point"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "point": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3,
+                                        "description": "[lng, lat, elevation]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "point"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "point": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3,
+                                        "description": "[lng, lat, elevation]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "line"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "line": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            },
+                                            "minItems": 3,
+                                            "maxItems": 3
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "line"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "line": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            },
+                                            "minItems": 3,
+                                            "maxItems": 3
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "point"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "point": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3,
+                                        "description": "[lng, lat, elevation]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "line"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "line": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            },
+                                            "minItems": 3,
+                                            "maxItems": 3
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "uuid",
+                            "name",
+                            "created_at",
+                            "updated_at",
+                            "type",
+                            "sub_type",
+                            "tasks",
+                            "config"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "uuid": {
+                                "type": "string",
+                                "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                            },
+                            "workspace_id": {
+                                "type": "number",
+                                "example": 42
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "timestamptz",
+                                "description": "ISO 8601 format with a timezone",
+                                "example": "2023-12-11 23:06:52.7879+00"
+                            },
+                            "type": {
+                                "type": "integer"
+                            },
+                            "sub_type": {
+                                "type": "integer",
+                                "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        }
+                                    }
+                                }
+                            },
+                            "config": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "polygon"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number"
+                                    },
+                                    "polygon": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            },
+                                            "minItems": 3,
+                                            "maxItems": 3
+                                        },
+                                        "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "if workspace_id is not present, it is a global geoobject"
+                    }
+                ]
             }
         ]
     }
@@ -3233,6 +3858,631 @@ export const ApiSchema_Geo_Object : JSONSchema4  = {
                 }
             },
             "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "point"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 3,
+                                    "description": "[lng, lat, elevation]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "point"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 3,
+                                    "description": "[lng, lat, elevation]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "line"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "line"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "point"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "point": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 3,
+                                    "description": "[lng, lat, elevation]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "line"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "line": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "uuid",
+                        "name",
+                        "created_at",
+                        "updated_at",
+                        "type",
+                        "sub_type",
+                        "tasks",
+                        "config"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                        },
+                        "workspace_id": {
+                            "type": "number",
+                            "example": 42
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "timestamptz",
+                            "description": "ISO 8601 format with a timezone",
+                            "example": "2023-12-11 23:06:52.7879+00"
+                        },
+                        "type": {
+                            "type": "integer"
+                        },
+                        "sub_type": {
+                            "type": "integer",
+                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                        },
+                        "tasks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    }
+                                }
+                            }
+                        },
+                        "config": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "polygon"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "polygon": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
+                                    },
+                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                }
+                            }
+                        }
+                    },
+                    "description": "if workspace_id is not present, it is a global geoobject"
+                }
+            ]
         }
     ]
 }
@@ -4378,6 +5628,1426 @@ export const ApiSchema_Geo_Object_Type2_Config : JSONSchema4  = {
         "speed": {
             "type": "number",
             "description": "TODO unit"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3 : JSONSchema4  = {
+    "anyOf": [
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "point"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "point": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "description": "[lng, lat, elevation]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "point"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "point": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "description": "[lng, lat, elevation]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "line"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "line"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "point"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "point": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "description": "[lng, lat, elevation]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "line"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "line": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        },
+        {
+            "type": "object",
+            "required": [
+                "id",
+                "uuid",
+                "name",
+                "created_at",
+                "updated_at",
+                "type",
+                "sub_type",
+                "tasks",
+                "config"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                },
+                "workspace_id": {
+                    "type": "number",
+                    "example": 42
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "timestamptz",
+                    "description": "ISO 8601 format with a timezone",
+                    "example": "2023-12-11 23:06:52.7879+00"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "sub_type": {
+                    "type": "integer",
+                    "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "example": 42
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "polygon"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "polygon": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 3,
+                                "maxItems": 3
+                            },
+                            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                        }
+                    }
+                }
+            },
+            "description": "if workspace_id is not present, it is a global geoobject"
+        }
+    ]
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype0 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "point"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[lng, lat, elevation]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype0_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "point"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "point": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "[lng, lat, elevation]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype1 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "point"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[lng, lat, elevation]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype1_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "point"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "point": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "[lng, lat, elevation]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype2 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "line"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype2_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "line"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "line": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype3 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "line"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype3_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "line"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "line": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype4 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "point"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[lng, lat, elevation]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype4_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "point"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "point": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "[lng, lat, elevation]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype5 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "line"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "line": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype5_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "line"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "line": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+        }
+    }
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype6 : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+        "type",
+        "sub_type",
+        "tasks",
+        "config"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "uuid": {
+            "type": "string",
+            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+        },
+        "workspace_id": {
+            "type": "number",
+            "example": 42
+        },
+        "name": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "type": {
+            "type": "integer"
+        },
+        "sub_type": {
+            "type": "integer",
+            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "example": 42
+                    }
+                }
+            }
+        },
+        "config": {
+            "type": "object",
+            "required": [
+                "id",
+                "polygon"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "polygon": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3
+                    },
+                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                }
+            }
+        }
+    },
+    "description": "if workspace_id is not present, it is a global geoobject"
+}
+
+export const ApiSchema_Geo_Object_Type3_Subtype6_Config : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "polygon"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "polygon": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
         }
     }
 }
@@ -7244,6 +9914,631 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                                 }
                             },
                             "description": "if workspace_id is not present, it is a global geoobject"
+                        },
+                        {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "point"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "point": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "description": "[lng, lat, elevation]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "point"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "point": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "description": "[lng, lat, elevation]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "line"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "line": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "line"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "line": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "point"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "point": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "description": "[lng, lat, elevation]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "line"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "line": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "id",
+                                        "uuid",
+                                        "name",
+                                        "created_at",
+                                        "updated_at",
+                                        "type",
+                                        "sub_type",
+                                        "tasks",
+                                        "config"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                        },
+                                        "workspace_id": {
+                                            "type": "number",
+                                            "example": 42
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "timestamptz",
+                                            "description": "ISO 8601 format with a timezone",
+                                            "example": "2023-12-11 23:06:52.7879+00"
+                                        },
+                                        "type": {
+                                            "type": "integer"
+                                        },
+                                        "sub_type": {
+                                            "type": "integer",
+                                            "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                        },
+                                        "tasks": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "id"
+                                                ],
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 42
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "polygon"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "polygon": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        },
+                                                        "minItems": 3,
+                                                        "maxItems": 3
+                                                    },
+                                                    "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "if workspace_id is not present, it is a global geoobject"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -7859,6 +11154,631 @@ export const ApiSchema_Task : JSONSchema4  = {
                             }
                         },
                         "description": "if workspace_id is not present, it is a global geoobject"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "point"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "point": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number"
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 3,
+                                                "description": "[lng, lat, elevation]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "point"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "point": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number"
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 3,
+                                                "description": "[lng, lat, elevation]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "line"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "line": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "line"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "line": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "point"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "point": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number"
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 3,
+                                                "description": "[lng, lat, elevation]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "line"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "line": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            },
+                            {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "uuid",
+                                    "name",
+                                    "created_at",
+                                    "updated_at",
+                                    "type",
+                                    "sub_type",
+                                    "tasks",
+                                    "config"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "uuid": {
+                                        "type": "string",
+                                        "example": "87ffce7c-da28-49cf-9134-8db9fd87ccd1"
+                                    },
+                                    "workspace_id": {
+                                        "type": "number",
+                                        "example": 42
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "timestamptz",
+                                        "description": "ISO 8601 format with a timezone",
+                                        "example": "2023-12-11 23:06:52.7879+00"
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "sub_type": {
+                                        "type": "integer",
+                                        "description": "other: 0, moto_glider: 1, tow_plane: 2, helicopter: 3, parachute: 4, drop_plane: 5, hang_glider: 6, para_glider: 7, powered_aircraft: 8, jet_aicraft: 9, ufo: 10, balloon: 11, airship: 12, uav: 13, ground_support: 14, static_object: 15"
+                                    },
+                                    "tasks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 42
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "polygon"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "polygon": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "minItems": 3,
+                                                    "maxItems": 3
+                                                },
+                                                "description": "[[lng, lat, elevation], [lng, lat, elevation]]"
+                                            }
+                                        }
+                                    }
+                                },
+                                "description": "if workspace_id is not present, it is a global geoobject"
+                            }
+                        ]
                     }
                 ]
             }
