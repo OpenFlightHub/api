@@ -147,7 +147,7 @@ export default class GeoObjectModule extends Module_Base<
      * @returns false if does not exist
      * @see updateGeoObjectSafe
      */
-    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object_without_geom, skipNotifyWebsockets?: boolean){
+    async updateGeoObject(idOrUUID: number | string, data: DBUpdate_Geo_Object_without_geom){
 
         const existingGeoObject = await this.getGeoObject(idOrUUID)
 
@@ -179,13 +179,11 @@ export default class GeoObjectModule extends Module_Base<
             workspaceId: typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : true
         }, geoObject)
 
-        if(skipNotifyWebsockets !== true){
-            this.subscribableEventHandlerGeoObjects.triggerListener('' + (typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : ''), {
-                event_type: 'update',
-                uuid: geoObject.uuid,
-                data: geoObject
-            })
-        }
+        this.subscribableEventHandlerGeoObjects.triggerListener('' + (typeof geoObject.workspace_id === 'number' ? geoObject.workspace_id : ''), {
+            event_type: 'update',
+            uuid: geoObject.uuid,
+            data: geoObject
+        })
 
         return geoObject
     }
@@ -358,7 +356,7 @@ export default class GeoObjectModule extends Module_Base<
             // but set the others as "synced" too, to prevent infinite sync attempts
             this.updateGeoObject(geoObject.id, {
                 is_synced_with_dji: true
-            }, true)
+            })
             return
         }
 
@@ -368,7 +366,7 @@ export default class GeoObjectModule extends Module_Base<
 
                 this.updateGeoObjectSafe(geoObject.id, {
                     is_synced_with_dji: true
-                }, true)//TODO only set this to true if the message was successfully sent and acknowledged by the client, otherwise we might lose unsynced geoObjects if the server restarts before the next update
+                })//TODO only set this to true if the message was successfully sent and acknowledged by the client, otherwise we might lose unsynced geoObjects if the server restarts before the next update
             }
         }).catch(err => {
             console.error('@syncGeoObjectWithDjiAsyncronously(): failed to get first connection for workspace', err)
