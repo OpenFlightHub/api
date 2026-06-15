@@ -1,5 +1,5 @@
 
-import {DBType_Connection, DBType_Geo_Object, DBType_Geo_Object_ConfigType, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType, DBType_Geo_Object_Type_TYPES, DBType_Geo_Object_TypeType} from '../../generated-definitions/db/DBTypes'
+import {DBType_Connection, DBType_Geo_Object, DBType_Geo_Object_Base, DBType_Geo_Object_ConfigType, DBType_Geo_Object_SubType_TYPES, DBType_Geo_Object_SubTypeType, DBType_Geo_Object_Type_TYPES, DBType_Geo_Object_TypeType} from '../../generated-definitions/db/DBTypes'
 import {DBInsert_Geo_Object, DBUpdate_Geo_Object, delete_Geo_Object, insert_Geo_Object, select_Geo_Object, update_Geo_Object} from '../../generated-definitions/db/DBHelpers'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 
@@ -20,7 +20,7 @@ import * as turf from '@turf/turf'
 const db = global.db as pgp.IDatabase<any>
 
 //@ts-ignore
-const sendCreateGeoObjectMessageToClient = global.sendCreateGeoObjectMessageToClient as (geoObject: DBType_Geo_Object, connection: DBType_Connection) => void
+const sendCreateGeoObjectMessageToClient = global.sendCreateGeoObjectMessageToClient as (geoObject: DBType_Geo_Object_Base<0, DBType_Geo_Object_SubTypeType<0>>, connection: DBType_Connection) => void
 
 export default class GeoObjectModule extends Module_Base<
     {
@@ -359,6 +359,15 @@ export default class GeoObjectModule extends Module_Base<
     }
 
     private syncGeoObjectWithDjiAsyncronously(geoObject: WithRequired<DBType_Geo_Object, 'workspace_id'>){
+
+        if(geoObject.type !== DBType_Geo_Object_Type_TYPES.marking){
+            // only sync markings
+            // but set the others as "synced" too, to prevent infinite sync attempts
+            this.updateGeoObject(geoObject.id, {
+                is_synced_with_dji: true
+            })
+            return
+        }
 
         getCore().modules.connection.getFirstConnectionForWorkspaceThatHasConnectedRemoteController(geoObject.workspace_id).then(connection => {
             if(connection){
