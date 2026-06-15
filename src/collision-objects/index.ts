@@ -211,7 +211,9 @@ async function refreshDataForCoverageArea(coverageArea: DBType_Collision_Object_
     })
 
     if(geoObjectIds.length > 0){
-        await delete_Geo_Object(pgp.as.format('WHERE id IN (${idArray:csv})', {idArray: geoObjectIds.map(obj => obj.id)}))
+        await Promise.all(geoObjectIds.map(async objId => {
+            return getCore().modules.geoObject.deleteGeoObject(objId.id)
+        }))
     }
 
     await delete_Collision_Object_Geo_Object(pgp.as.format('WHERE coverage_area_id = ${coverageAreaId}', {coverageAreaId: coverageArea.id}))
