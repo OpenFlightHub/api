@@ -25,7 +25,7 @@ export default class TrafficSensing {
     constructor(){
         this.addSource(FakeSensingArea.getFactory())
         this.addSource(GliderNetSensingArea.getFactory())//TODO glidernet generates duplicates
-        this.addSource(AdsbLol.getFactory())
+        //this.addSource(AdsbLol.getFactory())// broken at least for local dev ip
     }
 
     private addSource(factory: SensingSourceAreaFactory){
