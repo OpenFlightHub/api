@@ -195,6 +195,10 @@ app.use((req, res, next)=> {
 app.use((err, req: express.Request, res: express.Response, next)=> {
     try {
 
+        if(!res.GM){
+            res.GM = new GuardedMiddleware(req, res)
+        }
+
         res.GM.setCurrentError(err)
 
         if(err instanceof GuardError){// handle ManInTheMiddleware guardedMiddleware errors
