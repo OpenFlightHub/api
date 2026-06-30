@@ -34,11 +34,16 @@ export default class MqttServer {
 
                     done(null, isAllowed)
 
+                    if(!isAllowed){
+                        return
+                    }
+
                     try {
                         connectHandler(client)
                     } catch (err){
                         console.error('unhandled error in connectHandler', err)
                     }
+
                 }).catch(err =>{
                     console.error('error when calling authenticateHandler', err)
                     done(null, false)
