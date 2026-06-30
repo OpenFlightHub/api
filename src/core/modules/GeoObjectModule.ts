@@ -108,7 +108,7 @@ export default class GeoObjectModule extends Module_Base<
                 console.log('a geoObject with the same uuid and same data already exists', existingObject.uuid)
 
 
-                if(!existingObject.is_synced_with_dji && typeof existingObject.workspace_id === 'number'){
+                if(!existingObject.is_synced_with_dji && typeof existingObject.workspace_id === 'number'){//TODO update via websocket connection if already exists (the is_synced_with_dji flag only means its been created, which is misleading, we might need a second flag for is_up_to_date)
                     //@ts-ignore
                     this.syncGeoObjectWithDjiAsyncronously(existingObject)
                 }
