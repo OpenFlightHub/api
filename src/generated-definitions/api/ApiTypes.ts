@@ -626,6 +626,7 @@ export type ApiType_Workspace_Missions = {
     workspace_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     /**
@@ -3500,6 +3501,7 @@ export type ApiType_Mission = {
     workspace_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     /**
@@ -3523,6 +3525,7 @@ export type ApiType_Mission_Post = {
     workspace_id: number;
     name: string;
     description?: string;
+    notes?: string;
     assigned_to_team_id?: number;
     /**
      * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
@@ -3535,6 +3538,7 @@ export type ApiType_Mission_Post = {
 export type ApiType_Mission_Patch = {
     name?: string;
     description?: string;
+    notes?: string;
     assigned_to_team_id?: number;
     /**
      * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
@@ -3548,6 +3552,7 @@ export type ApiType_Mission_Tasks = {
     mission_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     /**
@@ -3867,6 +3872,7 @@ export type ApiType_Task = {
     mission_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     /**
@@ -4185,6 +4191,7 @@ export type ApiType_Task_Post = {
     mission_id: number;
     name: string;
     description?: string;
+    notes?: string;
     /**
      * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */
@@ -4196,6 +4203,7 @@ export type ApiType_Task_Post = {
 export type ApiType_Task_Patch = {
     name?: string;
     description?: string;
+    notes?: string;
     /**
      * 0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled
      */

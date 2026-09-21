@@ -487,6 +487,7 @@ export type DBType_Mission = {
     workspace_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     created_at: string;
@@ -516,6 +517,7 @@ export type DBType_Task = {
     mission_id: number;
     name: string;
     description?: string;
+    notes?: string;
     created_by: number;
     updated_by: number;
     created_at: string;

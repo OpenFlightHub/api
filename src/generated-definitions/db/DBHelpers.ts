@@ -3174,6 +3174,7 @@ export type DBInsert_Mission = {
     workspace_id: number
     name: string
     description?: string
+    notes?: string
     created_by: number
     updated_by: number
     created_at?: string
@@ -3186,6 +3187,7 @@ export type DBUpdate_Mission = {
     workspace_id?: number
     name?: string
     description?: string
+    notes?: string
     created_by?: number
     updated_by?: number
     created_at?: string
@@ -3206,6 +3208,10 @@ const COLUMN_SET_MISSIONS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "description",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "notes",
         "skip": (col: {exists: boolean}) => !col.exists
     },
     {
@@ -3247,6 +3253,10 @@ const COLUMN_SET_MISSIONS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "description",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "notes",
         "skip": (col: {exists: boolean}) => !col.exists
     },
     {
@@ -3399,6 +3409,7 @@ export type DBInsert_Task = {
     mission_id: number
     name: string
     description?: string
+    notes?: string
     created_by: number
     updated_by: number
     created_at?: string
@@ -3410,6 +3421,7 @@ export type DBUpdate_Task = {
     mission_id?: number
     name?: string
     description?: string
+    notes?: string
     created_by?: number
     updated_by?: number
     created_at?: string
@@ -3429,6 +3441,10 @@ const COLUMN_SET_TASKS = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "description",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "notes",
         "skip": (col: {exists: boolean}) => !col.exists
     },
     {
@@ -3466,6 +3482,10 @@ const COLUMN_SET_TASKS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
     },
     {
         "name": "description",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "notes",
         "skip": (col: {exists: boolean}) => !col.exists
     },
     {

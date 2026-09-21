@@ -4893,6 +4893,8 @@ components:
           type: string
         description:
           type: string
+        notes:
+          type: string
         created_by:
           $ref: "#/components/schemas/id"
         updated_by:
@@ -4918,6 +4920,8 @@ components:
           type: string
         description:
           type: string
+        notes:
+          type: string
         assigned_to_team_id:
           $ref: "#/components/schemas/id"
         state:
@@ -4929,6 +4933,9 @@ components:
         name:
           type: string
         description:
+          type: string
+          nullable: true
+        notes:
           type: string
           nullable: true
         assigned_to_team_id:
@@ -4962,6 +4969,8 @@ components:
           type: string
         description:
           type: string
+        notes:
+          type: string
         created_by:
           $ref: "#/components/schemas/id"
         updated_by:
@@ -4990,6 +4999,8 @@ components:
           type: string
         description:
           type: string
+        notes:
+          type: string
         state:
           $ref: "#/components/schemas/task_state"
 
@@ -4999,6 +5010,9 @@ components:
         name:
           type: string
         description:
+          type: string
+          nullable: true
+        notes:
           type: string
           nullable: true
         state:

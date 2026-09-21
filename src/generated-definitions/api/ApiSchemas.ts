@@ -1443,6 +1443,9 @@ export const ApiSchema_Workspace_Missions : JSONSchema4  = {
             "description": {
                 "type": "string"
             },
+            "notes": {
+                "type": "string"
+            },
             "created_by": {
                 "type": "number",
                 "example": 42
@@ -9223,6 +9226,9 @@ export const ApiSchema_Mission : JSONSchema4  = {
         "description": {
             "type": "string"
         },
+        "notes": {
+            "type": "string"
+        },
         "created_by": {
             "type": "number",
             "example": 42
@@ -9272,6 +9278,9 @@ export const ApiSchema_Mission_Post : JSONSchema4  = {
         "description": {
             "type": "string"
         },
+        "notes": {
+            "type": "string"
+        },
         "assigned_to_team_id": {
             "type": "number",
             "example": 42
@@ -9290,6 +9299,10 @@ export const ApiSchema_Mission_Patch : JSONSchema4  = {
             "type": "string"
         },
         "description": {
+            "type": "string",
+            "nullable": true
+        },
+        "notes": {
             "type": "string",
             "nullable": true
         },
@@ -9333,6 +9346,9 @@ export const ApiSchema_Mission_Tasks : JSONSchema4  = {
                 "type": "string"
             },
             "description": {
+                "type": "string"
+            },
+            "notes": {
                 "type": "string"
             },
             "created_by": {
@@ -10575,6 +10591,9 @@ export const ApiSchema_Task : JSONSchema4  = {
         "description": {
             "type": "string"
         },
+        "notes": {
+            "type": "string"
+        },
         "created_by": {
             "type": "number",
             "example": 42
@@ -11803,6 +11822,9 @@ export const ApiSchema_Task_Post : JSONSchema4  = {
         "description": {
             "type": "string"
         },
+        "notes": {
+            "type": "string"
+        },
         "state": {
             "type": "integer",
             "description": "0 = pending, 1 = accepted, 2 = in progress, 3 = done, 4 = rejected, 5 = failed, 6 = canceled"
@@ -11817,6 +11839,10 @@ export const ApiSchema_Task_Patch : JSONSchema4  = {
             "type": "string"
         },
         "description": {
+            "type": "string",
+            "nullable": true
+        },
+        "notes": {
             "type": "string",
             "nullable": true
         },
