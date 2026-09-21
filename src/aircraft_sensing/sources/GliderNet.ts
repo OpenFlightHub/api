@@ -73,9 +73,13 @@ class GliderNetReceiver extends EventManager<GliderNetReceiverEvents> {
         })
 
         this.isSocket.addListener('close', ()=>{
-            console.info('glidernet ISSocket closed')
+            console.info('glidernet ISSocket closed, restarting ...')
 
-            //TODO reconnect or does the lib do this for us?
+            this.isSocket.destroy()
+
+            setTimeout(()=>{
+                this.start()
+            }, 1000 * 10)
         })
 
         this.isSocket.addListener('connect', ()=>{
