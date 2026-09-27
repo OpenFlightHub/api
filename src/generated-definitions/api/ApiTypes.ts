@@ -682,6 +682,69 @@ export interface ApiType_Connection {
 }
 
 
+
+export type ApiType_Connection_Live_Share_Keys_Post = {
+    /**
+     * ISO 8601 format with a timezone
+     */
+    valid_until?: string;
+    name?: string;
+}
+
+
+
+export type ApiType_Connection_Live_Share_Keys_Post_Response = {
+    id: number;
+    key: string;
+    name?: string;
+    connection_id: number;
+    created_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    valid_until: string;
+}
+
+
+export type ApiType_Connection_Live_Share_Keys_Get = {
+    id: number;
+    key: string;
+    name?: string;
+    connection_id: number;
+    created_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    valid_until: string;
+}[];
+
+
+
+export type ApiType_Connection_Live_Share_Key = {
+    id: number;
+    key: string;
+    name?: string;
+    connection_id: number;
+    created_by: number;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    created_at: string;
+    /**
+     * ISO 8601 format with a timezone
+     */
+    valid_until: string;
+}
+
+
 export type ApiType_Workspace_Geo_Objects_Get = (
     | (
           | {

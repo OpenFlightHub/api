@@ -1596,6 +1596,103 @@ paths:
       security:
         - user_auth: []
 
+
+  /connection/{connection_id}/live-share-keys:
+    get:
+      tags:
+        - connection
+      summary: Get all live share keys for a connection
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Returns the connections live share keys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/connection_live_share_keys_get"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+    post:
+      tags:
+        - connection
+      summary: Create a new live share key
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/connection_live_share_keys_post"
+      responses:
+        "200":
+          description: Created a new key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/connection_live_share_keys_post_response"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
+
+  /connection/{connection_id}/live-share-key/{live_share_key_id}:
+    delete:
+      tags:
+        - connection
+      summary: Delete a live share key
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+        - name: live_share_key_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Deleted the key successfully
+
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "410":
+          $ref: "#/components/responses/410"
+      security:
+        - user_auth: []
+
   /workspace/{workspace_id}/geo-objects:
     get:
       tags:
@@ -3866,6 +3963,47 @@ components:
           $ref: "#/components/schemas/id"
         stream_is_alive:
           type: boolean
+
+    connection_live_share_keys_post:
+      type: object
+      properties:
+        valid_until:
+          $ref: "#/components/schemas/timestamptz"
+        name:
+          type: string
+
+    connection_live_share_keys_post_response:
+      $ref: "#/components/schemas/connection_live_share_key"
+
+    connection_live_share_keys_get:
+      type: array
+      items:
+        $ref: "#/components/schemas/connection_live_share_key"
+
+    connection_live_share_key:
+      type: object
+      required:
+        - id
+        - key
+        - connection_id
+        - created_by
+        - created_at
+        - valid_until
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        key:
+          type: string
+        name:
+          type: string
+        connection_id:
+          $ref: "#/components/schemas/id"
+        created_by:
+          $ref: "#/components/schemas/id"
+        created_at:
+            $ref: "#/components/schemas/timestamptz"
+        valid_until:
+          $ref: "#/components/schemas/timestamptz"
 
     workspace_geo_objects_get:
       type: array

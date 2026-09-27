@@ -552,6 +552,18 @@ export type DBType_Collision_Object_Geo_Object = {
 
 
 
+export type DBType_Live_Share_Key = {
+    id: number;
+    key: string;
+    name?: string;
+    connection_id: number;
+    created_at: string;
+    created_by: number;
+    valid_until: string;
+}
+
+
+
 export type DBType_Api_Endpoint_Performance = {
     id: number;
     url_with_id_params: string;

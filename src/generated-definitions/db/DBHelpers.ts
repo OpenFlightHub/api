@@ -4033,6 +4033,202 @@ import {DBType_Collision_Object_Geo_Object} from './DBTypes'
     }
 
 
+//live_share_keys
+
+import {} from "./DBTypes";
+
+export type DBInsert_Live_Share_Key = {
+    key: string
+    name?: string
+    connection_id: number
+    created_at?: string
+    created_by: number
+    valid_until?: string
+}
+
+export type DBUpdate_Live_Share_Key = {
+    key?: string
+    name?: string
+    connection_id?: number
+    created_at?: string
+    created_by?: number
+    valid_until?: string
+}
+const COLUMN_SET_LIVE_SHARE_KEYS = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "cnd": true
+    },
+    {
+        "name": "key"
+    },
+    {
+        "name": "name",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "connection_id"
+    },
+    {
+        "name": "created_at",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "created_by"
+    },
+    {
+        "name": "valid_until",
+        "skip": (col: {exists: boolean}) => !col.exists
+    }
+], {table: "live_share_keys"})
+
+const COLUMN_SET_LIVE_SHARE_KEYS_UPDATE = new db.$config.pgp.helpers.ColumnSet([
+    {
+        "name": "id",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "key",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "name",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "connection_id",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "created_at",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "created_by",
+        "skip": (col: {exists: boolean}) => !col.exists
+    },
+    {
+        "name": "valid_until",
+        "skip": (col: {exists: boolean}) => !col.exists
+    }
+], {table: "live_share_keys"})
+import {DBType_Live_Share_Key} from './DBTypes'
+
+
+    export async function insert_Live_Share_Key(values: DBInsert_Live_Share_Key){
+        const ret = await db.one<DBType_Live_Share_Key>(db.$config.pgp.helpers.insert(values, undefined, 'live_share_keys') + ' RETURNING *')
+
+        
+
+        return ret
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function update_Live_Share_Key<T extends number | string>(idOrWhereCondition: T, values: DBUpdate_Live_Share_Key): Promise<T extends number ? false | DBType_Live_Share_Key : DBType_Live_Share_Key[]>{
+
+        
+
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Live_Share_Key>(db.$config.pgp.helpers.update(values,  COLUMN_SET_LIVE_SHARE_KEYS_UPDATE) + ' WHERE id = ' + id + ' RETURNING *')
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Live_Share_Key>(db.$config.pgp.helpers.update(values,  COLUMN_SET_LIVE_SHARE_KEYS_UPDATE) + ' ' + whereCondition + ' RETURNING *')
+
+            
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+    @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+    */
+    export async function delete_Live_Share_Key<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Live_Share_Key : DBType_Live_Share_Key[]>{
+        if(typeof idOrWhereCondition === 'number'){
+            const id = idOrWhereCondition as number
+            const ret = await db.oneOrNone<DBType_Live_Share_Key>('DELETE FROM live_share_keys WHERE id = ${id} RETURNING *', {id})
+
+            if(!ret){
+                //@ts-ignore
+                return false
+            }
+
+            
+
+            //@ts-ignore
+            return ret
+
+        } else {
+            let whereCondition = idOrWhereCondition as string
+            whereCondition = whereCondition.trim()
+            if(whereCondition.endsWith(';')){
+                whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+            }
+
+            const ret = await db.manyOrNone<DBType_Live_Share_Key>('DELETE FROM live_share_keys ' + whereCondition + ' RETURNING *')
+
+            
+
+            //@ts-ignore
+            return ret
+        }
+    }
+
+    /**
+        @param idOrWhereCondition is either a single id or a where clause which shall be generated with pgp.as.format() e.g. pgp.as.format('WHERE id = ${id}', {id: 42})
+        */
+        export async function select_Live_Share_Key<T extends number | string>(idOrWhereCondition: T): Promise<T extends number ? false | DBType_Live_Share_Key : DBType_Live_Share_Key[]>{
+            if(typeof idOrWhereCondition === 'number'){
+                const id = idOrWhereCondition as number
+                const ret = await db.oneOrNone<DBType_Live_Share_Key>('SELECT * FROM live_share_keys ' + pgp.as.format('WHERE id = ${id}', {id}))
+
+                if(!ret){
+                    //@ts-ignore
+                    return false
+                }
+
+                
+
+                //@ts-ignore
+                return ret
+            } else {
+                let whereCondition = idOrWhereCondition as string
+                whereCondition = whereCondition.trim()
+                if(whereCondition.endsWith(';')){
+                    whereCondition = whereCondition.substring(0, whereCondition.length - 1)
+                }
+
+                const ret = await db.manyOrNone<DBType_Live_Share_Key>('SELECT * FROM live_share_keys ' + whereCondition)
+
+                
+
+                //@ts-ignore
+                return ret
+            }
+
+        }
+
+
 //api_endpoint_performances
 
 import {} from "./DBTypes";

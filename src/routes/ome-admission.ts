@@ -14,6 +14,7 @@ import { JSONSchema4 } from '../util/types/JSONSchema'
 import { getUserForStreamToken, GuardError } from '../ManInTheMiddleware';
 import { createHmac } from 'crypto';
 import { getCore } from '../core';
+import dayjs from 'dayjs';
 
 const secretsLoader = new SecretsLoader('secrets.json')
 const secrets = secretsLoader.getSecrets(['ome_admission_secret'])
@@ -200,7 +201,27 @@ router.post('/', asyncHandler(async(req, res)=>{
             const user = await getUserForStreamToken(auth)
 
             if(user === false){
-                throw GuardError._403_Forbidden()
+
+                const liveShareKey = await getCore().modules.connection.getLiveShareKey(auth)
+
+                if(liveShareKey === false){
+                    throw GuardError._403_Forbidden()
+                } else {
+
+                    if(liveShareKey.connection_id !== connection.id){
+                        throw GuardError._403_Forbidden()
+                    }
+
+                    if(dayjs(liveShareKey.valid_until).isAfter(dayjs()) === false){
+                        throw GuardError._403_Forbidden()
+                    }
+
+                    res.status(200).GM.guardSend<OmeAdmissionResponse_Opening>({
+                        allowed: true
+                    }, OME_ADMISSION_RESPONSE_OPENING_SCHEMA)
+
+                    return
+                }
             }
 
             if(await getCore().modules.user.userHasPermissionForWorkspace(user.id, connection.workspace_id) === false){

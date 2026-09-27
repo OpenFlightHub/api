@@ -1585,6 +1585,156 @@ export const ApiSchema_Connection : JSONSchema4  = {
     }
 }
 
+export const ApiSchema_Connection_Live_Share_Keys_Post : JSONSchema4  = {
+    "type": "object",
+    "properties": {
+        "valid_until": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "name": {
+            "type": "string"
+        }
+    }
+}
+
+export const ApiSchema_Connection_Live_Share_Keys_Post_Response : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "key",
+        "connection_id",
+        "created_by",
+        "created_at",
+        "valid_until"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "key": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "connection_id": {
+            "type": "number",
+            "example": 42
+        },
+        "created_by": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "valid_until": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
+export const ApiSchema_Connection_Live_Share_Keys_Get : JSONSchema4  = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "id",
+            "key",
+            "connection_id",
+            "created_by",
+            "created_at",
+            "valid_until"
+        ],
+        "properties": {
+            "id": {
+                "type": "number",
+                "example": 42
+            },
+            "key": {
+                "type": "string"
+            },
+            "name": {
+                "type": "string"
+            },
+            "connection_id": {
+                "type": "number",
+                "example": 42
+            },
+            "created_by": {
+                "type": "number",
+                "example": 42
+            },
+            "created_at": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            },
+            "valid_until": {
+                "type": "string",
+                "format": "timestamptz",
+                "description": "ISO 8601 format with a timezone",
+                "example": "2023-12-11 23:06:52.7879+00"
+            }
+        }
+    }
+}
+
+export const ApiSchema_Connection_Live_Share_Key : JSONSchema4  = {
+    "type": "object",
+    "required": [
+        "id",
+        "key",
+        "connection_id",
+        "created_by",
+        "created_at",
+        "valid_until"
+    ],
+    "properties": {
+        "id": {
+            "type": "number",
+            "example": 42
+        },
+        "key": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "connection_id": {
+            "type": "number",
+            "example": 42
+        },
+        "created_by": {
+            "type": "number",
+            "example": 42
+        },
+        "created_at": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        },
+        "valid_until": {
+            "type": "string",
+            "format": "timestamptz",
+            "description": "ISO 8601 format with a timezone",
+            "example": "2023-12-11 23:06:52.7879+00"
+        }
+    }
+}
+
 export const ApiSchema_Workspace_Geo_Objects_Get : JSONSchema4  = {
     "type": "array",
     "items": {

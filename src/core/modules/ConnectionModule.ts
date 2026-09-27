@@ -1,5 +1,5 @@
 
-import { DBInsert_Connection, DBUpdate_Connection, delete_Connection, insert_Connection, select_Connection, update_Connection } from '../../generated-definitions/db/DBHelpers'
+import { DBUpdate_Connection, delete_Connection, delete_Live_Share_Key, insert_Connection, insert_Live_Share_Key, select_Connection, select_Live_Share_Key, update_Connection } from '../../generated-definitions/db/DBHelpers'
 import {DBType_Connection} from '../../generated-definitions/db/DBTypes'
 import Module_Base, { makeFunctionIdSafe } from '../Module_Base'
 import { isConnectionOnline } from '../../connector/dji-pilot-2'
@@ -13,6 +13,8 @@ import * as express from 'express'
 import pgp from 'pg-promise'
 import { setSessionCookie } from '../../util/cookie'
 import type DroneModule from './DroneModule'
+import { createSimpleHumanReadableCode } from '../../util/humankey'
+
 //@ts-ignore
 const db = global.db as pgp.IDatabase<any>
 
@@ -201,4 +203,36 @@ export default class ConnectionModule extends Module_Base<
 
         return connections[0]
     }
+
+    async getConnectionLiveShareKeys(connectionId: number){
+        return await select_Live_Share_Key(pgp.as.format('WHERE connection_id = ${connectionId}', {connectionId}))
+    }
+
+    async createConnectionLiveShareKey(values: {connectionId: number, valid_until?: string, created_by_user_id: number, name?: string}){
+        let key = createSimpleHumanReadableCode(5)
+
+        while((await select_Live_Share_Key(pgp.as.format('WHERE key = ${key}', {key}))).length > 0){
+            key = createSimpleHumanReadableCode(5)
+        }
+
+        const liveShareKey = await insert_Live_Share_Key({
+            connection_id: values.connectionId,
+            key,
+            valid_until: values.valid_until,
+            created_by: values.created_by_user_id,
+            name: values.name
+        })
+
+        return liveShareKey
+    }
+
+    async deleteConnectionLiveShareKey(liveShareKeyId: number){
+        await delete_Live_Share_Key(liveShareKeyId)
+    }
+
+    async getLiveShareKey(key: string){
+        const liveShareKeys = await select_Live_Share_Key(pgp.as.format('WHERE key = ${key}', {key}))
+        return liveShareKeys.length > 0 ? liveShareKeys[0] : false
+    }
 }
+
